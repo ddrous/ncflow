@@ -145,8 +145,8 @@ class Trainer:
                  nb_steps_node=jnp.array(self.nb_steps_node), 
                  nb_steps_cont=jnp.array(self.nb_steps_ctx))
 
-        pickle.dump(self.opt_state_node, open(path+"/opt_state_node.pkl", "wb"))
-        pickle.dump(self.opt_state_ctx, open(path+"/opt_state_ctx.pkl", "wb"))
+        pickle.dump(self.opt_node_state, open(path+"/opt_state_node.pkl", "wb"))
+        pickle.dump(self.opt_ctx_state, open(path+"/opt_state_ctx.pkl", "wb"))
 
         self.learner.save_learner(path)
 

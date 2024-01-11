@@ -21,13 +21,13 @@ class Learner:
         self.loss_fn = lambda model, context, batch, weights: loss_fn(model, context, batch, weights, loss_fn_ctx, key=get_new_key(key))
 
     def save_learner(self, path):
-        eqx.tree_serialise_leaves(path+"model.eqx", self.model)
-        eqx.tree_serialise_leaves(path+"context.eqx", self.context)
+        eqx.tree_serialise_leaves(path+"neuralode.eqx", self.neuralode)
+        eqx.tree_serialise_leaves(path+"contexts.eqx", self.contexts)
         ## Save the loss function as well
 
     def load_learner(self, path):
-        self.model = eqx.tree_deserialise_leaves(path+"model.eqx", self.model)
-        self.context = eqx.tree_deserialise_leaves(path+"context.eqx", self.context)
+        self.model = eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.neuralode)
+        self.context = eqx.tree_deserialise_leaves(path+"contexts.eqx", self.contexts)
 
 
 

@@ -38,7 +38,6 @@ class VisualTester:
 
 
 
-
         fig, ax = plt.subplot_mosaic('AB;CC;DD;EF', figsize=(6*2, 3.5*4))
 
         mks = 2
@@ -61,11 +60,12 @@ class VisualTester:
         ax['B'].set_title("Phase space")
         ax['B'].legend()
 
-        nb_steps = np.vstack(self.trainer.nb_steps_node)
+        nb_steps = np.vstack(self.trainer.nb_steps_node).squeeze()
         xis = self.trainer.learner.contexts.params
         losses_node = np.vstack(self.trainer.losses_node)
         losses_ctx = np.vstack(self.trainer.losses_ctx)
         nb_envs = self.dataloader.nb_envs
+
 
         mke = np.ceil(losses_node.shape[0]/100).astype(int)
 
@@ -106,7 +106,7 @@ class VisualTester:
         plt.show();
 
         if save_path:
-            plt.savefig(save_path+"/alternating_node.png", dpi=100, bbox_inches='tight')
+            plt.savefig(save_path, dpi=100, bbox_inches='tight')
             print("Testing finished. Script, data, figures, and models saved in:", save_path)
 
         # return fig, ax
