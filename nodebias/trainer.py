@@ -18,7 +18,7 @@ class Trainer:
         self.nb_steps_ctx = []
 
     def train(self, nb_epochs, update_context_every=1, print_error_every=100, save_path=False, key=None):
-        # key = key if key is not None else self.key
+        key = key if key is not None else self.key
 
         opt_state_node = self.opt_node_state
         opt_state_ctx = self.opt_ctx_state
@@ -30,7 +30,7 @@ class Trainer:
 
         @eqx.filter_jit
         def train_step_node(node, contexts, batch, weights, opt_state):
-            print('\nCompiling function "train_step" for neural ode ...\n')
+            print('\nCompiling function "train_step" for neural ode ...')
 
             (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn, has_aux=True)(node, contexts, batch, weights)
 
@@ -42,7 +42,7 @@ class Trainer:
 
         @eqx.filter_jit
         def train_step_ctx(node, contexts, batch, weights, opt_state):
-            print('\nCompiling function "train_step" for context ...\n')
+            print('\nCompiling function "train_step" for context ...')
 
             loss_fn_ = lambda contexts, node, batch, weights: loss_fn(node, contexts, batch, weights)
 
@@ -59,7 +59,7 @@ class Trainer:
 
         assert update_context_every <= nb_train_steps_per_epoch, "update_context_every must be smaller than nb_train_steps_per_epoch"
 
-        print(f"\n\n=== Beginning training neural ODE ... ===")
+        print(f"\n\n=== Beginning training ... ===")
         print(f"    Number of examples in a batch: {self.dataloader.batch_size}")
         print(f"    Number of train steps per epoch: {nb_train_steps_per_epoch}")
         print(f"    Number of training epochs: {nb_epochs}")

@@ -2,10 +2,12 @@ from ._utils import *
 
 
 class Learner:
-    def __init__(self, neuralnet, nb_envs, context_size, loss_fn_ctx, integrator, invariant=None, physics=None, key=None):
+    def __init__(self, neuralnet, contexts, loss_fn_ctx, integrator, invariant=None, physics=None, key=None):
 
-        self.nb_envs = nb_envs
-        self.context_size = context_size
+        # self.nb_envs = nb_envs
+        # self.context_size = context_size
+
+        self.nb_envs, self.context_size = contexts.params.shape
 
         self.neuralnet = neuralnet
         self.physics = physics
@@ -14,10 +16,11 @@ class Learner:
         vectorfield = VectorField(neuralnet, physics)
         self.neuralode = NeuralODE(vectorfield, integrator, invariant)
 
-        self.contexts = ContextParams(self.nb_envs, self.context_size, key=get_new_key(key))
+        # ctx_key, loss_key = generate_new_keys(key, num=2)
+        # self.contexts = ContextParams(self.nb_envs, self.context_size, key=ctx_key)
+        self.contexts = contexts
         self.init_ctx_params = self.contexts.params.copy()
 
-        # self.loss_fn = partial(loss_fn, loss_fn_ctx=loss_fn_ctx, key=get_new_key(key))
         self.loss_fn = lambda model, context, batch, weights: loss_fn(model, context, batch, weights, loss_fn_ctx, key=get_new_key(key))
 
     def save_learner(self, path):
@@ -48,7 +51,12 @@ class ContextParams(eqx.Module):
     params: jnp.ndarray
 
     def __init__(self, nb_envs, context_size, key=None):
-        self.params = jax.random.normal(key, (nb_envs, context_size))
+        if key is None:
+            print("WARNING: No key provided for the context parameters. Initialising at 0.")
+            self.params = jnp.zeros((nb_envs, context_size))
+
+        else:
+            self.params = jax.random.normal(get_new_key(key), (nb_envs, context_size))
 
 
 class ID(eqx.Module):

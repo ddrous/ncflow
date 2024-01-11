@@ -21,8 +21,15 @@ class DataLoader:
         self.nb_steps_per_traj = datashape[2]
         self.data_size = datashape[3]
 
+        print("Dataset shape:", datashape)
+
         self.int_cutoff = int(int_cutoff*self.nb_steps_per_traj)    ## integration cutoff
-        self.batch_size = batch_size if batch_size > 0 else self.nb_trajs_per_env
+
+        if batch_size < 0 or batch_size > self.nb_trajs_per_env:
+            print("WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.")
+            self.batch_size = self.nb_trajs_per_env
+        else:
+            self.batch_size = batch_size
 
     def __iter__(self):     ## TODO! Randomise this function
         nb_batches = self.nb_trajs_per_env // self.batch_size

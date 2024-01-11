@@ -12,21 +12,21 @@ class VisualTester:
         """ Compute test metrics on entire test dataloader  """
         pass
 
-    def visualise(self, e=None, traj=None, cutoff=False, save_path=False, key=None):
+    def visualise(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):
 
         e_key, traj_key = get_new_key(time.time_ns(), num=2)
         e = e if e else jax.random.randint(e_key, (1,), 0, self.dataloader.nb_envs)[0]
         traj = traj if traj else jax.random.randint(traj_key, (1,), 0, self.dataloader.nb_trajs_per_env)[0]
 
         t_eval = self.dataloader.t_eval
-        test_length = self.dataloader.int_cutoff if cutoff else self.dataloader.nb_steps_per_traj
+        test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
         X = self.dataloader.dataset[e, traj:traj+1, :test_length, :]
         t_test = t_eval[:test_length]
 
         print("==  Begining testing ... ==")
         print("    Environment id:", e)
         print("    Trajectory id:", traj)
-        print("    Length of the training trajectories:", self.dataloader.int_cutoff)
+        print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
         print("    Length of the testing trajectories:", test_length)
 
         X_hat, _ = self.trainer.learner.neuralode(X[:, 0, :], 
@@ -79,7 +79,8 @@ class VisualTester:
         ax['D'].plot(nb_steps, c="brown")
         ax['D'].set_xlabel("Epochs")
         ax['D'].set_title("Total Number of Steps Taken per Epoch (Proportional to NFEs)")
-        ax['D'].set_yscale('log')
+        if np.all(nb_steps>0):
+            ax['D'].set_yscale('log')
 
         eps = 0.1
         colors = ['dodgerblue', 'r', 'b', 'g', 'm', 'c', 'y', 'orange', 'purple', 'brown']
@@ -107,6 +108,6 @@ class VisualTester:
 
         if save_path:
             plt.savefig(save_path, dpi=100, bbox_inches='tight')
-            print("Testing finished. Script, data, figures, and models saved in:", save_path)
+            print("Testing finished. Ffigure saved in:", save_path)
 
         # return fig, ax
