@@ -89,24 +89,43 @@ class NeuralODE(eqx.Module):
 
     def __call__(self, x0s, t_eval, ctx):
 
-        def integrate(x0):
-            solution = diffrax.diffeqsolve(
-                        diffrax.ODETerm(self.vectorfield),
-                        diffrax.Tsit5(),
-                        args=ctx,
-                        t0=t_eval[0],
-                        t1=t_eval[-1],
-                        dt0=t_eval[1] - t_eval[0],
-                        y0=x0,
-                        stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
-                        saveat=diffrax.SaveAt(ts=t_eval),
-                        max_steps=4096*10,
-                    )
-            return solution.ys, solution.stats["num_steps"]
+        # def integrate(x0):
+        #     solution = diffrax.diffeqsolve(
+        #                 diffrax.ODETerm(self.vectorfield),
+        #                 diffrax.Tsit5(),
+        #                 args=ctx,
+        #                 t0=t_eval[0],
+        #                 t1=t_eval[-1],
+        #                 dt0=t_eval[1] - t_eval[0],
+        #                 y0=x0,
+        #                 stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
+        #                 saveat=diffrax.SaveAt(ts=t_eval),
+        #                 max_steps=4096*1,
+        #             )
+        #     return solution.ys, solution.stats["num_steps"]
 
-        batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
-        return batched_ys, batched_num_steps
+        # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
+        # return batched_ys, batched_num_steps
 
+        rhs = lambda x, t: self.vectorfield(t, x, ctx)
+        batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
+        return batched_ys, t_eval.size
+
+
+# def rk4_integrator(rhs, y0, t, rtol, atol, hmax, mxstep, max_steps_rev, kind):
+def rk4_integrator(rhs, y0, t):
+  def step(state, t):
+    y_prev, t_prev = state
+    h = t - t_prev
+    k1 = h * rhs(y_prev, t_prev)
+    k2 = h * rhs(y_prev + k1/2., t_prev + h/2.)
+    k3 = h * rhs(y_prev + k2/2., t_prev + h/2.)
+    k4 = h * rhs(y_prev + k3, t + h)
+    y = y_prev + 1./6 * (k1 + 2 * k2 + 2 * k3 + k4)
+    return (y, t), y
+  _, ys = jax.lax.scan(step, (y0, t[0]), t[1:])
+  # return ys
+  return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
 
 
 

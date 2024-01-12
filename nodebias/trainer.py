@@ -119,6 +119,7 @@ class Trainer:
         wall_time = time.time() - start_time
         time_in_hmsecs = seconds_to_hours(wall_time)
         print("\nTotal gradient descent training time: %d hours %d mins %d secs" %time_in_hmsecs)
+        print("Environment weights at the end of the training:", weights)
 
         self.losses_node.append(jnp.vstack(losses_node))
         self.losses_ctx.append(jnp.vstack(losses_ctx))
@@ -135,6 +136,8 @@ class Trainer:
         if save_path:
             self.save_trainer(save_path)
 
+        # return opt_state_node, opt_state_ctx
+
 
     def save_trainer(self, path):
         print(f"\nSaving model and results into {path} folder ...\n")
@@ -142,8 +145,8 @@ class Trainer:
         np.savez(path+"train_histories.npz", 
                  losses_node=jnp.vstack(self.losses_node), 
                  losses_cont=jnp.vstack(self.losses_ctx), 
-                 nb_steps_node=jnp.array(self.nb_steps_node), 
-                 nb_steps_cont=jnp.array(self.nb_steps_ctx))
+                 nb_steps_node=jnp.concatenate(self.nb_steps_node), 
+                 nb_steps_cont=jnp.concatenate(self.nb_steps_ctx))
 
         pickle.dump(self.opt_node_state, open(path+"/opt_state_node.pkl", "wb"))
         pickle.dump(self.opt_ctx_state, open(path+"/opt_state_ctx.pkl", "wb"))

@@ -8,9 +8,30 @@ class VisualTester:
         self.dataloader = test_dataloader
         self.trainer = trainer
 
-    def test(self):
+        assert self.dataloader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
+
+    def test(self, criterion=None, int_cutoff=1.0):
         """ Compute test metrics on entire test dataloader  """
-        pass
+
+        criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
+
+        t_eval = self.dataloader.t_eval
+        test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
+        X = self.dataloader.dataset[:, :, :test_length, :]
+        t_test = t_eval[:test_length]
+
+        print("==  Begining testing ... ==")
+        print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+        print("    Length of the testing trajectories:", test_length)
+
+        X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0))(X[:, :, 0, :], 
+                                             t_test, 
+                                             self.trainer.learner.contexts.params)
+
+        batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
+
+        return batched_criterion(X_hat - X).mean(axis=1).sum(axis=0)
+
 
     def visualise(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):
 
@@ -23,7 +44,7 @@ class VisualTester:
         X = self.dataloader.dataset[e, traj:traj+1, :test_length, :]
         t_test = t_eval[:test_length]
 
-        print("==  Begining testing ... ==")
+        print("==  Begining visualisation ... ==")
         print("    Environment id:", e)
         print("    Trajectory id:", traj)
         print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
@@ -60,12 +81,13 @@ class VisualTester:
         ax['B'].set_title("Phase space")
         ax['B'].legend()
 
-        nb_steps = np.vstack(self.trainer.nb_steps_node).squeeze()
+        nb_steps = np.concatenate(self.trainer.nb_steps_node)
         xis = self.trainer.learner.contexts.params
         losses_node = np.vstack(self.trainer.losses_node)
         losses_ctx = np.vstack(self.trainer.losses_ctx)
         nb_envs = self.dataloader.nb_envs
 
+        print("    Number of steps taken per epoch:", nb_steps.shape)
 
         mke = np.ceil(losses_node.shape[0]/100).astype(int)
 
@@ -108,6 +130,6 @@ class VisualTester:
 
         if save_path:
             plt.savefig(save_path, dpi=100, bbox_inches='tight')
-            print("Testing finished. Ffigure saved in:", save_path)
+            print("Testing finished. Ffigure saved in:", save_path);
 
         # return fig, ax
