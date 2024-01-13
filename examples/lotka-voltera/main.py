@@ -1,14 +1,14 @@
 from nodebias import *
 from IPython.display import Image
 
-jax.config.update("jax_debug_nans", True)
+# jax.config.update("jax_debug_nans", True)
 
 
 #%%
 
-Image(filename="tmp/coda_lv_setting_1.png")
+# Image(filename="tmp/coda_lv_setting_1.png")
 #%%
-Image(filename="tmp/coda_lv_setting_2.png")
+# Image(filename="tmp/coda_lv_setting_2.png")
 
 ## Additionally
 # LV, GO: 4-layer MLPs with hidden layers of width 64
@@ -20,7 +20,7 @@ Image(filename="tmp/coda_lv_setting_2.png")
 
 ## Hyperparams
 SEED = 3
-context_size = 2
+context_size = 20
 nb_epochs = 100000
 
 
@@ -99,10 +99,11 @@ class Augmentation(eqx.Module):
 
 
 physics = Physics(key=SEED)
-augmentation = Augmentation(data_size=2, width_size=64, depth=3, context_size=2, key=SEED)
+augmentation = Augmentation(data_size=2, width_size=16*1, depth=3, context_size=context_size, key=SEED)
 contexts = ContextParams(nb_envs, context_size, key=SEED)
 
-integrator = diffrax.Tsit5()
+# integrator = diffrax.Tsit5()
+integrator = rk4_integrator
 
 def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, key):
     trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx)
@@ -135,12 +136,12 @@ learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physi
 #                                                 int(nb_epochs*0.75):0.25})
 # sched_node = 1e-3
 ## exponential decay
-sched_node = optax.exponential_decay(3e-3, nb_epochs, 0.9)
+sched_node = optax.exponential_decay(3e-4, nb_epochs*2, 0.99)
 # sched_ctx = optax.piecewise_constant_schedule(init_value=3e-2,
 #                         boundaries_and_scales={int(nb_epochs*0.25):0.25, 
 #                                                 int(nb_epochs*0.5):0.25,
 #                                                 int(nb_epochs*0.75):0.25})
-sched_ctx = 1e-1
+sched_ctx = 1e-3
 
 opt_node = optax.adabelief(sched_node)
 opt_ctx = optax.adabelief(sched_ctx)
@@ -150,9 +151,9 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
 #%%
 
 # for propostion in [0.25, 0.5, 0.75]:
-for propostion in np.linspace(0.1, 1.0, 11):
+for propostion in np.linspace(0.25, 0.5, 2):
     trainer.dataloader.int_cutoff = int(propostion*nb_steps_per_traj)
-    nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
+    # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
     trainer.train(nb_epochs=nb_epochs, print_error_every=1000, update_context_every=1, save_path="tmp/", key=SEED)
 
 #%%

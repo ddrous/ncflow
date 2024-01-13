@@ -13,7 +13,7 @@ np.random.seed(5)
 
 #%%
 
-Image(filename="tmp/coda_dataset.png")
+# Image(filename="tmp/coda_dataset.png")
 
 
 #%%
@@ -35,7 +35,30 @@ def lotka_volterra(t, state, alpha, beta, delta, gamma):
     x, y = state
     dx_dt = alpha * x - beta * x * y
     dy_dt = delta * x * y - gamma * y
-    return [dx_dt, dy_dt]
+    # return [dx_dt, dy_dt]
+    return np.array([dx_dt, dy_dt])
+
+
+def rk4_integrator(rhs, y0, t):
+  def step(state, t):
+    y_prev, t_prev = state
+    h = t - t_prev
+    k1 = h * rhs(y_prev, t_prev)
+    k2 = h * rhs(y_prev + k1/2., t_prev + h/2.)
+    k3 = h * rhs(y_prev + k2/2., t_prev + h/2.)
+    k4 = h * rhs(y_prev + k3, t + h)
+    y = y_prev + 1./6 * (k1 + 2 * k2 + 2 * k3 + k4)
+    return (y, t), y
+  
+  y = y0
+  ys = [y]
+  for i in range(t.size-1):
+    _, y = step((y, t[i]), t[i+1])
+    ys.append(y)
+  return  jnp.vstack(ys)
+
+#   _, ys = jax.lax.scan(step, (y0, t[0]), t[1:])
+#   return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
 
 
 ## Training environments
@@ -63,8 +86,8 @@ n_traj_per_env = 4     ## training
 # n_traj_per_env = 32     ## testing
 # n_traj_per_env = 1     ## adaptation
 
-# n_steps_per_traj = int(10/0.5)    ## from coda
-n_steps_per_traj = 201
+n_steps_per_traj = int(10/0.5)+1    ## from coda
+# n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
 
@@ -81,12 +104,16 @@ for j in range(n_traj_per_env):
         initial_state = np.random.uniform(1, 3, (2,))
 
         # Solve the ODEs using SciPy's solve_ivp
-        solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
+        # solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
+        # data[i, j, :, :] = solution.y.T
 
-        data[i, j, :, :] = solution.y.T
+        rhs = lambda x, t: lotka_volterra(t, x, selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"])
+        solution = rk4_integrator(rhs, initial_state, t_eval)
+        data[i, j, :, :] = solution
 
 # Extract the solution
-prey_concentration, predator_concentration = solution.y
+prey_concentration, predator_concentration = solution.T
+# prey_concentration, predator_concentration = solution.y
 # prey_concentration, predator_concentration = solution.ys
 
 # Create an animation of the Lotka-Volterra system
@@ -106,14 +133,15 @@ ax.legend()
 
 def animate(i):
     concentrations.set_data(prey_concentration[:i], predator_concentration[:i])
-    time_text.set_text(time_template % solution.t[i])
+    time_text.set_text(time_template % t_eval[i])
     return concentrations, time_text
 
-ani = FuncAnimation(fig, animate, frames=len(solution.t), interval=5, repeat=False, blit=True)  # Shortened interval
+ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
 plt.show()
 
 # Save t_eval and the solution to a npz file
-np.savez('tmp/dataset_big.npz', t=solution.t, X=data)
+np.savez('tmp/train_data.npz', t=t_eval, X=data)
 
 ## Save the movie to a small mp4 file
-ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+# ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+ani.save('tmp/lotka_volterra.gif', fps=30)

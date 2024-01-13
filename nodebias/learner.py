@@ -190,7 +190,7 @@ def l2_norm_traj(xs, xs_hat):
 def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=None):
     # print('\nCompiling function "loss_fn" ...\n')
     Xs, t_eval = batch
-    print("Shapes of elements in a batch:", Xs.shape, t_eval.shape, "\n")
+    print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
 
     all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, key)
 
