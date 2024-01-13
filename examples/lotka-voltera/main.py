@@ -43,20 +43,49 @@ data_size = train_dataloader.data_size
 
 ## Define model and loss function for the learner
 
+activation = jax.nn.softplus
+# activation = jax.nn.swish
+
+
+# class Physics(eqx.Module):
+#     params: jnp.ndarray
+
+#     def __init__(self, key=None):
+#         key = generate_new_keys(key, num=1)[0]
+#         self.params = jax.random.uniform(key, (4,), minval=0.05, maxval=1.5)
+
+#     def __call__(self, t, x):
+#         dx0 = x[0]*self.params[0] - x[0]*x[1]*self.params[1]
+#         dx1 = x[0]*x[1]*self.params[3] - x[1]*self.params[2]
+#         return jnp.array([dx0, dx1])
+
 class Physics(eqx.Module):
-    params: jnp.ndarray
+    params: list
+    layers_context: list
 
     def __init__(self, key=None):
-        key = generate_new_keys(key, num=1)[0]
-        self.params = jax.random.uniform(key, (4,), minval=0.05, maxval=1.5)
+        self.params = [0, 0, 0, 0]
 
-    def __call__(self, t, x):
-        dx0 = x[0]*self.params[0] - x[0]*x[1]*self.params[1]
-        dx1 = x[0]*x[1]*self.params[3] - x[1]*self.params[2]
+        keys = generate_new_keys(key, num=12)
+        width_size = 16
+        self.layers_context = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+                        eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
+                        eqx.nn.Linear(width_size, 4, key=keys[3])]
+
+    def __call__(self, t, x, ctx):
+        params = ctx
+        for layer in self.layers_context:
+            params = layer(params)
+        # self.params[0] = params[0]
+        # self.params[1] = params[1]
+        # self.params[2] = params[2]
+        # self.params[3] = params[3]
+
+        dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
+        dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
         return jnp.array([dx0, dx1])
 
-# activation = jax.nn.softplus
-activation = jax.nn.swish
 
 class Augmentation(eqx.Module):
     layers_data: list
@@ -130,15 +159,16 @@ learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physi
 
 ## Define optimiser and traine the model
 
-# sched_node = optax.piecewise_constant_schedule(init_value=3e-2,
-#                         boundaries_and_scales={int(nb_epochs*0.25):0.25, 
-#                                                 int(nb_epochs*0.5):0.25,
-#                                                 int(nb_epochs*0.75):0.25})
+nb_train_steps = nb_epochs * 2
+sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
+                        boundaries_and_scales={int(nb_train_steps*0.25):0.2, 
+                                                int(nb_train_steps*0.5):0.2,
+                                                int(nb_train_steps*0.75):0.2})
 # sched_node = 1e-3
-## exponential decay
-sched_node = optax.exponential_decay(3e-4, nb_epochs*2, 0.99)
+# sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
+
 # sched_ctx = optax.piecewise_constant_schedule(init_value=3e-2,
-#                         boundaries_and_scales={int(nb_epochs*0.25):0.25, 
+#                         boundaries_and_scales={int(nb_epochs*0.25):0.25,
 #                                                 int(nb_epochs*0.5):0.25,
 #                                                 int(nb_epochs*0.75):0.25})
 sched_ctx = 1e-3
@@ -151,7 +181,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
 #%%
 
 # for propostion in [0.25, 0.5, 0.75]:
-for propostion in np.linspace(0.25, 0.5, 2):
+for propostion in np.linspace(0.25, 1.0, 2):
     trainer.dataloader.int_cutoff = int(propostion*nb_steps_per_traj)
     # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
     trainer.train(nb_epochs=nb_epochs, print_error_every=1000, update_context_every=1, save_path="tmp/", key=SEED)
@@ -179,3 +209,4 @@ print("Parameters in the physics component:", learner.neuralode.vectorfield.phys
 
 #%%
 # len(trainer.losses_node)
+trainer.opt_node_state

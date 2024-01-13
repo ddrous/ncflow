@@ -74,7 +74,9 @@ class VectorField(eqx.Module):
         self.physics = physics if physics is not None else ID()
 
     def __call__(self, t, x, ctx):
-        return self.physics(t, x) + self.neuralnet(t, x, ctx)
+        # return self.physics(t, x) + self.neuralnet(t, x, ctx)
+        # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
+        return self.physics(t, x, ctx)
 
 
 class NeuralODE(eqx.Module):

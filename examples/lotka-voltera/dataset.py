@@ -49,7 +49,7 @@ def rk4_integrator(rhs, y0, t):
     k4 = h * rhs(y_prev + k3, t + h)
     y = y_prev + 1./6 * (k1 + 2 * k2 + 2 * k3 + k4)
     return (y, t), y
-  
+
   y = y0
   ys = [y]
   for i in range(t.size-1):
