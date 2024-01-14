@@ -63,7 +63,7 @@ class ID(eqx.Module):
     def __init__(self):
         pass
     def __call__(self, t, x):
-        return x
+        return jnp.zeros_like(x)
 
 class VectorField(eqx.Module):
     physics: eqx.Module
@@ -75,8 +75,8 @@ class VectorField(eqx.Module):
 
     def __call__(self, t, x, ctx):
         # return self.physics(t, x) + self.neuralnet(t, x, ctx)
-        # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
-        return self.physics(t, x, ctx)
+        return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
+        # return self.physics(t, x, ctx)
 
 
 class NeuralODE(eqx.Module):

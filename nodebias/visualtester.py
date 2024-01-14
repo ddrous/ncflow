@@ -30,7 +30,7 @@ class VisualTester:
 
         batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
 
-        return batched_criterion(X_hat - X).mean(axis=1).sum(axis=0)
+        return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
 
 
     def visualise(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):

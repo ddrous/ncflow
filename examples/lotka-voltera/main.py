@@ -59,33 +59,60 @@ activation = jax.nn.softplus
 #         dx1 = x[0]*x[1]*self.params[3] - x[1]*self.params[2]
 #         return jnp.array([dx0, dx1])
 
+# class Physics(eqx.Module):
+#     params: list
+#     layers_context: list
+
+#     def __init__(self, key=None):
+#         self.params = [0, 0, 0, 0]
+
+#         keys = generate_new_keys(key, num=12)
+#         width_size = 16
+#         self.layers_context = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
+#                         eqx.nn.Linear(width_size, 4, key=keys[3])]
+
+#     def __call__(self, t, x, ctx):
+#         params = ctx
+#         for layer in self.layers_context:
+#             params = layer(params)              ## TODO there is no garantee that these params are positive, yet it works !
+#         # self.params[0] = params[0]
+#         # self.params[1] = params[1]
+#         # self.params[2] = params[2]
+#         # self.params[3] = params[3]
+
+#         dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
+#         dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
+#         return jnp.array([dx0, dx1])
+
+
 class Physics(eqx.Module):
     params: list
     layers_context: list
 
     def __init__(self, key=None):
+        keys = generate_new_keys(key, num=12)
+        # self.params = jax.random.uniform(keys[0], (4,), minval=0.05, maxval=1.5)
         self.params = [0, 0, 0, 0]
 
-        keys = generate_new_keys(key, num=12)
-        width_size = 16
+        width_size = 8
         self.layers_context = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
                         eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
                         eqx.nn.Linear(width_size, 4, key=keys[3])]
 
     def __call__(self, t, x, ctx):
+        # params = self.params
         params = ctx
         for layer in self.layers_context:
-            params = layer(params)
-        # self.params[0] = params[0]
-        # self.params[1] = params[1]
-        # self.params[2] = params[2]
-        # self.params[3] = params[3]
+            params = layer(params) 
+
+        params = jnp.abs(params)     ## TODO: this ensure posititity
 
         dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
         dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
         return jnp.array([dx0, dx1])
-
 
 class Augmentation(eqx.Module):
     layers_data: list
@@ -128,7 +155,7 @@ class Augmentation(eqx.Module):
 
 
 physics = Physics(key=SEED)
-augmentation = Augmentation(data_size=2, width_size=16*1, depth=3, context_size=context_size, key=SEED)
+augmentation = Augmentation(data_size=2, width_size=8*1, depth=3, context_size=context_size, key=SEED)
 contexts = ContextParams(nb_envs, context_size, key=SEED)
 
 # integrator = diffrax.Tsit5()
@@ -161,9 +188,10 @@ learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physi
 
 nb_train_steps = nb_epochs * 2
 sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
-                        boundaries_and_scales={int(nb_train_steps*0.25):0.2, 
-                                                int(nb_train_steps*0.5):0.2,
-                                                int(nb_train_steps*0.75):0.2})
+                        boundaries_and_scales={int(nb_train_steps*0.25):0.2,
+                                                int(nb_train_steps*0.5):0.01,
+                                                int(nb_train_steps*0.75):0.05,
+                                                int(nb_train_steps*0.9):0.2})
 # sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
@@ -171,7 +199,7 @@ sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
 #                         boundaries_and_scales={int(nb_epochs*0.25):0.25,
 #                                                 int(nb_epochs*0.5):0.25,
 #                                                 int(nb_epochs*0.75):0.25})
-sched_ctx = 1e-3
+sched_ctx = 1e-4
 
 opt_node = optax.adabelief(sched_node)
 opt_ctx = optax.adabelief(sched_ctx)
@@ -198,6 +226,8 @@ test_dataloader = DataLoader("tmp/test_data.npz")
 
 visualtester = VisualTester(test_dataloader, trainer)
 
+print("Test score:", visualtester.test(int_cutoff=1.0))
+
 visualtester.visualise(int_cutoff=1.0, save_path="tmp/results.png");
 
 
@@ -208,5 +238,21 @@ print("Parameters in the physics component:", learner.neuralode.vectorfield.phys
 
 
 #%%
-# len(trainer.losses_node)
-trainer.opt_node_state
+# len(trainer.losses_node
+
+## Run and get the contexts
+for i in range(nb_envs):
+    ctx = trainer.learner.contexts.params[i]
+    # print(ctx)
+    param = ctx
+    for layer in trainer.learner.physics.layers_context:
+        param = layer(param)
+        # print("Context", ctx, "     Param", param)
+    param = jnp.abs(param)
+    print("Param:", param)
+
+
+#%%
+# train_dataloader.dataset[0,0].shape
+
+trainer.learner.physics.params
