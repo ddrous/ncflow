@@ -1,0 +1,33 @@
+#!/bin/bash
+#PBS -q ampereq
+#PBS -l select=1:ncpus=1:ngpus=1
+#PBS -l walltime=10:00:00
+#PBS -o ./scripts/reports/$PBS_JOBID.out
+
+## Some commands to quickly try this on ISAMBARD
+# qsub scripts/isambard.pbs     # Submit the script to Isambard (remember the queur, ampere, or pascal)
+# qstat -u br-rnzoyem           # Monitor my jobs
+
+## Test commands
+# module load mpich/ge/gcc/64/3.3.2
+# mpirun hostname
+# echo "I ran to fruition"
+
+# conda activate jaxgpu
+# problem_dir="./examples/lotka-voltera/"
+# cd "$problem_dir"
+# # python 01_coda_serial.py > data/nohup.log 2>&1
+# python 00_data_generation.py > data/nohup.log 2>&1
+
+
+## Steps to follow
+# 1. qsub -I -q ampereq -l select=1:ncpus=16:ngpus=1 -l walltime=4:00:00
+# 2. cd Projects/NodeBias
+# 3. source venv/bin/activate (or rather source ../GraphPinT/venv/bin/activate)
+# 4. Enjoy !
+
+source ./venv/bin/activate
+problem_dir="./examples/lotka-voltera/"
+cd "$problem_dir"
+# python 01_coda_serial.py > data/nohup.log 2>&1
+python 10_gan_node.py > data/nohup.log 2>&1
