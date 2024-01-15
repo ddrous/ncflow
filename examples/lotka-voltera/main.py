@@ -32,7 +32,7 @@ nb_epochs = 100000
 # train_dataloader = DataLoader(dataset, t_eval, batch_size=-1, int_cutoff=0.8, shuffle=True)
 
 # train_dataloader = DataLoader("tmp/dataset_big.npz", batch_size=-1, int_cutoff=0.2, shuffle=True)
-train_dataloader = DataLoader("tmp/train_data.npz", batch_size=-1, int_cutoff=0.25, shuffle=True)
+train_dataloader = DataLoader("tmp/train_data.npz", batch_size=1, int_cutoff=0.25, shuffle=True)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -54,38 +54,10 @@ activation = jax.nn.softplus
 #         key = generate_new_keys(key, num=1)[0]
 #         self.params = jax.random.uniform(key, (4,), minval=0.05, maxval=1.5)
 
-#     def __call__(self, t, x):
+#     def __call__(self, t, x, ctx):
 #         dx0 = x[0]*self.params[0] - x[0]*x[1]*self.params[1]
 #         dx1 = x[0]*x[1]*self.params[3] - x[1]*self.params[2]
 #         return jnp.array([dx0, dx1])
-
-# class Physics(eqx.Module):
-#     params: list
-#     layers_context: list
-
-#     def __init__(self, key=None):
-#         self.params = [0, 0, 0, 0]
-
-#         keys = generate_new_keys(key, num=12)
-#         width_size = 16
-#         self.layers_context = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-#                         eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
-#                         eqx.nn.Linear(width_size, 4, key=keys[3])]
-
-#     def __call__(self, t, x, ctx):
-#         params = ctx
-#         for layer in self.layers_context:
-#             params = layer(params)              ## TODO there is no garantee that these params are positive, yet it works !
-#         # self.params[0] = params[0]
-#         # self.params[1] = params[1]
-#         # self.params[2] = params[2]
-#         # self.params[3] = params[3]
-
-#         dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
-#         dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
-#         return jnp.array([dx0, dx1])
-
 
 class Physics(eqx.Module):
     params: list
@@ -138,7 +110,7 @@ class Augmentation(eqx.Module):
 
 
     def __call__(self, t, x, ctx):
-
+        return jnp.zeros_like(x)
         y = x
         ctx = ctx
         for i in range(len(self.layers_data)):

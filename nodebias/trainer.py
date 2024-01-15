@@ -35,6 +35,7 @@ class Trainer:
             (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn, has_aux=True)(node, contexts, batch, weights)
 
             updates, opt_state = self.opt_node.update(grads, opt_state)
+            # updates = jax.tree_map(lambda x: -x*1e-4, grads)
             node = eqx.apply_updates(node, updates)
 
             return node, contexts, opt_state, loss, aux_data
@@ -49,6 +50,7 @@ class Trainer:
             (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights)
 
             updates, opt_state = self.opt_ctx.update(grads, opt_state)
+            # updates = jax.tree_map(lambda x: -x*1e-4, grads)
             contexts = eqx.apply_updates(contexts, updates)
 
             return node, contexts, opt_state, loss, aux_data
