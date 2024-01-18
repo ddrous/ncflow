@@ -14,14 +14,16 @@ class Learner:
         self.invariant = invariant
 
         vectorfield = VectorField(neuralnet, physics)
-        self.neuralode = NeuralODE(vectorfield, integrator, invariant)
+        # self.neuralode = NeuralODE(vectorfield, integrator, invariant)
+        self.neuralode = NeuralContextFlow(vectorfield, integrator, invariant)      ## TODO call this Universal ODE
 
         # ctx_key, loss_key = generate_new_keys(key, num=2)
         # self.contexts = ContextParams(self.nb_envs, self.context_size, key=ctx_key)
         self.contexts = contexts
         self.init_ctx_params = self.contexts.params.copy()
 
-        self.loss_fn = lambda model, context, batch, weights: loss_fn(model, context, batch, weights, loss_fn_ctx, key=get_new_key(key))
+        # self.loss_fn = lambda model, contexts, batch, weights: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
+        self.loss_fn = lambda model, contexts, batch, weights: loss_fn_cf(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
 
     def save_learner(self, path):
         eqx.tree_serialise_leaves(path+"neuralode.eqx", self.neuralode)
@@ -62,7 +64,7 @@ class ContextParams(eqx.Module):
 class ID(eqx.Module):
     def __init__(self):
         pass
-    def __call__(self, t, x):
+    def __call__(self, t, x, *args):
         return jnp.zeros_like(x)
 
 class VectorField(eqx.Module):
@@ -73,10 +75,22 @@ class VectorField(eqx.Module):
         self.neuralnet = neuralnet
         self.physics = physics if physics is not None else ID()
 
-    def __call__(self, t, x, ctx):
-        # return self.physics(t, x) + self.neuralnet(t, x, ctx)
-        return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
-        # return self.physics(t, x, ctx)
+    def __call__(self, t, x, ctx, ctx_):
+
+        # print("Shapes of elements:", t.shape, x.shape, ctx.shape, ctx_.shape)
+
+        # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
+
+        vf = lambda xi_: self.physics(t, x, xi_) + self.neuralnet(t, x, xi_)
+        gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+        return vf(ctx) + gradvf(ctx, ctx_)
+
+
+
+
+
+
+
 
 
 class NeuralODE(eqx.Module):
@@ -112,6 +126,71 @@ class NeuralODE(eqx.Module):
         rhs = lambda x, t: self.vectorfield(t, x, ctx)
         batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
         return batched_ys, t_eval.size
+
+
+
+
+
+
+
+
+
+
+
+
+
+class NeuralContextFlow(eqx.Module):
+    vectorfield: VectorField
+    integrator: callable
+    # invariant: eqx.Module
+
+    def __init__(self, vectorfield, integrator, invariant=None, key=None):
+        self.integrator = integrator
+        # vf = lambda ctx, t, x: vectorfield(t, x, ctx)
+        # gradvf = lambda ctx, t, x: eqx.filter_vjp(vf, ctx, t, x)[1]
+        # self.totalvf = lambda ctx, t, x, ctx_: vf(ctx, t, x) + gradvf(ctx, t, x)(ctx_-ctx)      ## Transpose or not ! Read better
+
+        # vf = lambda ctx, t, x: vectorfield(t, x, ctx)
+        # gradvf = lambda ctx, t, x, ctx_: eqx.filter_jvp(vf, (ctx, t, x), (ctx_-ctx))[1]
+        # totalvf = lambda ctx, t, x, ctx_: vf(ctx, t, x) + gradvf(ctx, t, x, ctx_)
+        # self.vectorfield = totalvf
+
+        # def totalvf(t, x, ctx, ctx_):
+        #     vf = lambda xi_: vectorfield(t, x, xi_)
+        #     # gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+        #     # gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi,), (xi_-xi,))[1]
+
+        #     ### Test with grad vec == 0 TODO !!!
+        #     gradvf = lambda xi, xi_: jnp.zeros_like(x)
+
+        #     # return vf(ctx) + gradvf(ctx, ctx_)
+        #     return vf(ctx)
+        # self.vectorfield = totalvf
+
+        # self.vectorfield = lambda t, x, ctx, ctx_: vectorfield(t, x, ctx)         ## TODO: vectorfield cannot be a simple function, it must be a eqx module to maintain trainable params
+
+        self.vectorfield = vectorfield
+
+
+    def __call__(self, x0s, t_eval, ctx, ctx_):
+
+        ctx_ = ctx_.squeeze()
+
+        # rhs = lambda x, t: self.vectorfield(t, x, ctx)
+        rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
+        batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
+        return batched_ys, t_eval.size
+
+
+
+
+
+
+
+
+
+
+
 
 
 # def rk4_integrator(rhs, y0, t, rtol, atol, hmax, mxstep, max_steps_rev, kind):
@@ -197,5 +276,19 @@ def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=None):
     all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, key)
 
     total_loss = jnp.sum(all_loss*weights)
+
+    return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)
+
+
+
+def loss_fn_cf(model, contexts, batch, weights, loss_fn_ctx, key=None):
+    # print('\nCompiling function "loss_fn" ...\n')
+    Xs, t_eval = batch
+    print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
+
+    all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, contexts.params, key)
+
+    total_loss = jnp.sum(all_loss*weights)
+    # total_loss = jnp.sum(all_loss)
 
     return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)

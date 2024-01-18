@@ -10,7 +10,7 @@ class VisualTester:
 
         assert self.dataloader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
 
-    def test(self, criterion=None, int_cutoff=1.0):
+    def test_node(self, criterion=None, int_cutoff=1.0):
         """ Compute test metrics on entire test dataloader  """
 
         criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
@@ -33,6 +33,32 @@ class VisualTester:
         return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
 
 
+
+    def test_cf(self, criterion=None, int_cutoff=1.0):
+        """ Compute test metrics on entire test dataloader  """
+
+        criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
+
+        t_eval = self.dataloader.t_eval
+        test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
+        X = self.dataloader.dataset[:, :, :test_length, :]
+        t_test = t_eval[:test_length]
+
+        print("==  Begining testing ... ==")
+        print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+        print("    Length of the testing trajectories:", test_length)
+
+        X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0, 0))(X[:, :, 0, :], 
+                                             t_test, 
+                                             self.trainer.learner.contexts.params,
+                                             self.trainer.learner.contexts.params)      ## Reuse one's params for testing !
+
+        batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
+
+        return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
+
+
+
     def visualise(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):
 
         e_key, traj_key = get_new_key(time.time_ns(), num=2)
@@ -52,7 +78,8 @@ class VisualTester:
 
         X_hat, _ = self.trainer.learner.neuralode(X[:, 0, :], 
                                              t_test, 
-                                             self.trainer.learner.contexts.params[e])
+                                             self.trainer.learner.contexts.params[e],
+                                             self.trainer.learner.contexts.params[e])   ## TODO addition for NCF
 
         X_hat = X_hat.squeeze()
         X = X.squeeze()

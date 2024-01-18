@@ -74,19 +74,25 @@ def rk4_integrator(rhs, y0, t):
 #     {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
 # ]
 
+## Lots of data environment
+environments = []
+for beta in np.linspace(0.5, 0.6, 1):
+  new_env = {"alpha": 0.5, "beta": beta, "gamma": 0.5, "delta": 0.5}
+  environments.append(new_env)
+
 # ## Adaptation environments
-environments = [
-    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
-    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
-]
+# environments = [
+#     {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+#     {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+#     {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+#     {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+# ]
 
-# n_traj_per_env = 4     ## training
+n_traj_per_env = 4     ## training
 # n_traj_per_env = 32     ## testing
-n_traj_per_env = 1     ## adaptation
+# n_traj_per_env = 1     ## adaptation
 
-n_steps_per_traj = int(10/0.5)+1    ## from coda
+n_steps_per_traj = int(10/0.05)+1    ## from coda
 # n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
@@ -140,7 +146,7 @@ ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, 
 plt.show()
 
 # Save t_eval and the solution to a npz file
-np.savez('tmp/adapt_data.npz', t=t_eval, X=data)
+np.savez('tmp/train_data.npz', t=t_eval, X=data)
 
 ## Save the movie to a small mp4 file
 # ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
