@@ -84,6 +84,7 @@ class VectorField(eqx.Module):
         vf = lambda xi_: self.physics(t, x, xi_) + self.neuralnet(t, x, xi_)
         gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
         return vf(ctx) + gradvf(ctx, ctx_)
+        # return vf(ctx)
 
 
 

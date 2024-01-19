@@ -20,8 +20,8 @@ from IPython.display import Image
 
 ## Hyperparams
 SEED = 3
-context_size = 20
-nb_epochs = 1000
+context_size = 2
+nb_epochs = 5000
 
 
 
@@ -137,7 +137,8 @@ integrator = rk4_integrator
 
 def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
     # # trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx)
-    # trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx, ctx_)
+    # print("Shape of the context:", ctx.shape, ctx_.shape)
+    # trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx, ctx)
     # term1 = jnp.mean((trajs-trajs_hat)**2)
     # term2_1 = spectral_norm_estimation(model.vectorfield.neuralnet, key=key)
     # term2_2 = infinity_norm_estimation(model.vectorfield.neuralnet, trajs, ctx)
@@ -148,6 +149,7 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
     # loss_val = term1 + beta*term2
     # return loss_val, (jnp.sum(nb_steps), term1, term2)
 
+    #====== New Method ======
     # ctx is singular, but ctx_ is plural, it is the contexts for all the environements
     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
@@ -163,6 +165,7 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
     loss_val = term1+term2       ### Dangerous, but limit the context TODO
 
     return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
+    #====== New Method ======
 
 
 learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physics, key=SEED)
@@ -197,10 +200,10 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
 #%%
 
 # for propostion in [0.25, 0.5, 0.75]:
-for propostion in np.linspace(0.25, 0.4, 2):
-    trainer.dataloader.int_cutoff = int(propostion*nb_steps_per_traj)
+for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
+    trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
     # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-    trainer.train(nb_epochs=nb_epochs, print_error_every=100, update_context_every=1, save_path="tmp/", key=SEED)
+    trainer.train(nb_epochs=nb_epochs*(10**i), print_error_every=100*(10**i), update_context_every=1, save_path="tmp/", key=SEED)
 
 #%%
 

@@ -76,7 +76,7 @@ def rk4_integrator(rhs, y0, t):
 
 ## Lots of data environment
 environments = []
-for beta in np.linspace(0.5, 0.6, 100):
+for beta in np.linspace(0.5, 1.5, 11):
   new_env = {"alpha": 0.5, "beta": beta, "gamma": 0.5, "delta": 0.5}
   environments.append(new_env)
 
