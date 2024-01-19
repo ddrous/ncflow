@@ -197,7 +197,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
 #%%
 
 # for propostion in [0.25, 0.5, 0.75]:
-for propostion in np.linspace(0.25, 1.0, 2):
+for propostion in np.linspace(0.25, 0.4, 2):
     trainer.dataloader.int_cutoff = int(propostion*nb_steps_per_traj)
     # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
     trainer.train(nb_epochs=nb_epochs, print_error_every=100, update_context_every=1, save_path="tmp/", key=SEED)
