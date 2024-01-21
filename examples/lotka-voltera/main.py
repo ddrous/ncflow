@@ -20,8 +20,8 @@ from IPython.display import Image
 
 ## Hyperparams
 SEED = 3
-context_size = 2
-nb_epochs = 5000
+context_size = 8000
+nb_epochs = 1000
 
 
 
@@ -95,17 +95,22 @@ class Augmentation(eqx.Module):
     def __init__(self, data_size, width_size, depth, context_size, key=None):
         keys = generate_new_keys(key, num=12)
         self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
-                        # eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[2])]
 
-        self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
-                        # eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+        # self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+        #                 eqx.nn.Linear(width_size, data_size, key=keys[5])]
+
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//10, key=keys[3]), activation,
+                        eqx.nn.Linear(context_size//10, width_size*4, key=keys[11]), activation,
+                        eqx.nn.Linear(width_size*4, width_size, key=keys[4]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[5])]
 
         self.layers_shared = [eqx.nn.Linear(data_size*2, width_size, key=keys[6]), activation,
-                        # eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[9])]
 
@@ -129,7 +134,7 @@ class Augmentation(eqx.Module):
 
 # physics = Physics(key=SEED)
 physics = None
-augmentation = Augmentation(data_size=2, width_size=8*1, depth=3, context_size=context_size, key=SEED)
+augmentation = Augmentation(data_size=2, width_size=8*4, depth=3, context_size=context_size, key=SEED)
 contexts = ContextParams(nb_envs, context_size, key=SEED)
 
 # integrator = diffrax.Tsit5()
@@ -154,15 +159,18 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
-    # term1 = jnp.mean((new_trajs-trajs_hat)**2)
+    term1 = jnp.mean((new_trajs-trajs_hat)**2)
 
-    weights = jnp.mean((jnp.broadcast_to(ctx, ctx_.shape)-ctx_)**2, axis=-1) + 1e-8
-    weights = weights / jnp.sum(weights)
-    term1 = jnp.mean((new_trajs-trajs_hat)**2, axis=(1,2,3))  ## TODO: give more weights to the points for this context itself. Introduce a weighting system
-    term1 = jnp.sum(term1 * weights)
+    # weights = jnp.mean((jnp.broadcast_to(ctx, ctx_.shape)-ctx_)**2, axis=-1) + 1e-8
+    # weights = weights / jnp.sum(weights)
+    # term1 = jnp.mean((new_trajs-trajs_hat)**2, axis=(1,2,3))  ## TODO: give more weights to the points for this context itself. Introduce a weighting system
+    # term1 = jnp.sum(term1 * weights)
 
     term2 = 1e-1*jnp.mean((ctx)**2)
-    loss_val = term1+term2       ### Dangerous, but limit the context TODO
+    # term3 = 1e-3*spectral_norm_estimation(model.vectorfield.neuralnet, key=key)
+
+    # loss_val = term1+term2+term3                  ### Dangerous, but limit the context TODO
+    loss_val = term1+term2
 
     return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
     #====== New Method ======
@@ -177,20 +185,19 @@ learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physi
 
 ## Define optimiser and traine the model
 
-nb_train_steps = nb_epochs * 2
-# sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
-#                         boundaries_and_scales={int(nb_train_steps*0.25):0.2,
-#                                                 int(nb_train_steps*0.5):0.01,
-#                                                 int(nb_train_steps*0.75):0.05,
-#                                                 int(nb_train_steps*0.9):0.2})
-sched_node = 1e-3
+nb_train_steps = nb_epochs * 11
+sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
+                        boundaries_and_scales={int(nb_train_steps*0.25):0.2,
+                                                int(nb_train_steps*0.5):0.2,
+                                                int(nb_train_steps*0.75):0.2})
+# sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
-# sched_ctx = optax.piecewise_constant_schedule(init_value=3e-2,
-#                         boundaries_and_scales={int(nb_epochs*0.25):0.25,
-#                                                 int(nb_epochs*0.5):0.25,
-#                                                 int(nb_epochs*0.75):0.25})
-sched_ctx = 1e-3
+sched_ctx = optax.piecewise_constant_schedule(init_value=3e-2,
+                        boundaries_and_scales={int(nb_epochs*0.25):0.2,
+                                                int(nb_epochs*0.5):0.2,
+                                                int(nb_epochs*0.75):0.2})
+# sched_ctx = 1e-3
 
 opt_node = optax.adabelief(sched_node)
 opt_ctx = optax.adabelief(sched_ctx)
@@ -247,3 +254,4 @@ visualtester.visualise(int_cutoff=1.0, save_path="tmp/results.png");
 # train_dataloader.dataset[0,0].shape
 
 # trainer.learner.physics.params
+# print(augmentation)

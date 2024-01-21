@@ -76,14 +76,16 @@ class VectorField(eqx.Module):
         self.physics = physics if physics is not None else ID()
 
     def __call__(self, t, x, ctx, ctx_):
+    # def __call__(self, t, x, args):
+    #     ctx, ctx_ = args
 
         # print("Shapes of elements:", t.shape, x.shape, ctx.shape, ctx_.shape)
 
         # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
 
         vf = lambda xi_: self.physics(t, x, xi_) + self.neuralnet(t, x, xi_)
-        gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-        return vf(ctx) + gradvf(ctx, ctx_)
+        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+        return vf(ctx_) + gradvf(ctx_, ctx)
         # return vf(ctx)
 
 
@@ -181,6 +183,24 @@ class NeuralContextFlow(eqx.Module):
         rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
         batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
         return batched_ys, t_eval.size
+
+        # def integrate(x0):
+        #     solution = diffrax.diffeqsolve(
+        #                 diffrax.ODETerm(self.vectorfield),
+        #                 diffrax.Tsit5(),
+        #                 args=(ctx, ctx_),
+        #                 t0=t_eval[0],
+        #                 t1=t_eval[-1],
+        #                 dt0=t_eval[1] - t_eval[0],
+        #                 y0=x0,
+        #                 stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
+        #                 saveat=diffrax.SaveAt(ts=t_eval),
+        #                 max_steps=4096*1,
+        #             )
+        #     return solution.ys, solution.stats["num_steps"]
+
+        # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
+        # return batched_ys, batched_num_steps
 
 
 
