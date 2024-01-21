@@ -21,7 +21,7 @@ from IPython.display import Image
 ## Hyperparams
 SEED = 3
 context_size = 8000
-nb_epochs = 1000
+nb_epochs = 50000
 
 
 
@@ -188,15 +188,15 @@ learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physi
 nb_train_steps = nb_epochs * 11
 sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
                         boundaries_and_scales={int(nb_train_steps*0.25):0.2,
-                                                int(nb_train_steps*0.5):0.2,
-                                                int(nb_train_steps*0.75):0.2})
+                                                int(nb_train_steps*0.5):0.1,
+                                                int(nb_train_steps*0.75):0.01})
 # sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
 sched_ctx = optax.piecewise_constant_schedule(init_value=3e-2,
                         boundaries_and_scales={int(nb_epochs*0.25):0.2,
-                                                int(nb_epochs*0.5):0.2,
-                                                int(nb_epochs*0.75):0.2})
+                                                int(nb_epochs*0.5):0.1,
+                                                int(nb_epochs*0.75):0.01})
 # sched_ctx = 1e-3
 
 opt_node = optax.adabelief(sched_node)

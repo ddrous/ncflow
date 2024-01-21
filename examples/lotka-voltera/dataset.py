@@ -88,8 +88,8 @@ environments = [
 #     {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
 # ]
 
-n_traj_per_env = 4     ## training
-# n_traj_per_env = 32     ## testing
+# n_traj_per_env = 4     ## training
+n_traj_per_env = 32     ## testing
 # n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.5)+1    ## from coda
@@ -146,7 +146,7 @@ ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, 
 plt.show()
 
 # Save t_eval and the solution to a npz file
-np.savez('tmp/train_data.npz', t=t_eval, X=data)
+np.savez('tmp/test_data.npz', t=t_eval, X=data)
 
 ## Save the movie to a small mp4 file
 # ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
