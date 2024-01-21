@@ -185,15 +185,15 @@ learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physi
 
 ## Define optimiser and traine the model
 
-nb_train_steps = nb_epochs * 11
-sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
+nb_train_steps = nb_epochs * 3
+sched_node = optax.piecewise_constant_schedule(init_value=3e-4,
                         boundaries_and_scales={int(nb_train_steps*0.25):0.2,
                                                 int(nb_train_steps*0.5):0.1,
                                                 int(nb_train_steps*0.75):0.01})
 # sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
-sched_ctx = optax.piecewise_constant_schedule(init_value=3e-2,
+sched_ctx = optax.piecewise_constant_schedule(init_value=3e-3,
                         boundaries_and_scales={int(nb_epochs*0.25):0.2,
                                                 int(nb_epochs*0.5):0.1,
                                                 int(nb_epochs*0.75):0.01})
@@ -210,7 +210,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
 for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
     trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
     # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-    trainer.train(nb_epochs=nb_epochs*(10**i), print_error_every=100*(10**i), update_context_every=1, save_path="tmp/", key=SEED)
+    trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=1000*(2**i), update_context_every=1, save_path="tmp/", key=SEED)
 
 #%%
 
