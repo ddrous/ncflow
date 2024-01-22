@@ -18,8 +18,6 @@ class DataLoader:
             else:
                 self.key = key
 
-        print("Dataset type:", type(self.dataset))
-
         assert jnp.ndim(self.dataset) == 4, "Dataset must be of shape (nb_envs, nb_trajs_per_env, nb_steps_per_traj, data_size)"
         assert self.t_eval.shape[0] == self.dataset.shape[2], "t_eval must have the same length as the number of steps in the dataset"
 
@@ -49,10 +47,10 @@ class DataLoader:
 
     def __iter__(self):
         nb_batches = self.nb_trajs_per_env // self.batch_size
-        key = get_new_key(self.key)
-        perm_dataset = self.dataset
 
         if self.shuffle:
+            key = get_new_key(self.key)
+
             ## The strategy below eleviates encountering the same (env1, traj1) - (env2, traj2) pair across all batches
 
             ## 1) Extract a subset of environments
@@ -81,7 +79,8 @@ class DataLoader:
             traj_start, traj_end = batch_id*self.batch_size, (batch_id+1)*self.batch_size
             yield perm_dataset[:, traj_start:traj_end, :self.int_cutoff, :], self.t_eval[:self.int_cutoff]
 
-        self.key = key
+        if self.shuffle:
+            self.key = key
 
     def __len__(self):
         return self.nb_envs * self.nb_trajs_per_env

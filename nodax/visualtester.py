@@ -76,7 +76,7 @@ class VisualTester:
             print("==  Begining out-of-distribution testing ... ==")
             print("    Number of training environments:", self.trainer.dataloader.nb_envs)
             print("    Number of adaptation environments:", data_loader.nb_envs)
-        print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+        print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
         print("    Length of the testing trajectories:", test_length)
 
         if data_loader.adaptation == False:
@@ -91,8 +91,15 @@ class VisualTester:
 
         batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
 
-        return batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
+        crit = batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
 
+        if data_loader.adaptation == False:
+            print("Test Score (In-Domain):", crit)
+        else:
+            print("Test Score (OOD):", crit)
+        print()
+
+        return crit
 
 
     # def visualise_cf(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):
@@ -223,7 +230,7 @@ class VisualTester:
             print("==  Begining out-of-distribution visualisation ... ==")
         print("    Environment id:", e)
         print("    Trajectory id:", traj)
-        print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+        print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
         print("    Length of the testing trajectories:", test_length)
 
         if data_loader.adaptation == False:

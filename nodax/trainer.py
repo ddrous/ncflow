@@ -140,8 +140,6 @@ class Trainer:
         if save_path:
             self.save_trainer(save_path)
 
-        # return opt_state_node, opt_state_ctx
-
 
 
 
@@ -224,8 +222,8 @@ class Trainer:
 
         wall_time = time.time() - start_time
         time_in_hmsecs = seconds_to_hours(wall_time)
-        print("\nTotal gradient descent training time: %d hours %d mins %d secs" %time_in_hmsecs)
-        print("Environment weights at the end of the training:", weights)
+        print("\nTotal gradient descent adaptation time: %d hours %d mins %d secs" %time_in_hmsecs)
+        print("Environment weights at the end of the adaptation:", weights)
 
         self.losses_adapt.append(jnp.vstack(losses))
         self.nb_steps_adapt.append(jnp.array(nb_steps))

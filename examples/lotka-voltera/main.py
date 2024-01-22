@@ -21,7 +21,7 @@ from nodax import *
 ## Hyperparams
 SEED = 3
 context_size = 8000
-nb_epochs = 100
+nb_epochs = 100000
 
 
 
@@ -32,7 +32,7 @@ nb_epochs = 100
 # train_dataloader = DataLoader(dataset, t_eval, batch_size=-1, int_cutoff=0.8, shuffle=True)
 
 # train_dataloader = DataLoader("tmp/dataset_big.npz", batch_size=-1, int_cutoff=0.2, shuffle=True)
-train_dataloader = DataLoader("tmp/train_data.npz", batch_size=-1, int_cutoff=0.25, shuffle=True)
+train_dataloader = DataLoader("tmp/train_data.npz", batch_size=2, int_cutoff=0.25, shuffle=True, key=SEED)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -192,12 +192,11 @@ for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
 # dataset, t_eval = raw_data["X"][0:1, ...], raw_data["t"]
 # test_dataloader = DataLoader(dataset, t_eval)
 
-test_dataloader = DataLoader("tmp/test_data.npz")
+test_dataloader = DataLoader("tmp/test_data.npz", shuffle=False)
 
 visualtester = VisualTester(trainer)
 
-print("Test Score (In-Domain):", visualtester.test(test_dataloader, int_cutoff=1.0))
-print()
+ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
 
 visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.png");
 
@@ -225,14 +224,15 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.p
 
 #%%
 
-adapt_dataloader = DataLoader("tmp/ood_data.npz", adaptation=True)
+adapt_dataloader = DataLoader("tmp/ood_data.npz", adaptation=True, key=SEED)
 
 nb_epochs_adapt = 1000
 opt_adapt = optax.adabelief(default_optimizer_schedule(3e-3, nb_epochs_adapt))
 
 trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=100, save_path="tmp/", key=SEED)
 
-print("Test Score (OOD):", visualtester.test(adapt_dataloader, int_cutoff=1.0))
-print()
+
+#%%
+ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)
 
 visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path="tmp/results_adapt.png");
