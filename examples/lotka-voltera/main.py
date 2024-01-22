@@ -21,7 +21,7 @@ from IPython.display import Image
 ## Hyperparams
 SEED = 3
 context_size = 8000
-nb_epochs = 50000
+nb_epochs = 100000
 
 
 
