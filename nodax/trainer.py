@@ -1,4 +1,6 @@
 import pickle
+
+from nodax.learner import ContextParams
 from ._utils import *
 
 class Trainer:
@@ -144,6 +146,97 @@ class Trainer:
 
 
 
+    def adapt(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):
+        key = key if key is not None else self.key
+
+        loss_fn = self.learner.loss_fn
+        node = self.learner.neuralode
+
+        if optimizer is None:
+            if self.opt_adapt is not None:
+                print("WARNING: No optimizer provided for adaptation, using any previrouly defined for adapation")
+                opt = self.opt_adapt
+                contexts = self.learner.contexts_adapt
+                opt_state = self.opt_state_adapt
+            else:
+                raise ValueError("No optimizer provided for adaptation, and none previously defined")
+        else:
+            opt = optimizer
+            contexts = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], get_new_key(key))
+            opt_state = opt.init(contexts)
+            self.learner.init_ctx_params_adapt = contexts
+            self.losses_adapt = []
+            self.nb_steps_adapt = []
+
+        @eqx.filter_jit
+        def train_step(node, contexts, batch, weights, opt_state):
+            print('\nCompiling function "train_step" for context ...')
+
+            loss_fn_ = lambda contexts, node, batch, weights: loss_fn(node, contexts, batch, weights)
+
+            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights)
+
+            updates, opt_state = opt.update(grads, opt_state)
+            contexts = eqx.apply_updates(contexts, updates)
+
+            return node, contexts, opt_state, loss, aux_data
+
+        nb_train_steps_per_epoch = int(np.ceil(data_loader.nb_trajs_per_env / data_loader.batch_size))
+        total_steps = nb_epochs * nb_train_steps_per_epoch
+
+        print(f"\n\n=== Beginning adaptation ... ===")
+        print(f"    Number of examples in a batch: {data_loader.batch_size}")
+        print(f"    Number of train steps per epoch: {nb_train_steps_per_epoch}")
+        print(f"    Number of training epochs: {nb_epochs}")
+        print(f"    Total number of training steps: {total_steps}")
+
+        start_time = time.time()
+
+        losses = []
+        nb_steps = []
+
+        weights = jnp.ones(data_loader.nb_envs) / data_loader.nb_envs
+
+        for epoch in range(nb_epochs):
+            nb_batches = 0
+            loss_sum = jnp.zeros(1)
+            nb_steps_eph = 0
+
+            for i, batch in enumerate(data_loader):
+
+                node, contexts, opt_state, loss, (nb_steps_, term1, term2) = train_step(node, contexts, batch, weights, opt_state)
+
+                term1 = term1 + 1e-8
+                weights = term1 / jnp.sum(term1)
+
+                loss_sum += jnp.array([loss])
+                nb_steps_eph += nb_steps_
+
+                nb_batches += 1
+
+            loss_epoch = loss_sum/nb_batches
+
+            losses.append(loss_epoch)
+            nb_steps.append(nb_steps_eph)
+
+            if epoch%print_error_every==0 or epoch<=3 or epoch==nb_epochs-1:
+                print(f"    Epoch: {epoch:-5d}     LossContext: {loss_epoch[0]:-.8f}", flush=True)
+
+        wall_time = time.time() - start_time
+        time_in_hmsecs = seconds_to_hours(wall_time)
+        print("\nTotal gradient descent training time: %d hours %d mins %d secs" %time_in_hmsecs)
+        print("Environment weights at the end of the training:", weights)
+
+        self.losses_adapt.append(jnp.vstack(losses))
+        self.nb_steps_adapt.append(jnp.array(nb_steps))
+
+        self.opt_state_adapt = opt_state
+
+        self.learner.contexts_adapt = contexts
+
+        if save_path:
+            self.save_adapted_trainer(save_path)
+
 
 
 
@@ -160,6 +253,18 @@ class Trainer:
         pickle.dump(self.opt_ctx_state, open(path+"/opt_state_ctx.pkl", "wb"))
 
         self.learner.save_learner(path)
+
+
+    def save_adapted_trainer(self, path):
+        print(f"\nSaving adaptation parameters into {path} folder ...\n")
+
+        np.savez(path+"adapt_histories.npz", 
+                 losses_adapt=jnp.vstack(self.losses_adapt), 
+                 nb_steps_adapt=jnp.concatenate(self.nb_steps_adapt))
+
+        pickle.dump(self.opt_state_adapt, open(path+"/opt_state_adapt.pkl", "wb"))
+
+        self.learner.save_adapted_contexts(path+"/adapted_contexts_00.pkl")
 
 
     def load_trainer(self, path):

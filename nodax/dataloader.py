@@ -1,7 +1,7 @@
 from ._utils import *
 
 class DataLoader:
-    def __init__(self, dataset, t_eval=None, batch_size=-1, int_cutoff=0.2, shuffle=False):
+    def __init__(self, dataset, t_eval=None, batch_size=-1, int_cutoff=0.2, shuffle=False, adaptation=False):
 
         if isinstance(dataset, str):
             raw_dat = np.load(dataset)
@@ -30,6 +30,8 @@ class DataLoader:
             self.batch_size = self.nb_trajs_per_env
         else:
             self.batch_size = batch_size
+
+        self.adaptation = adaptation    ## Is this a dataset for adaptation ?
 
     def __iter__(self):     ## TODO! Randomise this function
         nb_batches = self.nb_trajs_per_env // self.batch_size

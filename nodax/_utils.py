@@ -130,3 +130,10 @@ def unflatten_pytree(flat, shapes, tree_def):
     leaves = [flat[lpcum[i-1]:lpcum[i]].reshape(shapes[i-1]) for i in range(1, len(lpcum))]
 
     return jax.tree_util.tree_unflatten(tree_def, leaves)
+
+
+def default_optimizer_schedule(init_lr, nb_epochs):
+    return optax.piecewise_constant_schedule(init_value=init_lr,
+                        boundaries_and_scales={int(nb_epochs*0.25):0.2,
+                                                int(nb_epochs*0.5):0.1,
+                                                int(nb_epochs*0.75):0.01})

@@ -30,10 +30,15 @@ class Learner:
         eqx.tree_serialise_leaves(path+"contexts.eqx", self.contexts)
         ## Save the loss function as well
 
+    def save_adapted_contexts(self, filename):
+        eqx.tree_serialise_leaves(filename, self.contexts)
+
     def load_learner(self, path):
         self.model = eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.neuralode)
         self.context = eqx.tree_deserialise_leaves(path+"contexts.eqx", self.contexts)
 
+    def load_adapted_contexts(self, filename):
+        self.context = eqx.tree_deserialise_leaves(filename, self.contexts)
 
 
 

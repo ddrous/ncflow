@@ -222,11 +222,11 @@ for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
 
 test_dataloader = DataLoader("tmp/test_data.npz")
 
-visualtester = VisualTester(test_dataloader, trainer)
+visualtester = VisualTester(trainer)
 
-print("Test score:", visualtester.test_cf(int_cutoff=1.0))
+print("In-Domain Test Score:", visualtester.test(test_dataloader, int_cutoff=1.0))
 
-visualtester.visualise(int_cutoff=1.0, save_path="tmp/results.png");
+visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.png");
 
 
 #%%
@@ -251,7 +251,14 @@ visualtester.visualise(int_cutoff=1.0, save_path="tmp/results.png");
 
 
 #%%
-# train_dataloader.dataset[0,0].shape
 
-# trainer.learner.physics.params
-# print(augmentation)
+adapt_dataloader = DataLoader("tmp/ood_data.npz", adaptation=True)
+
+nb_epochs_adapt = 1000
+opt_adapt = optax.adabelief(default_optimizer_schedule(3e-3, nb_epochs_adapt))
+
+trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=100, save_path="tmp/", key=SEED)
+
+print("OOD Test Score:", visualtester.test(adapt_dataloader, int_cutoff=1.0))
+
+visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path="tmp/results_adapt.png");
