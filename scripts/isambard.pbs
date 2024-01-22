@@ -22,7 +22,7 @@
 
 ## Steps to follow
 # 1. qsub -I -q ampereq -l select=1:ncpus=16:ngpus=1 -l walltime=4:00:00
-# 2. cd Projects/NodeBias
+# 2. cd Projects/Nodax
 # 3. source venv/bin/activate (or rather source ../GraphPinT/venv/bin/activate)
 # 4. Enjoy !
 

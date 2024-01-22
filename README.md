@@ -1,10 +1,10 @@
-# nodebias
+# Nodax
 Inductive bias learning for dynamical systems
 
 This is a one-stop shop for all things neural odes for dynamical systems.
 
 
-NodeBias is built around 5 extensible modules: 
+Nodax is built around 5 extensible modules: 
 - a DataLoader: to store the dataset
 - a Learner: a model and loss function
 - A Trainer: to train

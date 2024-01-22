@@ -11,9 +11,9 @@ pintode.egg-info/*
 *vtk
 quadqs_statistics.json
 
-nodebias.egg-info
-nodebias.egg-info/*
-nodebias/__pycache__/*
+nodax.egg-info
+nodax.egg-info/*
+nodax/__pycache__/*
 
 # For tensorboard logs
 *v2
@@ -29,7 +29,7 @@ nodebias/__pycache__/*
 !scripts/isambard.pbs
 
 # Artifacts of testing
-nodebias/tests/tmp/*
+nodax/tests/tmp/*
 
 ## Pytorch tmp savings
 *-ubyte

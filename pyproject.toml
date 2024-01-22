@@ -1,5 +1,5 @@
 [project]
-name = "nodebias"
+name = "nodax"
 description = "Scaling differential equations via transferable dynamics"
 version = "0.0.1"
 authors = [
@@ -22,4 +22,4 @@ dev = [
 ]
 
 [tool.setuptools]
-py-modules = ["nodebias"]
+py-modules = ["nodax"]

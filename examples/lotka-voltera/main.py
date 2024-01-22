@@ -1,5 +1,5 @@
-from nodebias import *
-from IPython.display import Image
+from nodax import *
+# from IPython.display import Image
 
 # jax.config.update("jax_debug_nans", True)
 
@@ -21,7 +21,7 @@ from IPython.display import Image
 ## Hyperparams
 SEED = 3
 context_size = 8000
-nb_epochs = 100000
+nb_epochs = 1
 
 
 
