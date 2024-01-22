@@ -21,7 +21,7 @@ from nodax import *
 ## Hyperparams
 SEED = 3
 context_size = 8000
-nb_epochs = 1
+nb_epochs = 100
 
 
 
@@ -46,42 +46,21 @@ data_size = train_dataloader.data_size
 activation = jax.nn.softplus
 # activation = jax.nn.swish
 
-
-# class Physics(eqx.Module):
-#     params: jnp.ndarray
-
-#     def __init__(self, key=None):
-#         key = generate_new_keys(key, num=1)[0]
-#         self.params = jax.random.uniform(key, (4,), minval=0.05, maxval=1.5)
-
-#     def __call__(self, t, x, ctx):
-#         dx0 = x[0]*self.params[0] - x[0]*x[1]*self.params[1]
-#         dx1 = x[0]*x[1]*self.params[3] - x[1]*self.params[2]
-#         return jnp.array([dx0, dx1])
-
 class Physics(eqx.Module):
-    params: list
-    layers_context: list
+    layers: list
 
-    def __init__(self, key=None):
-        keys = generate_new_keys(key, num=12)
-        # self.params = jax.random.uniform(keys[0], (4,), minval=0.05, maxval=1.5)
-        self.params = [0, 0, 0, 0]
-
-        width_size = 8
-        self.layers_context = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+    def __init__(self, width_size=8, key=None):
+        keys = generate_new_keys(key, num=4)
+        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
                         eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
                         eqx.nn.Linear(width_size, 4, key=keys[3])]
 
     def __call__(self, t, x, ctx):
-        # return jnp.zeros_like(x)
-        # params = self.params
         params = ctx
-        for layer in self.layers_context:
-            params = layer(params) 
-
-        params = jnp.abs(params)     ## TODO: this ensure posititity
+        for layer in self.layers:
+            params = layer(params)
+        params = jnp.abs(params)
 
         dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
         dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
@@ -98,11 +77,6 @@ class Augmentation(eqx.Module):
                         eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[2])]
-
-        # self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-        #                 eqx.nn.Linear(width_size, data_size, key=keys[5])]
 
         self.layers_context = [eqx.nn.Linear(context_size, context_size//10, key=keys[3]), activation,
                         eqx.nn.Linear(context_size//10, width_size*4, key=keys[11]), activation,
@@ -122,61 +96,59 @@ class Augmentation(eqx.Module):
             y = self.layers_data[i](y)
             ctx = self.layers_context[i](ctx)
 
-        # ctx = jnp.zeros_like(y)     ## TODO: remove this line, please !
-
-        # y = jnp.concatenate([y, ctx, y*ctx], axis=0)
         y = jnp.concatenate([y, ctx], axis=0)
-        # y = y*ctx
         for layer in self.layers_shared:
             y = layer(y)
         return y
+
+class ContextFlowVectorField(eqx.Module):
+    physics: eqx.Module
+    augmentation: eqx.Module
+
+    def __init__(self, augmentation, physics=None):
+        self.augmentation = augmentation
+        self.physics = physics if physics is not None else NoPhysics()
+
+    def __call__(self, t, x, ctx, ctx_):
+
+        vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+
+        return vf(ctx_) + gradvf(ctx_, ctx)
+        # return vf(ctx)
+
 
 
 # physics = Physics(key=SEED)
 physics = None
 augmentation = Augmentation(data_size=2, width_size=8*4, depth=3, context_size=context_size, key=SEED)
+vectorfield = ContextFlowVectorField(augmentation, physics=physics)
+
 contexts = ContextParams(nb_envs, context_size, key=SEED)
 
 # integrator = diffrax.Tsit5()
 integrator = rk4_integrator
 
-def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
-    # # trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx)
-    # print("Shape of the context:", ctx.shape, ctx_.shape)
-    # trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx, ctx)
-    # term1 = jnp.mean((trajs-trajs_hat)**2)
-    # term2_1 = spectral_norm_estimation(model.vectorfield.neuralnet, key=key)
-    # term2_2 = infinity_norm_estimation(model.vectorfield.neuralnet, trajs, ctx)
-    # # term2_1 = 1e-2*jnp.mean((ctx)**2)
-    # # term2_1 = 0.
-    # # term2_2 = 0.
-    # term2 = term2_1 + alpha*term2_2
-    # loss_val = term1 + beta*term2
-    # return loss_val, (jnp.sum(nb_steps), term1, term2)
 
-    #====== New Method ======
-    # ctx is singular, but ctx_ is plural, it is the contexts for all the environements
+# loss_fn_ctx = basic_loss_fn_ctx
+# loss_fn_ctx = default_loss_fn_ctx
+
+## Redefine a proper loss function here
+def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
+
     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)
 
-    # weights = jnp.mean((jnp.broadcast_to(ctx, ctx_.shape)-ctx_)**2, axis=-1) + 1e-8
-    # weights = weights / jnp.sum(weights)
-    # term1 = jnp.mean((new_trajs-trajs_hat)**2, axis=(1,2,3))  ## TODO: give more weights to the points for this context itself. Introduce a weighting system
-    # term1 = jnp.sum(term1 * weights)
-
     term2 = 1e-1*jnp.mean((ctx)**2)
-    # term3 = 1e-3*spectral_norm_estimation(model.vectorfield.neuralnet, key=key)
 
-    # loss_val = term1+term2+term3                  ### Dangerous, but limit the context TODO
     loss_val = term1+term2
 
     return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
-    #====== New Method ======
 
 
-learner = Learner(augmentation, contexts, loss_fn_ctx, integrator, physics=physics, key=SEED)
+learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=SEED)
 # learner = Learner(augmentation, nb_envs, context_size, loss_fn_ctx, integrator, physics=None)
 
 
@@ -224,7 +196,8 @@ test_dataloader = DataLoader("tmp/test_data.npz")
 
 visualtester = VisualTester(trainer)
 
-print("In-Domain Test Score:", visualtester.test(test_dataloader, int_cutoff=1.0))
+print("Test Score (In-Domain):", visualtester.test(test_dataloader, int_cutoff=1.0))
+print()
 
 visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.png");
 
@@ -259,6 +232,7 @@ opt_adapt = optax.adabelief(default_optimizer_schedule(3e-3, nb_epochs_adapt))
 
 trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=100, save_path="tmp/", key=SEED)
 
-print("OOD Test Score:", visualtester.test(adapt_dataloader, int_cutoff=1.0))
+print("Test Score (OOD):", visualtester.test(adapt_dataloader, int_cutoff=1.0))
+print()
 
 visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path="tmp/results_adapt.png");

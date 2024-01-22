@@ -10,27 +10,27 @@ class VisualTester:
 
         # assert self.dataloader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
 
-    def test_node(self, criterion=None, int_cutoff=1.0):
-        """ Compute test metrics on entire test dataloader  """
+    # def test_node(self, criterion=None, int_cutoff=1.0):
+    #     """ Compute test metrics on entire test dataloader  """
 
-        criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
+    #     criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
 
-        t_eval = self.dataloader.t_eval
-        test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
-        X = self.dataloader.dataset[:, :, :test_length, :]
-        t_test = t_eval[:test_length]
+    #     t_eval = self.dataloader.t_eval
+    #     test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
+    #     X = self.dataloader.dataset[:, :, :test_length, :]
+    #     t_test = t_eval[:test_length]
 
-        print("==  Begining testing ... ==")
-        print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
-        print("    Length of the testing trajectories:", test_length)
+    #     print("==  Begining testing ... ==")
+    #     print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+    #     print("    Length of the testing trajectories:", test_length)
 
-        X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0))(X[:, :, 0, :], 
-                                             t_test, 
-                                             self.trainer.learner.contexts.params)
+    #     X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0))(X[:, :, 0, :], 
+    #                                          t_test, 
+    #                                          self.trainer.learner.contexts.params)
 
-        batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
+    #     batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
 
-        return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
+    #     return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
 
 
 
@@ -71,11 +71,11 @@ class VisualTester:
 
         if data_loader.adaptation == False:
             print("==  Begining in-domain testing ... ==")
-            print("     Number of training environments:", self.trainer.dataloader.nb_envs)
+            print("    Number of training environments:", self.trainer.dataloader.nb_envs)
         else:
             print("==  Begining out-of-distribution testing ... ==")
-            print("     Number of training environments:", self.trainer.dataloader.nb_envs)
-            print("     Number of adaptation environments:", data_loader.nb_envs)
+            print("    Number of training environments:", self.trainer.dataloader.nb_envs)
+            print("    Number of adaptation environments:", data_loader.nb_envs)
         print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
         print("    Length of the testing trajectories:", test_length)
 
@@ -313,10 +313,9 @@ class VisualTester:
         plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
 
         plt.tight_layout()
-        plt.show();
+        # plt.show();
+        plt.draw();
 
         if save_path:
             plt.savefig(save_path, dpi=100, bbox_inches='tight')
             print("Testing finished. Figure saved in:", save_path);
-
-        # return fig, ax

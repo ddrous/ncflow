@@ -2,20 +2,20 @@ from ._utils import *
 
 
 class Learner:
-    def __init__(self, neuralnet, contexts, loss_fn_ctx, integrator, invariant=None, physics=None, key=None):
+    def __init__(self, vectorfield, contexts, loss_fn_ctx, integrator, key=None):
 
         # self.nb_envs = nb_envs
         # self.context_size = context_size
 
         self.nb_envs, self.context_size = contexts.params.shape
 
-        self.neuralnet = neuralnet
-        self.physics = physics
-        self.invariant = invariant
+        # self.neuralnet = neuralnet
+        # self.physics = physics
+        # self.invariant = invariant
 
-        vectorfield = VectorField(neuralnet, physics)
+        # vectorfield = VectorField(neuralnet, physics)
         # self.neuralode = NeuralODE(vectorfield, integrator, invariant)
-        self.neuralode = NeuralContextFlow(vectorfield, integrator, invariant)      ## TODO call this Universal ODE
+        self.neuralode = NeuralODE(vectorfield, integrator)      ## TODO call this Universal ODE
 
         # ctx_key, loss_key = generate_new_keys(key, num=2)
         # self.contexts = ContextParams(self.nb_envs, self.context_size, key=ctx_key)
@@ -23,7 +23,7 @@ class Learner:
         self.init_ctx_params = self.contexts.params.copy()
 
         # self.loss_fn = lambda model, contexts, batch, weights: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
-        self.loss_fn = lambda model, contexts, batch, weights: loss_fn_cf(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
+        self.loss_fn = lambda model, contexts, batch, weights: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
 
     def save_learner(self, path):
         eqx.tree_serialise_leaves(path+"neuralode.eqx", self.neuralode)
@@ -66,128 +66,110 @@ class ContextParams(eqx.Module):
             self.params = jax.random.normal(get_new_key(key), (nb_envs, context_size))
 
 
-class ID(eqx.Module):
+class NoPhysics(eqx.Module):
     def __init__(self):
         pass
     def __call__(self, t, x, *args):
         return jnp.zeros_like(x)
 
-class VectorField(eqx.Module):
+
+# class VectorField(eqx.Module):
+#     physics: eqx.Module
+#     neuralnet: eqx.Module
+
+#     def __init__(self, neuralnet, physics=None):
+#         self.neuralnet = neuralnet
+#         self.physics = physics if physics is not None else ID()
+
+#     def __call__(self, t, x, ctx, ctx_):
+#     # def __call__(self, t, x, args):
+#     #     ctx, ctx_ = args
+
+#         # print("Shapes of elements:", t.shape, x.shape, ctx.shape, ctx_.shape)
+
+#         # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
+
+#         vf = lambda xi_: self.physics(t, x, xi_) + self.neuralnet(t, x, xi_)
+#         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+#         return vf(ctx_) + gradvf(ctx_, ctx)
+#         # return vf(ctx)
+
+
+class DefaultVectorField(eqx.Module):
     physics: eqx.Module
     neuralnet: eqx.Module
 
-    def __init__(self, neuralnet, physics=None):
-        self.neuralnet = neuralnet
-        self.physics = physics if physics is not None else ID()
+    def __init__(self, augmentation, physics=None):
+        self.augmentation = augmentation
+        self.physics = physics if physics is not None else NoPhysics()
 
     def __call__(self, t, x, ctx, ctx_):
-    # def __call__(self, t, x, args):
-    #     ctx, ctx_ = args
-
-        # print("Shapes of elements:", t.shape, x.shape, ctx.shape, ctx_.shape)
-
-        # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
-
-        vf = lambda xi_: self.physics(t, x, xi_) + self.neuralnet(t, x, xi_)
-        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-        return vf(ctx_) + gradvf(ctx_, ctx)
-        # return vf(ctx)
+        return self.physics(t, x, ctx) + self.augmentation(t, x, ctx)
 
 
 
 
 
 
+# class NeuralODE(eqx.Module):
+#     vectorfield: VectorField
+#     integrator: callable
+#     # invariant: eqx.Module
+
+#     def __init__(self, vectorfield, integrator, invariant=None, key=None):
+#         self.vectorfield = vectorfield
+#         self.integrator = integrator
+#         # self.invariant = invariant
+
+#     def __call__(self, x0s, t_eval, ctx):
+
+#         # def integrate(x0):
+#         #     solution = diffrax.diffeqsolve(
+#         #                 diffrax.ODETerm(self.vectorfield),
+#         #                 diffrax.Tsit5(),
+#         #                 args=ctx,
+#         #                 t0=t_eval[0],
+#         #                 t1=t_eval[-1],
+#         #                 dt0=t_eval[1] - t_eval[0],
+#         #                 y0=x0,
+#         #                 stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
+#         #                 saveat=diffrax.SaveAt(ts=t_eval),
+#         #                 max_steps=4096*1,
+#         #             )
+#         #     return solution.ys, solution.stats["num_steps"]
+
+#         # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
+#         # return batched_ys, batched_num_steps
+
+#         rhs = lambda x, t: self.vectorfield(t, x, ctx)
+#         batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
+#         return batched_ys, t_eval.size
 
 
 
+
+
+
+
+
+
+
+
+
+
+# class NeuralContextFlow(eqx.Module):
 class NeuralODE(eqx.Module):
-    vectorfield: VectorField
+    vectorfield: eqx.Module
     integrator: callable
-    # invariant: eqx.Module
 
-    def __init__(self, vectorfield, integrator, invariant=None, key=None):
-        self.vectorfield = vectorfield
+    def __init__(self, vectorfield, integrator, key=None):
         self.integrator = integrator
-        # self.invariant = invariant
-
-    def __call__(self, x0s, t_eval, ctx):
-
-        # def integrate(x0):
-        #     solution = diffrax.diffeqsolve(
-        #                 diffrax.ODETerm(self.vectorfield),
-        #                 diffrax.Tsit5(),
-        #                 args=ctx,
-        #                 t0=t_eval[0],
-        #                 t1=t_eval[-1],
-        #                 dt0=t_eval[1] - t_eval[0],
-        #                 y0=x0,
-        #                 stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
-        #                 saveat=diffrax.SaveAt(ts=t_eval),
-        #                 max_steps=4096*1,
-        #             )
-        #     return solution.ys, solution.stats["num_steps"]
-
-        # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
-        # return batched_ys, batched_num_steps
-
-        rhs = lambda x, t: self.vectorfield(t, x, ctx)
-        batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
-        return batched_ys, t_eval.size
-
-
-
-
-
-
-
-
-
-
-
-
-
-class NeuralContextFlow(eqx.Module):
-    vectorfield: VectorField
-    integrator: callable
-    # invariant: eqx.Module
-
-    def __init__(self, vectorfield, integrator, invariant=None, key=None):
-        self.integrator = integrator
-        # vf = lambda ctx, t, x: vectorfield(t, x, ctx)
-        # gradvf = lambda ctx, t, x: eqx.filter_vjp(vf, ctx, t, x)[1]
-        # self.totalvf = lambda ctx, t, x, ctx_: vf(ctx, t, x) + gradvf(ctx, t, x)(ctx_-ctx)      ## Transpose or not ! Read better
-
-        # vf = lambda ctx, t, x: vectorfield(t, x, ctx)
-        # gradvf = lambda ctx, t, x, ctx_: eqx.filter_jvp(vf, (ctx, t, x), (ctx_-ctx))[1]
-        # totalvf = lambda ctx, t, x, ctx_: vf(ctx, t, x) + gradvf(ctx, t, x, ctx_)
-        # self.vectorfield = totalvf
-
-        # def totalvf(t, x, ctx, ctx_):
-        #     vf = lambda xi_: vectorfield(t, x, xi_)
-        #     # gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-        #     # gradvf = lambda xi, xi_: eqx.filter_jvp(vf, (xi,), (xi_-xi,))[1]
-
-        #     ### Test with grad vec == 0 TODO !!!
-        #     gradvf = lambda xi, xi_: jnp.zeros_like(x)
-
-        #     # return vf(ctx) + gradvf(ctx, ctx_)
-        #     return vf(ctx)
-        # self.vectorfield = totalvf
-
-        # self.vectorfield = lambda t, x, ctx, ctx_: vectorfield(t, x, ctx)         ## TODO: vectorfield cannot be a simple function, it must be a eqx module to maintain trainable params
-
         self.vectorfield = vectorfield
 
 
     def __call__(self, x0s, t_eval, ctx, ctx_):
 
         ctx_ = ctx_.squeeze()
-
-        # rhs = lambda x, t: self.vectorfield(t, x, ctx)
-        rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
-        batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
-        return batched_ys, t_eval.size
 
         # def integrate(x0):
         #     solution = diffrax.diffeqsolve(
@@ -207,6 +189,9 @@ class NeuralContextFlow(eqx.Module):
         # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
         # return batched_ys, batched_num_steps
 
+        rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
+        batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
+        return batched_ys, t_eval.size
 
 
 
@@ -294,27 +279,72 @@ def l2_norm_traj(xs, xs_hat):
     return jnp.sum(total_loss) / (xs.shape[-2] * xs.shape[-3])
 
 
+# def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=None):
+#     # print('\nCompiling function "loss_fn" ...\n')
+#     Xs, t_eval = batch
+#     print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
+
+#     all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, key)
+
+#     total_loss = jnp.sum(all_loss*weights)
+
+#     return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)
+
+
+
+# def loss_fn_cf(model, contexts, batch, weights, loss_fn_ctx, key=None):
+#     # print('\nCompiling function "loss_fn" ...\n')
+#     Xs, t_eval = batch
+#     print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
+
+#     all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, contexts.params, key)
+
+#     total_loss = jnp.sum(all_loss*weights)
+#     # total_loss = jnp.sum(all_loss)
+
+#     return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)
+
+
+
 def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=None):
     # print('\nCompiling function "loss_fn" ...\n')
     Xs, t_eval = batch
     print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
 
-    all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, key)
-
-    total_loss = jnp.sum(all_loss*weights)
-
-    return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)
-
-
-
-def loss_fn_cf(model, contexts, batch, weights, loss_fn_ctx, key=None):
-    # print('\nCompiling function "loss_fn" ...\n')
-    Xs, t_eval = batch
-    print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
-
-    all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-0, 1e-3, contexts.params, key)
+    all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-1, 1e-0, contexts.params, key)
 
     total_loss = jnp.sum(all_loss*weights)
     # total_loss = jnp.sum(all_loss)
 
     return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)
+
+
+
+
+
+
+
+def context_flow_loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
+    trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
+    new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
+
+    term1 = jnp.mean((new_trajs-trajs_hat)**2)
+
+    term2 = alpha*jnp.mean((ctx)**2)
+
+    loss_val = term1 + beta*term2
+    return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
+
+
+
+def default_loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
+    trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx, ctx)
+
+    term1 = jnp.mean((trajs-trajs_hat)**2)
+
+    term2_1 = spectral_norm_estimation(model.vectorfield.augmentation, key=key)
+    term2_2 = infinity_norm_estimation(model.vectorfield.augmentation, trajs, ctx)
+    term2 = term2_1 + alpha*term2_2
+
+    loss_val = term1 + beta*term2
+    return loss_val, (jnp.sum(nb_steps), term1, term2)

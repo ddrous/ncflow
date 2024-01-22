@@ -83,8 +83,8 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, key):
     trajs_hat, nb_steps = model(trajs[:, 0, :], t_eval, ctx)
     term1 = l2_norm_traj(trajs, trajs_hat)
 
-    term2_1 = spectral_norm_estimation(model.vectorfield.neuralnet, key=key)
-    term2_2 = infinity_norm_estimation(model.vectorfield.neuralnet, trajs, ctx)
+    term2_1 = spectral_norm_estimation(model.vectorfield.augmentation, key=key)
+    term2_2 = infinity_norm_estimation(model.vectorfield.augmentation, trajs, ctx)
     term2 = term2_1 + alpha*term2_2
 
     loss_val = term1 + beta*term2
