@@ -59,7 +59,7 @@ class ContextParams(eqx.Module):
 
     def __init__(self, nb_envs, context_size, key=None):
         if key is None:
-            print("WARNING: No key provided for the context parameters. Initialising at 0.")
+            print("WARNING: No key provided for the context initialization. Initializing at 0.")
             self.params = jnp.zeros((nb_envs, context_size))
 
         else:

@@ -1,28 +1,18 @@
 from nodax import *
-# from IPython.display import Image
 
 # jax.config.update("jax_debug_nans", True)
 
 
 #%%
 
-# Image(filename="tmp/coda_lv_setting_1.png")
-#%%
-# Image(filename="tmp/coda_lv_setting_2.png")
-
-## Additionally
-# LV, GO: 4-layer MLPs with hidden layers of width 64
-# We apply Swish activation (Ramachandran et al., 2018).
-# The hypernet A is a single affine layer NN
-
-#%%
-
 
 ## Hyperparams
-SEED = 3
+SEED = 18
 context_size = 8000
-nb_epochs = 100000
+nb_epochs = 5000
+nb_epochs_adapt = 5000
 
+print_error_every = 1000
 
 
 ## Define dataloader for training
@@ -32,7 +22,7 @@ nb_epochs = 100000
 # train_dataloader = DataLoader(dataset, t_eval, batch_size=-1, int_cutoff=0.8, shuffle=True)
 
 # train_dataloader = DataLoader("tmp/dataset_big.npz", batch_size=-1, int_cutoff=0.2, shuffle=True)
-train_dataloader = DataLoader("tmp/train_data.npz", batch_size=2, int_cutoff=0.25, shuffle=True, key=SEED)
+train_dataloader = DataLoader("tmp/train_data.npz", batch_size=-1, int_cutoff=0.25, shuffle=True, key=SEED)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -124,7 +114,8 @@ physics = None
 augmentation = Augmentation(data_size=2, width_size=8*4, depth=3, context_size=context_size, key=SEED)
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
-contexts = ContextParams(nb_envs, context_size, key=SEED)
+# contexts = ContextParams(nb_envs, context_size, key=SEED)
+contexts = ContextParams(nb_envs, context_size, key=None)
 
 # integrator = diffrax.Tsit5()
 integrator = rk4_integrator
@@ -182,7 +173,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
 for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
     trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
     # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-    trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=1000*(2**i), update_context_every=1, save_path="tmp/", key=SEED)
+    trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path="tmp/", key=SEED)
 
 #%%
 
@@ -226,10 +217,9 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.p
 
 adapt_dataloader = DataLoader("tmp/ood_data.npz", adaptation=True, key=SEED)
 
-nb_epochs_adapt = 1000
 opt_adapt = optax.adabelief(default_optimizer_schedule(3e-3, nb_epochs_adapt))
 
-trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=100, save_path="tmp/", key=SEED)
+trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path="tmp/")
 
 
 #%%

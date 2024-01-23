@@ -1,7 +1,7 @@
 from ._utils import *
 
 class DataLoader:
-    def __init__(self, dataset, t_eval=None, batch_size=-1, int_cutoff=0.2, shuffle=True, key=None, adaptation=False):
+    def __init__(self, dataset, t_eval=None, batch_size=-1, int_cutoff=1.0, shuffle=True, key=None, adaptation=False):
 
         if isinstance(dataset, str):
             raw_dat = jnp.load(dataset)

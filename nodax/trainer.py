@@ -145,7 +145,7 @@ class Trainer:
 
 
     def adapt(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):
-        key = key if key is not None else self.key
+        # key = key if key is not None else self.key
 
         loss_fn = self.learner.loss_fn
         node = self.learner.neuralode
@@ -160,7 +160,7 @@ class Trainer:
                 raise ValueError("No optimizer provided for adaptation, and none previously defined")
         else:
             opt = optimizer
-            contexts = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], get_new_key(key))
+            contexts = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], key)
             opt_state = opt.init(contexts)
             self.learner.init_ctx_params_adapt = contexts
             self.losses_adapt = []
