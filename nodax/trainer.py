@@ -140,8 +140,38 @@ class Trainer:
         if save_path:
             self.save_trainer(save_path)
 
+    def save_trainer(self, path):
+        print(f"\nSaving model and results into {path} folder ...\n")
+
+        np.savez(path+"train_histories.npz", 
+                 losses_node=jnp.vstack(self.losses_node), 
+                 losses_ctx=jnp.vstack(self.losses_ctx), 
+                 nb_steps_node=jnp.concatenate(self.nb_steps_node), 
+                 nb_steps_ctx=jnp.concatenate(self.nb_steps_ctx))
+
+        pickle.dump(self.opt_node_state, open(path+"/opt_state_node.pkl", "wb"))
+        pickle.dump(self.opt_ctx_state, open(path+"/opt_state_ctx.pkl", "wb"))
+
+        self.learner.save_learner(path)
 
 
+    def restore_trainer(self, path):
+        print(f"\nNo training, loading model and results from {path} folder ...\n")
+
+        histories = np.load(path+"train_histories.npz")
+        self.losses_node = [histories['losses_node']]
+        self.losses_ctx = [histories['losses_ctx']]
+        self.nb_steps_node = [histories['nb_steps_node']]
+        self.nb_steps_ctx = [histories['nb_steps_ctx']]
+
+        self.opt_state_node = pickle.load(open(path+"/opt_state_node.pkl", "rb"))
+        self.opt_state_ctx = pickle.load(open(path+"/opt_state_ctx.pkl", "rb"))
+
+        self.learner.load_learner(path)
+
+        # eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.learner.neuralode)
+        # eqx.tree_deserialise_leaves(path+"contexts.eqx", self.learner.contexts)
+        # eqx.tree_deserialise_leaves(path+"contexts_init.eqx", self.learner.init_ctx_params)
 
 
     def adapt(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):
@@ -150,8 +180,9 @@ class Trainer:
         loss_fn = self.learner.loss_fn
         node = self.learner.neuralode
 
-        if optimizer is None:
-            if self.opt_adapt is not None:
+        if optimizer is None:       ## You want to continue a previous adaptation !!!
+            # if self.opt_adapt is not None:
+            if hasattr(self, 'opt_adapt'):
                 print("WARNING: No optimizer provided for adaptation, using any previrouly defined for adapation")
                 opt = self.opt_adapt
                 contexts = self.learner.contexts_adapt
@@ -162,7 +193,7 @@ class Trainer:
             opt = optimizer
             contexts = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], key)
             opt_state = opt.init(contexts)
-            self.learner.init_ctx_params_adapt = contexts
+            self.learner.init_ctx_params_adapt = contexts.params.copy()
             self.losses_adapt = []
             self.nb_steps_adapt = []
 
@@ -228,53 +259,45 @@ class Trainer:
         self.losses_adapt.append(jnp.vstack(losses))
         self.nb_steps_adapt.append(jnp.array(nb_steps))
 
+        self.opt_adapt = opt
         self.opt_state_adapt = opt_state
 
         self.learner.contexts_adapt = contexts
 
         if save_path:
-            self.save_adapted_trainer(save_path)
+            self.save_adapted_trainer(save_path, data_loader.data_id)
 
 
 
+    def save_adapted_trainer(self, path, save_id):
+        print(f"\nSaving adaptation parameters into {path} folder with id {save_id} ...\n")
 
-    def save_trainer(self, path):
-        print(f"\nSaving model and results into {path} folder ...\n")
-
-        np.savez(path+"train_histories.npz", 
-                 losses_node=jnp.vstack(self.losses_node), 
-                 losses_cont=jnp.vstack(self.losses_ctx), 
-                 nb_steps_node=jnp.concatenate(self.nb_steps_node), 
-                 nb_steps_cont=jnp.concatenate(self.nb_steps_ctx))
-
-        pickle.dump(self.opt_node_state, open(path+"/opt_state_node.pkl", "wb"))
-        pickle.dump(self.opt_ctx_state, open(path+"/opt_state_ctx.pkl", "wb"))
-
-        self.learner.save_learner(path)
-
-
-    def save_adapted_trainer(self, path):
-        print(f"\nSaving adaptation parameters into {path} folder ...\n")
-
-        np.savez(path+"adapt_histories.npz", 
+        np.savez(path+"adapt_histories_"+save_id+"_.npz", 
                  losses_adapt=jnp.vstack(self.losses_adapt), 
                  nb_steps_adapt=jnp.concatenate(self.nb_steps_adapt))
 
         pickle.dump(self.opt_state_adapt, open(path+"/opt_state_adapt.pkl", "wb"))
 
-        self.learner.save_adapted_contexts(path+"/adapted_contexts_00.pkl")
+        eqx.tree_serialise_leaves(path+"/adapted_contexts_"+save_id+"_.pkl", self.learner.contexts_adapt)
+
+        np.save(path+"adapted_contexts_init_"+save_id+"_.npy", self.learner.init_ctx_params_adapt)
 
 
-    def load_trainer(self, path):
-        print(f"\nNo training, loading model and results from {path} folder ...\n")
+    def restore_adapted_trainer(self, path, data_loader=None):
 
-        histories = np.load(path+"train_histories.npz")
-        self.losses_node = histories['losses_node']
-        self.losses_cont = histories['losses_cont']
-        self.nb_steps_node = histories['nb_steps_node']
-        self.nb_steps_cont = histories['nb_steps_cont']
+        if data_loader is None:
+            ValueError("ERROR: You must provide the dataset on which this system was adapted.")
+        load_id = data_loader.data_id
 
-        self.opt_state_node = pickle.load(path+"/opt_state_node.pkl")
-        self.opt_state_ctx = pickle.load(path+"/opt_state_ctx.pkl")
+        print(f"\nNo adaptation, loading adaptation parameters from {path} folder with id: {load_id} ...\n")
 
-        self.learner.load_learner(path)
+        histories = np.load(path+"adapt_histories_"+load_id+"_.npz")
+        self.losses_adapt = [histories['losses_adapt']]
+        self.nb_steps_adapt = [histories['nb_steps_adapt']]
+
+        self.opt_state_adapt = pickle.load(open(path+"/opt_state_adapt.pkl", "rb"))
+
+        self.learner.contexts_adapt = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], None)
+        self.learner.contexts_adapt = eqx.tree_deserialise_leaves(path+"/adapted_contexts_"+load_id+"_.pkl", self.learner.contexts_adapt)
+
+        self.learner.init_ctx_params_adapt = np.load(path+"adapted_contexts_init_"+load_id+"_.npy")

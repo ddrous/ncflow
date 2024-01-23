@@ -1,7 +1,12 @@
 from ._utils import *
 
 class DataLoader:
-    def __init__(self, dataset, t_eval=None, batch_size=-1, int_cutoff=1.0, shuffle=True, key=None, adaptation=False):
+    def __init__(self, dataset, t_eval=None, batch_size=-1, int_cutoff=1.0, shuffle=True, adaptation=False, data_id=None, key=None):
+
+        self.data_id = data_id if data_id else get_id_current_time()
+        if data_id is None:
+            print("WARNING: You did not provide a dataloader id. A new one has been generated:", self.data_id)
+            print("WARNING: Note that this id used to distuinguish between adaptations to different environments.")
 
         if isinstance(dataset, str):
             raw_dat = jnp.load(dataset)

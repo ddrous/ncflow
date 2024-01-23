@@ -7,8 +7,46 @@ from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
 from IPython.display import Image
 
+
+try:
+    __IPYTHON__
+    _in_ipython_session = True
+except NameError:
+    _in_ipython_session = False
+
+print("Running this script in ipython (Jupyter) session ?", _in_ipython_session)
+
+## Parse the three arguments from the command line: "train", the foldername, and the seed
+
+import argparse
+
+
+if _in_ipython_session:
+	args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
+else:
+	parser = argparse.ArgumentParser(description='Description of your program')
+	parser.add_argument('--split', type=str, help='Generate "train", "test" or "adapt" data', default='train', required=False)
+	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
+	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=42, required=False)
+
+	args = parser.parse_args()
+
+
+split = args.split
+assert split in ["train", "test", "adapt"], "Split must be either 'train', 'test' or 'adapt'"
+
+savepath = args.savepath
+seed = args.seed
+
+print('=== Parsed arguments to generate data ===')
+print(' Split:', split)
+print(' Savepath:', savepath)
+print(' Seed:', seed)
+print()
+
+
 ## Set numpy seed for reproducibility
-np.random.seed(5)
+np.random.seed(seed)
 
 
 #%%
@@ -25,10 +63,10 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
 
-import jax
+# import jax
 # jax.config.update("jax_platform_name", "cpu")
 import jax.numpy as jnp
-import diffrax
+# import diffrax
 
 # Define the Lotka-Volterra system
 def lotka_volterra(t, state, alpha, beta, delta, gamma):
@@ -61,18 +99,28 @@ def rk4_integrator(rhs, y0, t):
 #   return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
 
 
-# Training environments
-environments = [
-    {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.5},
-    {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.5},
-    {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.5},
-    {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.75},
-    {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.75},
-    {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.75},
-    {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 1.0},
-    {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 1.0},
-    {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
-]
+
+if split == "train" or split=="test":
+  # Training environments
+  environments = [
+      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.5},
+      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.5},
+      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.5},
+      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.75},
+      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.75},
+      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.75},
+      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 1.0},
+      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 1.0},
+      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
+  ]
+elif split == "adapt":
+  ## Adaptation environments
+  environments = [
+      {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+      {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+      {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+      {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+  ]
 
 # ## Lots of data environment
 # environments = []
@@ -80,19 +128,16 @@ environments = [
 #   new_env = {"alpha": 0.5, "beta": beta, "gamma": 0.5, "delta": 0.5}
 #   environments.append(new_env)
 
-# ## Adaptation environments
-# environments = [
-#     {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-#     {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
-#     {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-#     {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
-# ]
 
-n_traj_per_env = 4     ## training
-# n_traj_per_env = 32     ## testing
-# n_traj_per_env = 1     ## adaptation
 
-n_steps_per_traj = int(10/0.5)    ## TODO: from coda, it is 20 to be precise
+if split == "train":
+  n_traj_per_env = 4     ## training
+elif split == "test":
+  n_traj_per_env = 32     ## testing
+elif split == "adapt":
+  n_traj_per_env = 1     ## adaptation
+
+n_steps_per_traj = int(10/0.5)
 # n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
@@ -117,37 +162,58 @@ for j in range(n_traj_per_env):
         solution = rk4_integrator(rhs, initial_state, t_eval)
         data[i, j, :, :] = solution
 
-# Extract the solution
-prey_concentration, predator_concentration = solution.T
-# prey_concentration, predator_concentration = solution.y
-# prey_concentration, predator_concentration = solution.ys
-
-# Create an animation of the Lotka-Volterra system
-fig, ax = plt.subplots()
-eps = 0.5
-ax.set_xlim(-eps, np.max(prey_concentration)+eps)
-ax.set_ylim(-eps, np.max(predator_concentration)+eps)
-ax.set_xlabel('Preys')
-ax.set_ylabel('Predators')
-
-concentrations, = ax.plot([], [], 'r-', lw=1, label='Concentrations')
-time_template = 'Time = %.1fs'
-time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
-
-# Add legend
-ax.legend()
-
-def animate(i):
-    concentrations.set_data(prey_concentration[:i], predator_concentration[:i])
-    time_text.set_text(time_template % t_eval[i])
-    return concentrations, time_text
-
-ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
-plt.show()
-
 # Save t_eval and the solution to a npz file
-np.savez('tmp/train_data.npz', t=t_eval, X=data)
+if split == "train":
+  filename = savepath+'train_data.npz'
+elif split == "test":
+  filename = savepath+'test_data.npz'
+elif split == "adapt":
+  filename = savepath+'adapt_data.npz'
 
-## Save the movie to a small mp4 file
-# ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
-ani.save('tmp/lotka_volterra.gif', fps=30)
+np.savez(filename, t=t_eval, X=data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+if _in_ipython_session:
+  # Extract the solution
+  prey_concentration, predator_concentration = solution.T
+  # prey_concentration, predator_concentration = solution.y
+  # prey_concentration, predator_concentration = solution.ys
+
+  # Create an animation of the Lotka-Volterra system
+  fig, ax = plt.subplots()
+  eps = 0.5
+  ax.set_xlim(-eps, np.max(prey_concentration)+eps)
+  ax.set_ylim(-eps, np.max(predator_concentration)+eps)
+  ax.set_xlabel('Preys')
+  ax.set_ylabel('Predators')
+
+  concentrations, = ax.plot([], [], 'r-', lw=1, label='Concentrations')
+  time_template = 'Time = %.1fs'
+  time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+
+  # Add legend
+  ax.legend()
+
+  def animate(i):
+      concentrations.set_data(prey_concentration[:i], predator_concentration[:i])
+      time_text.set_text(time_template % t_eval[i])
+      return concentrations, time_text
+
+  ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
+  plt.show()
+
+
+  ## Save the movie to a small mp4 file
+  # ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+  ani.save('tmp/lotka_volterra.gif', fps=30)

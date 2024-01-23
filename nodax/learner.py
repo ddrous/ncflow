@@ -28,19 +28,14 @@ class Learner:
     def save_learner(self, path):
         eqx.tree_serialise_leaves(path+"neuralode.eqx", self.neuralode)
         eqx.tree_serialise_leaves(path+"contexts.eqx", self.contexts)
-        ## Save the loss function as well
 
-    def save_adapted_contexts(self, filename):
-        eqx.tree_serialise_leaves(filename, self.contexts)
+        np.save(path+"contexts_init.npy", self.init_ctx_params)
 
     def load_learner(self, path):
-        self.model = eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.neuralode)
-        self.context = eqx.tree_deserialise_leaves(path+"contexts.eqx", self.contexts)
+        self.neuralode = eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.neuralode)
+        self.contexts = eqx.tree_deserialise_leaves(path+"contexts.eqx", self.contexts)
 
-    def load_adapted_contexts(self, filename):
-        self.context = eqx.tree_deserialise_leaves(filename, self.contexts)
-
-
+        self.init_ctx_params = np.load(path+"contexts_init.npy")
 
 
 

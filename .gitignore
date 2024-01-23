@@ -49,5 +49,9 @@ examples/dahlquist/tmp/*
 examples/lotka-voltera/tmp/*
 examples/lotka-voltera/lightning_logs/*
 
+## Tmp and Runs
+examples/lotka-voltera/runs/*
+
+
 ## Ingnore all folders named "tmp", recursively
 **/tmp/

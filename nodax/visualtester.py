@@ -280,7 +280,7 @@ class VisualTester:
             losses_node = np.vstack(self.trainer.losses_adapt)      ## Replotting the label context !
             losses_ctx = np.vstack(self.trainer.losses_adapt)
             xis = self.trainer.learner.contexts_adapt.params
-            init_xis = self.trainer.learner.init_ctx_params_adapt.params
+            init_xis = self.trainer.learner.init_ctx_params_adapt
 
         mke = np.ceil(losses_node.shape[0]/100).astype(int)
 

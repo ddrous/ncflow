@@ -1,28 +1,72 @@
 from nodax import *
-
 # jax.config.update("jax_debug_nans", True)
 
 
 #%%
 
-
 ## Hyperparams
-SEED = 18
+
+seed = 18
+
 context_size = 8000
-nb_epochs = 5000
-nb_epochs_adapt = 5000
+nb_epochs = 1
+nb_epochs_adapt = 1
 
-print_error_every = 1000
+print_error_every = 1
 
+train = True
+adapt = True
+
+#%%
+
+
+if train == True:
+
+    # check that 'tmp' folder exists. If not, create it
+    if not os.path.exists('./runs'):
+        os.mkdir('./runs')
+
+    # Make a new folder inside 'tmp' whose name is the current time
+    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    # run_folder = "./runs/23012024-163033/"
+    os.mkdir(run_folder)
+    print("Data folder created successfuly:", run_folder)
+
+    # Save the run and dataset scripts in that folder
+    script_name = os.path.basename(__file__)
+    os.system(f"cp {script_name} {run_folder}")
+    os.system(f"cp dataset.py {run_folder}")
+
+    # Save the nodax module files as well
+    os.system(f"cp -r ../../nodax {run_folder}")
+    print("Completed copied scripts ")
+
+
+else:
+    run_folder = "./runs/23012024-182737/"
+    print("No training. Loading data and results from:", run_folder)
+
+## Create a folder for the adaptation results
+adapt_folder = run_folder+"adapt/"
+if not os.path.exists(adapt_folder):
+    os.mkdir(adapt_folder)
+
+#%%
+
+if train == True:
+    # Run the dataset script to generate the data
+    os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
+    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+if adapt == True:
+    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+
+
+
+
+#%%
 
 ## Define dataloader for training
-
-# raw_data = np.load("tmp/train_data.npz")
-# dataset, t_eval = raw_data["X"][0:1, ...], raw_data["t"]
-# train_dataloader = DataLoader(dataset, t_eval, batch_size=-1, int_cutoff=0.8, shuffle=True)
-
-# train_dataloader = DataLoader("tmp/dataset_big.npz", batch_size=-1, int_cutoff=0.2, shuffle=True)
-train_dataloader = DataLoader("tmp/train_data.npz", batch_size=-1, int_cutoff=0.25, shuffle=True, key=SEED)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=-1, int_cutoff=0.25, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -109,39 +153,38 @@ class ContextFlowVectorField(eqx.Module):
 
 
 
-# physics = Physics(key=SEED)
+# physics = Physics(key=seed)
 physics = None
-augmentation = Augmentation(data_size=2, width_size=8*4, depth=3, context_size=context_size, key=SEED)
+
+augmentation = Augmentation(data_size=2, width_size=8*4, depth=3, context_size=context_size, key=seed)
+
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
-# contexts = ContextParams(nb_envs, context_size, key=SEED)
 contexts = ContextParams(nb_envs, context_size, key=None)
 
-# integrator = diffrax.Tsit5()
+# integrator = diffrax.Tsit5()  ## Has to conform to my API
 integrator = rk4_integrator
 
 
 # loss_fn_ctx = basic_loss_fn_ctx
 # loss_fn_ctx = default_loss_fn_ctx
 
-## Redefine a proper loss function here
+## Define a custom loss function here
 def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
 
     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
-    term1 = jnp.mean((new_trajs-trajs_hat)**2)
+    term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
 
-    term2 = 1e-1*jnp.mean((ctx)**2)
+    term2 = 1e-1*jnp.mean((ctx)**2)             ## regularisation
 
     loss_val = term1+term2
 
     return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
 
 
-learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=SEED)
-# learner = Learner(augmentation, nb_envs, context_size, loss_fn_ctx, integrator, physics=None)
-
+learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
 
 
 #%%
@@ -165,37 +208,39 @@ sched_ctx = optax.piecewise_constant_schedule(init_value=3e-3,
 opt_node = optax.adabelief(sched_node)
 opt_ctx = optax.adabelief(sched_ctx)
 
-trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=SEED)
+trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 
 #%%
 
-# for propostion in [0.25, 0.5, 0.75]:
-for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
-    trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-    # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-    trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path="tmp/", key=SEED)
+if train == True:
+    # for propostion in [0.25, 0.5, 0.75]:
+    for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
+        trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
+        # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
+        trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path=run_folder, key=seed)
+
+else:
+    # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
+
+    trainer.restore_trainer(path=run_folder)
+
+
+
 
 #%%
 
 ## Test and visualise the results on a test dataloader
 
-# raw_data = np.load("tmp/test_data.npz")
-# dataset, t_eval = raw_data["X"][0:1, ...], raw_data["t"]
-# test_dataloader = DataLoader(dataset, t_eval)
-
-test_dataloader = DataLoader("tmp/test_data.npz", shuffle=False)
+test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
 
 visualtester = VisualTester(trainer)
+# ans = visualtester.trainer.nb_steps_node
+# print(ans.shape)
 
 ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
 
-visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.png");
+visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=run_folder+"results_in_domain.png");
 
-
-#%%
-
-## Print some other params
-# print("Parameters in the physics component:", learner.neuralode.vectorfield.physics.params)
 
 
 #%%
@@ -215,14 +260,29 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path="tmp/results.p
 
 #%%
 
-adapt_dataloader = DataLoader("tmp/ood_data.npz", adaptation=True, key=SEED)
+## Give the dataloader an id to help with restoration later on
 
-opt_adapt = optax.adabelief(default_optimizer_schedule(3e-3, nb_epochs_adapt))
+adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
 
-trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path="tmp/")
+sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-3,
+                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.2,
+                                                int(nb_epochs_adapt*0.5):0.1,
+                                                int(nb_epochs_adapt*0.75):0.01})
+opt_adapt = optax.adabelief(sched_ctx_new)
+
+if adapt == True:
+    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+else:
+    print("save_id:", adapt_dataloader.data_id)
+
+    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+
+#%%
+ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+
+visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
 #%%
-ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)
 
-visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path="tmp/results_adapt.png");
+# eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)

@@ -137,3 +137,9 @@ def default_optimizer_schedule(init_lr, nb_epochs):
                         boundaries_and_scales={int(nb_epochs*0.25):0.2,
                                                 int(nb_epochs*0.5):0.1,
                                                 int(nb_epochs*0.75):0.01})
+
+
+def get_id_current_time():
+    """ Returns a string of the current time in the format as an ID """
+    # return time.strftime("%Y%m%d-%H%M%S")
+    return time.strftime("%H%M%S")
