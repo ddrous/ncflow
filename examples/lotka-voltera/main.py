@@ -9,10 +9,10 @@ from nodax import *
 seed = 18
 
 context_size = 8000
-nb_epochs = 1
-nb_epochs_adapt = 1
+nb_epochs = 100000
+nb_epochs_adapt = 50000
 
-print_error_every = 1
+print_error_every = 1000
 
 train = True
 adapt = True
