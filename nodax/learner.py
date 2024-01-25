@@ -26,12 +26,16 @@ class Learner:
         self.loss_fn = lambda model, contexts, batch, weights: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
 
     def save_learner(self, path):
+        assert path[-1] == "/", "ERROR: Invalidn parovided. The path must end with /"
+
         eqx.tree_serialise_leaves(path+"neuralode.eqx", self.neuralode)
         eqx.tree_serialise_leaves(path+"contexts.eqx", self.contexts)
 
         np.save(path+"contexts_init.npy", self.init_ctx_params)
 
     def load_learner(self, path):
+        assert path[-1] == "/", "ERROR: Invalidn parovided. The path must end with /"
+
         self.neuralode = eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.neuralode)
         self.contexts = eqx.tree_deserialise_leaves(path+"contexts.eqx", self.contexts)
 

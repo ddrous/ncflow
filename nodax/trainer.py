@@ -141,6 +141,7 @@ class Trainer:
             self.save_trainer(save_path)
 
     def save_trainer(self, path):
+        assert path[-1] == "/", "ERROR: Invalidn parovided. The path must end with /"
         print(f"\nSaving model and results into {path} folder ...\n")
 
         np.savez(path+"train_histories.npz", 
@@ -149,13 +150,14 @@ class Trainer:
                  nb_steps_node=jnp.concatenate(self.nb_steps_node), 
                  nb_steps_ctx=jnp.concatenate(self.nb_steps_ctx))
 
-        pickle.dump(self.opt_node_state, open(path+"/opt_state_node.pkl", "wb"))
-        pickle.dump(self.opt_ctx_state, open(path+"/opt_state_ctx.pkl", "wb"))
+        pickle.dump(self.opt_node_state, open(path+"opt_state_node.pkl", "wb"))
+        pickle.dump(self.opt_ctx_state, open(path+"opt_state_ctx.pkl", "wb"))
 
         self.learner.save_learner(path)
 
 
     def restore_trainer(self, path):
+        assert path[-1] == "/", "ERROR: Invalidn parovided. The path must end with /"
         print(f"\nNo training, loading model and results from {path} folder ...\n")
 
         histories = np.load(path+"train_histories.npz")
@@ -164,8 +166,8 @@ class Trainer:
         self.nb_steps_node = [histories['nb_steps_node']]
         self.nb_steps_ctx = [histories['nb_steps_ctx']]
 
-        self.opt_state_node = pickle.load(open(path+"/opt_state_node.pkl", "rb"))
-        self.opt_state_ctx = pickle.load(open(path+"/opt_state_ctx.pkl", "rb"))
+        self.opt_state_node = pickle.load(open(path+"opt_state_node.pkl", "rb"))
+        self.opt_state_ctx = pickle.load(open(path+"opt_state_ctx.pkl", "rb"))
 
         self.learner.load_learner(path)
 

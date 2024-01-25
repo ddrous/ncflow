@@ -9,12 +9,17 @@ from nodax import *
 seed = 18
 
 context_size = 8000
-nb_epochs = 100000
-nb_epochs_adapt = 50000
+nb_epochs = 2*10**0
+nb_epochs_adapt = 5*10**0
 
-print_error_every = 1000
+print_error_every = 10000
 
-train = True
+train = False
+save_trainer = True
+
+finetune = True
+run_folder = "./runs/24012024-084802/"      ## Only needed if not training
+
 adapt = True
 
 #%%
@@ -43,7 +48,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/23012024-182737/"
+    # run_folder = "./runs/24012024-084802/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -193,14 +198,14 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
 
 nb_train_steps = nb_epochs * 3
 sched_node = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_train_steps*0.25):0.2,
+                        boundaries_and_scales={int(nb_train_steps*0.25):0.1,
                                                 int(nb_train_steps*0.5):0.1,
-                                                int(nb_train_steps*0.75):0.01})
+                                                int(nb_train_steps*0.75):0.1})
 # sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
 sched_ctx = optax.piecewise_constant_schedule(init_value=3e-3,
-                        boundaries_and_scales={int(nb_epochs*0.25):0.2,
+                        boundaries_and_scales={int(nb_epochs*0.25):0.1,
                                                 int(nb_epochs*0.5):0.1,
                                                 int(nb_epochs*0.75):0.01})
 # sched_ctx = 1e-3
@@ -212,17 +217,48 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 
 #%%
 
+trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
     for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
         trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-        trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path=run_folder, key=seed)
+        trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path=trainer_save_path, key=seed)
 
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
-    trainer.restore_trainer(path=run_folder)
+    # restore_folder = run_folder
+    restore_folder = "./runs/24012024-084802/finetune_123938/"
+    trainer.restore_trainer(path=restore_folder)
+
+
+#%%
+
+
+
+
+
+if finetune:
+    # ## Finetune a trained model
+
+    finetunedir = run_folder+"finetune_"+trainer.dataloader.data_id+"/"
+    if not os.path.exists(finetunedir):
+        os.mkdir(finetunedir)
+    print("No training. Loading and finetuning into:", finetunedir)
+
+    trainer.dataloader.int_cutoff = nb_steps_per_traj
+
+    # opt_node = optax.adabelief(3e-4*0.1*0.1*0.01)
+    # opt_ctx = optax.adabelief(3e-3*0.1*0.1*0.01)
+    # trainer.optimizer = (opt_node, opt_ctx)
+
+    trainer.train(nb_epochs=200000, print_error_every=10000, update_context_every=1, save_path=finetunedir, key=seed)
+
+
+
+
+
 
 
 
@@ -239,7 +275,11 @@ visualtester = VisualTester(trainer)
 
 ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
 
-visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=run_folder+"results_in_domain.png");
+if finetune:
+    savefigdir = finetunedir+"results_in_domain.png"
+else:
+    savefigdir = run_folder+"results_in_domain.png"
+visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 
@@ -265,7 +305,7 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=run_folder+"re
 adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
 
 sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-3,
-                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.2,
+                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
                                                 int(nb_epochs_adapt*0.5):0.1,
                                                 int(nb_epochs_adapt*0.75):0.01})
 opt_adapt = optax.adabelief(sched_ctx_new)

@@ -22,7 +22,8 @@ import argparse
 
 
 if _in_ipython_session:
-	args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
+	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
+	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=3422)
 else:
 	parser = argparse.ArgumentParser(description='Description of your program')
 	parser.add_argument('--split', type=str, help='Generate "train", "test" or "adapt" data', default='train', required=False)
