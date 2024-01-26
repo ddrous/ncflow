@@ -6,19 +6,19 @@ from nodax import *
 
 ## Hyperparams
 
-seed = 18
+seed = 28
 
-context_size = 8000
-nb_epochs = 2*10**0
-nb_epochs_adapt = 5*10**0
+context_size = 5120
+nb_epochs = 60000
+nb_epochs_adapt = 60000
 
-print_error_every = 10000
+print_error_every = 1000
 
-train = False
+train = True
 save_trainer = True
 
-finetune = True
-run_folder = "./runs/24012024-084802/"      ## Only needed if not training
+finetune = False
+# run_folder = "./runs/24012024-084802/"      ## Only needed if not training
 
 adapt = True
 
@@ -71,7 +71,7 @@ if adapt == True:
 #%%
 
 ## Define dataloader for training
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=-1, int_cutoff=0.25, shuffle=True, key=seed)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=2, int_cutoff=0.25, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -118,9 +118,9 @@ class Augmentation(eqx.Module):
                         eqx.nn.Linear(width_size, data_size, key=keys[2])]
 
         self.layers_context = [eqx.nn.Linear(context_size, context_size//10, key=keys[3]), activation,
-                        eqx.nn.Linear(context_size//10, width_size*4, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size*4, width_size, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size, data_size, key=keys[5])]
+                        eqx.nn.Linear(context_size//10, width_size, key=keys[11]), activation,
+                        eqx.nn.Linear(width_size, width_size//4, key=keys[4]), activation,
+                        eqx.nn.Linear(width_size//4, data_size, key=keys[5])]
 
         self.layers_shared = [eqx.nn.Linear(data_size*2, width_size, key=keys[6]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
@@ -161,7 +161,7 @@ class ContextFlowVectorField(eqx.Module):
 # physics = Physics(key=seed)
 physics = None
 
-augmentation = Augmentation(data_size=2, width_size=8*4, depth=3, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=2, width_size=128, depth=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
@@ -182,7 +182,7 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
 
-    term2 = 1e-1*jnp.mean((ctx)**2)             ## regularisation
+    term2 = 1e-2*jnp.mean((ctx)**2)             ## regularisation
 
     loss_val = term1+term2
 
@@ -197,17 +197,17 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
 ## Define optimiser and traine the model
 
 nb_train_steps = nb_epochs * 3
-sched_node = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_train_steps*0.25):0.1,
-                                                int(nb_train_steps*0.5):0.1,
-                                                int(nb_train_steps*0.75):0.1})
+sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
+                        boundaries_and_scales={int(nb_train_steps*0.25):0.2,
+                                                int(nb_train_steps*0.5):0.2,
+                                                int(nb_train_steps*0.75):0.2})
 # sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
 sched_ctx = optax.piecewise_constant_schedule(init_value=3e-3,
-                        boundaries_and_scales={int(nb_epochs*0.25):0.1,
-                                                int(nb_epochs*0.5):0.1,
-                                                int(nb_epochs*0.75):0.01})
+                        boundaries_and_scales={int(nb_epochs*0.25):0.2,
+                                                int(nb_epochs*0.5):0.2,
+                                                int(nb_epochs*0.75):0.2})
 # sched_ctx = 1e-3
 
 opt_node = optax.adabelief(sched_node)
@@ -307,7 +307,7 @@ adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, da
 sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-3,
                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
                                                 int(nb_epochs_adapt*0.5):0.1,
-                                                int(nb_epochs_adapt*0.75):0.01})
+                                                int(nb_epochs_adapt*0.75):0.1})
 opt_adapt = optax.adabelief(sched_ctx_new)
 
 if adapt == True:
