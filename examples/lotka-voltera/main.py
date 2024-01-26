@@ -6,11 +6,11 @@ from nodax import *
 
 ## Hyperparams
 
-seed = 28
+seed = 118
 
-context_size = 5120
-nb_epochs = 60000
-nb_epochs_adapt = 60000
+context_size = 1024
+nb_epochs = 100000
+nb_epochs_adapt = 100000
 
 print_error_every = 1000
 
@@ -117,8 +117,8 @@ class Augmentation(eqx.Module):
                         eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[2])]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//10, key=keys[3]), activation,
-                        eqx.nn.Linear(context_size//10, width_size, key=keys[11]), activation,
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
+                        eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
                         eqx.nn.Linear(width_size, width_size//4, key=keys[4]), activation,
                         eqx.nn.Linear(width_size//4, data_size, key=keys[5])]
 
@@ -182,7 +182,7 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
 
-    term2 = 1e-2*jnp.mean((ctx)**2)             ## regularisation
+    term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
 
     loss_val = term1+term2
 
@@ -198,16 +198,16 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
 
 nb_train_steps = nb_epochs * 3
 sched_node = optax.piecewise_constant_schedule(init_value=3e-3,
-                        boundaries_and_scales={int(nb_train_steps*0.25):0.2,
-                                                int(nb_train_steps*0.5):0.2,
-                                                int(nb_train_steps*0.75):0.2})
+                        boundaries_and_scales={int(nb_train_steps*0.25):0.1,
+                                                int(nb_train_steps*0.5):0.1,
+                                                int(nb_train_steps*0.75):0.1})
 # sched_node = 1e-3
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
 sched_ctx = optax.piecewise_constant_schedule(init_value=3e-3,
-                        boundaries_and_scales={int(nb_epochs*0.25):0.2,
-                                                int(nb_epochs*0.5):0.2,
-                                                int(nb_epochs*0.75):0.2})
+                        boundaries_and_scales={int(nb_epochs*0.25):0.1,
+                                                int(nb_epochs*0.5):0.1,
+                                                int(nb_epochs*0.75):0.1})
 # sched_ctx = 1e-3
 
 opt_node = optax.adabelief(sched_node)
