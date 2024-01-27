@@ -6,11 +6,11 @@ from nodax import *
 
 ## Hyperparams
 
-seed = 118
+seed = 1180
 
 context_size = 1024
 nb_epochs = 100000
-nb_epochs_adapt = 100000
+nb_epochs_adapt = 200000
 
 print_error_every = 1000
 
@@ -18,7 +18,7 @@ train = True
 save_trainer = True
 
 finetune = False
-# run_folder = "./runs/24012024-084802/"      ## Only needed if not training
+# run_folder = "./runs/26012024-092626/"      ## Only needed if not training
 
 adapt = True
 
@@ -71,7 +71,7 @@ if adapt == True:
 #%%
 
 ## Define dataloader for training
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=2, int_cutoff=0.25, shuffle=True, key=seed)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=0.25, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -115,14 +115,14 @@ class Augmentation(eqx.Module):
         self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size, data_size, key=keys[2])]
+                        eqx.nn.Linear(width_size, width_size, key=keys[2])]
 
         self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
                         eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size, width_size//4, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size//4, data_size, key=keys[5])]
+                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
 
-        self.layers_shared = [eqx.nn.Linear(data_size*2, width_size, key=keys[6]), activation,
+        self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[9])]
@@ -161,7 +161,7 @@ class ContextFlowVectorField(eqx.Module):
 # physics = Physics(key=seed)
 physics = None
 
-augmentation = Augmentation(data_size=2, width_size=128, depth=4, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=2, width_size=64, depth=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
@@ -181,8 +181,10 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
+    # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat))  ## reconstruction
 
-    term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
+    # term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
+    term2 = 1e-3*jnp.mean(jnp.abs(ctx))             ## regularisation
 
     loss_val = term1+term2
 
@@ -221,6 +223,7 @@ trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
     for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
+    # for i, prop in enumerate([1]):
         trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
         trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path=trainer_save_path, key=seed)
@@ -229,7 +232,7 @@ else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
     # restore_folder = run_folder
-    restore_folder = "./runs/24012024-084802/finetune_123938/"
+    restore_folder = "./runs/26012024-092626/finetune_230335/"
     trainer.restore_trainer(path=restore_folder)
 
 
@@ -249,11 +252,11 @@ if finetune:
 
     trainer.dataloader.int_cutoff = nb_steps_per_traj
 
-    # opt_node = optax.adabelief(3e-4*0.1*0.1*0.01)
-    # opt_ctx = optax.adabelief(3e-3*0.1*0.1*0.01)
-    # trainer.optimizer = (opt_node, opt_ctx)
+    opt_node = optax.adabelief(3e-3*0.1*0.1*0.1)
+    opt_ctx = optax.adabelief(3e-3*0.1*0.1*0.1)
+    trainer.opt_node, trainer.opt_ctx = opt_node, opt_ctx
 
-    trainer.train(nb_epochs=200000, print_error_every=10000, update_context_every=1, save_path=finetunedir, key=seed)
+    trainer.train(nb_epochs=500000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
 
 
 
