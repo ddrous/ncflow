@@ -48,9 +48,11 @@ examples/pendulums/tmp/*
 examples/dahlquist/tmp/*
 examples/lotka-voltera/tmp/*
 examples/lotka-voltera/lightning_logs/*
+examples/glycolytic-oscillator/tmp/*
 
 ## Tmp and Runs
 examples/lotka-voltera/runs/*
+examples/glycolytic-oscillator/runs/*
 
 
 ## Ingnore all folders named "tmp", recursively

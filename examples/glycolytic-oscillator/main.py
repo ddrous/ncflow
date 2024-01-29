@@ -15,18 +15,18 @@ from nodax import *
 seed = 1181
 
 context_size = 1024
-nb_epochs = 200000
-nb_epochs_adapt = 200000
+nb_epochs = 2000
+nb_epochs_adapt = 2000
 
-print_error_every = 1000
+print_error_every = 100
 
 train = False
 save_trainer = True
 
-finetune = True
-run_folder = "./runs/27012024-155719/"      ## Only needed if not training
+finetune = False
+run_folder = "./runs/29012024-225232/"      ## Only needed if not training
 
-adapt = False
+adapt = True
 
 #%%
 
@@ -91,25 +91,25 @@ data_size = train_dataloader.data_size
 activation = jax.nn.softplus
 # activation = jax.nn.swish
 
-class Physics(eqx.Module):
-    layers: list
+# class Physics(eqx.Module):
+#     layers: list
 
-    def __init__(self, width_size=8, key=None):
-        keys = generate_new_keys(key, num=4)
-        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
-                        eqx.nn.Linear(width_size, 4, key=keys[3])]
+#     def __init__(self, width_size=8, key=None):
+#         keys = generate_new_keys(key, num=4)
+#         self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
+#                         eqx.nn.Linear(width_size, 4, key=keys[3])]
 
-    def __call__(self, t, x, ctx):
-        params = ctx
-        for layer in self.layers:
-            params = layer(params)
-        params = jnp.abs(params)
+#     def __call__(self, t, x, ctx):
+#         params = ctx
+#         for layer in self.layers:
+#             params = layer(params)
+#         params = jnp.abs(params)
 
-        dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
-        dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
-        return jnp.array([dx0, dx1])
+#         dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
+#         dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
+#         return jnp.array([dx0, dx1])
 
 class Augmentation(eqx.Module):
     layers_data: list
@@ -167,7 +167,7 @@ class ContextFlowVectorField(eqx.Module):
 # physics = Physics(key=seed)
 physics = None
 
-augmentation = Augmentation(data_size=2, width_size=64, depth=4, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=7, width_size=64, depth=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
