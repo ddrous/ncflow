@@ -6,6 +6,12 @@ from nodax import *
 
 ## Hyperparams
 
+# ## Take seed as a paramter with argparse !! ONLY during testing.
+# import argparse
+# parser = argparse.ArgumentParser()
+# parser.add_argument("--seed", type=int, default=1176)
+# seed = parser.parse_args().seed
+
 seed = 1181
 
 context_size = 1024
@@ -17,7 +23,7 @@ print_error_every = 1000
 train = False
 save_trainer = True
 
-finetune = False
+finetune = True
 run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = False
@@ -62,8 +68,8 @@ if train == True:
     # Run the dataset script to generate the data
     os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
 os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-if adapt == True:
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+# if adapt == True:
+os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 
 
 
@@ -252,11 +258,11 @@ if finetune:
 
     trainer.dataloader.int_cutoff = nb_steps_per_traj
 
-    opt_node = optax.adabelief(3e-3*0.1*0.1*0.1)
-    opt_ctx = optax.adabelief(3e-3*0.1*0.1*0.1)
+    opt_node = optax.adabelief(3e-4*0.1*0.1*0.1)
+    opt_ctx = optax.adabelief(3e-4*0.1*0.1*0.1)
     trainer.opt_node, trainer.opt_ctx = opt_node, opt_ctx
 
-    trainer.train(nb_epochs=500000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
+    trainer.train(nb_epochs=400000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
 
 
 
@@ -353,3 +359,39 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 #%%
 
 # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#%%
+
+# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the tmp/test_scores.csv file
+
+# # First, check if the file exists. If not, create it and write the header
+# if not os.path.exists('./tmp'):
+#     os.mkdir('./tmp')
+
+# if not os.path.exists('./tmp/test_scores.csv'):
+#     os.system(f"touch ./tmp/test_scores.csv")
+
+# with open('./tmp/test_scores.csv', 'r') as f:
+#     lines = f.readlines()
+#     if len(lines) == 0:
+#         with open('./tmp/test_scores.csv', 'w') as f:
+#             f.write("seed,ind_crit,ood_crit\n")
+
+# Then, append the values to the file
+with open('./tmp/test_scores.csv', 'a') as f:
+    f.write(f"{seed},{ind_crit},{ood_crit}\n")
+
