@@ -5,115 +5,197 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
+from IPython.display import Image
+
+
+try:
+    __IPYTHON__
+    _in_ipython_session = True
+except NameError:
+    _in_ipython_session = False
+
+print("Running this script in ipython (Jupyter) session ?", _in_ipython_session)
+
+## Parse the three arguments from the command line: "train", the foldername, and the seed
+
+import argparse
+
+
+if _in_ipython_session:
+	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
+	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=3422)
+else:
+	parser = argparse.ArgumentParser(description='Description of your program')
+	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
+	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
+	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=42, required=False)
+
+	args = parser.parse_args()
+
+
+split = args.split
+assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge'"
+
+savepath = args.savepath
+seed = args.seed
+
+print('=== Parsed arguments to generate data ===')
+print(' Split:', split)
+print(' Savepath:', savepath)
+print(' Seed:', seed)
+print()
 
 
 ## Set numpy seed for reproducibility
-np.random.seed(5)
+np.random.seed(seed)
 
 
-##### Generatate data for multiple simple environemnts
+#%%
+
+# Image(filename="tmp/coda_dataset.png")
 
 
+#%%
+
+
+#%%
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+from matplotlib.animation import FuncAnimation
+
+# import jax
+# jax.config.update("jax_platform_name", "cpu")
+import jax.numpy as jnp
+# import diffrax
+
+# Define the Lotka-Volterra system
 def simple_pendulum(t, state, L, g):
     theta, theta_dot = state
     theta_ddot = -(g / L) * np.sin(theta)
     return [theta_dot, theta_ddot]
 
 
-nb_envs = 9
-environments = []
-gs = np.linspace(3, 25, nb_envs)
-for e in range(nb_envs):
-    # L = np.random.uniform(0.5, 1.5)
-    # L = 1
-    L = 0.75
-    # g = np.random.uniform(3.72, 240.79)
-    g = gs[e]
-    environments.append({"L": L, "g": g})
+def rk4_integrator(rhs, y0, t):
+  def step(state, t):
+    y_prev, t_prev = state
+    h = t - t_prev
+    k1 = h * rhs(y_prev, t_prev)
+    k2 = h * rhs(y_prev + k1/2., t_prev + h/2.)
+    k3 = h * rhs(y_prev + k2/2., t_prev + h/2.)
+    k4 = h * rhs(y_prev + k3, t + h)
+    y = y_prev + 1./6 * (k1 + 2 * k2 + 2 * k3 + k4)
+    return (y, t), y
 
-for e in range(nb_envs):
-    # L = np.random.uniform(0.5, 1.5)
-    # L = 1
-    L = 1.25
-    # g = np.random.uniform(3.72, 240.79)
-    g = gs[e]
-    environments.append({"L": L, "g": g})
+  y = y0
+  ys = [y]
+  for i in range(t.size-1):
+    _, y = step((y, t[i]), t[i+1])
+    ys.append(y)
+  return  jnp.vstack(ys)
 
-
-# environments = [
-#     {"L": 0.5, "g": 9.81},    ## Eearth
-#     {"L": 1.0, "g": 9.81},
-#     # {"L": 1.5, "g": 9.81},
-#     {"L": 0.5, "g": 24.79},      ## Jupiter
-#     {"L": 1.0, "g": 24.79},
-#     # {"L": 1.5, "g": 24.79},
-#     {"L": 0.5, "g": 3.72},      ## Mars
-#     {"L": 1.0, "g": 3.72},
-#     # {"L": 1.5, "g": 3.72},
-# ]
+#   _, ys = jax.lax.scan(step, (y0, t[0]), t[1:])
+#   return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
 
 
 
-# # environments = [
-# #     {"L": 0.1, "g": 9.81},    ## Eearth
-# #     {"L": 1.0, "g": 9.81},
-# #     {"L": 10, "g": 9.81},
-# #     {"L": 0.1, "g": 24.79},      ## Jupiter
-# #     {"L": 1.0, "g": 24.79},
-# #     {"L": 10, "g": 24.79},
-# #     {"L": 0.1, "g": 3.72},      ## Mars
-# #     {"L": 1.0, "g": 3.72},
-# #     {"L": 10, "g": 3.72},
-# # ]
+if split == "train" or split=="test":
+  # Training environments
+  environments = [(1., g) for g in list(np.linspace(2, 24, 100))]
 
+elif split == "adapt" or split == "adapt_test":
+  ## Adaptation environments
+  environments = [(1., g) for g in list(np.linspace(1, 2, 10))] + [(1., g) for g in list(np.linspace(24, 30, 10))]
 
-n_traj_per_env = 128*2      ## Big
-# n_traj_per_env = 8      ## Small
-n_steps_per_traj = 201
+if split == "train":
+  n_traj_per_env = 4     ## training
+elif split == "test":
+  n_traj_per_env = 32     ## testing
+elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
+  n_traj_per_env = 1     ## adaptation
+
+n_steps_per_traj = int(10/0.5)
+# n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
 
+# Time span for simulation
 t_span = (0, 10)  # Shortened time span
 t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
 
 for j in range(n_traj_per_env):
-    # Initial conditions (prey and predator concentrations)
-    initial_state = np.concatenate([np.random.uniform(-np.pi/2, np.pi/2, size=(1,)), 
-    # initial_state = np.concatenate([np.array([-np.pi/2]), 
-                                    np.random.uniform(-1, 1, size=(1,))])
-                                    # np.array([-1])])
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
+        # Initial conditions (prey and predator concentrations)
+        initial_state = np.random.uniform(1, 3, (2,))
+
         # Solve the ODEs using SciPy's solve_ivp
-        solution = solve_ivp(simple_pendulum, t_span, initial_state, args=(selected_params['L'], selected_params['g']), t_eval=t_eval)
+        # solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
+        # data[i, j, :, :] = solution.y.T
 
-        data[i, j, :, :] = solution.y.T
-
-# Extract the solution
-theta, theta_dot = solution.y
-
-# Create an animation of the pendulum's motion
-fig, ax = plt.subplots(figsize=(13, 5))
-ax.set_xlim(-2.1, 2.1)
-ax.set_ylim(-1.4, 0.25)
-
-pendulum, = ax.plot([], [], 'ro-', lw=2)
-time_template = 'Time = %.1fs'
-time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
-
-def animate(i):
-    x = [0, selected_params['L'] * np.sin(theta[i])]
-    y = [0, -selected_params['L'] * np.cos(theta[i])]
-    pendulum.set_data(x, y)
-    time_text.set_text(time_template % solution.t[i])
-    return pendulum, time_text
-
-ani = FuncAnimation(fig, animate, frames=len(solution.t), interval=10, repeat=True, blit=True)
-plt.show()
-
-# ani.save('data/simple_pen.mp4', writer='ffmpeg')
+        rhs = lambda x, t: simple_pendulum(t, x, selected_params[0], selected_params[1])
+        solution = rk4_integrator(rhs, initial_state, t_eval)
+        data[i, j, :, :] = solution
 
 # Save t_eval and the solution to a npz file
-np.savez('tmp/simple_pendulum_big.npz', t=solution.t, X=data)
+if split == "train":
+  filename = savepath+'train_data.npz'
+elif split == "test":
+  filename = savepath+'test_data.npz'
+elif split == "adapt":
+  filename = savepath+'adapt_data.npz'
+elif split == "adapt_test":
+  filename = savepath+'adapt_test_data.npz'
+elif split == "adapt_huge":
+  filename = savepath+'adapt_huge_data.npz'
+
+np.savez(filename, t=t_eval, X=data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+if _in_ipython_session:
+  # Extract the solution
+  prey_concentration, predator_concentration = solution.T
+  # prey_concentration, predator_concentration = solution.y
+  # prey_concentration, predator_concentration = solution.ys
+
+  # Create an animation of the Lotka-Volterra system
+  fig, ax = plt.subplots()
+  eps = 0.5
+  ax.set_xlim(-eps, np.max(prey_concentration)+eps)
+  ax.set_ylim(-eps, np.max(predator_concentration)+eps)
+  ax.set_xlabel('Preys')
+  ax.set_ylabel('Predators')
+
+  concentrations, = ax.plot([], [], 'r-', lw=1, label='Concentrations')
+  time_template = 'Time = %.1fs'
+  time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+
+  # Add legend
+  ax.legend()
+
+  def animate(i):
+      concentrations.set_data(prey_concentration[:i], predator_concentration[:i])
+      time_text.set_text(time_template % t_eval[i])
+      return concentrations, time_text
+
+  ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
+  plt.show()
+
+
+  ## Save the movie to a small mp4 file
+  # ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+  ani.save('tmp/lotka_volterra.gif', fps=30)
+

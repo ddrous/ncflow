@@ -49,10 +49,13 @@ examples/dahlquist/tmp/*
 examples/lotka-voltera/tmp/*
 examples/lotka-voltera/lightning_logs/*
 examples/glycolytic-oscillator/tmp/*
+examples/pendulum/tmp/*
+
 
 ## Tmp and Runs
 examples/lotka-voltera/runs/*
 examples/glycolytic-oscillator/runs/*
+examples/pendulum/runs/*
 
 
 ## Ingnore all folders named "tmp", recursively
