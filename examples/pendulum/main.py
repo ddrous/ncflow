@@ -18,16 +18,16 @@ from nodax import *
 # parser.add_argument("--seed", type=int, default=1176)
 # seed = parser.parse_args().seed
 
-seed = 1181
+seed = 1180
 
 context_size = 1024
-nb_epochs = 5000
-nb_epochs_adapt = 5000
+nb_epochs = 2000
+nb_epochs_adapt = 2000
 
 print_error_every = 1000
 
 train = True
-save_trainer = False
+save_trainer = True
 
 finetune = False
 # run_folder = "./runs/30012024-103849/"      ## Only needed if not training
@@ -45,9 +45,10 @@ if train == True:
         os.mkdir('./runs')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/23012024-163033/"
-    os.mkdir(run_folder)
+    # run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    run_folder = "./runs/30012024-165151/"
+    if not os.path.exists('./runs'):
+        os.mkdir(run_folder)
     print("Data folder created successfuly:", run_folder)
 
     # Save the run and dataset scripts in that folder
@@ -83,6 +84,8 @@ if adapt_huge == True:
 
 
 
+#%%
+np.load(run_folder+"train_data.npz")['X'].shape
 
 #%%
 

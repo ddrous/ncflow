@@ -23,7 +23,7 @@ import argparse
 
 if _in_ipython_session:
 	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=3422)
+	args = argparse.Namespace(split='adapt', savepath="./runs/30012024-165151/", seed=3422)
 else:
 	parser = argparse.ArgumentParser(description='Description of your program')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
@@ -101,11 +101,12 @@ def rk4_integrator(rhs, y0, t):
 
 if split == "train" or split=="test":
   # Training environments
-  environments = [(1., g) for g in list(np.linspace(2, 24, 100))]
+  environments = [(1., g) for g in list(np.linspace(2, 24, 25))]
 
 elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
-  environments = [(1., g) for g in list(np.linspace(1, 2, 10))] + [(1., g) for g in list(np.linspace(24, 30, 10))]
+  # environments = [(1., g) for g in list(np.linspace(1, 2, 4))] + [(1., g) for g in list(np.linspace(24, 30, 4))]
+  environments = [(1., g) for g in list(np.linspace(24, 30, 4))]
 
 if split == "train":
   n_traj_per_env = 4     ## training
@@ -114,7 +115,7 @@ elif split == "test":
 elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   n_traj_per_env = 1     ## adaptation
 
-n_steps_per_traj = int(10/0.5)
+n_steps_per_traj = int(10/0.1)
 # n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))

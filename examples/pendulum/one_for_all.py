@@ -193,12 +193,12 @@ def dataloader(arrays, batch_size, *, key):
 def main(
     dataset_size=None,
     batch_size=9*4,
-    lr_strategy=(3e-5, 3e-6),
+    lr_strategy=(3e-4, 3e-5),
     length_strategy=(0.25, 1.0),   ## If you increase the length, you must decrease the learning rate. Relation is non-linear
     steps_strategy=(5000, 10000),
     width_size=64*1,
     depth=3,
-    seed=1081,
+    seed=10829,
     plot=True,
     print_every=1000,
 ):
@@ -242,11 +242,17 @@ def main(
         model = eqx.apply_updates(model, updates)
         return loss, model, opt_state, nfes
 
+    nb_epochs = 15000
+    sched = optax.piecewise_constant_schedule(init_value=3e-4,
+                            boundaries_and_scales={int(nb_epochs*0.25):0.1,
+                                                    int(nb_epochs*0.5):0.1,
+                                                    int(nb_epochs*0.75):0.1})
+    optim = optax.adabelief(sched)
+    opt_state = optim.init(eqx.filter(model, eqx.is_inexact_array))
+
     losses = []
     nfes = []
     for lr, steps, length in zip(lr_strategy, steps_strategy, length_strategy):
-        optim = optax.adabelief(lr)
-        opt_state = optim.init(eqx.filter(model, eqx.is_inexact_array))
         _ts = ts[: int(length_size * length)]
         _ys = ys[:, : int(length_size * length)]
         for step, (yi,) in zip(
@@ -343,4 +349,25 @@ ts, ys, model = main()
 skeleton = NeuralODE(2, 64, 3, key=jrandom.PRNGKey(0))
 model = eqx.tree_deserialise_leaves(run_folder+"model.pkl", skeleton)
 
+
+
+
+#%%
+
+## load new ts and ys from test_data.npz
+raw_data = np.load(data_load_folder+"test_data.npz")
+ys, ts = raw_data['X'], raw_data['t']
+
+ys = jnp.reshape(ys, (-1, ys.shape[2], ys.shape[3]))
+test_mse_model(model, ts, ys)
+
+
+
+#%%
+
+## load new ts and ys from test_data.npz
+raw_data = np.load(data_load_folder+"adapt_data.npz")
+ys, ts = raw_data['X'], raw_data['t']
+
+ys = jnp.reshape(ys, (-1, ys.shape[2], ys.shape[3]))
 test_mse_model(model, ts, ys)
