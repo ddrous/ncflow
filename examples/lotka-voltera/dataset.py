@@ -26,7 +26,7 @@ if _in_ipython_session:
 	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=3422)
 else:
 	parser = argparse.ArgumentParser(description='Description of your program')
-	parser.add_argument('--split', type=str, help='Generate "train", "test" or "adapt" data', default='train', required=False)
+	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
 	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
 	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=42, required=False)
 
@@ -34,7 +34,7 @@ else:
 
 
 split = args.split
-assert split in ["train", "test", "adapt"], "Split must be either 'train', 'test' or 'adapt'"
+assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge'"
 
 savepath = args.savepath
 seed = args.seed
@@ -114,7 +114,7 @@ if split == "train" or split=="test":
       {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 1.0},
       {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
   ]
-elif split == "adapt":
+elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
   environments = [
       {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
@@ -122,6 +122,9 @@ elif split == "adapt":
       {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
       {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
   ]
+elif split == "adapt_huge":
+  environments = [
+      {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 11) for d in np.linspace(0.25, 1.25, 11)]
 
 # ## Lots of data environment
 # environments = []
@@ -135,7 +138,7 @@ if split == "train":
   n_traj_per_env = 4     ## training
 elif split == "test":
   n_traj_per_env = 32     ## testing
-elif split == "adapt":
+elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.5)
@@ -170,6 +173,10 @@ elif split == "test":
   filename = savepath+'test_data.npz'
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
+elif split == "adapt_test":
+  filename = savepath+'adapt_test_data.npz'
+elif split == "adapt_huge":
+  filename = savepath+'adapt_huge_data.npz'
 
 np.savez(filename, t=t_eval, X=data)
 

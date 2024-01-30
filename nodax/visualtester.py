@@ -91,7 +91,9 @@ class VisualTester:
 
         batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
 
-        crit = batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
+        # crit = batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
+        crit_all = batched_criterion(X_hat, X).mean(axis=1)
+        crit = crit_all.mean(axis=0)
 
         if data_loader.adaptation == False:
             print("Test Score (In-Domain):", crit)
@@ -99,7 +101,7 @@ class VisualTester:
             print("Test Score (OOD):", crit)
         print()
 
-        return crit
+        return crit, crit_all
 
 
     # def visualise_cf(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):

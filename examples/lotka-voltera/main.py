@@ -1,5 +1,11 @@
+# import os
+## Do not preallocate GPU memory
+# os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
+
 from nodax import *
 # jax.config.update("jax_debug_nans", True)
+
+
 
 
 #%%
@@ -21,12 +27,13 @@ nb_epochs_adapt = 200000
 print_error_every = 1000
 
 train = False
-save_trainer = True
+save_trainer = False
 
-finetune = True
+finetune = False
 run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = False
+adapt_huge = True
 
 #%%
 
@@ -67,9 +74,12 @@ if not os.path.exists(adapt_folder):
 if train == True:
     # Run the dataset script to generate the data
     os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
-os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-# if adapt == True:
-os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+if adapt == True:
+    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+if adapt_huge == True:
+    os.system(f'python dataset.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
+
 
 
 
@@ -238,11 +248,14 @@ else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
     restore_folder = run_folder
-    # restore_folder = "./runs/26012024-092626/finetune_230335/"
+    # restore_folder = "./runs/27012024-155719/finetune_193625/"
     trainer.restore_trainer(path=restore_folder)
 
 
 #%%
+
+
+
 
 
 
@@ -376,6 +389,9 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 #%%
 
+#### Generate data for analysis
+
+
 # ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the tmp/test_scores.csv file
 
 # # First, check if the file exists. If not, create it and write the header
@@ -391,7 +407,61 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 #         with open('./tmp/test_scores.csv', 'w') as f:
 #             f.write("seed,ind_crit,ood_crit\n")
 
-# Then, append the values to the file
-with open('./tmp/test_scores.csv', 'a') as f:
-    f.write(f"{seed},{ind_crit},{ood_crit}\n")
 
+
+
+
+
+# for seed in range(4*10**3, 6*10**3, 200):
+
+#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+
+#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
+#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, key=seed)
+
+#     ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
+#     ood_crit = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
+
+#     # Then, append the values to the file
+#     with open('./analysis/test_scores_2.csv', 'a') as f:
+#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
+
+
+
+
+
+#%%
+
+## Huge adaptation step to 51*51 environments and MAPE score computation
+
+
+
+## Give the dataloader an id to help with restoration later on
+
+
+
+adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
+
+sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
+                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
+                                                int(nb_epochs_adapt*0.5):0.1,
+                                                int(nb_epochs_adapt*0.75):0.1})
+opt_adapt = optax.adabelief(sched_ctx_new)
+
+# nb_epochs_adapt = 2
+if adapt_huge == True:
+    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+else:
+    print("save_id:", adapt_dataloader.data_id)
+
+    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+
+## Define mape criterion over a trajectory
+def mape(y, y_hat):
+    norm_traget = jnp.abs(y)
+    norm_diff = jnp.abs(y-y_hat)
+    ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
+    return jnp.sum(ratios)
+
+ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
