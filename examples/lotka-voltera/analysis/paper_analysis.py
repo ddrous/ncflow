@@ -59,3 +59,67 @@ print(std_ood)
 # 5700,1.2630783203348983e-05,3.0352341582329245e-06
 # 5800,1.3580125596490689e-05,4.271199941285886e-06
 # 5900,1.3703637705475558e-05,6.039120853529312e-05
+
+
+
+
+#%%
+
+
+
+
+
+mapes = np.load("mapes.npy")
+print(mapes)
+mapes_mean = mapes[mapes<26].mean()
+mapes = np.where(mapes<26, mapes, mapes_mean)
+
+envs = [ (b, d) for b in np.linspace(0.25, 1.25, 11) for d in np.linspace(0.25, 1.25, 11)]
+
+envs_arr = [np.array(e) for e in envs]
+envs_final = np.vstack(envs_arr)
+
+print(envs_final.shape)
+print(mapes.shape)
+
+### Plot trisurf of mapes agains envs_final
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111)
+# ax = fig.add_subplot(111, projection='3d')
+
+
+# surf = ax.plot_trisurf(envs_final[:,0], envs_final[:,1], mapes, cmap='viridis')
+# plt.pcolormesh(envs_final[:,0], envs_final[:,1], mapes, cmap='viridis')
+
+x = envs_final[:,0].reshape((11, 11))
+y = envs_final[:,1].reshape((11, 11))
+z = mapes.reshape((11, 11)) 
+# surf = ax.imshow(z, cmap='viridis')
+surf = plt.contourf(x, y, z, cmap='coolwarm', levels=50)
+
+
+# Add color bar
+fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
+
+# Set labels and title
+ax.set_xlabel(r'$\beta$')
+ax.set_ylabel(r'$\delta$')
+ax.set_title('MAPE')
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
