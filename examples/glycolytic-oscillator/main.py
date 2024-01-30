@@ -15,18 +15,18 @@ from nodax import *
 seed = 1181
 
 context_size = 1024
-nb_epochs = 2000
-nb_epochs_adapt = 2000
+nb_epochs = 100000
+nb_epochs_adapt = 100000
 
-print_error_every = 100
+print_error_every = 1000
 
-train = False
+train = True
 save_trainer = True
 
 finetune = False
-run_folder = "./runs/29012024-225232/"      ## Only needed if not training
+# run_folder = "./runs/29012024-225232/"      ## Only needed if not training
 
-adapt = True
+adapt = False
 
 #%%
 
@@ -54,7 +54,7 @@ if train == True:
 
 
 else:
-    # run_folder = "./runs/24012024-084802/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/30012024-075246/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -228,7 +228,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
-    for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
+    for i, prop in enumerate(np.linspace(0.25, 0.5, 2)):
     # for i, prop in enumerate([1]):
         trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
