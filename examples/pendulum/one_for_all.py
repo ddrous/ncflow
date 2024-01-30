@@ -14,11 +14,7 @@ print("Available devices:", jax.devices())
 
 from jax import config
 ##  Debug nans
-config.update("jax_debug_nans", True)
-
-import jax.numpy as jnp
-import jax.scipy as jsp
-import jax.scipy.optimize
+# config.update("jax_debug_nans", True)
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -26,13 +22,6 @@ from scipy.integrate import solve_ivp
 import equinox as eqx
 
 import matplotlib.pyplot as plt
-
-from nodax._utils import *
-
-import optax
-from functools import partial
-import time
-
 
 from functools import partial
 import time
@@ -46,6 +35,7 @@ import jax.random as jrandom
 import matplotlib.pyplot as plt
 import optax  # https://github.com/deepmind/optax
 
+from nodax._utils import *
 
 #%%
 
@@ -58,7 +48,6 @@ SEED = np.random.randint(0, 1000)
 
 ## Optimiser hps
 init_lr = 1e-3
-decay_rate = 0.9
 
 ## Training hps
 print_every = 100
@@ -67,16 +56,22 @@ nb_epochs = 5000
 batch_size = 1
 
 
-run_folder = "runs/30012024-115643/"
-
 #%%
 
 ## Load data from 
 
+
 #%%
 
-raw_data = np.load("data/train_data.npz")
-data, t_eval = raw_data['data'], raw_data['t_eval']
+data_load_folder = "runs/30012024-165151/"
+run_folder = data_load_folder + "oneforall/"
+if not os.path.exists(run_folder):
+    os.makedirs(run_folder)
+
+#%%
+
+raw_data = np.load(data_load_folder+"train_data.npz")
+data, t_eval = raw_data['X'], raw_data['t']
 
 data = jnp.reshape(data, (-1, data.shape[2], data.shape[3]))
 print("data shape:", data.shape)
@@ -196,16 +191,16 @@ def dataloader(arrays, batch_size, *, key):
 #%%
 
 def main(
-    dataset_size=9*4,
+    dataset_size=None,
     batch_size=9*4,
-    lr_strategy=(3e-4, 3e-4),
+    lr_strategy=(3e-5, 3e-6),
     length_strategy=(0.25, 1.0),   ## If you increase the length, you must decrease the learning rate. Relation is non-linear
-    steps_strategy=(10000, 20000),
+    steps_strategy=(5000, 10000),
     width_size=64*1,
-    depth=2,
-    seed=5678,
+    depth=3,
+    seed=1081,
     plot=True,
-    print_every=100,
+    print_every=1000,
 ):
     key = jrandom.PRNGKey(seed)
     data_key, model_key, loader_key = jrandom.split(key, 3)
@@ -238,7 +233,7 @@ def main(
 
         ## TODO APHYNITY-style loss: https://arxiv.org/abs/2010.04456
         # return jnp.mean((yi - y_pred) ** 2) + 1e-3*params_norm(model.func.mlp.layers), (jnp.sum(nfes))
-        return jnp.mean((yi - y_pred) ** 2)
+        return jnp.mean((yi - y_pred) ** 2), jnp.sum(nfes)
 
     @eqx.filter_jit
     def make_step(ti, yi, model, opt_state):
@@ -265,45 +260,87 @@ def main(
             if (step % print_every) == 0 or step == steps - 1:
                 print(f"Step: {step:-5d},    Loss: {loss:-.8f},    NFEs: {nfe_step:-5d},    CPTime: {end - start:-.4f}")
 
+    ## Save the model with eqx.tree_serialise
+    eqx.tree_serialise_leaves(run_folder+"model.pkl", model)
+
+    ## Save the loss
+    np.save(run_folder+"loss.npy", np.array(losses))
+
+
     if plot:
-        # fig, ax = plt.subplots(2, 2, figsize=(6*2, 3.5*2))
-        fig, ax = plt.subplot_mosaic('AB;CC;DD', figsize=(6*2, 3.5*3))
-        model_y, _ = model(ts, ys[0, 0])   ## TODO predicting on the entire trajectory ==forecasting !
-
-        ax['A'].plot(ts, ys[0, :, 0], c="dodgerblue", label="Preys (GT)")
-        ax['A'].plot(ts, model_y[:, 0], ".", c="navy", label="Preys (NODE)")
-
-        ax['A'].plot(ts, ys[0, :, 1], c="violet", label="Predators (GT)")
-        ax['A'].plot(ts, model_y[:, 1], ".", c="purple", label="Predators (NODE)")
-        
-        ax['A'].set_xlabel("Time")
-        ax['A'].set_title("Trajectories")
-        ax['A'].legend()
-
-        ax['B'].plot(ys[0, :, 0], ys[0, :, 1], c="turquoise", label="GT")
-        ax['B'].plot(model_y[:, 0], model_y[:, 1], ".", c="teal", label="Neural ODE")
-        ax['B'].set_xlabel("Preys")
-        ax['B'].set_ylabel("Predators")
-        ax['B'].set_title("Phase space")
-        ax['B'].legend()
-
-        ax['C'].plot(losses, c="grey", label="Losses")
-        ax['C'].set_xlabel("Epochs")
-        ax['C'].set_title("Loss")
-        ax['C'].set_yscale('log')
-        ax['C'].legend()
-
-        ax['D'].plot(nfes, c="brown", label="num_steps_taken")
-        ax['D'].set_xlabel("Epochs")
-        ax['D'].set_title("(Factor of) Number of Function Evaluations")
-        ax['D'].legend()
-
-        plt.tight_layout()
-        plt.savefig("data/neural_ode_diffrax.png")
-        plt.show()
+        plot_result(0, model, losses, nfes, ts, ys)
 
     return ts, ys, model
 
 
+def plot_result(traj, model, losses, nfes, ts, ys):
+    # fig, ax = plt.subplots(2, 2, figsize=(6*2, 3.5*2))
+    fig, ax = plt.subplot_mosaic('AB;CC;DD', figsize=(6*2, 3.5*3))
+    model_y, _ = model(ts, ys[traj, 0])   ## TODO predicting on the entire trajectory ==forecasting !
+
+    ax['A'].plot(ts, ys[traj, :, 0], c="dodgerblue", label="Preys (GT)")
+    ax['A'].plot(ts, model_y[:, 0], ".", c="navy", label="Preys (NODE)")
+
+    ax['A'].plot(ts, ys[traj, :, 1], c="violet", label="Predators (GT)")
+    ax['A'].plot(ts, model_y[:, 1], ".", c="purple", label="Predators (NODE)")
+    
+    ax['A'].set_xlabel("Time")
+    ax['A'].set_title("Trajectories")
+    ax['A'].legend()
+
+    ax['B'].plot(ys[traj, :, 0], ys[traj, :, 1], c="turquoise", label="GT")
+    ax['B'].plot(model_y[:, 0], model_y[:, 1], ".", c="teal", label="Neural ODE")
+    ax['B'].set_xlabel("Preys")
+    ax['B'].set_ylabel("Predators")
+    ax['B'].set_title("Phase space")
+    ax['B'].legend()
+
+    ax['C'].plot(losses, c="grey", label="Losses")
+    ax['C'].set_xlabel("Epochs")
+    ax['C'].set_title("Loss")
+    ax['C'].set_yscale('log')
+    ax['C'].legend()
+
+    ax['D'].plot(nfes, c="brown", label="num_steps_taken")
+    ax['D'].set_xlabel("Epochs")
+    ax['D'].set_title("(Factor of) Number of Function Evaluations")
+    ax['D'].legend()
+
+    plt.tight_layout()
+    plt.savefig(run_folder+"neural_ode_diffrax.png")
+    plt.show()
+
+
+
+def test_mse_model(model, ts, ys):
+    y_pred, nfes = jax.vmap(model, in_axes=(None, 0))(ts, ys[:, 0, :])
+    return jnp.mean((ys[:, :, :] - y_pred) ** 2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # with jax.profiler.trace("/data/jax-trace", create_perfetto_link=False):
 ts, ys, model = main()
+
+
+
+
+#%%
+
+## Load the model with eqx.tree_deserialise
+skeleton = NeuralODE(2, 64, 3, key=jrandom.PRNGKey(0))
+model = eqx.tree_deserialise_leaves(run_folder+"model.pkl", skeleton)
+
+test_mse_model(model, ts, ys)
