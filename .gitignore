@@ -60,3 +60,4 @@ examples/pendulum/runs/*
 
 ## Ingnore all folders named "tmp", recursively
 **/tmp/
+venv/*

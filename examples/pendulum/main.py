@@ -21,16 +21,16 @@ from nodax import *
 seed = 1181
 
 context_size = 1024
-nb_epochs = 10000
-nb_epochs_adapt = 10000
+nb_epochs = 5000
+nb_epochs_adapt = 5000
 
 print_error_every = 1000
 
 train = True
-save_trainer = True
+save_trainer = False
 
 finetune = False
-run_folder = "./runs/27012024-155719/"      ## Only needed if not training
+run_folder = "./runs/30012024-103849/"      ## Only needed if not training
 
 adapt = True
 adapt_huge = False
@@ -441,27 +441,27 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 
 
-adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
+# adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
 
-sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-                                                int(nb_epochs_adapt*0.5):0.1,
-                                                int(nb_epochs_adapt*0.75):0.1})
-opt_adapt = optax.adabelief(sched_ctx_new)
+# sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
+#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
+#                                                 int(nb_epochs_adapt*0.5):0.1,
+#                                                 int(nb_epochs_adapt*0.75):0.1})
+# opt_adapt = optax.adabelief(sched_ctx_new)
 
-# nb_epochs_adapt = 2
-if adapt_huge == True:
-    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-else:
-    print("save_id:", adapt_dataloader.data_id)
+# # nb_epochs_adapt = 2
+# if adapt_huge == True:
+#     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+# else:
+#     print("save_id:", adapt_dataloader.data_id)
 
-    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+#     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-## Define mape criterion over a trajectory
-def mape(y, y_hat):
-    norm_traget = jnp.abs(y)
-    norm_diff = jnp.abs(y-y_hat)
-    ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
-    return jnp.sum(ratios)
+# ## Define mape criterion over a trajectory
+# def mape(y, y_hat):
+#     norm_traget = jnp.abs(y)
+#     norm_diff = jnp.abs(y-y_hat)
+#     ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
+#     return jnp.sum(ratios)
 
-ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
+# ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
