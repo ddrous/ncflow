@@ -73,7 +73,7 @@ import jax.numpy as jnp
 def simple_pendulum(t, state, L, g):
     theta, theta_dot = state
     theta_ddot = -(g / L) * np.sin(theta)
-    return [theta_dot, theta_ddot]
+    return np.array([theta_dot, theta_ddot])
 
 
 def rk4_integrator(rhs, y0, t):
@@ -129,10 +129,12 @@ for j in range(n_traj_per_env):
         # print("Environment", i)
 
         # Initial conditions (prey and predator concentrations)
-        initial_state = np.random.uniform(1, 3, (2,))
+        initial_state_0 = np.random.uniform(-np.pi/3, np.pi/3, (1,))
+        initial_state_1 = np.random.uniform(-1, 1, (1,))
+        initial_state = np.concatenate([initial_state_0, initial_state_1], axis=0)
 
         # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
+        # solution = solve_ivp(simple_pendulum, t_span, initial_state, args=(selected_params[0], selected_params[1]), t_eval=t_eval)
         # data[i, j, :, :] = solution.y.T
 
         rhs = lambda x, t: simple_pendulum(t, x, selected_params[0], selected_params[1])
@@ -157,6 +159,15 @@ np.savez(filename, t=t_eval, X=data)
 
 
 
+# ## Randmly pick a trajectory and plot it, then save it
+# e, traj_id = np.random.randint(0, len(environments)), np.random.randint(0, n_traj_per_env)
+# print("Plotting environment", e, "trajectory", traj_id)
+# traj = data[e, traj_id, :, :]
+# plt.plot(t_eval, traj[:, 0], label='theta')
+# plt.plot(t_eval, traj[:, 1], label='theta_dot')
+# plt.legend()
+# plt.savefig('tmp/pendulum.png')
+# plt.show()
 
 
 

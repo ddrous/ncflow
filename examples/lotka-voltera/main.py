@@ -22,7 +22,7 @@ seed = 1181
 
 context_size = 1024
 nb_epochs = 200000
-nb_epochs_adapt = 200000
+nb_epochs_adapt = 50000
 
 print_error_every = 1000
 
@@ -33,7 +33,7 @@ finetune = False
 run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = False
-adapt_huge = True
+adapt_huge = False
 
 #%%
 
@@ -465,3 +465,8 @@ def mape(y, y_hat):
     return jnp.sum(ratios)
 
 ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
+
+print(odd_crit_all)
+
+## Save the odd_crit_all in numpy
+np.save('mapes.npy', odd_crit_all)
