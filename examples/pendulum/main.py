@@ -30,7 +30,7 @@ train = True
 save_trainer = False
 
 finetune = False
-run_folder = "./runs/30012024-103849/"      ## Only needed if not training
+# run_folder = "./runs/30012024-103849/"      ## Only needed if not training
 
 adapt = True
 adapt_huge = False
@@ -61,7 +61,7 @@ if train == True:
 
 
 else:
-    # run_folder = "./runs/24012024-084802/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/30012024-115643/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results

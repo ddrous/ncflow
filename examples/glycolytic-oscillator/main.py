@@ -20,7 +20,7 @@ nb_epochs_adapt = 100000
 
 print_error_every = 1000
 
-train = True
+train = False
 save_trainer = True
 
 finetune = False
@@ -54,7 +54,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/30012024-075246/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/30012024-121418/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
