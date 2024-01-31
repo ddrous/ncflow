@@ -26,13 +26,13 @@ nb_epochs_adapt = 2000
 
 print_error_every = 1000
 
-train = False
+train = True
 save_trainer = True
 
 finetune = False
 run_folder = "./runs/30012024-165151/"      ## Only needed if not training
 
-adapt = False
+adapt = True
 adapt_huge = False
 
 #%%
@@ -62,7 +62,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/30012024-165151/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/30012024-212115/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -269,8 +269,6 @@ else:
 
 
 
-
-
 if finetune:
     # ## Finetune a trained model
 
@@ -299,8 +297,7 @@ if finetune:
 
 ## Test and visualise the results on a test dataloader
 
-# test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-test_dataloader = DataLoader(run_folder+"train_data.npz", shuffle=False)
+test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
 
 visualtester = VisualTester(trainer)
 # ans = visualtester.trainer.nb_steps_node
@@ -312,8 +309,7 @@ if finetune:
     savefigdir = finetunedir+"results_in_domain.png"
 else:
     savefigdir = run_folder+"results_in_domain.png"
-# visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
-visualtester.visualize(test_dataloader, e=7, traj=0, int_cutoff=1.0, save_path=savefigdir);
+visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 

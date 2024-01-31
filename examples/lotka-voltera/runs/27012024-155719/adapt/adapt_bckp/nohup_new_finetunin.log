@@ -1,0 +1,157 @@
+nohup: ignoring input
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt_huge
+ Savepath: ./runs/27012024-155719/adapt/
+ Seed: 4724
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+No training. Loading data and results from: ./runs/27012024-155719/
+WARNING: You did not provide a dataloader id. A new one has been generated: 104749
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 4, 20, 2)
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+No training, loading model and results from ./runs/27012024-155719/ folder ...
+
+WARNING: You did not provide a dataloader id. A new one has been generated: 104750
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 32, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 9
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Test Score (In-Domain): 1.14712375e-05
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 2
+    Trajectory id: 14
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/27012024-155719/results_in_domain.png
+Dataset shape: (4, 1, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+save_id: 170846
+
+No adaptation, loading adaptation parameters from ./runs/27012024-155719/adapt/ folder with id: 170846 ...
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 9
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Test Score (OOD): 1.80486e-06
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 2
+    Trajectory id: 0
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/27012024-155719/adapt/results_ood.png
+Dataset shape: (121, 1, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+
+=== Beginning adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 50000
+    Total number of training steps: 50000
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (121, 1, 20, 2) (20,)
+    Epoch:     0     LossContext: 0.58252645
+    Epoch:     1     LossContext: 1.62471581
+    Epoch:     2     LossContext: 1.62164962
+    Epoch:     3     LossContext: 1.61749077
+    Epoch:  1000     LossContext: 0.01259248
+    Epoch:  2000     LossContext: 0.00919141
+    Epoch:  3000     LossContext: 0.00759778
+    Epoch:  4000     LossContext: 0.00654005
+    Epoch:  5000     LossContext: 0.00581591
+    Epoch:  6000     LossContext: 0.00528085
+    Epoch:  7000     LossContext: 0.00486741
+    Epoch:  8000     LossContext: 0.00456486
+    Epoch:  9000     LossContext: 0.00434550
+    Epoch: 10000     LossContext: 0.00417891
+    Epoch: 11000     LossContext: 0.00405693
+    Epoch: 12000     LossContext: 0.00396609
+    Epoch: 13000     LossContext: 0.00392393
+    Epoch: 14000     LossContext: 0.00391389
+    Epoch: 15000     LossContext: 0.00389866
+    Epoch: 16000     LossContext: 0.00388058
+    Epoch: 17000     LossContext: 0.00386569
+    Epoch: 18000     LossContext: 0.00385044
+    Epoch: 19000     LossContext: 0.00383467
+    Epoch: 20000     LossContext: 0.00382174
+    Epoch: 21000     LossContext: 0.00380712
+    Epoch: 22000     LossContext: 0.00379327
+    Epoch: 23000     LossContext: 0.00378355
+    Epoch: 24000     LossContext: 0.00377262
+    Epoch: 25000     LossContext: 0.00376163
+    Epoch: 26000     LossContext: 0.00376077
+    Epoch: 27000     LossContext: 0.00375872
+    Epoch: 28000     LossContext: 0.00375764
+    Epoch: 29000     LossContext: 0.00375428
+    Epoch: 30000     LossContext: 0.00375308
+    Epoch: 31000     LossContext: 0.00375156
+    Epoch: 32000     LossContext: 0.00374904
+    Epoch: 33000     LossContext: 0.00374826
+    Epoch: 34000     LossContext: 0.00374685
+    Epoch: 35000     LossContext: 0.00374490
+    Epoch: 36000     LossContext: 0.00374341
+    Epoch: 37000     LossContext: 0.00374089
+    Epoch: 38000     LossContext: 0.00374190
+    Epoch: 39000     LossContext: 0.00374235
+    Epoch: 40000     LossContext: 0.00374216
+    Epoch: 41000     LossContext: 0.00374170
+    Epoch: 42000     LossContext: 0.00374182
+    Epoch: 43000     LossContext: 0.00373953
+    Epoch: 44000     LossContext: 0.00374234
+    Epoch: 45000     LossContext: 0.00374193
+    Epoch: 46000     LossContext: 0.00374031
+    Epoch: 47000     LossContext: 0.00373943
+    Epoch: 48000     LossContext: 0.00373857
+    Epoch: 49000     LossContext: 0.00373945
+    Epoch: 49999     LossContext: 0.00373956
+
+Total gradient descent adaptation time: 1 hours 54 mins 53 secs
+Environment weights at the end of the adaptation: [0.0602136  0.01260791 0.01274123 0.0138056  0.01605725 0.00951865
+ 0.01190196 0.01927618 0.00951319 0.01437064 0.10298188 0.01569532
+ 0.00496967 0.00672848 0.00436039 0.00543576 0.0057945  0.00509008
+ 0.00680218 0.0084926  0.00778839 0.01114156 0.0189077  0.00561494
+ 0.00353875 0.00391414 0.00382709 0.00513296 0.0066992  0.00665354
+ 0.0054678  0.00856937 0.01003211 0.02936501 0.00452162 0.00332429
+ 0.00191761 0.00393225 0.00273081 0.002843   0.00600742 0.00633169
+ 0.00670306 0.00848738 0.02102373 0.00591611 0.00494995 0.00190123
+ 0.00469507 0.00346958 0.00220466 0.00272238 0.00508816 0.00814577
+ 0.0073135  0.01387552 0.00416872 0.00275547 0.00309671 0.00300104
+ 0.00384788 0.00392526 0.00381409 0.00499269 0.00637956 0.00712628
+ 0.06300272 0.00404542 0.00333768 0.00331582 0.00268375 0.00301657
+ 0.00254476 0.00435849 0.00501631 0.00522381 0.00675136 0.00452241
+ 0.01389562 0.00409676 0.00290849 0.00302505 0.00329918 0.00357343
+ 0.00358089 0.00455558 0.00590978 0.00676641 0.00520926 0.0039155
+ 0.0037009  0.00426243 0.00375399 0.00371944 0.00394483 0.00447107
+ 0.00487927 0.00575883 0.00753387 0.00745654 0.00474231 0.00736021
+ 0.00324738 0.00446353 0.00634658 0.00508984 0.00513624 0.00592317
+ 0.00668248 0.00545365 0.00909569 0.00560893 0.00653895 0.00994469
+ 0.00426793 0.0089276  0.00885991 0.00518138 0.00759488 0.00778284
+ 0.00949357]
+
+Saving adaptation parameters into ./runs/27012024-155719/adapt/ folder with id 090142 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 9
+    Number of adaptation environments: 121
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Test Score (OOD): 1.9539605
+

@@ -61,3 +61,8 @@ examples/pendulum/runs/*
 ## Ingnore all folders named "tmp", recursively
 **/tmp/
 venv/*
+
+
+!examples/pendulum/runs/30012024-165151
+!examples/lotka-voltera/runs/27012024-155719
+

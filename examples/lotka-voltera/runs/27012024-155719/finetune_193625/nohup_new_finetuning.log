@@ -1,0 +1,488 @@
+nohup: ignoring input
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/27012024-155719/
+ Seed: 2362
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/27012024-155719/adapt/
+ Seed: 3543
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+No training. Loading data and results from: ./runs/27012024-155719/
+WARNING: You did not provide a dataloader id. A new one has been generated: 193625
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 4, 20, 2)
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+No training, loading model and results from ./runs/27012024-155719/ folder ...
+
+No training. Loading and finetuning into: ./runs/27012024-155719/finetune_193625/
+
+
+=== Beginning training ... ===
+    Number of examples in a batch: 4
+    Number of train steps per epoch: 1
+    Number of training epochs: 400000
+    Total number of training steps: 400000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+    Epoch:     0      LossNeuralODE: 0.00001879     LossContext: 0.00001940
+    Epoch:     1      LossNeuralODE: 0.00001940     LossContext: 0.00001930
+    Epoch:     2      LossNeuralODE: 0.00001932     LossContext: 0.00001937
+    Epoch:     3      LossNeuralODE: 0.00001939     LossContext: 0.00001950
+    Epoch:  1000      LossNeuralODE: 0.00001926     LossContext: 0.00001925
+    Epoch:  2000      LossNeuralODE: 0.00001916     LossContext: 0.00001917
+    Epoch:  3000      LossNeuralODE: 0.00001915     LossContext: 0.00001913
+    Epoch:  4000      LossNeuralODE: 0.00001923     LossContext: 0.00001924
+    Epoch:  5000      LossNeuralODE: 0.00001911     LossContext: 0.00001909
+    Epoch:  6000      LossNeuralODE: 0.00001903     LossContext: 0.00001904
+    Epoch:  7000      LossNeuralODE: 0.00001911     LossContext: 0.00001911
+    Epoch:  8000      LossNeuralODE: 0.00001905     LossContext: 0.00001907
+    Epoch:  9000      LossNeuralODE: 0.00001893     LossContext: 0.00001894
+    Epoch: 10000      LossNeuralODE: 0.00001890     LossContext: 0.00001887
+    Epoch: 11000      LossNeuralODE: 0.00001886     LossContext: 0.00001890
+    Epoch: 12000      LossNeuralODE: 0.00001879     LossContext: 0.00001881
+    Epoch: 13000      LossNeuralODE: 0.00001879     LossContext: 0.00001880
+    Epoch: 14000      LossNeuralODE: 0.00001877     LossContext: 0.00001878
+    Epoch: 15000      LossNeuralODE: 0.00001869     LossContext: 0.00001870
+    Epoch: 16000      LossNeuralODE: 0.00001865     LossContext: 0.00001864
+    Epoch: 17000      LossNeuralODE: 0.00001868     LossContext: 0.00001869
+    Epoch: 18000      LossNeuralODE: 0.00001866     LossContext: 0.00001865
+    Epoch: 19000      LossNeuralODE: 0.00001861     LossContext: 0.00001860
+    Epoch: 20000      LossNeuralODE: 0.00001861     LossContext: 0.00001859
+    Epoch: 21000      LossNeuralODE: 0.00001846     LossContext: 0.00001847
+    Epoch: 22000      LossNeuralODE: 0.00001863     LossContext: 0.00001862
+    Epoch: 23000      LossNeuralODE: 0.00001843     LossContext: 0.00001844
+    Epoch: 24000      LossNeuralODE: 0.00001838     LossContext: 0.00001837
+    Epoch: 25000      LossNeuralODE: 0.00001842     LossContext: 0.00001841
+    Epoch: 26000      LossNeuralODE: 0.00001842     LossContext: 0.00001840
+    Epoch: 27000      LossNeuralODE: 0.00001834     LossContext: 0.00001830
+    Epoch: 28000      LossNeuralODE: 0.00001831     LossContext: 0.00001832
+    Epoch: 29000      LossNeuralODE: 0.00001835     LossContext: 0.00001835
+    Epoch: 30000      LossNeuralODE: 0.00001829     LossContext: 0.00001830
+    Epoch: 31000      LossNeuralODE: 0.00001820     LossContext: 0.00001821
+    Epoch: 32000      LossNeuralODE: 0.00001832     LossContext: 0.00001831
+    Epoch: 33000      LossNeuralODE: 0.00001819     LossContext: 0.00001818
+    Epoch: 34000      LossNeuralODE: 0.00001817     LossContext: 0.00001818
+    Epoch: 35000      LossNeuralODE: 0.00001807     LossContext: 0.00001808
+    Epoch: 36000      LossNeuralODE: 0.00001808     LossContext: 0.00001808
+    Epoch: 37000      LossNeuralODE: 0.00001802     LossContext: 0.00001802
+    Epoch: 38000      LossNeuralODE: 0.00001801     LossContext: 0.00001802
+    Epoch: 39000      LossNeuralODE: 0.00001792     LossContext: 0.00001793
+    Epoch: 40000      LossNeuralODE: 0.00001797     LossContext: 0.00001797
+    Epoch: 41000      LossNeuralODE: 0.00001790     LossContext: 0.00001793
+    Epoch: 42000      LossNeuralODE: 0.00001792     LossContext: 0.00001798
+    Epoch: 43000      LossNeuralODE: 0.00001786     LossContext: 0.00001785
+    Epoch: 44000      LossNeuralODE: 0.00001782     LossContext: 0.00001785
+    Epoch: 45000      LossNeuralODE: 0.00001785     LossContext: 0.00001785
+    Epoch: 46000      LossNeuralODE: 0.00001766     LossContext: 0.00001767
+    Epoch: 47000      LossNeuralODE: 0.00001770     LossContext: 0.00001768
+    Epoch: 48000      LossNeuralODE: 0.00001761     LossContext: 0.00001762
+    Epoch: 49000      LossNeuralODE: 0.00001766     LossContext: 0.00001765
+    Epoch: 50000      LossNeuralODE: 0.00001755     LossContext: 0.00001754
+    Epoch: 51000      LossNeuralODE: 0.00001760     LossContext: 0.00001760
+    Epoch: 52000      LossNeuralODE: 0.00001753     LossContext: 0.00001756
+    Epoch: 53000      LossNeuralODE: 0.00001768     LossContext: 0.00001755
+    Epoch: 54000      LossNeuralODE: 0.00001740     LossContext: 0.00001736
+    Epoch: 55000      LossNeuralODE: 0.00001748     LossContext: 0.00001743
+    Epoch: 56000      LossNeuralODE: 0.00001750     LossContext: 0.00001752
+    Epoch: 57000      LossNeuralODE: 0.00001730     LossContext: 0.00001732
+    Epoch: 58000      LossNeuralODE: 0.00001728     LossContext: 0.00001730
+    Epoch: 59000      LossNeuralODE: 0.00001733     LossContext: 0.00001730
+    Epoch: 60000      LossNeuralODE: 0.00001728     LossContext: 0.00001729
+    Epoch: 61000      LossNeuralODE: 0.00001728     LossContext: 0.00001725
+    Epoch: 62000      LossNeuralODE: 0.00001714     LossContext: 0.00001713
+    Epoch: 63000      LossNeuralODE: 0.00001715     LossContext: 0.00001716
+    Epoch: 64000      LossNeuralODE: 0.00001713     LossContext: 0.00001716
+    Epoch: 65000      LossNeuralODE: 0.00001702     LossContext: 0.00001705
+    Epoch: 66000      LossNeuralODE: 0.00001714     LossContext: 0.00001715
+    Epoch: 67000      LossNeuralODE: 0.00001704     LossContext: 0.00001703
+    Epoch: 68000      LossNeuralODE: 0.00001702     LossContext: 0.00001705
+    Epoch: 69000      LossNeuralODE: 0.00001702     LossContext: 0.00001702
+    Epoch: 70000      LossNeuralODE: 0.00001696     LossContext: 0.00001695
+    Epoch: 71000      LossNeuralODE: 0.00001697     LossContext: 0.00001695
+    Epoch: 72000      LossNeuralODE: 0.00001693     LossContext: 0.00001691
+    Epoch: 73000      LossNeuralODE: 0.00001683     LossContext: 0.00001682
+    Epoch: 74000      LossNeuralODE: 0.00001678     LossContext: 0.00001679
+    Epoch: 75000      LossNeuralODE: 0.00001687     LossContext: 0.00001687
+    Epoch: 76000      LossNeuralODE: 0.00001675     LossContext: 0.00001675
+    Epoch: 77000      LossNeuralODE: 0.00001666     LossContext: 0.00001667
+    Epoch: 78000      LossNeuralODE: 0.00001658     LossContext: 0.00001660
+    Epoch: 79000      LossNeuralODE: 0.00001656     LossContext: 0.00001658
+    Epoch: 80000      LossNeuralODE: 0.00001659     LossContext: 0.00001659
+    Epoch: 81000      LossNeuralODE: 0.00001660     LossContext: 0.00001656
+    Epoch: 82000      LossNeuralODE: 0.00001656     LossContext: 0.00001655
+    Epoch: 83000      LossNeuralODE: 0.00001641     LossContext: 0.00001640
+    Epoch: 84000      LossNeuralODE: 0.00001643     LossContext: 0.00001641
+    Epoch: 85000      LossNeuralODE: 0.00001650     LossContext: 0.00001651
+    Epoch: 86000      LossNeuralODE: 0.00001643     LossContext: 0.00001644
+    Epoch: 87000      LossNeuralODE: 0.00001637     LossContext: 0.00001639
+    Epoch: 88000      LossNeuralODE: 0.00001639     LossContext: 0.00001641
+    Epoch: 89000      LossNeuralODE: 0.00001637     LossContext: 0.00001636
+    Epoch: 90000      LossNeuralODE: 0.00001629     LossContext: 0.00001630
+    Epoch: 91000      LossNeuralODE: 0.00001626     LossContext: 0.00001626
+    Epoch: 92000      LossNeuralODE: 0.00001645     LossContext: 0.00001645
+    Epoch: 93000      LossNeuralODE: 0.00001619     LossContext: 0.00001621
+    Epoch: 94000      LossNeuralODE: 0.00001620     LossContext: 0.00001622
+    Epoch: 95000      LossNeuralODE: 0.00001627     LossContext: 0.00001626
+    Epoch: 96000      LossNeuralODE: 0.00001617     LossContext: 0.00001618
+    Epoch: 97000      LossNeuralODE: 0.00001608     LossContext: 0.00001608
+    Epoch: 98000      LossNeuralODE: 0.00001608     LossContext: 0.00001608
+    Epoch: 99000      LossNeuralODE: 0.00001610     LossContext: 0.00001609
+    Epoch: 100000      LossNeuralODE: 0.00001607     LossContext: 0.00001608
+    Epoch: 101000      LossNeuralODE: 0.00001595     LossContext: 0.00001596
+    Epoch: 102000      LossNeuralODE: 0.00001589     LossContext: 0.00001589
+    Epoch: 103000      LossNeuralODE: 0.00001591     LossContext: 0.00001589
+    Epoch: 104000      LossNeuralODE: 0.00001600     LossContext: 0.00001597
+    Epoch: 105000      LossNeuralODE: 0.00001594     LossContext: 0.00001593
+    Epoch: 106000      LossNeuralODE: 0.00001591     LossContext: 0.00001591
+    Epoch: 107000      LossNeuralODE: 0.00001574     LossContext: 0.00001574
+    Epoch: 108000      LossNeuralODE: 0.00001583     LossContext: 0.00001584
+    Epoch: 109000      LossNeuralODE: 0.00001585     LossContext: 0.00001586
+    Epoch: 110000      LossNeuralODE: 0.00001579     LossContext: 0.00001579
+    Epoch: 111000      LossNeuralODE: 0.00001566     LossContext: 0.00001568
+    Epoch: 112000      LossNeuralODE: 0.00001570     LossContext: 0.00001570
+    Epoch: 113000      LossNeuralODE: 0.00001562     LossContext: 0.00001560
+    Epoch: 114000      LossNeuralODE: 0.00001567     LossContext: 0.00001567
+    Epoch: 115000      LossNeuralODE: 0.00001557     LossContext: 0.00001554
+    Epoch: 116000      LossNeuralODE: 0.00001556     LossContext: 0.00001557
+    Epoch: 117000      LossNeuralODE: 0.00001554     LossContext: 0.00001549
+    Epoch: 118000      LossNeuralODE: 0.00001561     LossContext: 0.00001559
+    Epoch: 119000      LossNeuralODE: 0.00001554     LossContext: 0.00001554
+    Epoch: 120000      LossNeuralODE: 0.00001540     LossContext: 0.00001544
+    Epoch: 121000      LossNeuralODE: 0.00001540     LossContext: 0.00001544
+    Epoch: 122000      LossNeuralODE: 0.00001535     LossContext: 0.00001535
+    Epoch: 123000      LossNeuralODE: 0.00001541     LossContext: 0.00001541
+    Epoch: 124000      LossNeuralODE: 0.00001533     LossContext: 0.00001533
+    Epoch: 125000      LossNeuralODE: 0.00001527     LossContext: 0.00001527
+    Epoch: 126000      LossNeuralODE: 0.00001524     LossContext: 0.00001525
+    Epoch: 127000      LossNeuralODE: 0.00001520     LossContext: 0.00001520
+    Epoch: 128000      LossNeuralODE: 0.00001523     LossContext: 0.00001524
+    Epoch: 129000      LossNeuralODE: 0.00001527     LossContext: 0.00001525
+    Epoch: 130000      LossNeuralODE: 0.00001513     LossContext: 0.00001514
+    Epoch: 131000      LossNeuralODE: 0.00001513     LossContext: 0.00001513
+    Epoch: 132000      LossNeuralODE: 0.00001515     LossContext: 0.00001513
+    Epoch: 133000      LossNeuralODE: 0.00001514     LossContext: 0.00001512
+    Epoch: 134000      LossNeuralODE: 0.00001508     LossContext: 0.00001509
+    Epoch: 135000      LossNeuralODE: 0.00001497     LossContext: 0.00001501
+    Epoch: 136000      LossNeuralODE: 0.00001494     LossContext: 0.00001492
+    Epoch: 137000      LossNeuralODE: 0.00001489     LossContext: 0.00001489
+    Epoch: 138000      LossNeuralODE: 0.00001496     LossContext: 0.00001500
+    Epoch: 139000      LossNeuralODE: 0.00001498     LossContext: 0.00001498
+    Epoch: 140000      LossNeuralODE: 0.00001486     LossContext: 0.00001484
+    Epoch: 141000      LossNeuralODE: 0.00001486     LossContext: 0.00001485
+    Epoch: 142000      LossNeuralODE: 0.00001486     LossContext: 0.00001485
+    Epoch: 143000      LossNeuralODE: 0.00001478     LossContext: 0.00001477
+    Epoch: 144000      LossNeuralODE: 0.00001476     LossContext: 0.00001478
+    Epoch: 145000      LossNeuralODE: 0.00001480     LossContext: 0.00001480
+    Epoch: 146000      LossNeuralODE: 0.00001471     LossContext: 0.00001472
+    Epoch: 147000      LossNeuralODE: 0.00001464     LossContext: 0.00001463
+    Epoch: 148000      LossNeuralODE: 0.00001461     LossContext: 0.00001460
+    Epoch: 149000      LossNeuralODE: 0.00001464     LossContext: 0.00001467
+    Epoch: 150000      LossNeuralODE: 0.00001454     LossContext: 0.00001453
+    Epoch: 151000      LossNeuralODE: 0.00001468     LossContext: 0.00001466
+    Epoch: 152000      LossNeuralODE: 0.00001452     LossContext: 0.00001450
+    Epoch: 153000      LossNeuralODE: 0.00001462     LossContext: 0.00001464
+    Epoch: 154000      LossNeuralODE: 0.00001456     LossContext: 0.00001455
+    Epoch: 155000      LossNeuralODE: 0.00001446     LossContext: 0.00001445
+    Epoch: 156000      LossNeuralODE: 0.00001443     LossContext: 0.00001445
+    Epoch: 157000      LossNeuralODE: 0.00001443     LossContext: 0.00001447
+    Epoch: 158000      LossNeuralODE: 0.00001435     LossContext: 0.00001434
+    Epoch: 159000      LossNeuralODE: 0.00001443     LossContext: 0.00001444
+    Epoch: 160000      LossNeuralODE: 0.00001437     LossContext: 0.00001440
+    Epoch: 161000      LossNeuralODE: 0.00001434     LossContext: 0.00001435
+    Epoch: 162000      LossNeuralODE: 0.00001428     LossContext: 0.00001428
+    Epoch: 163000      LossNeuralODE: 0.00001433     LossContext: 0.00001432
+    Epoch: 164000      LossNeuralODE: 0.00001431     LossContext: 0.00001431
+    Epoch: 165000      LossNeuralODE: 0.00001420     LossContext: 0.00001420
+    Epoch: 166000      LossNeuralODE: 0.00001424     LossContext: 0.00001424
+    Epoch: 167000      LossNeuralODE: 0.00001418     LossContext: 0.00001417
+    Epoch: 168000      LossNeuralODE: 0.00001415     LossContext: 0.00001415
+    Epoch: 169000      LossNeuralODE: 0.00001411     LossContext: 0.00001411
+    Epoch: 170000      LossNeuralODE: 0.00001412     LossContext: 0.00001410
+    Epoch: 171000      LossNeuralODE: 0.00001410     LossContext: 0.00001410
+    Epoch: 172000      LossNeuralODE: 0.00001411     LossContext: 0.00001414
+    Epoch: 173000      LossNeuralODE: 0.00001411     LossContext: 0.00001411
+    Epoch: 174000      LossNeuralODE: 0.00001392     LossContext: 0.00001399
+    Epoch: 175000      LossNeuralODE: 0.00001401     LossContext: 0.00001400
+    Epoch: 176000      LossNeuralODE: 0.00001390     LossContext: 0.00001392
+    Epoch: 177000      LossNeuralODE: 0.00001393     LossContext: 0.00001391
+    Epoch: 178000      LossNeuralODE: 0.00001394     LossContext: 0.00001396
+    Epoch: 179000      LossNeuralODE: 0.00001385     LossContext: 0.00001383
+    Epoch: 180000      LossNeuralODE: 0.00001390     LossContext: 0.00001390
+    Epoch: 181000      LossNeuralODE: 0.00001392     LossContext: 0.00001390
+    Epoch: 182000      LossNeuralODE: 0.00001386     LossContext: 0.00001381
+    Epoch: 183000      LossNeuralODE: 0.00001385     LossContext: 0.00001384
+    Epoch: 184000      LossNeuralODE: 0.00001374     LossContext: 0.00001375
+    Epoch: 185000      LossNeuralODE: 0.00001371     LossContext: 0.00001368
+    Epoch: 186000      LossNeuralODE: 0.00001376     LossContext: 0.00001378
+    Epoch: 187000      LossNeuralODE: 0.00001370     LossContext: 0.00001367
+    Epoch: 188000      LossNeuralODE: 0.00001357     LossContext: 0.00001356
+    Epoch: 189000      LossNeuralODE: 0.00001366     LossContext: 0.00001364
+    Epoch: 190000      LossNeuralODE: 0.00001369     LossContext: 0.00001369
+    Epoch: 191000      LossNeuralODE: 0.00001366     LossContext: 0.00001363
+    Epoch: 192000      LossNeuralODE: 0.00001361     LossContext: 0.00001360
+    Epoch: 193000      LossNeuralODE: 0.00001357     LossContext: 0.00001356
+    Epoch: 194000      LossNeuralODE: 0.00001348     LossContext: 0.00001349
+    Epoch: 195000      LossNeuralODE: 0.00001351     LossContext: 0.00001350
+    Epoch: 196000      LossNeuralODE: 0.00001347     LossContext: 0.00001349
+    Epoch: 197000      LossNeuralODE: 0.00001350     LossContext: 0.00001349
+    Epoch: 198000      LossNeuralODE: 0.00001340     LossContext: 0.00001339
+    Epoch: 199000      LossNeuralODE: 0.00001345     LossContext: 0.00001344
+    Epoch: 200000      LossNeuralODE: 0.00001333     LossContext: 0.00001336
+    Epoch: 201000      LossNeuralODE: 0.00001343     LossContext: 0.00001341
+    Epoch: 202000      LossNeuralODE: 0.00001330     LossContext: 0.00001327
+    Epoch: 203000      LossNeuralODE: 0.00001322     LossContext: 0.00001321
+    Epoch: 204000      LossNeuralODE: 0.00001326     LossContext: 0.00001328
+    Epoch: 205000      LossNeuralODE: 0.00001321     LossContext: 0.00001321
+    Epoch: 206000      LossNeuralODE: 0.00001323     LossContext: 0.00001322
+    Epoch: 207000      LossNeuralODE: 0.00001325     LossContext: 0.00001322
+    Epoch: 208000      LossNeuralODE: 0.00001321     LossContext: 0.00001319
+    Epoch: 209000      LossNeuralODE: 0.00001316     LossContext: 0.00001315
+    Epoch: 210000      LossNeuralODE: 0.00001316     LossContext: 0.00001315
+    Epoch: 211000      LossNeuralODE: 0.00001314     LossContext: 0.00001313
+    Epoch: 212000      LossNeuralODE: 0.00001308     LossContext: 0.00001309
+    Epoch: 213000      LossNeuralODE: 0.00001307     LossContext: 0.00001307
+    Epoch: 214000      LossNeuralODE: 0.00001309     LossContext: 0.00001309
+    Epoch: 215000      LossNeuralODE: 0.00001295     LossContext: 0.00001296
+    Epoch: 216000      LossNeuralODE: 0.00001299     LossContext: 0.00001298
+    Epoch: 217000      LossNeuralODE: 0.00001298     LossContext: 0.00001299
+    Epoch: 218000      LossNeuralODE: 0.00001300     LossContext: 0.00001304
+    Epoch: 219000      LossNeuralODE: 0.00001286     LossContext: 0.00001286
+    Epoch: 220000      LossNeuralODE: 0.00001293     LossContext: 0.00001291
+    Epoch: 221000      LossNeuralODE: 0.00001296     LossContext: 0.00001295
+    Epoch: 222000      LossNeuralODE: 0.00001290     LossContext: 0.00001289
+    Epoch: 223000      LossNeuralODE: 0.00001287     LossContext: 0.00001288
+    Epoch: 224000      LossNeuralODE: 0.00001288     LossContext: 0.00001287
+    Epoch: 225000      LossNeuralODE: 0.00001288     LossContext: 0.00001288
+    Epoch: 226000      LossNeuralODE: 0.00001286     LossContext: 0.00001284
+    Epoch: 227000      LossNeuralODE: 0.00001283     LossContext: 0.00001283
+    Epoch: 228000      LossNeuralODE: 0.00001271     LossContext: 0.00001271
+    Epoch: 229000      LossNeuralODE: 0.00001272     LossContext: 0.00001271
+    Epoch: 230000      LossNeuralODE: 0.00001273     LossContext: 0.00001274
+    Epoch: 231000      LossNeuralODE: 0.00001266     LossContext: 0.00001268
+    Epoch: 232000      LossNeuralODE: 0.00001270     LossContext: 0.00001271
+    Epoch: 233000      LossNeuralODE: 0.00001266     LossContext: 0.00001271
+    Epoch: 234000      LossNeuralODE: 0.00001269     LossContext: 0.00001268
+    Epoch: 235000      LossNeuralODE: 0.00001268     LossContext: 0.00001268
+    Epoch: 236000      LossNeuralODE: 0.00001263     LossContext: 0.00001264
+    Epoch: 237000      LossNeuralODE: 0.00001257     LossContext: 0.00001257
+    Epoch: 238000      LossNeuralODE: 0.00001258     LossContext: 0.00001258
+    Epoch: 239000      LossNeuralODE: 0.00001258     LossContext: 0.00001258
+    Epoch: 240000      LossNeuralODE: 0.00001259     LossContext: 0.00001260
+    Epoch: 241000      LossNeuralODE: 0.00001252     LossContext: 0.00001250
+    Epoch: 242000      LossNeuralODE: 0.00001252     LossContext: 0.00001253
+    Epoch: 243000      LossNeuralODE: 0.00001250     LossContext: 0.00001250
+    Epoch: 244000      LossNeuralODE: 0.00001243     LossContext: 0.00001244
+    Epoch: 245000      LossNeuralODE: 0.00001240     LossContext: 0.00001243
+    Epoch: 246000      LossNeuralODE: 0.00001242     LossContext: 0.00001239
+    Epoch: 247000      LossNeuralODE: 0.00001239     LossContext: 0.00001241
+    Epoch: 248000      LossNeuralODE: 0.00001245     LossContext: 0.00001245
+    Epoch: 249000      LossNeuralODE: 0.00001230     LossContext: 0.00001232
+    Epoch: 250000      LossNeuralODE: 0.00001232     LossContext: 0.00001232
+    Epoch: 251000      LossNeuralODE: 0.00001230     LossContext: 0.00001230
+    Epoch: 252000      LossNeuralODE: 0.00001225     LossContext: 0.00001224
+    Epoch: 253000      LossNeuralODE: 0.00001225     LossContext: 0.00001226
+    Epoch: 254000      LossNeuralODE: 0.00001226     LossContext: 0.00001224
+    Epoch: 255000      LossNeuralODE: 0.00001215     LossContext: 0.00001215
+    Epoch: 256000      LossNeuralODE: 0.00001211     LossContext: 0.00001210
+    Epoch: 257000      LossNeuralODE: 0.00001216     LossContext: 0.00001213
+    Epoch: 258000      LossNeuralODE: 0.00001216     LossContext: 0.00001215
+    Epoch: 259000      LossNeuralODE: 0.00001214     LossContext: 0.00001213
+    Epoch: 260000      LossNeuralODE: 0.00001213     LossContext: 0.00001214
+    Epoch: 261000      LossNeuralODE: 0.00001206     LossContext: 0.00001206
+    Epoch: 262000      LossNeuralODE: 0.00001202     LossContext: 0.00001201
+    Epoch: 263000      LossNeuralODE: 0.00001209     LossContext: 0.00001211
+    Epoch: 264000      LossNeuralODE: 0.00001200     LossContext: 0.00001201
+    Epoch: 265000      LossNeuralODE: 0.00001201     LossContext: 0.00001200
+    Epoch: 266000      LossNeuralODE: 0.00001197     LossContext: 0.00001196
+    Epoch: 267000      LossNeuralODE: 0.00001194     LossContext: 0.00001193
+    Epoch: 268000      LossNeuralODE: 0.00001195     LossContext: 0.00001195
+    Epoch: 269000      LossNeuralODE: 0.00001193     LossContext: 0.00001191
+    Epoch: 270000      LossNeuralODE: 0.00001187     LossContext: 0.00001188
+    Epoch: 271000      LossNeuralODE: 0.00001191     LossContext: 0.00001191
+    Epoch: 272000      LossNeuralODE: 0.00001191     LossContext: 0.00001191
+    Epoch: 273000      LossNeuralODE: 0.00001191     LossContext: 0.00001191
+    Epoch: 274000      LossNeuralODE: 0.00001183     LossContext: 0.00001183
+    Epoch: 275000      LossNeuralODE: 0.00001180     LossContext: 0.00001181
+    Epoch: 276000      LossNeuralODE: 0.00001182     LossContext: 0.00001182
+    Epoch: 277000      LossNeuralODE: 0.00001176     LossContext: 0.00001175
+    Epoch: 278000      LossNeuralODE: 0.00001178     LossContext: 0.00001179
+    Epoch: 279000      LossNeuralODE: 0.00001179     LossContext: 0.00001181
+    Epoch: 280000      LossNeuralODE: 0.00001178     LossContext: 0.00001178
+    Epoch: 281000      LossNeuralODE: 0.00001175     LossContext: 0.00001174
+    Epoch: 282000      LossNeuralODE: 0.00001170     LossContext: 0.00001171
+    Epoch: 283000      LossNeuralODE: 0.00001167     LossContext: 0.00001169
+    Epoch: 284000      LossNeuralODE: 0.00001165     LossContext: 0.00001171
+    Epoch: 285000      LossNeuralODE: 0.00001162     LossContext: 0.00001161
+    Epoch: 286000      LossNeuralODE: 0.00001162     LossContext: 0.00001163
+    Epoch: 287000      LossNeuralODE: 0.00001162     LossContext: 0.00001162
+    Epoch: 288000      LossNeuralODE: 0.00001165     LossContext: 0.00001162
+    Epoch: 289000      LossNeuralODE: 0.00001161     LossContext: 0.00001161
+    Epoch: 290000      LossNeuralODE: 0.00001154     LossContext: 0.00001152
+    Epoch: 291000      LossNeuralODE: 0.00001159     LossContext: 0.00001158
+    Epoch: 292000      LossNeuralODE: 0.00001149     LossContext: 0.00001149
+    Epoch: 293000      LossNeuralODE: 0.00001139     LossContext: 0.00001142
+    Epoch: 294000      LossNeuralODE: 0.00001145     LossContext: 0.00001146
+    Epoch: 295000      LossNeuralODE: 0.00001147     LossContext: 0.00001147
+    Epoch: 296000      LossNeuralODE: 0.00001142     LossContext: 0.00001143
+    Epoch: 297000      LossNeuralODE: 0.00001144     LossContext: 0.00001145
+    Epoch: 298000      LossNeuralODE: 0.00001135     LossContext: 0.00001134
+    Epoch: 299000      LossNeuralODE: 0.00001137     LossContext: 0.00001133
+    Epoch: 300000      LossNeuralODE: 0.00001131     LossContext: 0.00001133
+    Epoch: 301000      LossNeuralODE: 0.00001140     LossContext: 0.00001140
+    Epoch: 302000      LossNeuralODE: 0.00001139     LossContext: 0.00001137
+    Epoch: 303000      LossNeuralODE: 0.00001127     LossContext: 0.00001129
+    Epoch: 304000      LossNeuralODE: 0.00001136     LossContext: 0.00001137
+    Epoch: 305000      LossNeuralODE: 0.00001129     LossContext: 0.00001128
+    Epoch: 306000      LossNeuralODE: 0.00001128     LossContext: 0.00001130
+    Epoch: 307000      LossNeuralODE: 0.00001125     LossContext: 0.00001127
+    Epoch: 308000      LossNeuralODE: 0.00001121     LossContext: 0.00001122
+    Epoch: 309000      LossNeuralODE: 0.00001117     LossContext: 0.00001117
+    Epoch: 310000      LossNeuralODE: 0.00001114     LossContext: 0.00001114
+    Epoch: 311000      LossNeuralODE: 0.00001115     LossContext: 0.00001118
+    Epoch: 312000      LossNeuralODE: 0.00001113     LossContext: 0.00001111
+    Epoch: 313000      LossNeuralODE: 0.00001107     LossContext: 0.00001106
+    Epoch: 314000      LossNeuralODE: 0.00001109     LossContext: 0.00001107
+    Epoch: 315000      LossNeuralODE: 0.00001110     LossContext: 0.00001109
+    Epoch: 316000      LossNeuralODE: 0.00001111     LossContext: 0.00001112
+    Epoch: 317000      LossNeuralODE: 0.00001106     LossContext: 0.00001102
+    Epoch: 318000      LossNeuralODE: 0.00001110     LossContext: 0.00001110
+    Epoch: 319000      LossNeuralODE: 0.00001104     LossContext: 0.00001105
+    Epoch: 320000      LossNeuralODE: 0.00001104     LossContext: 0.00001105
+    Epoch: 321000      LossNeuralODE: 0.00001100     LossContext: 0.00001101
+    Epoch: 322000      LossNeuralODE: 0.00001098     LossContext: 0.00001097
+    Epoch: 323000      LossNeuralODE: 0.00001098     LossContext: 0.00001099
+    Epoch: 324000      LossNeuralODE: 0.00001093     LossContext: 0.00001091
+    Epoch: 325000      LossNeuralODE: 0.00001095     LossContext: 0.00001095
+    Epoch: 326000      LossNeuralODE: 0.00001088     LossContext: 0.00001091
+    Epoch: 327000      LossNeuralODE: 0.00001092     LossContext: 0.00001090
+    Epoch: 328000      LossNeuralODE: 0.00001090     LossContext: 0.00001088
+    Epoch: 329000      LossNeuralODE: 0.00001089     LossContext: 0.00001093
+    Epoch: 330000      LossNeuralODE: 0.00001089     LossContext: 0.00001091
+    Epoch: 331000      LossNeuralODE: 0.00001086     LossContext: 0.00001086
+    Epoch: 332000      LossNeuralODE: 0.00001082     LossContext: 0.00001083
+    Epoch: 333000      LossNeuralODE: 0.00001085     LossContext: 0.00001081
+    Epoch: 334000      LossNeuralODE: 0.00001074     LossContext: 0.00001073
+    Epoch: 335000      LossNeuralODE: 0.00001080     LossContext: 0.00001079
+    Epoch: 336000      LossNeuralODE: 0.00001079     LossContext: 0.00001077
+    Epoch: 337000      LossNeuralODE: 0.00001072     LossContext: 0.00001072
+    Epoch: 338000      LossNeuralODE: 0.00001073     LossContext: 0.00001073
+    Epoch: 339000      LossNeuralODE: 0.00001075     LossContext: 0.00001073
+    Epoch: 340000      LossNeuralODE: 0.00001070     LossContext: 0.00001070
+    Epoch: 341000      LossNeuralODE: 0.00001067     LossContext: 0.00001070
+    Epoch: 342000      LossNeuralODE: 0.00001058     LossContext: 0.00001060
+    Epoch: 343000      LossNeuralODE: 0.00001074     LossContext: 0.00001073
+    Epoch: 344000      LossNeuralODE: 0.00001065     LossContext: 0.00001068
+    Epoch: 345000      LossNeuralODE: 0.00001068     LossContext: 0.00001067
+    Epoch: 346000      LossNeuralODE: 0.00001061     LossContext: 0.00001061
+    Epoch: 347000      LossNeuralODE: 0.00001056     LossContext: 0.00001057
+    Epoch: 348000      LossNeuralODE: 0.00001058     LossContext: 0.00001056
+    Epoch: 349000      LossNeuralODE: 0.00001060     LossContext: 0.00001058
+    Epoch: 350000      LossNeuralODE: 0.00001049     LossContext: 0.00001046
+    Epoch: 351000      LossNeuralODE: 0.00001058     LossContext: 0.00001059
+    Epoch: 352000      LossNeuralODE: 0.00001048     LossContext: 0.00001048
+    Epoch: 353000      LossNeuralODE: 0.00001052     LossContext: 0.00001053
+    Epoch: 354000      LossNeuralODE: 0.00001055     LossContext: 0.00001058
+    Epoch: 355000      LossNeuralODE: 0.00001044     LossContext: 0.00001043
+    Epoch: 356000      LossNeuralODE: 0.00001045     LossContext: 0.00001044
+    Epoch: 357000      LossNeuralODE: 0.00001040     LossContext: 0.00001044
+    Epoch: 358000      LossNeuralODE: 0.00001041     LossContext: 0.00001042
+    Epoch: 359000      LossNeuralODE: 0.00001043     LossContext: 0.00001043
+    Epoch: 360000      LossNeuralODE: 0.00001039     LossContext: 0.00001039
+    Epoch: 361000      LossNeuralODE: 0.00001035     LossContext: 0.00001034
+    Epoch: 362000      LossNeuralODE: 0.00001044     LossContext: 0.00001043
+    Epoch: 363000      LossNeuralODE: 0.00001036     LossContext: 0.00001031
+    Epoch: 364000      LossNeuralODE: 0.00001032     LossContext: 0.00001029
+    Epoch: 365000      LossNeuralODE: 0.00001032     LossContext: 0.00001030
+    Epoch: 366000      LossNeuralODE: 0.00001040     LossContext: 0.00001040
+    Epoch: 367000      LossNeuralODE: 0.00001031     LossContext: 0.00001031
+    Epoch: 368000      LossNeuralODE: 0.00001037     LossContext: 0.00001033
+    Epoch: 369000      LossNeuralODE: 0.00001035     LossContext: 0.00001032
+    Epoch: 370000      LossNeuralODE: 0.00001027     LossContext: 0.00001026
+    Epoch: 371000      LossNeuralODE: 0.00001020     LossContext: 0.00001019
+    Epoch: 372000      LossNeuralODE: 0.00001021     LossContext: 0.00001021
+    Epoch: 373000      LossNeuralODE: 0.00001022     LossContext: 0.00001023
+    Epoch: 374000      LossNeuralODE: 0.00001017     LossContext: 0.00001016
+    Epoch: 375000      LossNeuralODE: 0.00001019     LossContext: 0.00001017
+    Epoch: 376000      LossNeuralODE: 0.00001015     LossContext: 0.00001014
+    Epoch: 377000      LossNeuralODE: 0.00001019     LossContext: 0.00001019
+    Epoch: 378000      LossNeuralODE: 0.00001018     LossContext: 0.00001018
+    Epoch: 379000      LossNeuralODE: 0.00001011     LossContext: 0.00001011
+    Epoch: 380000      LossNeuralODE: 0.00001012     LossContext: 0.00001010
+    Epoch: 381000      LossNeuralODE: 0.00001010     LossContext: 0.00001009
+    Epoch: 382000      LossNeuralODE: 0.00001007     LossContext: 0.00001005
+    Epoch: 383000      LossNeuralODE: 0.00001011     LossContext: 0.00001012
+    Epoch: 384000      LossNeuralODE: 0.00001003     LossContext: 0.00001003
+    Epoch: 385000      LossNeuralODE: 0.00001010     LossContext: 0.00001007
+    Epoch: 386000      LossNeuralODE: 0.00001004     LossContext: 0.00001003
+    Epoch: 387000      LossNeuralODE: 0.00000997     LossContext: 0.00000995
+    Epoch: 388000      LossNeuralODE: 0.00000996     LossContext: 0.00000998
+    Epoch: 389000      LossNeuralODE: 0.00001002     LossContext: 0.00001003
+    Epoch: 390000      LossNeuralODE: 0.00001000     LossContext: 0.00000999
+    Epoch: 391000      LossNeuralODE: 0.00000996     LossContext: 0.00000996
+    Epoch: 392000      LossNeuralODE: 0.00000990     LossContext: 0.00000989
+    Epoch: 393000      LossNeuralODE: 0.00000991     LossContext: 0.00000993
+    Epoch: 394000      LossNeuralODE: 0.00000989     LossContext: 0.00000988
+    Epoch: 395000      LossNeuralODE: 0.00000987     LossContext: 0.00000985
+    Epoch: 396000      LossNeuralODE: 0.00000997     LossContext: 0.00000998
+    Epoch: 397000      LossNeuralODE: 0.00000987     LossContext: 0.00000987
+    Epoch: 398000      LossNeuralODE: 0.00000983     LossContext: 0.00000984
+    Epoch: 399000      LossNeuralODE: 0.00000985     LossContext: 0.00000984
+    Epoch: 399999      LossNeuralODE: 0.00000980     LossContext: 0.00000982
+
+Total gradient descent training time: 4 hours 29 mins 36 secs
+Environment weights at the end of the training: [0.13797426 0.10863401 0.12225113 0.11749392 0.0954376  0.06075845
+ 0.13787894 0.13394973 0.08562201]
+
+Saving model and results into ./runs/27012024-155719/finetune_193625/ folder ...
+
+WARNING: You did not provide a dataloader id. A new one has been generated: 000702
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 32, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 9
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Test Score (In-Domain): 1.6942413e-05
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 3
+    Trajectory id: 22
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/27012024-155719/finetune_193625/results_in_domain.png
+Dataset shape: (4, 1, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+save_id: 170846
+
+No adaptation, loading adaptation parameters from ./runs/27012024-155719/adapt/ folder with id: 170846 ...
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 9
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Test Score (OOD): 0.008501967
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 2
+    Trajectory id: 0
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/27012024-155719/adapt/results_ood.png

@@ -23,10 +23,10 @@ import argparse
 
 if _in_ipython_session:
 	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='adapt', savepath="./runs/30012024-165151/", seed=3422)
+	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=3422)
 else:
 	parser = argparse.ArgumentParser(description='Description of your program')
-	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
+	parser.add_argument('--split', type=str, help='Generate "train", "test" or "adapt" data', default='train', required=False)
 	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
 	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=42, required=False)
 
@@ -34,7 +34,7 @@ else:
 
 
 split = args.split
-assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge'"
+assert split in ["train", "test", "adapt"], "Split must be either 'train', 'test' or 'adapt'"
 
 savepath = args.savepath
 seed = args.seed
@@ -70,10 +70,12 @@ import jax.numpy as jnp
 # import diffrax
 
 # Define the Lotka-Volterra system
-def simple_pendulum(t, state, L, g):
-    theta, theta_dot = state
-    theta_ddot = -(g / L) * np.sin(theta)
-    return np.array([theta_dot, theta_ddot])
+def lotka_volterra(t, state, alpha, beta, delta, gamma):
+    x, y = state
+    dx_dt = alpha * x - beta * x * y
+    dy_dt = delta * x * y - gamma * y
+    # return [dx_dt, dy_dt]
+    return np.array([dx_dt, dy_dt])
 
 
 def rk4_integrator(rhs, y0, t):
@@ -101,22 +103,42 @@ def rk4_integrator(rhs, y0, t):
 
 if split == "train" or split=="test":
   # Training environments
-  environments = [(1., g) for g in list(np.linspace(2, 24, 25))]
-
-elif split == "adapt" or split == "adapt_test":
+  environments = [
+      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.5},
+      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.5},
+      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.5},
+      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.75},
+      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.75},
+      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.75},
+      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 1.0},
+      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 1.0},
+      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
+  ]
+elif split == "adapt":
   ## Adaptation environments
-  # environments = [(1., g) for g in list(np.linspace(1, 2, 4))] + [(1., g) for g in list(np.linspace(24, 30, 4))]
-  # environments = [(1., g) for g in list(np.linspace(10.5, 17, 4))]
-  environments = [(1., 10.25), (1., 14.75)]
+  environments = [
+      {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+      {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+      {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+      {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+  ]
+
+# ## Lots of data environment
+# environments = []
+# for beta in np.linspace(0.5, 1.5, 11):
+#   new_env = {"alpha": 0.5, "beta": beta, "gamma": 0.5, "delta": 0.5}
+#   environments.append(new_env)
+
+
 
 if split == "train":
   n_traj_per_env = 4     ## training
 elif split == "test":
   n_traj_per_env = 32     ## testing
-elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
+elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
-n_steps_per_traj = int(10/0.1)
+n_steps_per_traj = int(10/0.5)
 # n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
@@ -131,15 +153,13 @@ for j in range(n_traj_per_env):
         # print("Environment", i)
 
         # Initial conditions (prey and predator concentrations)
-        initial_state_0 = np.random.uniform(-np.pi/3, np.pi/3, (1,))
-        initial_state_1 = np.random.uniform(-1, 1, (1,))
-        initial_state = np.concatenate([initial_state_0, initial_state_1], axis=0)
+        initial_state = np.random.uniform(1, 3, (2,))
 
         # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(simple_pendulum, t_span, initial_state, args=(selected_params[0], selected_params[1]), t_eval=t_eval)
+        # solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
         # data[i, j, :, :] = solution.y.T
 
-        rhs = lambda x, t: simple_pendulum(t, x, selected_params[0], selected_params[1])
+        rhs = lambda x, t: lotka_volterra(t, x, selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"])
         solution = rk4_integrator(rhs, initial_state, t_eval)
         data[i, j, :, :] = solution
 
@@ -150,10 +170,6 @@ elif split == "test":
   filename = savepath+'test_data.npz'
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
-elif split == "adapt_test":
-  filename = savepath+'adapt_test_data.npz'
-elif split == "adapt_huge":
-  filename = savepath+'adapt_huge_data.npz'
 
 np.savez(filename, t=t_eval, X=data)
 
@@ -161,15 +177,6 @@ np.savez(filename, t=t_eval, X=data)
 
 
 
-# ## Randmly pick a trajectory and plot it, then save it
-# e, traj_id = np.random.randint(0, len(environments)), np.random.randint(0, n_traj_per_env)
-# print("Plotting environment", e, "trajectory", traj_id)
-# traj = data[e, traj_id, :, :]
-# plt.plot(t_eval, traj[:, 0], label='theta')
-# plt.plot(t_eval, traj[:, 1], label='theta_dot')
-# plt.legend()
-# plt.savefig('tmp/pendulum.png')
-# plt.show()
 
 
 

@@ -195,10 +195,10 @@ def main(
     batch_size=9*4,
     lr_strategy=(3e-4, 3e-5),
     length_strategy=(0.25, 1.0),   ## If you increase the length, you must decrease the learning rate. Relation is non-linear
-    steps_strategy=(5000, 10000),
+    steps_strategy=(2000, 4000),
     width_size=64*1,
     depth=3,
-    seed=10829,
+    seed=109,
     plot=True,
     print_every=1000,
 ):
@@ -318,6 +318,9 @@ def plot_result(traj, model, losses, nfes, ts, ys):
 
 
 
+
+
+
 def test_mse_model(model, ts, ys):
     y_pred, nfes = jax.vmap(model, in_axes=(None, 0))(ts, ys[:, 0, :])
     return jnp.mean((ys[:, :, :] - y_pred) ** 2)
@@ -371,3 +374,62 @@ ys, ts = raw_data['X'], raw_data['t']
 
 ys = jnp.reshape(ys, (-1, ys.shape[2], ys.shape[3]))
 test_mse_model(model, ts, ys)
+
+
+
+
+#%%
+
+
+
+def plot_traj(traj, model, ts, ys, stop=1000):
+
+    # import numpy as np
+    # import seaborn as sns
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    sns.set(context='talk', style='ticks',
+            font='sans-serif', font_scale=1, color_codes=True, rc={"lines.linewidth": 6})
+    # plt.style.use("dark_background")
+    # sns.set_style("whitegrid", {'axes.grid' : True})
+
+    ## Increaset x and y ticks and lable sizes
+    # plt.rcParams['xtick.labelsize']=14
+    # plt.rcParams['ytick.labelsize']=14
+    plt.rcParams['axes.labelsize']=14
+    plt.rcParams['axes.titlesize']=14
+
+    # fig, ax = plt.subplots(2, 2, figsize=(6*2, 3.5*2))
+    fig, ax = plt.subplot_mosaic('A', figsize=(6*2, 3.5*3))
+    model_y, _ = model(ts, ys[traj, 0])   ## TODO predicting on the entire trajectory ==forecasting !
+
+    ax['A'].plot(ts[:stop], ys[traj, :stop, 0], c="dodgerblue", label="GT Trajectory", lw=4)
+    ax['A'].plot(ts[:stop], model_y[:stop, 0], "o-", markersize=8, c="crimson", label="Prediction")
+
+    # ax['A'].plot(ts[:stop], ys[traj, :stop, 1], c="violet", label="Predators (GT)")
+    # ax['A'].plot(ts[:stop], model_y[:stop, 1], ".-", c="purple", label="Predators (NODE)")
+    
+    mse = np.mean((ys[traj, :stop, 0] - model_y[:stop, 0])**2)
+
+    ax['A'].set_xlabel("Time", fontsize=28)
+    ax['A'].set_title(f"MSE: {mse:.3f}", fontsize=28)
+    ax['A'].legend(fontsize=18)
+
+    plt.tight_layout()
+    plt.savefig(run_folder+"single_traj.pdf", dpi=300, bbox_inches='tight', pad_inches=0.1)
+    plt.show()
+
+raw_data = np.load(data_load_folder+"train_data.npz")
+ys, ts = raw_data['X'], raw_data['t']
+ys = jnp.reshape(ys, (-1, ys.shape[2], ys.shape[3]))
+
+plot_traj(28, model, ts, ys)
+
+
+
+
+
+
+#%%
+
+

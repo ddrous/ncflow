@@ -1,39 +1,26 @@
-# import os
-## Do not preallocate GPU memory
-# os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
-
 from nodax import *
 # jax.config.update("jax_debug_nans", True)
-
-
 
 
 #%%
 
 ## Hyperparams
 
-# ## Take seed as a paramter with argparse !! ONLY during testing.
-# import argparse
-# parser = argparse.ArgumentParser()
-# parser.add_argument("--seed", type=int, default=1176)
-# seed = parser.parse_args().seed
-
-seed = 1178
+seed = 1181
 
 context_size = 1024
-nb_epochs = 2000
-nb_epochs_adapt = 2000
+nb_epochs = 200000
+nb_epochs_adapt = 200000
 
 print_error_every = 1000
 
-train = False
+train = True
 save_trainer = True
 
 finetune = False
-run_folder = "./runs/30012024-165151/"      ## Only needed if not training
+# run_folder = "./runs/26012024-092626/"      ## Only needed if not training
 
-adapt = False
-adapt_huge = False
+adapt = True
 
 #%%
 
@@ -46,9 +33,8 @@ if train == True:
 
     # Make a new folder inside 'tmp' whose name is the current time
     run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    run_folder = "./runs/30012024-165151/"
-    if not os.path.exists('./runs'):
-        os.mkdir(run_folder)
+    # run_folder = "./runs/23012024-163033/"
+    os.mkdir(run_folder)
     print("Data folder created successfuly:", run_folder)
 
     # Save the run and dataset scripts in that folder
@@ -62,7 +48,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/30012024-165151/"  ## Needed for loading the model and finetuning TODO: opti
+    # run_folder = "./runs/24012024-084802/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -75,17 +61,12 @@ if not os.path.exists(adapt_folder):
 if train == True:
     # Run the dataset script to generate the data
     os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
-os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
 if adapt == True:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-if adapt_huge == True:
-    os.system(f'python dataset.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
 
 
 
-
-#%%
-np.load(run_folder+"train_data.npz")['X'].shape
 
 #%%
 
@@ -140,11 +121,6 @@ class Augmentation(eqx.Module):
                         eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[5])]
-
-        # self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[5])]
 
         self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
@@ -255,17 +231,12 @@ if train == True:
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
-    restore_folder = run_folder
-    # restore_folder = "./runs/27012024-155719/finetune_193625/"
+    # restore_folder = run_folder
+    restore_folder = "./runs/26012024-092626/finetune_230335/"
     trainer.restore_trainer(path=restore_folder)
 
 
 #%%
-
-
-
-
-
 
 
 
@@ -281,11 +252,11 @@ if finetune:
 
     trainer.dataloader.int_cutoff = nb_steps_per_traj
 
-    opt_node = optax.adabelief(3e-4*0.1*0.1*0.1)
-    opt_ctx = optax.adabelief(3e-4*0.1*0.1*0.1)
+    opt_node = optax.adabelief(3e-3*0.1*0.1*0.1)
+    opt_ctx = optax.adabelief(3e-3*0.1*0.1*0.1)
     trainer.opt_node, trainer.opt_ctx = opt_node, opt_ctx
 
-    trainer.train(nb_epochs=400000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
+    trainer.train(nb_epochs=500000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
 
 
 
@@ -299,8 +270,7 @@ if finetune:
 
 ## Test and visualise the results on a test dataloader
 
-# test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-test_dataloader = DataLoader(run_folder+"train_data.npz", shuffle=False)
+test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
 
 visualtester = VisualTester(trainer)
 # ans = visualtester.trainer.nb_steps_node
@@ -312,8 +282,7 @@ if finetune:
     savefigdir = finetunedir+"results_in_domain.png"
 else:
     savefigdir = run_folder+"results_in_domain.png"
-# visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
-visualtester.visualize(test_dataloader, e=7, traj=0, int_cutoff=1.0, save_path=savefigdir);
+visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 
@@ -333,30 +302,6 @@ visualtester.visualize(test_dataloader, e=7, traj=0, int_cutoff=1.0, save_path=s
 
 
 #%%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Give the dataloader an id to help with restoration later on
 
@@ -384,96 +329,3 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 #%%
 
 # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#%%
-
-#### Generate data for analysis
-
-
-# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the tmp/test_scores.csv file
-
-# # First, check if the file exists. If not, create it and write the header
-# if not os.path.exists('./tmp'):
-#     os.mkdir('./tmp')
-
-# if not os.path.exists('./tmp/test_scores.csv'):
-#     os.system(f"touch ./tmp/test_scores.csv")
-
-# with open('./tmp/test_scores.csv', 'r') as f:
-#     lines = f.readlines()
-#     if len(lines) == 0:
-#         with open('./tmp/test_scores.csv', 'w') as f:
-#             f.write("seed,ind_crit,ood_crit\n")
-
-
-
-
-
-
-# for seed in range(4*10**3, 6*10**3, 200):
-
-#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-
-#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, key=seed)
-
-#     ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
-#     ood_crit = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
-
-#     # Then, append the values to the file
-#     with open('./analysis/test_scores_2.csv', 'a') as f:
-#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
-
-
-
-
-
-#%%
-
-## Huge adaptation step to 51*51 environments and MAPE score computation
-
-
-
-## Give the dataloader an id to help with restoration later on
-
-
-
-# adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
-
-# sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-#                                                 int(nb_epochs_adapt*0.5):0.1,
-#                                                 int(nb_epochs_adapt*0.75):0.1})
-# opt_adapt = optax.adabelief(sched_ctx_new)
-
-# # nb_epochs_adapt = 2
-# if adapt_huge == True:
-#     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-# else:
-#     print("save_id:", adapt_dataloader.data_id)
-
-#     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
-
-# ## Define mape criterion over a trajectory
-# def mape(y, y_hat):
-#     norm_traget = jnp.abs(y)
-#     norm_diff = jnp.abs(y-y_hat)
-#     ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
-#     return jnp.sum(ratios)
-
-# ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)

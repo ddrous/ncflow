@@ -247,9 +247,6 @@ class VisualTester:
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
-        ## Save X_hat in the savepath
-        # np.save(save_path+'X_hat.npy', X_hat)
-
         fig, ax = plt.subplot_mosaic('AB;CC;DD;EF', figsize=(6*2, 3.5*4))
 
         mks = 2
