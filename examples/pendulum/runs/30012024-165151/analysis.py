@@ -1,10 +1,21 @@
 #%%
 
+import numpy as np
+import pandas as pd
 
 ## Load one for all losses in oneforall/
-# df = pd.read_csv('oneforall/losses.csv')
+df = pd.read_csv('./analysis/test_scores.csv')
+# df.mean(axis=0)
+df.std(axis=0)
 
 
+
+## New score for SP
+# IND: 0.008389 +- 0.000901
+# OOD: 1.239647 +- 0.867611
+
+
+#%%
 
 import numpy as np
 # import seaborn as sns
@@ -185,6 +196,76 @@ ood_std = np.std(ood)
 print(f"IND: {ind_mean:.5f} +- {ind_std:.5f}")
 print(f"OOD: {ood_mean:.5f} +- {ood_std:.5f}")
 
+
+
+
+
+
+
+
+
+#%%
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+c = 2
+ind1 = [0.2972967, 0.5362495, 0.46570486]
+ood1 = [0.12615547, 2.37, 0.9652765]
+
+c= 4
+ind2 = [0.13577554, 0.44245037, 0.36009705]
+ood2 = [0.23241526, 2.0955732, 0.4132346]
+
+
+c=16
+ind3 = [0.0033225645, 0.011012313, 0.0071533322]
+ood3 = [1.8910992, 2.9741187, 2.431864]
+
+
+c = 512
+ind4 = [0.0025011243, 0.008244528, 0.0055813324]
+ood4 = [1.8484825, 2.5651355, 2.388569]
+
+
+
+## Cloalesce everything
+cs = [2, 4, 16, 512]
+inds = [ind1, ind2, ind3, ind4]
+
+## We want to plot c angainst the mean and std of ind (using bloxplots)
+data = np.stack(inds, axis=0)
+# data
+
+mean_data = np.mean(data, axis=1)
+std_data = np.std(data, axis=1)
+
+mean_data
+
+## Now do the boxplots
+# df = pd.DataFrame(data)
+# df = pd.DataFrame(np.log10(data.T), columns=cs)
+df = pd.DataFrame(data.T, columns=cs)
+print(df)
+colors = {'2': 'blue', '4': 'green', '16': 'orange'}
+# colors = ['dodgerblue', 'b', 'darkblue', 'skyblue', 'turquoise']
+# df.boxplot(vert=True)
+# df.violinplot()
+# sns.violinplot(data=df, palette="Set3")
+
+
+# df = pd.DataFrame(data.T, columns=cs)
+sns.boxplot(data=df, palette="Set3")
+plt.yscale('log')  # Set log scale for y-axis
+# plt.grid(True)
+# plt.title('Boxplot of Values by Category (Log Scale)')
+plt.xlabel('Context Size'+r" $d_{\xi}$", fontsize=14)
+plt.ylabel('Log MSE', fontsize=14)
+plt.draw()
+
+plt.savefig('analysis/boxplot.pdf', transparent=False, dpi=600, bbox_inches='tight', pad_inches=0.1)
 
 
 

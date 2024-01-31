@@ -20,7 +20,7 @@ from nodax import *
 
 seed = 1178
 
-context_size = 1024
+context_size = 4
 nb_epochs = 2000
 nb_epochs_adapt = 2000
 
@@ -62,7 +62,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/30012024-212115/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/30012024-165151/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -76,8 +76,8 @@ if train == True:
     # Run the dataset script to generate the data
     os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
 os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-if adapt == True:
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+# if adapt == True:
+os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 if adapt_huge == True:
     os.system(f'python dataset.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
 
@@ -136,15 +136,15 @@ class Augmentation(eqx.Module):
                         eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[2])]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
-                        eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
-
-        # self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
+        # self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
+        #                 eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
         #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
         #                 eqx.nn.Linear(width_size, width_size, key=keys[5])]
+
+        self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
 
         self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
@@ -269,6 +269,8 @@ else:
 
 
 
+
+
 if finetune:
     # ## Finetune a trained model
 
@@ -297,7 +299,8 @@ if finetune:
 
 ## Test and visualise the results on a test dataloader
 
-test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
+# test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
+test_dataloader = DataLoader(run_folder+"train_data.npz", shuffle=False)
 
 visualtester = VisualTester(trainer)
 # ans = visualtester.trainer.nb_steps_node
@@ -309,7 +312,8 @@ if finetune:
     savefigdir = finetunedir+"results_in_domain.png"
 else:
     savefigdir = run_folder+"results_in_domain.png"
-visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
+# visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
+visualtester.visualize(test_dataloader, e=7, traj=0, int_cutoff=1.0, save_path=savefigdir);
 
 
 
