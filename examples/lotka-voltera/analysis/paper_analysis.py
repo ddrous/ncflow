@@ -112,14 +112,46 @@ plt.show()
 
 
 
+#%%
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+sns.set(context='talk', style='ticks',
+        font='sans-serif', font_scale=1, color_codes=True, rc={"lines.linewidth": 4})
+
+
+loss_bad = np.load("train_histories_bad.npz")["losses_node"]
+loss_bad
+
+loss_good = np.load("train_histories.npz")["losses_node"]
+loss_good
+
+
+## Plot these two in the same plot nicely
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111)
+plt.plot(loss_bad, label="NCF With Only Shared Network", color="blue")
+plt.plot(loss_good, label="NCF Complete", color="crimson")
+plt.yscale("log")
+plt.xlabel("Epoch", fontsize=24)
+plt.ylabel("MSE", fontsize=24)
+plt.legend()
+
+
+plt.savefig("losses.pdf", bbox_inches='tight', dpi=600)
 
 
 
 
+#%%
 
 
+## Load the test_scores.csv
+df = pd.read_csv('test_scores_3.csv', sep=',', header=0)
+df.mean()
 
-
-
-
-
+## print with better precision
+# print(df.mean().to_string(float_format="{:0.2e}".format))
+np.std(df.values, axis=0)

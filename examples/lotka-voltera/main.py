@@ -22,15 +22,15 @@ seed = 1181
 
 context_size = 1024
 nb_epochs = 200000
-nb_epochs_adapt = 50000
+nb_epochs_adapt = 200000
 
 print_error_every = 1000
 
 train = False
-save_trainer = False
+save_trainer = True
 
 finetune = False
-run_folder = "./runs/27012024-155719/"      ## Only needed if not training
+# run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = False
 adapt_huge = False
@@ -61,7 +61,7 @@ if train == True:
 
 
 else:
-    # run_folder = "./runs/24012024-084802/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/31012024-090548/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -122,23 +122,24 @@ class Physics(eqx.Module):
         return jnp.array([dx0, dx1])
 
 class Augmentation(eqx.Module):
-    layers_data: list
-    layers_context: list
+    # layers_data: list
+    # layers_context: list
     layers_shared: list
 
     def __init__(self, data_size, width_size, depth, context_size, key=None):
         keys = generate_new_keys(key, num=12)
-        self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[2])]
+        # self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[2])]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
-                        eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
+        # self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
+        #                 eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+        #                 eqx.nn.Linear(width_size, width_size, key=keys[5])]
 
-        self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
+        # self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
+        self.layers_shared = [eqx.nn.Linear(context_size+data_size, width_size, key=keys[6]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[9])]
@@ -147,9 +148,9 @@ class Augmentation(eqx.Module):
     def __call__(self, t, x, ctx):
         y = x
         ctx = ctx
-        for i in range(len(self.layers_data)):
-            y = self.layers_data[i](y)
-            ctx = self.layers_context[i](ctx)
+        # for i in range(len(self.layers_data)):
+        #     y = self.layers_data[i](y)
+        #     ctx = self.layers_context[i](ctx)
 
         y = jnp.concatenate([y, ctx], axis=0)
         for layer in self.layers_shared:
@@ -412,20 +413,20 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 
 
-# for seed in range(4*10**3, 6*10**3, 200):
+for seed in range(4*10**3, 6*10**3, 200):
 
-#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 
-#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, key=seed)
+    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
+    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, key=seed)
 
-#     ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
-#     ood_crit = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
+    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0)
+    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
 
-#     # Then, append the values to the file
-#     with open('./analysis/test_scores_2.csv', 'a') as f:
-#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
+    # Then, append the values to the file
+    with open('./analysis/test_scores_3.csv', 'a') as f:
+        f.write(f"{seed},{ind_crit},{ood_crit}\n")
 
 
 
@@ -441,32 +442,32 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 
 
-adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
+# adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
 
-sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-                                                int(nb_epochs_adapt*0.5):0.1,
-                                                int(nb_epochs_adapt*0.75):0.1})
-opt_adapt = optax.adabelief(sched_ctx_new)
+# sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
+#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
+#                                                 int(nb_epochs_adapt*0.5):0.1,
+#                                                 int(nb_epochs_adapt*0.75):0.1})
+# opt_adapt = optax.adabelief(sched_ctx_new)
 
-# nb_epochs_adapt = 2
-if adapt_huge == True:
-    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-else:
-    print("save_id:", adapt_dataloader.data_id)
+# # nb_epochs_adapt = 2
+# if adapt_huge == True:
+#     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+# else:
+#     print("save_id:", adapt_dataloader.data_id)
 
-    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+#     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-## Define mape criterion over a trajectory
-def mape(y, y_hat):
-    norm_traget = jnp.abs(y)
-    norm_diff = jnp.abs(y-y_hat)
-    ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
-    return jnp.sum(ratios)
+# ## Define mape criterion over a trajectory
+# def mape(y, y_hat):
+#     norm_traget = jnp.abs(y)
+#     norm_diff = jnp.abs(y-y_hat)
+#     ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
+#     return jnp.sum(ratios)
 
-ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
+# ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
 
-print(odd_crit_all)
+# print(odd_crit_all)
 
-## Save the odd_crit_all in numpy
-np.save('mapes.npy', odd_crit_all)
+# ## Save the odd_crit_all in numpy
+# np.save('mapes.npy', odd_crit_all)
