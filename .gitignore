@@ -4,7 +4,7 @@
 \.pytest_cache
 .vscode
 .mypy_cache
-*.npz
+# *.npz
 .cache
 .DS_Store
 pintode.egg-info/*

@@ -122,25 +122,40 @@ sns.set(context='talk', style='ticks',
         font='sans-serif', font_scale=1, color_codes=True, rc={"lines.linewidth": 4})
 
 
-loss_bad = np.load("train_histories_bad.npz")["losses_node"]
-loss_bad
+loss_bad1 = np.load("train_histories_bad.npz")["losses_node"]
+loss_bad2 = np.load("train_histories_bad_2.npz")["losses_node"]
+loss_bad = np.stack([loss_bad1, loss_bad2], axis=0)
+mean_bad = np.mean(loss_bad, axis=0).squeeze()
+std_bad = np.std(loss_bad, axis=0).squeeze()
 
-loss_good = np.load("train_histories.npz")["losses_node"]
-loss_good
+loss_good1 = np.load("train_histories.npz")["losses_node"]
+loss_good2 = np.load("train_histories_2.npz")["losses_node"]
+loss_good = np.stack([loss_good1, loss_good2], axis=0)
+mean_good = np.mean(loss_good, axis=0).squeeze()
+std_good = np.std(loss_good, axis=0).squeeze()
 
+
+num_epochs = 600000
 
 ## Plot these two in the same plot nicely
 fig = plt.figure(figsize=(12, 8))
 ax = fig.add_subplot(111)
-plt.plot(loss_bad, label="NCF With Only Shared Network", color="blue")
-plt.plot(loss_good, label="NCF Complete", color="crimson")
+ax.plot(mean_bad, label="NCF Without 3-Networks Architecture", color="blue")
+# sns.lineplot(x=range(num_epochs), y=mean_bad, label='One-For-All', color='blue', ax=ax)
+ax.plot(mean_good, label="NCF Complete", color="crimson")
+
+# print(mean_bad.shape)
+ax.fill_between(range(num_epochs), mean_bad - std_bad, mean_bad + std_bad, color='blue', alpha=0.3)
+ax.fill_between(range(num_epochs), mean_good - std_good, mean_good + std_good, color='crimson', alpha=0.3)
+
+
 plt.yscale("log")
 plt.xlabel("Epoch", fontsize=24)
 plt.ylabel("MSE", fontsize=24)
 plt.legend()
 
 
-plt.savefig("losses.pdf", bbox_inches='tight', dpi=600)
+plt.savefig("losses_ablation.pdf", bbox_inches='tight', dpi=300)
 
 
 
