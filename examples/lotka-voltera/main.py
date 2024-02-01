@@ -122,21 +122,21 @@ class Physics(eqx.Module):
         return jnp.array([dx0, dx1])
 
 class Augmentation(eqx.Module):
-    # layers_data: list
-    # layers_context: list
+    layers_data: list
+    layers_context: list
     layers_shared: list
 
     def __init__(self, data_size, width_size, depth, context_size, key=None):
         keys = generate_new_keys(key, num=12)
-        # self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[2])]
+        self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[2])]
 
-        # self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
-        #                 eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[5])]
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
+                        eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
 
         # self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
         self.layers_shared = [eqx.nn.Linear(context_size+data_size, width_size, key=keys[6]), activation,
@@ -148,9 +148,9 @@ class Augmentation(eqx.Module):
     def __call__(self, t, x, ctx):
         y = x
         ctx = ctx
-        # for i in range(len(self.layers_data)):
-        #     y = self.layers_data[i](y)
-        #     ctx = self.layers_context[i](ctx)
+        for i in range(len(self.layers_data)):
+            y = self.layers_data[i](y)
+            ctx = self.layers_context[i](ctx)
 
         y = jnp.concatenate([y, ctx], axis=0)
         for layer in self.layers_shared:
