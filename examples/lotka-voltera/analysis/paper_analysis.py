@@ -155,8 +155,11 @@ plt.ylabel("MSE", fontsize=24)
 plt.legend()
 
 
-plt.savefig("losses_ablation.pdf", bbox_inches='tight', dpi=300)
+# plt.savefig("losses_ablation.pdf", bbox_inches='tight', dpi=300)
 
+
+## Save the plot making sure the pdf size is small
+plt.savefig("losses_ablation.png", bbox_inches='tight', dpi=600)
 
 
 
