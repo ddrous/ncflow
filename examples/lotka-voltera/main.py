@@ -20,19 +20,19 @@ from nodax import *
 
 seed = 1181
 
-context_size = 1024
-nb_epochs = 200000
-nb_epochs_adapt = 200000
+context_size = 90
+nb_epochs = 30000
+nb_epochs_adapt = 6000
 
 print_error_every = 1000
 
-train = False
+train = True
 save_trainer = True
 
 finetune = False
 # run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
-adapt = False
+adapt = True
 adapt_huge = False
 
 #%%
@@ -61,7 +61,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/31012024-090548/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/08022024-133610/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -101,26 +101,51 @@ data_size = train_dataloader.data_size
 activation = jax.nn.softplus
 # activation = jax.nn.swish
 
-class Physics(eqx.Module):
-    layers: list
+# class Physics(eqx.Module):
+#     layers: list
 
-    def __init__(self, width_size=8, key=None):
-        keys = generate_new_keys(key, num=4)
-        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
-                        eqx.nn.Linear(width_size, 4, key=keys[3])]
+#     def __init__(self, width_size=64, key=None):
+#         keys = generate_new_keys(key, num=4)
+#         self.layers = [eqx.nn.Linear(2, width_size*1, key=keys[0]), activation,
+#                         eqx.nn.Linear(width_size*1, width_size*1, key=keys[1]), activation,
+#                         eqx.nn.Linear(width_size*1, width_size, key=keys[2]), activation,
+#                         eqx.nn.Linear(width_size, 2, key=keys[3])]
 
-    def __call__(self, t, x, ctx):
-        params = ctx
-        for layer in self.layers:
-            params = layer(params)
-        params = jnp.abs(params)
+#     def __call__(self, t, x, ctx):
+#         y = x
+#         for layer in self.layers:
+#             y = layer(y)
+#         y = jnp.abs(y)
 
-        dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
-        dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
-        return jnp.array([dx0, dx1])
+#         # dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
+#         # dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
+#         # return jnp.array([dx0, dx1])
 
+#         return y
+
+# class Augmentation(eqx.Module):
+#     layers_data: list
+#     layers_context: list
+#     layers_shared: list
+
+#     def __init__(self, data_size, width_size, depth, context_size, key=None):
+#         keys = generate_new_keys(key, num=12)
+#         self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[2])]
+
+#         self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
+#                         eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[5])]
+
+#         self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
+#                         eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
+#                         eqx.nn.Linear(width_size, data_size, key=keys[9])]
+
+# # context_size = 124
 class Augmentation(eqx.Module):
     layers_data: list
     layers_context: list
@@ -128,21 +153,22 @@ class Augmentation(eqx.Module):
 
     def __init__(self, data_size, width_size, depth, context_size, key=None):
         keys = generate_new_keys(key, num=12)
-        self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[2])]
+        self.layers_data = [eqx.nn.Linear(data_size, width_size//2, key=keys[0]), activation,
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[10]), activation,
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[1]), activation,
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[2]), jax.nn.swish]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
-                        eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
+        self.layers_context = [eqx.nn.Linear(context_size, width_size//1, key=keys[3]), activation,
+                        eqx.nn.Linear(width_size//1, width_size//2, key=keys[11]), activation,
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[4]), activation,
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[5]), jax.nn.swish]
 
-        # self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
-        self.layers_shared = [eqx.nn.Linear(context_size+data_size, width_size, key=keys[6]), activation,
+        self.layers_shared = [eqx.nn.Linear(width_size//1, width_size, key=keys[6]), activation,
+        # self.layers_shared = [eqx.nn.Linear(context_size+data_size, width_size, key=keys[6]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
                         eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
                         eqx.nn.Linear(width_size, data_size, key=keys[9])]
+
 
 
     def __call__(self, t, x, ctx):
@@ -152,7 +178,8 @@ class Augmentation(eqx.Module):
             y = self.layers_data[i](y)
             ctx = self.layers_context[i](ctx)
 
-        y = jnp.concatenate([y, ctx], axis=0)
+        # y = jnp.concatenate([y, ctx], axis=0)
+        y = jnp.dstack([y,ctx]).ravel()
         for layer in self.layers_shared:
             y = layer(y)
         return y
@@ -165,14 +192,21 @@ class ContextFlowVectorField(eqx.Module):
         self.augmentation = augmentation
         self.physics = physics if physics is not None else NoPhysics()
 
-    def __call__(self, t, x, ctx, ctx_):
+    # def __call__(self, t, x, ctx, ctx_):
+
+    #     vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+    #     gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+
+    #     return vf(ctx_) + gradvf(ctx_, ctx)
+    #     # return vf(ctx)
+
+    def __call__(self, t, x, ctxs):
+        ctx, ctx_ = ctxs
 
         vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
 
         return vf(ctx_) + gradvf(ctx_, ctx)
-        # return vf(ctx)
-
 
 
 # physics = Physics(key=seed)
@@ -181,11 +215,13 @@ physics = None
 augmentation = Augmentation(data_size=2, width_size=64, depth=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
+print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
 
 contexts = ContextParams(nb_envs, context_size, key=None)
 
 # integrator = diffrax.Tsit5()  ## Has to conform to my API
-integrator = rk4_integrator
+# integrator = rk4_integrator
+integrator = diffrax.Dopri5()
 
 
 # loss_fn_ctx = basic_loss_fn_ctx
@@ -215,19 +251,23 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
 
 ## Define optimiser and traine the model
 
-nb_train_steps = nb_epochs * 3
-sched_node = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_train_steps*0.25):0.1,
-                                                int(nb_train_steps*0.5):0.1,
-                                                int(nb_train_steps*0.75):0.1})
-# sched_node = 1e-3
+nb_total_epochs = nb_epochs * 1
+# sched_node = optax.piecewise_constant_schedule(init_value=1e-5,
+#                         boundaries_and_scales={int(nb_total_epochs*0.25):1.,
+#                                                 int(nb_total_epochs*0.5):0.1,
+#                                                 int(nb_total_epochs*0.75):1.})
+sched_node = optax.piecewise_constant_schedule(init_value=1e-5,
+                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:1.0})
+# sched_node = 1e-5
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
-sched_ctx = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_epochs*0.25):0.1,
-                                                int(nb_epochs*0.5):0.1,
-                                                int(nb_epochs*0.75):0.1})
-# sched_ctx = 1e-3
+# sched_ctx = optax.piecewise_constant_schedule(init_value=1e-5,
+#                         boundaries_and_scales={int(nb_total_epochs*0.25):1.,
+#                                                 int(nb_total_epochs*0.5):0.1,
+#                                                 int(nb_total_epochs*0.75):1.})
+sched_ctx = optax.piecewise_constant_schedule(init_value=1e-5,
+                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:1.0})
+# sched_ctx = 1e-5
 
 opt_node = optax.adabelief(sched_node)
 opt_ctx = optax.adabelief(sched_ctx)
@@ -239,11 +279,11 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
-    for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
+    for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):     ## TODO removed the quirky tricks !!
     # for i, prop in enumerate([1]):
         trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-        trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path=trainer_save_path, key=seed)
+        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed)
 
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
@@ -351,10 +391,13 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
 
-sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-                                                int(nb_epochs_adapt*0.5):0.1,
-                                                int(nb_epochs_adapt*0.75):0.1})
+# sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
+#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
+#                                                 int(nb_epochs_adapt*0.5):0.1,
+#                                                 int(nb_epochs_adapt*0.75):1.})
+sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
+                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:1.0})
+# sched_ctx_new = 1e-5
 opt_adapt = optax.adabelief(sched_ctx_new)
 
 if adapt == True:
@@ -413,20 +456,20 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 
 
-for seed in range(4*10**3, 6*10**3, 200):
+# for seed in range(4*10**3, 6*10**3, 200):
 
-    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, key=seed)
+#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
+#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, key=seed)
 
-    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0)
-    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
+#     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0)
+#     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
 
-    # Then, append the values to the file
-    with open('./analysis/test_scores_3.csv', 'a') as f:
-        f.write(f"{seed},{ind_crit},{ood_crit}\n")
+#     # Then, append the values to the file
+#     with open('./analysis/test_scores_3.csv', 'a') as f:
+#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
 
 
 

@@ -254,11 +254,11 @@ class VisualTester:
 
         mks = 2
 
-        ax['A'].plot(t_test, X[:, 0], c="deepskyblue", label=r"$\theta$ (GT)")
-        ax['A'].plot(t_test, X_hat[:, 0], "o", c="royalblue", label=r"$\theta$ (NODE)", markersize=mks)
+        ax['A'].plot(t_test, X[:, 0], c="deepskyblue", label=r"$x_1$ (GT)")
+        ax['A'].plot(t_test, X_hat[:, 0], "o", c="royalblue", label=r"$\hat{x}_1$ (NCF)", markersize=mks)
 
-        ax['A'].plot(t_test, X[:, 1], c="violet", label=r"$\dot \theta$ (GT)")
-        ax['A'].plot(t_test, X_hat[:, 1], "x", c="purple", label=r"$\dot \theta$ (NODE)", markersize=mks)
+        ax['A'].plot(t_test, X[:, 1], c="violet", label=r"$x_1$ (GT)")
+        ax['A'].plot(t_test, X_hat[:, 1], "x", c="purple", label=r"$\hat{x}_2$ (NCF)", markersize=mks)
 
         ax['A'].set_xlabel("Time")
         ax['A'].set_ylabel("State")
@@ -266,10 +266,10 @@ class VisualTester:
         ax['A'].legend()
 
         ax['B'].plot(X[:, 0], X[:, 1], c="turquoise", label="GT")
-        ax['B'].plot(X_hat[:, 0], X_hat[:, 1], ".", c="teal", label="Neural ODE")
-        ax['B'].set_xlabel(r"$\theta$")
-        ax['B'].set_ylabel(r"$\dot \theta$")
-        ax['B'].set_title("Phase space")
+        ax['B'].plot(X_hat[:, 0], X_hat[:, 1], ".", c="teal", label="NCF")
+        ax['B'].set_xlabel(r"$x_1$")
+        ax['B'].set_ylabel(r"$x_2$")
+        ax['B'].set_title("Phase portrait")
         ax['B'].legend()
 
         nb_envs = data_loader.nb_envs

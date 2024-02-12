@@ -164,33 +164,38 @@ class NeuralODE(eqx.Module):
     def __init__(self, vectorfield, integrator, key=None):
         self.integrator = integrator
         self.vectorfield = vectorfield
+        # # self.vectorfield = lambda t, x, ctxs: vectorfield(t, x, *ctxs)
+        # self.vectorfield = lambda t, x, ctxs: vectorfield(t, x, ctxs[0], ctxs[1])
 
 
     def __call__(self, x0s, t_eval, ctx, ctx_):
 
         ctx_ = ctx_.squeeze()
 
-        # def integrate(x0):
-        #     solution = diffrax.diffeqsolve(
-        #                 diffrax.ODETerm(self.vectorfield),
-        #                 diffrax.Tsit5(),
-        #                 args=(ctx, ctx_),
-        #                 t0=t_eval[0],
-        #                 t1=t_eval[-1],
-        #                 dt0=t_eval[1] - t_eval[0],
-        #                 y0=x0,
-        #                 stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
-        #                 saveat=diffrax.SaveAt(ts=t_eval),
-        #                 max_steps=4096*1,
-        #             )
-        #     return solution.ys, solution.stats["num_steps"]
+        def integrate(x0):
+            solution = diffrax.diffeqsolve(
+                        diffrax.ODETerm(self.vectorfield),
+                        # diffrax.Dopri5(),
+                        self.integrator,
+                        args=(ctx, ctx_),
+                        t0=t_eval[0],
+                        t1=t_eval[-1],
+                        dt0=t_eval[1] - t_eval[0],
+                        y0=x0,
+                        stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
+                        saveat=diffrax.SaveAt(ts=t_eval),
+                        # adjoint=diffrax.BacksolveAdjoint(),
+                        max_steps=4096*1,
+                    )
+            return solution.ys, solution.stats["num_steps"]
 
-        # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
-        # return batched_ys, batched_num_steps
+        batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
+        return batched_ys, batched_num_steps
 
-        rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
-        batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
-        return batched_ys, t_eval.size
+        # # rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
+        # rhs = lambda x, t: self.vectorfield(t, x, (ctx, ctx_))
+        # batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
+        # return batched_ys, t_eval.size
 
 
 

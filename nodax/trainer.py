@@ -90,8 +90,8 @@ class Trainer:
 
                 node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2) = train_step_node(node, contexts, batch, weights, opt_state_node)
 
-                term1 = term1 + 1e-8
-                weights = term1 / jnp.sum(term1)
+                # term1 = term1 + 1e-8
+                # weights = term1 / jnp.sum(term1)
 
                 loss_sum_node += jnp.array([loss_node])
                 nb_steps_eph_node += nb_steps_node_
@@ -101,8 +101,8 @@ class Trainer:
                 if i%update_context_every==0:
                     node, contexts, opt_state_ctx, loss_ctx, (nb_steps_ctx_, term1, term2) = train_step_ctx(node, contexts, batch, weights, opt_state_ctx)
 
-                    term1 = term1 + 1e-8
-                    weights = term1 / jnp.sum(term1)
+                    # term1 = term1 + 1e-8
+                    # weights = term1 / jnp.sum(term1)
 
                     loss_sum_ctx += jnp.array([loss_ctx])
                     nb_steps_eph_ctx += nb_steps_ctx_
@@ -112,13 +112,26 @@ class Trainer:
             loss_epoch_node = loss_sum_node/nb_batches_node
             loss_epoch_ctx = loss_sum_ctx/nb_batches_ctx
 
+            # if epoch>100 and loss_epoch_node[0]>losses_node[-1][0] and save_path:
+            #     # print("WARNING: Neural ODE loss is increasing. Saving model ...")
+            #     self.save_trainer(save_path)
+
+            # self.losses_node.append(loss_epoch_node)
+            # self.losses_ctx.append(loss_epoch_ctx)
+            # self.nb_steps_node.append(jnp.array([nb_steps_eph_node]))
+            # self.nb_steps_ctx.append(jnp.array([nb_steps_eph_ctx]))
+            # self.opt_node_state = opt_state_node
+            # self.opt_ctx_state = opt_state_ctx
+            # self.learner.neuralode = node
+            # self.learner.contexts = contexts
+
             losses_node.append(loss_epoch_node)
             losses_ctx.append(loss_epoch_ctx)
             nb_steps_node.append(nb_steps_eph_node)
             nb_steps_ctx.append(nb_steps_eph_ctx)
 
             if epoch%print_error_every==0 or epoch<=3 or epoch==nb_epochs-1:
-                print(f"    Epoch: {epoch:-5d}      LossNeuralODE: {loss_epoch_node[0]:-.8f}     LossContext: {loss_epoch_ctx[0]:-.8f}", flush=True)
+                print(f"    Epoch: {epoch:-5d}      LossNeuralODE: {loss_epoch_node[0]:-.8f}     LossContext: {loss_epoch_ctx[0]:-.8f}     AvgContextPen: {jnp.mean(term2):-.8f}", flush=True)
 
         wall_time = time.time() - start_time
         time_in_hmsecs = seconds_to_hours(wall_time)
@@ -136,13 +149,13 @@ class Trainer:
         self.learner.neuralode = node
         self.learner.contexts = contexts
 
-        ## Save the model and results
+        # Save the model and results
         if save_path:
             self.save_trainer(save_path)
 
     def save_trainer(self, path):
-        assert path[-1] == "/", "ERROR: Invalidn parovided. The path must end with /"
-        print(f"\nSaving model and results into {path} folder ...\n")
+        assert path[-1] == "/", "ERROR: The path must end with /"
+        # print(f"\nSaving model and results into {path} folder ...\n")
 
         np.savez(path+"train_histories.npz", 
                  losses_node=jnp.vstack(self.losses_node), 
@@ -170,10 +183,6 @@ class Trainer:
         self.opt_state_ctx = pickle.load(open(path+"opt_state_ctx.pkl", "rb"))
 
         self.learner.load_learner(path)
-
-        # eqx.tree_deserialise_leaves(path+"neuralode.eqx", self.learner.neuralode)
-        # eqx.tree_deserialise_leaves(path+"contexts.eqx", self.learner.contexts)
-        # eqx.tree_deserialise_leaves(path+"contexts_init.eqx", self.learner.init_ctx_params)
 
 
     def adapt(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):

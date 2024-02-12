@@ -1,0 +1,54 @@
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/12022024-171957/
+ Seed: 1181
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/12022024-171957/
+ Seed: 2362
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/12022024-171957/adapt/
+ Seed: 3543
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Data folder created successfuly: ./runs/12022024-171957/
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 171959
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 4, 20, 2)
+
+
+Total number of parameters in the model: 25890 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+
+=== Beginning training ... ===
+    Number of examples in a batch: 4
+    Number of train steps per epoch: 1
+    Number of training epochs: 30000
+    Total number of training steps: 30000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+    Epoch:     0      LossNeuralODE: 5.16737843     LossContext: 5.13003063     AvgContextPen: 0.00000000
+    Epoch:     1      LossNeuralODE: 5.13001394     LossContext: 5.09321594     AvgContextPen: 0.00000001
+    Epoch:     2      LossNeuralODE: 5.09320641     LossContext: 5.05396891     AvgContextPen: 0.00000002
+    Epoch:     3      LossNeuralODE: 5.05396938     LossContext: 5.01298046     AvgContextPen: 0.00000003
+    Epoch:  1000      LossNeuralODE: 0.36603606     LossContext: 0.36601976     AvgContextPen: 0.00004949
+    Epoch:  2000      LossNeuralODE: 0.14748842     LossContext: 0.14740425     AvgContextPen: 0.00010100
+    Epoch:  3000      LossNeuralODE: 0.05241797     LossContext: 0.05231598     AvgContextPen: 0.00010946

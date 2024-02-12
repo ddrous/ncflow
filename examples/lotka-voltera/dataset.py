@@ -156,15 +156,15 @@ for j in range(n_traj_per_env):
         # print("Environment", i)
 
         # Initial conditions (prey and predator concentrations)
-        initial_state = np.random.uniform(1, 3, (2,))
+        initial_state = np.random.uniform(size=(2,)) + 1.
 
         # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
+        solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
+        data[i, j, :, :] = solution.y.T
 
-        rhs = lambda x, t: lotka_volterra(t, x, selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"])
-        solution = rk4_integrator(rhs, initial_state, t_eval)
-        data[i, j, :, :] = solution
+        # rhs = lambda x, t: lotka_volterra(t, x, selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"])
+        # solution = rk4_integrator(rhs, initial_state, t_eval)
+        # data[i, j, :, :] = solution
 
 # Save t_eval and the solution to a npz file
 if split == "train":
