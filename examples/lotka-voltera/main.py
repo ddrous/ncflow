@@ -22,14 +22,14 @@ seed = 1181
 
 context_size = 90
 nb_epochs = 30000
-nb_epochs_adapt = 6000
+nb_epochs_adapt = 600
 
 print_error_every = 1000
 
-train = True
+train = False
 save_trainer = True
 
-finetune = False
+finetune = True
 # run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = True
@@ -61,7 +61,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/08022024-133610/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/12022024-223202/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -156,12 +156,12 @@ class Augmentation(eqx.Module):
         self.layers_data = [eqx.nn.Linear(data_size, width_size//2, key=keys[0]), activation,
                         eqx.nn.Linear(width_size//2, width_size//2, key=keys[10]), activation,
                         eqx.nn.Linear(width_size//2, width_size//2, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[2]), jax.nn.swish]
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[2])]
 
         self.layers_context = [eqx.nn.Linear(context_size, width_size//1, key=keys[3]), activation,
                         eqx.nn.Linear(width_size//1, width_size//2, key=keys[11]), activation,
                         eqx.nn.Linear(width_size//2, width_size//2, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[5]), jax.nn.swish]
+                        eqx.nn.Linear(width_size//2, width_size//2, key=keys[5])]
 
         self.layers_shared = [eqx.nn.Linear(width_size//1, width_size, key=keys[6]), activation,
         # self.layers_shared = [eqx.nn.Linear(context_size+data_size, width_size, key=keys[6]), activation,
@@ -235,11 +235,12 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
     # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat))  ## reconstruction
+    # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat)/new_trajs)  ## MAPE
 
     # term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
-    term2 = 1e-3*jnp.mean(jnp.abs(ctx))             ## regularisation
+    term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
 
-    loss_val = term1+term2
+    loss_val = term1 + 0*term2
 
     return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
 
@@ -257,7 +258,7 @@ nb_total_epochs = nb_epochs * 1
 #                                                 int(nb_total_epochs*0.5):0.1,
 #                                                 int(nb_total_epochs*0.75):1.})
 sched_node = optax.piecewise_constant_schedule(init_value=1e-5,
-                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:1.0})
+                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:0.1})
 # sched_node = 1e-5
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
@@ -266,7 +267,7 @@ sched_node = optax.piecewise_constant_schedule(init_value=1e-5,
 #                                                 int(nb_total_epochs*0.5):0.1,
 #                                                 int(nb_total_epochs*0.75):1.})
 sched_ctx = optax.piecewise_constant_schedule(init_value=1e-5,
-                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:1.0})
+                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:0.1})
 # sched_ctx = 1e-5
 
 opt_node = optax.adabelief(sched_node)
@@ -312,11 +313,14 @@ if finetune:
 
     trainer.dataloader.int_cutoff = nb_steps_per_traj
 
-    opt_node = optax.adabelief(3e-4*0.1*0.1*0.1)
-    opt_ctx = optax.adabelief(3e-4*0.1*0.1*0.1)
+    opt_node = optax.adabelief(1e-7)
+    opt_ctx = optax.adabelief(1e-7)
     trainer.opt_node, trainer.opt_ctx = opt_node, opt_ctx
 
-    trainer.train(nb_epochs=400000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
+    # trainer.opt_node_state = trainer.opt_node.init(eqx.filter(trainer.learner.neuralode, eqx.is_array))
+    # trainer.opt_ctx_state = trainer.opt_ctx.init(trainer.learner.contexts)
+
+    trainer.train(nb_epochs=25000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
 
 
 
@@ -396,7 +400,7 @@ adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, da
 #                                                 int(nb_epochs_adapt*0.5):0.1,
 #                                                 int(nb_epochs_adapt*0.75):1.})
 sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
-                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:1.0})
+                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:0.1})
 # sched_ctx_new = 1e-5
 opt_adapt = optax.adabelief(sched_ctx_new)
 
@@ -411,6 +415,18 @@ else:
 ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
 
 visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+
+
+
+
+#%%
+## If the nohup.log file exists, copy it to the run folder
+try:
+    __IPYTHON__ ## in a jupyter notebook
+except NameError:
+    if os.path.exists("nohup.log"):
+        # os.system(f"cp nohup.log {run_folder}")
+        os.system(f"cp nohup.log {finetunedir}")
 
 
 #%%

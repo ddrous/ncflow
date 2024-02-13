@@ -90,8 +90,9 @@ class Trainer:
 
                 node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2) = train_step_node(node, contexts, batch, weights, opt_state_node)
 
-                # term1 = term1 + 1e-8
-                # weights = term1 / jnp.sum(term1)
+                # if i%1==0:
+                    # term1 = term1 + 1e-8
+                    # weights = term1 / jnp.sum(term1)
 
                 loss_sum_node += jnp.array([loss_node])
                 nb_steps_eph_node += nb_steps_node_
@@ -131,7 +132,9 @@ class Trainer:
             nb_steps_ctx.append(nb_steps_eph_ctx)
 
             if epoch%print_error_every==0 or epoch<=3 or epoch==nb_epochs-1:
-                print(f"    Epoch: {epoch:-5d}      LossNeuralODE: {loss_epoch_node[0]:-.8f}     LossContext: {loss_epoch_ctx[0]:-.8f}     AvgContextPen: {jnp.mean(term2):-.8f}", flush=True)
+                # print(f"    Epoch: {epoch:-5d}      LossNeuralODE: {loss_epoch_node[0]:-.8f}     LossContext: {loss_epoch_ctx[0]:-.8f}     AvgContextPen: {jnp.mean(term2):-.8f}", flush=True)
+                print(f"    Epoch: {epoch:-5d}      LossTrajs: {loss_epoch_node[0]:-.8f}     ContextsNorm: {jnp.mean(term2):-.8f}", flush=True)
+
 
         wall_time = time.time() - start_time
         time_in_hmsecs = seconds_to_hours(wall_time)

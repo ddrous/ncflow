@@ -269,7 +269,7 @@ class VisualTester:
         ax['B'].plot(X_hat[:, 0], X_hat[:, 1], ".", c="teal", label="NCF")
         ax['B'].set_xlabel(r"$x_1$")
         ax['B'].set_ylabel(r"$x_2$")
-        ax['B'].set_title("Phase portrait")
+        ax['B'].set_title("Phase space")
         ax['B'].legend()
 
         nb_envs = data_loader.nb_envs

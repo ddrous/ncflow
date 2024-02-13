@@ -317,8 +317,15 @@ def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=None):
 
     all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-1, 1e-0, contexts.params, key)
 
-    total_loss = jnp.sum(all_loss*weights)
-    # total_loss = jnp.sum(all_loss)
+    recons = jnp.sum(all_loss*weights)
+    # recons = jnp.sum(all_loss)
+    # recons = jnp.max(all_loss)  # simply return the max, then things should even out naturally
+
+    # regul = 1e-5*params_norm(eqx.filter(model, eqx.is_array))
+    # regul = 1e-5*spectral_norm_estimation(model)
+    regul = 0.
+
+    total_loss = recons + regul
 
     return total_loss, (jnp.sum(all_nb_steps), all_term1, all_term2)
 
