@@ -18,21 +18,21 @@ from nodax import *
 # parser.add_argument("--seed", type=int, default=1176)
 # seed = parser.parse_args().seed
 
-seed = 1181
+seed = 11801
 
 context_size = 90
-nb_epochs = 30000
-nb_epochs_adapt = 600
+nb_epochs = 300000
+nb_epochs_adapt = 100000
 
 print_error_every = 1000
 
 train = False
-save_trainer = True
+save_trainer = False
 
-finetune = True
+finetune = False
 # run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
-adapt = True
+adapt = False
 adapt_huge = False
 
 #%%
@@ -258,7 +258,7 @@ nb_total_epochs = nb_epochs * 1
 #                                                 int(nb_total_epochs*0.5):0.1,
 #                                                 int(nb_total_epochs*0.75):1.})
 sched_node = optax.piecewise_constant_schedule(init_value=1e-5,
-                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.01})
 # sched_node = 1e-5
 # sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
 
@@ -267,7 +267,7 @@ sched_node = optax.piecewise_constant_schedule(init_value=1e-5,
 #                                                 int(nb_total_epochs*0.5):0.1,
 #                                                 int(nb_total_epochs*0.75):1.})
 sched_ctx = optax.piecewise_constant_schedule(init_value=1e-5,
-                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.01})
 # sched_ctx = 1e-5
 
 opt_node = optax.adabelief(sched_node)
@@ -400,7 +400,7 @@ adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, da
 #                                                 int(nb_epochs_adapt*0.5):0.1,
 #                                                 int(nb_epochs_adapt*0.75):1.})
 sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
-                        boundaries_and_scales={nb_total_epochs//3:1.0, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.01})
 # sched_ctx_new = 1e-5
 opt_adapt = optax.adabelief(sched_ctx_new)
 
@@ -425,8 +425,8 @@ try:
     __IPYTHON__ ## in a jupyter notebook
 except NameError:
     if os.path.exists("nohup.log"):
-        # os.system(f"cp nohup.log {run_folder}")
-        os.system(f"cp nohup.log {finetunedir}")
+        os.system(f"cp nohup.log {run_folder}")
+        # os.system(f"cp nohup.log {finetunedir}")
 
 
 #%%
@@ -455,24 +455,26 @@ except NameError:
 # ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the tmp/test_scores.csv file
 
 # # First, check if the file exists. If not, create it and write the header
-# if not os.path.exists('./tmp'):
-#     os.mkdir('./tmp')
+# if not os.path.exists(run_folder+'analysis'):
+#     os.mkdir(run_folder+'analysis')
 
-# if not os.path.exists('./tmp/test_scores.csv'):
-#     os.system(f"touch ./tmp/test_scores.csv")
+# csv_file = run_folder+'analysis/test_scores.csv'
+# if not os.path.exists(csv_file):
+#     os.system(f"touch {csv_file}")
 
-# with open('./tmp/test_scores.csv', 'r') as f:
+# with open(csv_file, 'r') as f:
 #     lines = f.readlines()
 #     if len(lines) == 0:
-#         with open('./tmp/test_scores.csv', 'w') as f:
+#         with open(csv_file, 'w') as f:
 #             f.write("seed,ind_crit,ood_crit\n")
 
 
 
 
 
-
-# for seed in range(4*10**3, 6*10**3, 200):
+# seeds = np.random.randint(0, 10000, 500)
+# for seed in seeds:
+# # for seed in range(8000, 6*10**3, 10):
 
 #     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
 #     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
@@ -484,7 +486,7 @@ except NameError:
 #     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
 
 #     # Then, append the values to the file
-#     with open('./analysis/test_scores_3.csv', 'a') as f:
+#     with open(csv_file, 'a') as f:
 #         f.write(f"{seed},{ind_crit},{ood_crit}\n")
 
 

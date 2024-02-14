@@ -1,0 +1,106 @@
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/12022024-223202/adapt/
+ Seed: 3543
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+No training. Loading data and results from: ./runs/12022024-223202/
+WARNING: You did not provide a dataloader id. A new one has been generated: 110333
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 4, 20, 2)
+
+
+Total number of parameters in the model: 25890 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+No training, loading model and results from ./runs/12022024-223202/ folder ...
+
+No training. Loading and finetuning into: ./runs/12022024-223202/finetune_110333/
+
+
+=== Beginning training ... ===
+    Number of examples in a batch: 4
+    Number of train steps per epoch: 1
+    Number of training epochs: 25000
+    Total number of training steps: 25000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+    Epoch:     0      LossTrajs: 0.00001612     ContextsNorm: 0.13101359
+    Epoch:     1      LossTrajs: 0.00004121     ContextsNorm: 0.13101359
+    Epoch:     2      LossTrajs: 0.00001774     ContextsNorm: 0.13101359
+    Epoch:     3      LossTrajs: 0.00001930     ContextsNorm: 0.13101359
+    Epoch:  1000      LossTrajs: 0.00002023     ContextsNorm: 0.13101320
+    Epoch:  2000      LossTrajs: 0.00002268     ContextsNorm: 0.13101290
+    Epoch:  3000      LossTrajs: 0.00001990     ContextsNorm: 0.13101299
+    Epoch:  4000      LossTrajs: 0.00002100     ContextsNorm: 0.13101298
+    Epoch:  5000      LossTrajs: 0.00001841     ContextsNorm: 0.13101278
+    Epoch:  6000      LossTrajs: 0.00001707     ContextsNorm: 0.13101263
+    Epoch:  7000      LossTrajs: 0.00002224     ContextsNorm: 0.13101263
+    Epoch:  8000      LossTrajs: 0.00001596     ContextsNorm: 0.13101256
+    Epoch:  9000      LossTrajs: 0.00001538     ContextsNorm: 0.13101238
+    Epoch: 10000      LossTrajs: 0.00002710     ContextsNorm: 0.13101240
+    Epoch: 11000      LossTrajs: 0.00002139     ContextsNorm: 0.13101256
+    Epoch: 12000      LossTrajs: 0.00001673     ContextsNorm: 0.13101254
+    Epoch: 13000      LossTrajs: 0.00003334     ContextsNorm: 0.13101260
+    Epoch: 14000      LossTrajs: 0.00001735     ContextsNorm: 0.13101278
+    Epoch: 15000      LossTrajs: 0.00003607     ContextsNorm: 0.13101278
+    Epoch: 16000      LossTrajs: 0.00001948     ContextsNorm: 0.13101287
+    Epoch: 17000      LossTrajs: 0.00002718     ContextsNorm: 0.13101302
+    Epoch: 18000      LossTrajs: 0.00001733     ContextsNorm: 0.13101326
+    Epoch: 19000      LossTrajs: 0.00001874     ContextsNorm: 0.13101357
+    Epoch: 20000      LossTrajs: 0.00002286     ContextsNorm: 0.13101383
+    Epoch: 21000      LossTrajs: 0.00001787     ContextsNorm: 0.13101391
+    Epoch: 22000      LossTrajs: 0.00001639     ContextsNorm: 0.13101372
+    Epoch: 23000      LossTrajs: 0.00001817     ContextsNorm: 0.13101383
+    Epoch: 24000      LossTrajs: 0.00001825     ContextsNorm: 0.13101378
+    Epoch: 24999      LossTrajs: 0.00001767     ContextsNorm: 0.13101371
+
+Total gradient descent training time: 0 hours 26 mins 3 secs
+Environment weights at the end of the training: [0.17067337 0.07819805 0.16540135 0.09435552 0.08292992 0.07531562
+ 0.13186385 0.11605913 0.08520328]
+WARNING: You did not provide a dataloader id. A new one has been generated: 112941
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+Dataset shape: (9, 32, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 9
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Test Score (In-Domain): 5.023847e-05
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 4
+    Trajectory id: 23
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/12022024-223202/finetune_110333/results_in_domain.png
+Dataset shape: (4, 1, 20, 2)
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+
+=== Beginning adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 600
+    Total number of training steps: 600
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (4, 1, 20, 2) (20,)
+    Epoch:     0     LossContext: 0.04216951
+    Epoch:     1     LossContext: 0.05211058
+    Epoch:     2     LossContext: 0.05232878
+    Epoch:     3     LossContext: 0.05200766
+    Epoch:   599     LossContext: 0.02088178

@@ -66,3 +66,4 @@ venv/*
 !examples/pendulum/runs/30012024-165151
 !examples/lotka-voltera/runs/27012024-155719
 
+!examples/lotka-voltera/runs/12022024-223202
