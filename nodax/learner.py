@@ -23,7 +23,7 @@ class Learner:
         self.init_ctx_params = self.contexts.params.copy()
 
         # self.loss_fn = lambda model, contexts, batch, weights: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
-        self.loss_fn = lambda model, contexts, batch, weights: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=get_new_key(key))
+        self.loss_fn = lambda model, contexts, batch, weights, key: loss_fn(model, contexts, batch, weights, loss_fn_ctx, key)
 
     def save_learner(self, path):
         assert path[-1] == "/", "ERROR: Invalidn parovided. The path must end with /"
@@ -310,12 +310,12 @@ def l2_norm_traj(xs, xs_hat):
 
 
 
-def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key=None):
+def loss_fn(model, contexts, batch, weights, loss_fn_ctx, key):
     # print('\nCompiling function "loss_fn" ...\n')
     Xs, t_eval = batch
     print("Shapes of elements in a batch:", Xs.shape, t_eval.shape)
 
-    all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, 1e-1, 1e-0, contexts.params, key)
+    all_loss, (all_nb_steps, all_term1, all_term2) = jax.vmap(loss_fn_ctx, in_axes=(None, 0, None, 0, None, None))(model, Xs[:, :, :, :], t_eval, contexts.params, contexts.params, key)
 
     recons = jnp.sum(all_loss*weights)
     # recons = jnp.sum(all_loss)

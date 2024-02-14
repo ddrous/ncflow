@@ -32,7 +32,7 @@ class DataLoader:
         self.nb_steps_per_traj = datashape[2]
         self.data_size = datashape[3]
 
-        print("Dataset shape:", datashape)
+        # print("Dataset shape:", datashape)
 
         self.int_cutoff = int(int_cutoff*self.nb_steps_per_traj)    ## integration cutoff
 

@@ -14,8 +14,6 @@ try:
 except NameError:
     _in_ipython_session = False
 
-print("Running this script in ipython (Jupyter) session ?", _in_ipython_session)
-
 ## Parse the three arguments from the command line: "train", the foldername, and the seed
 
 import argparse
@@ -23,12 +21,13 @@ import argparse
 
 if _in_ipython_session:
 	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=3422)
+	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=2026, verbose=1)
 else:
 	parser = argparse.ArgumentParser(description='Description of your program')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
 	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
-	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=42, required=False)
+	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=2026, required=False)
+	parser.add_argument('--verbose',type=int, help='Whether to print details or not ?', default=1, required=False)
 
 	args = parser.parse_args()
 
@@ -39,11 +38,20 @@ assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split m
 savepath = args.savepath
 seed = args.seed
 
-print('=== Parsed arguments to generate data ===')
-print(' Split:', split)
-print(' Savepath:', savepath)
-print(' Seed:', seed)
-print()
+# ## Print verbose arg
+# print('=== Parsed arguments to generate data ===')
+# print(' Split:', split)
+# print(' Savepath:', savepath)
+# print(' Seed:', seed)
+# print(' Verbose:', args.verbose)
+
+if args.verbose != 0:
+  print("Running this script in ipython (Jupyter) session ?", _in_ipython_session)
+  print('=== Parsed arguments to generate data ===')
+  print(' Split:', split)
+  print(' Savepath:', savepath)
+  print(' Seed:', seed)
+  print()
 
 
 ## Set numpy seed for reproducibility

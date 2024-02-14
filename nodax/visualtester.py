@@ -59,7 +59,7 @@ class VisualTester:
     #     return batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
 
 
-    def test(self, data_loader, criterion=None, int_cutoff=1.0):
+    def test(self, data_loader, criterion=None, int_cutoff=1.0, verbose=True):
         """ Compute test metrics on the adaptation dataloader  """
 
         criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
@@ -69,15 +69,16 @@ class VisualTester:
         X = data_loader.dataset[:, :, :test_length, :]
         t_test = t_eval[:test_length]
 
-        if data_loader.adaptation == False:
-            print("==  Begining in-domain testing ... ==")
-            print("    Number of training environments:", self.trainer.dataloader.nb_envs)
-        else:
-            print("==  Begining out-of-distribution testing ... ==")
-            print("    Number of training environments:", self.trainer.dataloader.nb_envs)
-            print("    Number of adaptation environments:", data_loader.nb_envs)
-        print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
-        print("    Length of the testing trajectories:", test_length)
+        if verbose == True:
+            if data_loader.adaptation == False:
+                print("==  Begining in-domain testing ... ==")
+                print("    Number of training environments:", self.trainer.dataloader.nb_envs)
+            else:
+                print("==  Begining out-of-distribution testing ... ==")
+                print("    Number of training environments:", self.trainer.dataloader.nb_envs)
+                print("    Number of adaptation environments:", data_loader.nb_envs)
+            print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+            print("    Length of the testing trajectories:", test_length)
 
         if data_loader.adaptation == False:
             contexts = self.trainer.learner.contexts.params
@@ -95,11 +96,12 @@ class VisualTester:
         crit_all = batched_criterion(X_hat, X).mean(axis=1)
         crit = crit_all.mean(axis=0)
 
-        if data_loader.adaptation == False:
-            print("Test Score (In-Domain):", crit)
-        else:
-            print("Test Score (OOD):", crit)
-        print()
+        if verbose == True:
+            if data_loader.adaptation == False:
+                print("Test Score (In-Domain):", crit)
+            else:
+                print("Test Score (OOD):", crit)
+            print(flush=True)
 
         return crit, crit_all
 

@@ -1,45 +1,97 @@
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/14022024-175313/
+ Seed: 2026
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/14022024-175313/
+ Seed: 4052
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
  Split: adapt
- Savepath: ./runs/12022024-223202/adapt/
- Seed: 35403
+ Savepath: ./runs/14022024-175313/adapt/
+ Seed: 6078
 
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
 Jax version: 0.4.23
 Available devices: [cuda(id=0)]
-No training. Loading data and results from: ./runs/12022024-223202/
-WARNING: You did not provide a dataloader id. A new one has been generated: 112455
+Data folder created successfuly: ./runs/14022024-175313/
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 175315
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
-Dataset shape: (9, 4, 20, 2)
 
 
-Total number of parameters in the model: 25890 
+Total number of parameters in the model: 319506 
 
 
 WARNING: No key provided for the context initialization. Initializing at 0.
 
-No training, loading model and results from ./runs/12022024-223202/ folder ...
 
-WARNING: You did not provide a dataloader id. A new one has been generated: 112456
+=== Beginning training ... ===
+    Number of examples in a batch: 4
+    Number of train steps per epoch: 1
+    Number of training epochs: 24000
+    Total number of training steps: 24000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+    Epoch:     0      LossTrajs: 15.28014183     ContextsNorm: 0.00000000
+    Epoch:     1      LossTrajs: 14.60792637     ContextsNorm: 0.00009873
+    Epoch:     2      LossTrajs: 13.92509174     ContextsNorm: 0.00020127
+    Epoch:     3      LossTrajs: 13.23454666     ContextsNorm: 0.00030745
+    Epoch:  1000      LossTrajs: 0.10567196     ContextsNorm: 0.03705830
+    Epoch:  2000      LossTrajs: 0.00848474     ContextsNorm: 0.05012886
+    Epoch:  3000      LossTrajs: 0.00193247     ContextsNorm: 0.05183994
+    Epoch:  4000      LossTrajs: 0.00102437     ContextsNorm: 0.05303736
+    Epoch:  5000      LossTrajs: 0.00075607     ContextsNorm: 0.05359951
+    Epoch:  6000      LossTrajs: 0.00042200     ContextsNorm: 0.05359270
+    Epoch:  7000      LossTrajs: 0.00035462     ContextsNorm: 0.05362939
+    Epoch:  8000      LossTrajs: 0.00029080     ContextsNorm: 0.05354246
+    Epoch:  9000      LossTrajs: 0.00019141     ContextsNorm: 0.05351961
+    Epoch: 10000      LossTrajs: 0.00016274     ContextsNorm: 0.05350383
+    Epoch: 11000      LossTrajs: 0.00014961     ContextsNorm: 0.05353335
+    Epoch: 12000      LossTrajs: 0.00016432     ContextsNorm: 0.05347824
+    Epoch: 13000      LossTrajs: 0.00012722     ContextsNorm: 0.05345770
+    Epoch: 14000      LossTrajs: 0.00015394     ContextsNorm: 0.05343269
+    Epoch: 15000      LossTrajs: 0.00011750     ContextsNorm: 0.05339150
+    Epoch: 16000      LossTrajs: 0.00013126     ContextsNorm: 0.05336576
+    Epoch: 17000      LossTrajs: 0.00014514     ContextsNorm: 0.05336588
+    Epoch: 18000      LossTrajs: 0.00009775     ContextsNorm: 0.05336619
+    Epoch: 19000      LossTrajs: 0.00010386     ContextsNorm: 0.05336452
+    Epoch: 20000      LossTrajs: 0.00011792     ContextsNorm: 0.05335782
+    Epoch: 21000      LossTrajs: 0.00010536     ContextsNorm: 0.05336168
+    Epoch: 22000      LossTrajs: 0.00012328     ContextsNorm: 0.05336314
+    Epoch: 23000      LossTrajs: 0.00010946     ContextsNorm: 0.05336348
+    Epoch: 23999      LossTrajs: 0.00009766     ContextsNorm: 0.05336011
+
+Total gradient descent training time: 0 hours 40 mins 13 secs
+Environment weights at the end of the training: [0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111
+ 0.11111111 0.11111111 0.11111111]
+WARNING: You did not provide a dataloader id. A new one has been generated: 183333
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
-Dataset shape: (9, 32, 20, 2)
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 WARNING: No key provided, using time as seed
 ==  Begining in-domain testing ... ==
     Number of training environments: 9
-    Final length of the training trajectories: 5
+    Final length of the training trajectories: 20
     Length of the testing trajectories: 20
-Test Score (In-Domain): 5.21378e-05
+Test Score (In-Domain): 0.00023757925
 
 ==  Begining in-domain visualisation ... ==
-    Environment id: 3
-    Trajectory id: 19
-    Final length of the training trajectories: 5
+    Environment id: 7
+    Trajectory id: 30
+    Final length of the training trajectories: 20
     Length of the testing trajectories: 20
-Testing finished. Figure saved in: ./runs/12022024-223202/results_in_domain.png
-Dataset shape: (4, 1, 20, 2)
+Testing finished. Figure saved in: ./runs/14022024-175313/results_in_domain.png
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 WARNING: No key provided for the context initialization. Initializing at 0.
 
@@ -47,131 +99,40 @@ WARNING: No key provided for the context initialization. Initializing at 0.
 === Beginning adaptation ... ===
     Number of examples in a batch: 1
     Number of train steps per epoch: 1
-    Number of training epochs: 100000
-    Total number of training steps: 100000
+    Number of training epochs: 1000
+    Total number of training steps: 1000
+WARNING: No key provided, using time as seed
 
 Compiling function "train_step" for context ...
 Shapes of elements in a batch: (4, 1, 20, 2) (20,)
-    Epoch:     0     LossContext: 0.04754084
-    Epoch:     1     LossContext: 0.06536437
-    Epoch:     2     LossContext: 0.06540879
-    Epoch:     3     LossContext: 0.06517475
-    Epoch:  1000     LossContext: 0.00453010
-    Epoch:  2000     LossContext: 0.00223882
-    Epoch:  3000     LossContext: 0.00081450
-    Epoch:  4000     LossContext: 0.00016667
-    Epoch:  5000     LossContext: 0.00006074
-    Epoch:  6000     LossContext: 0.00003710
-    Epoch:  7000     LossContext: 0.00002669
-    Epoch:  8000     LossContext: 0.00003134
-    Epoch:  9000     LossContext: 0.00003145
-    Epoch: 10000     LossContext: 0.00003059
-    Epoch: 11000     LossContext: 0.00003030
-    Epoch: 12000     LossContext: 0.00003148
-    Epoch: 13000     LossContext: 0.00003114
-    Epoch: 14000     LossContext: 0.00002970
-    Epoch: 15000     LossContext: 0.00003112
-    Epoch: 16000     LossContext: 0.00002974
-    Epoch: 17000     LossContext: 0.00003073
-    Epoch: 18000     LossContext: 0.00002877
-    Epoch: 19000     LossContext: 0.00002853
-    Epoch: 20000     LossContext: 0.00002925
-    Epoch: 21000     LossContext: 0.00003149
-    Epoch: 22000     LossContext: 0.00002904
-    Epoch: 23000     LossContext: 0.00002988
-    Epoch: 24000     LossContext: 0.00002935
-    Epoch: 25000     LossContext: 0.00002840
-    Epoch: 26000     LossContext: 0.00002797
-    Epoch: 27000     LossContext: 0.00002750
-    Epoch: 28000     LossContext: 0.00003210
-    Epoch: 29000     LossContext: 0.00002829
-    Epoch: 30000     LossContext: 0.00002819
-    Epoch: 31000     LossContext: 0.00002811
-    Epoch: 32000     LossContext: 0.00002749
-    Epoch: 33000     LossContext: 0.00002793
-    Epoch: 34000     LossContext: 0.00002811
-    Epoch: 35000     LossContext: 0.00003601
-    Epoch: 36000     LossContext: 0.00002740
-    Epoch: 37000     LossContext: 0.00002647
-    Epoch: 38000     LossContext: 0.00002631
-    Epoch: 39000     LossContext: 0.00002591
-    Epoch: 40000     LossContext: 0.00002755
-    Epoch: 41000     LossContext: 0.00002732
-    Epoch: 42000     LossContext: 0.00002759
-    Epoch: 43000     LossContext: 0.00002644
-    Epoch: 44000     LossContext: 0.00002640
-    Epoch: 45000     LossContext: 0.00002660
-    Epoch: 46000     LossContext: 0.00002717
-    Epoch: 47000     LossContext: 0.00002726
-    Epoch: 48000     LossContext: 0.00002616
-    Epoch: 49000     LossContext: 0.00007898
-    Epoch: 50000     LossContext: 0.00002566
-    Epoch: 51000     LossContext: 0.00002631
-    Epoch: 52000     LossContext: 0.00003971
-    Epoch: 53000     LossContext: 0.00002605
-    Epoch: 54000     LossContext: 0.00002611
-    Epoch: 55000     LossContext: 0.00002675
-    Epoch: 56000     LossContext: 0.00002576
-    Epoch: 57000     LossContext: 0.00002608
-    Epoch: 58000     LossContext: 0.00002676
-    Epoch: 59000     LossContext: 0.00002580
-    Epoch: 60000     LossContext: 0.00002827
-    Epoch: 61000     LossContext: 0.00002628
-    Epoch: 62000     LossContext: 0.00002515
-    Epoch: 63000     LossContext: 0.00002511
-    Epoch: 64000     LossContext: 0.00002586
-    Epoch: 65000     LossContext: 0.00002533
-    Epoch: 66000     LossContext: 0.00002543
-    Epoch: 67000     LossContext: 0.00002485
-    Epoch: 68000     LossContext: 0.00002492
-    Epoch: 69000     LossContext: 0.00002567
-    Epoch: 70000     LossContext: 0.00002822
-    Epoch: 71000     LossContext: 0.00002420
-    Epoch: 72000     LossContext: 0.00002543
-    Epoch: 73000     LossContext: 0.00002466
-    Epoch: 74000     LossContext: 0.00002490
-    Epoch: 75000     LossContext: 0.00002522
-    Epoch: 76000     LossContext: 0.00002542
-    Epoch: 77000     LossContext: 0.00002377
-    Epoch: 78000     LossContext: 0.00002674
-    Epoch: 79000     LossContext: 0.00002479
-    Epoch: 80000     LossContext: 0.00002600
-    Epoch: 81000     LossContext: 0.00002537
-    Epoch: 82000     LossContext: 0.00002448
-    Epoch: 83000     LossContext: 0.00002511
-    Epoch: 84000     LossContext: 0.00002386
-    Epoch: 85000     LossContext: 0.00002071
-    Epoch: 86000     LossContext: 0.00002484
-    Epoch: 87000     LossContext: 0.00002509
-    Epoch: 88000     LossContext: 0.00002454
-    Epoch: 89000     LossContext: 0.00002435
-    Epoch: 90000     LossContext: 0.00002463
-    Epoch: 91000     LossContext: 0.00002479
-    Epoch: 92000     LossContext: 0.00002519
-    Epoch: 93000     LossContext: 0.00002449
-    Epoch: 94000     LossContext: 0.00002490
-    Epoch: 95000     LossContext: 0.00002451
-    Epoch: 96000     LossContext: 0.00002450
-    Epoch: 97000     LossContext: 0.00002487
-    Epoch: 98000     LossContext: 0.00002470
-    Epoch: 99000     LossContext: 0.00002381
-    Epoch: 99999     LossContext: 0.00002515
+    Epoch:     0     LossContext: 0.07411742
+    Epoch:     1     LossContext: 0.13947847
+    Epoch:     2     LossContext: 0.13939443
+    Epoch:     3     LossContext: 0.13944082
+    Epoch:   999     LossContext: 0.00256263
 
-Total gradient descent adaptation time: 1 hours 14 mins 31 secs
-Environment weights at the end of the adaptation: [0.17280933 0.34064648 0.14792404 0.33862013]
+Total gradient descent adaptation time: 0 hours 0 mins 37 secs
+Environment weights at the end of the adaptation: [0.15412363 0.32771894 0.19339082 0.32476664]
 
-Saving adaptation parameters into ./runs/12022024-223202/adapt/ folder with id 170846 ...
+Saving adaptation parameters into ./runs/14022024-175313/adapt/ folder with id 170846 ...
 
 ==  Begining out-of-distribution testing ... ==
     Number of training environments: 9
     Number of adaptation environments: 4
-    Final length of the training trajectories: 5
+    Final length of the training trajectories: 20
     Length of the testing trajectories: 20
-Test Score (OOD): 2.098844e-05
+Test Score (OOD): 0.00696741
 
 ==  Begining out-of-distribution visualisation ... ==
     Environment id: 3
     Trajectory id: 0
-    Final length of the training trajectories: 5
+    Final length of the training trajectories: 20
     Length of the testing trajectories: 20
-Testing finished. Figure saved in: ./runs/12022024-223202/adapt/results_ood.png
+Testing finished. Figure saved in: ./runs/14022024-175313/adapt/results_ood.png
+
+Full evaluation of the model on 10 random seeds
+
+          seed  ind_crit  ood_crit
+count 1.00e+01  1.00e+01  1.00e+01
+mean  5.25e+03  2.27e-04  6.96e-03
+std   3.39e+03  2.27e-05  6.13e-04

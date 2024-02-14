@@ -31,10 +31,10 @@ class Trainer:
         contexts = self.learner.contexts
 
         @eqx.filter_jit
-        def train_step_node(node, contexts, batch, weights, opt_state):
+        def train_step_node(node, contexts, batch, weights, opt_state, key):
             print('\nCompiling function "train_step" for neural ode ...')
 
-            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn, has_aux=True)(node, contexts, batch, weights)
+            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn, has_aux=True)(node, contexts, batch, weights, key)
 
             updates, opt_state = self.opt_node.update(grads, opt_state)
             # updates = jax.tree_map(lambda x: -x*1e-4, grads)
@@ -44,12 +44,12 @@ class Trainer:
 
 
         @eqx.filter_jit
-        def train_step_ctx(node, contexts, batch, weights, opt_state):
+        def train_step_ctx(node, contexts, batch, weights, opt_state, key):
             print('\nCompiling function "train_step" for context ...')
 
-            loss_fn_ = lambda contexts, node, batch, weights: loss_fn(node, contexts, batch, weights)
+            loss_fn_ = lambda contexts, node, batch, weights, key: loss_fn(node, contexts, batch, weights, key)
 
-            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights)
+            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights, key)
 
             updates, opt_state = self.opt_ctx.update(grads, opt_state)
             # updates = jax.tree_map(lambda x: -x*1e-4, grads)
@@ -78,6 +78,8 @@ class Trainer:
 
         weights = jnp.ones(self.learner.nb_envs) / self.learner.nb_envs
 
+        loss_key = get_new_key(key)
+
         for epoch in range(nb_epochs):
             nb_batches_node = 0
             nb_batches_ctx = 0
@@ -86,9 +88,12 @@ class Trainer:
             nb_steps_eph_node = 0
             nb_steps_eph_ctx = 0
 
-            for i, batch in enumerate(self.dataloader):
+            # loss_key = get_new_key(loss_key[-1], self.dataloader.batch_size)
 
-                node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2) = train_step_node(node, contexts, batch, weights, opt_state_node)
+            for i, batch in enumerate(self.dataloader):
+                loss_key = get_new_key(loss_key)
+
+                node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2) = train_step_node(node, contexts, batch, weights, opt_state_node, loss_key)
 
                 # if i%1==0:
                     # term1 = term1 + 1e-8
@@ -100,7 +105,7 @@ class Trainer:
                 nb_batches_node += 1
 
                 if i%update_context_every==0:
-                    node, contexts, opt_state_ctx, loss_ctx, (nb_steps_ctx_, term1, term2) = train_step_ctx(node, contexts, batch, weights, opt_state_ctx)
+                    node, contexts, opt_state_ctx, loss_ctx, (nb_steps_ctx_, term1, term2) = train_step_ctx(node, contexts, batch, weights, opt_state_ctx, loss_key)
 
                     # term1 = term1 + 1e-8
                     # weights = term1 / jnp.sum(term1)
@@ -212,12 +217,12 @@ class Trainer:
             self.nb_steps_adapt = []
 
         @eqx.filter_jit
-        def train_step(node, contexts, batch, weights, opt_state):
+        def train_step(node, contexts, batch, weights, opt_state, key):
             print('\nCompiling function "train_step" for context ...')
 
-            loss_fn_ = lambda contexts, node, batch, weights: loss_fn(node, contexts, batch, weights)
+            loss_fn_ = lambda contexts, node, batch, weights, key: loss_fn(node, contexts, batch, weights, key)
 
-            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights)
+            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights, key)
 
             updates, opt_state = opt.update(grads, opt_state)
             contexts = eqx.apply_updates(contexts, updates)
@@ -239,6 +244,7 @@ class Trainer:
         nb_steps = []
 
         weights = jnp.ones(data_loader.nb_envs) / data_loader.nb_envs
+        loss_key = get_new_key(key)
 
         for epoch in range(nb_epochs):
             nb_batches = 0
@@ -246,8 +252,9 @@ class Trainer:
             nb_steps_eph = 0
 
             for i, batch in enumerate(data_loader):
+                loss_key = get_new_key(loss_key)
 
-                node, contexts, opt_state, loss, (nb_steps_, term1, term2) = train_step(node, contexts, batch, weights, opt_state)
+                node, contexts, opt_state, loss, (nb_steps_, term1, term2) = train_step(node, contexts, batch, weights, opt_state, loss_key)
 
                 term1 = term1 + 1e-8
                 weights = term1 / jnp.sum(term1)
