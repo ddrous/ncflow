@@ -20,10 +20,10 @@ from nodax import *
 
 seed = 2026
 
-flow_pool_count = 1               ## Number of neighboring contexts j to use for a flow in env e
+flow_pool_count = 6               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-nb_epochs = 24000*1
-nb_epochs_adapt = 24000
+nb_epochs = 24000*3
+nb_epochs_adapt = 8000
 
 print_error_every = 1000
 
@@ -62,7 +62,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/15022024-133847/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/12022024-223202/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -279,7 +279,7 @@ if finetune:
     # trainer.opt_node_state = trainer.opt_node.init(eqx.filter(trainer.learner.neuralode, eqx.is_array))
     # trainer.opt_ctx_state = trainer.opt_ctx.init(trainer.learner.contexts)
 
-    trainer.train(nb_epochs=24000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
+    trainer.train(nb_epochs=25000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
 
 
 
@@ -385,13 +385,8 @@ try:
     __IPYTHON__ ## in a jupyter notebook
 except NameError:
     if os.path.exists("nohup.log"):
-        if finetune == True:
-            os.system(f"cp nohup.log {finetunedir}")
-            ## Open the results_in_domain in the terminal
-            os.system(f"open {finetunedir}results_in_domain.png")
-        else:
-            os.system(f"cp nohup.log {run_folder}")
-            os.system(f"open {run_folder}results_in_domain.png")
+        os.system(f"cp nohup.log {run_folder}")
+        # os.system(f"cp nohup.log {finetunedir}")
 
 
 #%%
