@@ -1,3 +1,4 @@
+ncf_sample_size = 4
 # import os
 ## Do not preallocate GPU memory
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
@@ -20,7 +21,7 @@ from nodax import *
 
 seed = 2026
 
-ncf_sample_size = 1               ## Number of neighboring contexts j to use for a flow in env e
+# ncf_sample_size = 1               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 nb_epochs = 24000*1
 nb_epochs_adapt = 24000
@@ -163,7 +164,6 @@ class ContextFlowVectorField(eqx.Module):
 augmentation = Augmentation(data_size=2, width_size=64, depth=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=None)
-print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
 
 contexts = ContextParams(nb_envs, context_size, key=None)
 
@@ -246,7 +246,6 @@ if train == True:
         trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed)
 
 else:
-    # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
     restore_folder = run_folder
     # restore_folder = "./runs/27012024-155719/finetune_193625/"
@@ -268,7 +267,6 @@ if finetune:
     finetunedir = run_folder+"finetune_"+trainer.dataloader.data_id+"/"
     if not os.path.exists(finetunedir):
         os.mkdir(finetunedir)
-    print("No training. Loading anctx_sd finetuning into:", finetunedir)
 
     trainer.dataloader.int_cutoff = nb_steps_per_traj
 
@@ -366,7 +364,6 @@ opt_adapt = optax.adabelief(sched_ctx_new)
 if adapt == True:
     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
 else:
-    print("save_id:", adapt_dataloader.data_id)
 
     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
@@ -420,7 +417,6 @@ except NameError:
 ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
 
 
-print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
 
 # First, check if the file exists. If not, create it and write the header
 if not os.path.exists(run_folder+'analysis'):
@@ -434,7 +430,7 @@ with open(csv_file, 'r') as f:
     lines = f.readlines()
     if len(lines) == 0:
         with open(csv_file, 'w') as f:
-            f.write("seed,ind_crit,ood_crit\n")
+            f.write('seed,ind_crit,ood_crit\n')
 
 
 ## Get results on test and adaptation datasets, then append them to the csv
@@ -453,7 +449,7 @@ for seed in seeds:
     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
 
     with open(csv_file, 'a') as f:
-        f.write(f"{seed},{ind_crit},{ood_crit}\n")
+        f.write(f'{seed},{ind_crit},{ood_crit}\n')
 
 
 ## Print the mean and stds of the scores
@@ -461,6 +457,9 @@ import pandas as pd
 pd.set_option('display.float_format', '{:.2e}'.format)
 test_scores = pd.read_csv(csv_file).describe()
 print(test_scores.iloc[:3])
+
+
+print("\n-----------------------------------------------------------------------------------------------------------\n")
 
 
 #%%
