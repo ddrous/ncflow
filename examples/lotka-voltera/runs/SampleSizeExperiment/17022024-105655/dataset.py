@@ -132,7 +132,7 @@ elif split == "adapt" or split == "adapt_test":
   ]
 elif split == "adapt_huge":
   environments = [
-      {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 21) for d in np.linspace(0.25, 1.25, 21)]
+      {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 51) for d in np.linspace(0.25, 1.25, 51)]
 
 # ## Lots of data environment
 # environments = []

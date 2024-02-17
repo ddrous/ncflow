@@ -2,9 +2,11 @@
 import pandas as pd
 
 ## Assign each folder a new name
-ncf_sample_sizes = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-folder_names = ['16022024-115227', '16022024-122638', '16022024-131350', '16022024-140720', '16022024-150923', '16022024-161301', '16022024-172037', '16022024-183601', '16022024-195713']
+ncf_sample_sizes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+folder_names = ['17022024-105655', '16022024-115227', '16022024-122638', '16022024-131350', '16022024-140720', '16022024-150923', '16022024-161301', '16022024-172037', '16022024-183601', '16022024-195713']
 
+
+data0 = [0, 1.26e-04, 1.51e-05, 1.15e-03, 3.17e-04]
 
 data1 = [1, 1.01e-04, 7.95e-06, 2.51e-04, 1.88e-04]
 
@@ -24,8 +26,9 @@ data8 = [8, 5.91e-05, 3.82e-06, 1.27e-04, 3.74e-05]
 
 data9 = [9, 6.59e-05, 1.86e-05, 1.11e-04, 2.36e-05]
 
+
 ## Create a dataframe with each line a data point
-df_1 = pd.DataFrame(data = [data1, data2, data3, data4, data5, data6, data7, data8, data9], columns = ['ncf_sample_size', 'mean_ind', 'std_ind', 'mean_ood', 'std_ood'])
+df_1 = pd.DataFrame(data = [data0, data1, data2, data3, data4, data5, data6, data7, data8, data9], columns = ['ncf_sample_size', 'mean_ind', 'std_ind', 'mean_ood', 'std_ood'])
 
 ## Plot boxes at means, betweeen mean-stds and mean+stds of the in-domain data
 import matplotlib.pyplot as plt
