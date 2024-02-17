@@ -93,7 +93,7 @@ class VisualTester:
         batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
 
         # crit = batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
-        crit_all = batched_criterion(X, X_hat).mean(axis=1)
+        crit_all = batched_criterion(X_hat, X).mean(axis=1)
         crit = crit_all.mean(axis=0)
 
         if verbose == True:
