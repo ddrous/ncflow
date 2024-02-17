@@ -1,0 +1,75 @@
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt_huge
+ Savepath: ./runs/16022024-161301/adapt/
+ Seed: 8104
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+No training. Loading data and results from: ./runs/16022024-161301/
+WARNING: You did not provide a dataloader id. A new one has been generated: 081936
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+
+
+Total number of parameters in the model: 319506 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+No training, loading model and results from ./runs/16022024-161301/ folder ...
+
+WARNING: You did not provide a dataloader id. A new one has been generated: 081937
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 9
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Test Score (In-Domain): 5.9835886e-05
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 0
+    Trajectory id: 3
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/16022024-161301/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+save_id: 170846
+
+No adaptation, loading adaptation parameters from ./runs/16022024-161301/adapt/ folder with id: 170846 ...
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 9
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Test Score (OOD): 4.925985e-05
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 0
+    Trajectory id: 0
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/16022024-161301/adapt/results_ood.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+
+=== Beginning adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 2400
+    Total number of training steps: 2400
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (2601, 1, 20, 2) (20,)
+    Epoch:     0     LossContext: 0.31914425
+    Epoch:     1     LossContext: 0.31590629
+    Epoch:     2     LossContext: 0.31252134
+    Epoch:     3     LossContext: 0.30905002

@@ -256,8 +256,8 @@ class Trainer:
 
                 node, contexts, opt_state, loss, (nb_steps_, term1, term2) = train_step(node, contexts, batch, weights, opt_state, loss_key)
 
-                term1 = term1 + 1e-8
-                weights = term1 / jnp.sum(term1)
+                # term1 = term1 + 1e-8
+                # weights = term1 / jnp.sum(term1)
 
                 loss_sum += jnp.array([loss])
                 nb_steps_eph += nb_steps_

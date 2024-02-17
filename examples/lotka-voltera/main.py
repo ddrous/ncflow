@@ -20,21 +20,21 @@ from nodax import *
 
 seed = 2026
 
-ncf_sample_size = 1               ## Number of neighboring contexts j to use for a flow in env e
+ncf_sample_size = 5*5               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 nb_epochs = 24000*1
-nb_epochs_adapt = 24000
+nb_epochs_adapt = 2400
 
 print_error_every = 1000
 
-train = True
+train = False
 save_trainer = True
 
 finetune = False
 # run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
-adapt = True
-adapt_huge = False
+adapt = False
+adapt_huge = True
 
 #%%
 
@@ -62,7 +62,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/15022024-133847/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/16022024-161301/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -380,21 +380,6 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 
 #%%
-## If the nohup.log file exists, copy it to the run folder
-try:
-    __IPYTHON__ ## in a jupyter notebook
-except NameError:
-    if os.path.exists("nohup.log"):
-        if finetune == True:
-            os.system(f"cp nohup.log {finetunedir}")
-            ## Open the results_in_domain in the terminal
-            os.system(f"open {finetunedir}results_in_domain.png")
-        else:
-            os.system(f"cp nohup.log {run_folder}")
-            os.system(f"open {run_folder}results_in_domain.png")
-
-
-#%%
 
 # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
 
@@ -417,50 +402,50 @@ except NameError:
 #### Generate data for analysis
 
 
-## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
+# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
 
 
-print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
+# print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
 
-# First, check if the file exists. If not, create it and write the header
-if not os.path.exists(run_folder+'analysis'):
-    os.mkdir(run_folder+'analysis')
+# # First, check if the file exists. If not, create it and write the header
+# if not os.path.exists(run_folder+'analysis'):
+#     os.mkdir(run_folder+'analysis')
 
-csv_file = run_folder+'analysis/test_scores.csv'
-if not os.path.exists(csv_file):
-    os.system(f"touch {csv_file}")
+# csv_file = run_folder+'analysis/test_scores.csv'
+# if not os.path.exists(csv_file):
+#     os.system(f"touch {csv_file}")
 
-with open(csv_file, 'r') as f:
-    lines = f.readlines()
-    if len(lines) == 0:
-        with open(csv_file, 'w') as f:
-            f.write("seed,ind_crit,ood_crit\n")
-
-
-## Get results on test and adaptation datasets, then append them to the csv
-
-np.random.seed(seed)
-seeds = np.random.randint(0, 10000, 10)
-for seed in seeds:
-# for seed in range(8000, 6*10**3, 10):
-    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
-
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=4, data_id="082026")
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
-
-    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
-    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
-
-    with open(csv_file, 'a') as f:
-        f.write(f"{seed},{ind_crit},{ood_crit}\n")
+# with open(csv_file, 'r') as f:
+#     lines = f.readlines()
+#     if len(lines) == 0:
+#         with open(csv_file, 'w') as f:
+#             f.write("seed,ind_crit,ood_crit\n")
 
 
-## Print the mean and stds of the scores
-import pandas as pd
-pd.set_option('display.float_format', '{:.2e}'.format)
-test_scores = pd.read_csv(csv_file).describe()
-print(test_scores.iloc[:3])
+# ## Get results on test and adaptation datasets, then append them to the csv
+
+# np.random.seed(seed)
+# seeds = np.random.randint(0, 10000, 10)
+# for seed in seeds:
+# # for seed in range(8000, 6*10**3, 10):
+#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
+#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
+
+#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=4, data_id="082026")
+#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
+
+#     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
+#     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
+
+#     with open(csv_file, 'a') as f:
+#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
+
+
+# ## Print the mean and stds of the scores
+# import pandas as pd
+# pd.set_option('display.float_format', '{:.2e}'.format)
+# test_scores = pd.read_csv(csv_file).describe()
+# print(test_scores.iloc[:3])
 
 
 #%%
@@ -473,32 +458,55 @@ print(test_scores.iloc[:3])
 
 
 
-# adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
+adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
 
-# sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-#                                                 int(nb_epochs_adapt*0.5):0.1,
-#                                                 int(nb_epochs_adapt*0.75):0.1})
-# opt_adapt = optax.adabelief(sched_ctx_new)
+sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-3,
+                        boundaries_and_scales={nb_epochs_adapt//3:0.1, 2*nb_epochs_adapt//3:0.1})
+opt_adapt = optax.adabelief(sched_ctx_new)
 
-# # nb_epochs_adapt = 2
-# if adapt_huge == True:
-#     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-# else:
-#     print("save_id:", adapt_dataloader.data_id)
+# nb_epochs_adapt = 2
+if adapt_huge == True:
+    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+else:
+    print("save_id:", adapt_dataloader.data_id)
 
-#     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-# ## Define mape criterion over a trajectory
-# def mape(y, y_hat):
-#     norm_traget = jnp.abs(y)
-#     norm_diff = jnp.abs(y-y_hat)
-#     ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
-#     return jnp.sum(ratios)
+## Define mape criterion over a trajectory
+def mape(y, y_hat):
+    norm_traget = jnp.abs(y)
+    norm_diff = jnp.abs(y-y_hat)
+    ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
+    return jnp.sum(ratios)
 
-# ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
+ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
+visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood_huge.png");
 
-# print(odd_crit_all)
+print(odd_crit_all)
 
-# ## Save the odd_crit_all in numpy
-# np.save('mapes.npy', odd_crit_all)
+## Save the odd_crit_all in numpy
+np.save(adapt_folder+'mapes.npy', odd_crit_all)
+
+
+
+
+
+#%%
+## If the nohup.log file exists, copy it to the run folder
+try:
+    __IPYTHON__ ## in a jupyter notebook
+except NameError:
+    if os.path.exists("nohup.log"):
+        if finetune == True:
+            os.system(f"cp nohup.log {finetunedir}")
+            ## Open the results_in_domain in the terminal
+            os.system(f"open {finetunedir}results_in_domain.png")
+        elif adapt == True:
+            os.system(f"cp nohup.log {adapt_folder}")
+            os.system(f"open {adapt_folder}results_ood.png")
+        elif adapt_huge == True:
+            os.system(f"cp nohup.log {adapt_folder}")
+            os.system(f"open {adapt_folder}results_ood_huge.png")
+        else:
+            os.system(f"cp nohup.log {run_folder}")
+            os.system(f"open {run_folder}results_in_domain.png")
