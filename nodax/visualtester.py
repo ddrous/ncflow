@@ -291,10 +291,15 @@ class VisualTester:
 
         mke = np.ceil(losses_node.shape[0]/100).astype(int)
 
-        label_node = "NodeLoss" if data_loader.adaptation == False else "ContextLossAdapt"
+        label_node = "Node Loss" if data_loader.adaptation == False else "Node Loss Adapt"
         ax['C'].plot(losses_node[:,0], label=label_node, color="grey", linewidth=3, alpha=1.0)
-        label_ctx = "ContextLoss" if data_loader.adaptation == False else "ContextLossAdapt"
+        label_ctx = "Context Loss" if data_loader.adaptation == False else "Context Loss Adapt"
         ax['C'].plot(losses_ctx[:,0], "x-", markevery=mke, markersize=mks, label=label_ctx, color="grey", linewidth=1, alpha=0.5)
+
+        if hasattr(self.trainer, 'val_losses') and data_loader.adaptation==False:
+            val_losses = np.vstack(self.trainer.val_losses)
+            ax['C'].plot(val_losses[:,0], val_losses[:,1], "o", label="Validation Loss", color="brown", linewidth=3, alpha=0.5)
+
         ax['C'].set_xlabel("Epochs")
         ax['C'].set_title("Loss Terms")
         ax['C'].set_yscale('log')

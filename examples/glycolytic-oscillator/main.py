@@ -20,10 +20,10 @@ from nodax import *
 
 seed = 2026
 
-flow_pool_count = 1               ## Number of neighboring contexts j to use for a flow in env e
+flow_pool_count = 6               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-nb_epochs = 24000*3
-nb_epochs_adapt = 24000*3
+nb_epochs = 24000*1
+nb_epochs_adapt = 24000*1
 
 print_error_every = 1000
 
@@ -62,7 +62,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/15022024-133847/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/16022024-205415/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -87,13 +87,15 @@ if adapt_huge == True:
 
 #%%
 
-## Define dataloader for training
+## Define dataloader for training and validation
 train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=0.25, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
 nb_steps_per_traj = train_dataloader.nb_steps_per_traj
 data_size = train_dataloader.data_size
+
+val_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
 
 #%%
 
@@ -243,7 +245,7 @@ if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed)
+        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, val_criterion=None)
 
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
@@ -251,6 +253,7 @@ else:
     restore_folder = run_folder
     # restore_folder = "./runs/27012024-155719/finetune_193625/"
     trainer.restore_trainer(path=restore_folder)
+
 
 
 #%%
@@ -285,16 +288,11 @@ if finetune:
 
 
 
-
-
-
-
 #%%
 
 ## Test and visualise the results on a test dataloader
 
 test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-
 visualtester = VisualTester(trainer)
 # ans = visualtester.trainer.nb_steps_node
 # print(ans.shape)
@@ -306,6 +304,10 @@ if finetune:
 else:
     savefigdir = run_folder+"results_in_domain.png"
 visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
+
+
+
+
 
 
 

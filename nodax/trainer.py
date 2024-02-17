@@ -1,6 +1,7 @@
 import pickle
 
 from nodax.learner import ContextParams
+from nodax.visualtester import VisualTester
 from ._utils import *
 
 class Trainer:
@@ -19,7 +20,9 @@ class Trainer:
         self.nb_steps_node = []
         self.nb_steps_ctx = []
 
-    def train(self, nb_epochs, update_context_every=1, print_error_every=100, save_path=False, key=None):
+        self.val_losses = []
+
+    def train(self, nb_epochs, update_context_every=1, print_error_every=100, save_path=False, val_dataloader=None, val_criterion=None, key=None):
         key = key if key is not None else self.key
 
         opt_state_node = self.opt_node_state
@@ -63,6 +66,11 @@ class Trainer:
 
         assert update_context_every <= nb_train_steps_per_epoch, "update_context_every must be smaller than nb_train_steps_per_epoch"
 
+
+        if val_dataloader is not None:
+            tester = VisualTester(self)
+
+
         print(f"\n\n=== Beginning training ... ===")
         print(f"    Number of examples in a batch: {self.dataloader.batch_size}")
         print(f"    Number of train steps per epoch: {nb_train_steps_per_epoch}")
@@ -75,6 +83,8 @@ class Trainer:
         losses_ctx = []
         nb_steps_node = []
         nb_steps_ctx = []
+
+        val_losses = []
 
         weights = jnp.ones(self.learner.nb_envs) / self.learner.nb_envs
 
@@ -138,7 +148,15 @@ class Trainer:
 
             if epoch%print_error_every==0 or epoch<=3 or epoch==nb_epochs-1:
                 # print(f"    Epoch: {epoch:-5d}      LossNeuralODE: {loss_epoch_node[0]:-.8f}     LossContext: {loss_epoch_ctx[0]:-.8f}     AvgContextPen: {jnp.mean(term2):-.8f}", flush=True)
-                print(f"    Epoch: {epoch:-5d}      LossTrajs: {loss_epoch_node[0]:-.8f}     ContextsNorm: {jnp.mean(term2):-.8f}", flush=True)
+
+                if val_dataloader is not None:
+                    self.learner.neuralode = node
+                    self.learner.contexts = contexts
+                    ind_crit,_ = tester.test(val_dataloader, int_cutoff=1.0, criterion=val_criterion, verbose=False)
+                    val_losses.append(np.array([epoch, ind_crit]))
+                    print(f"    Epoch: {epoch:-5d}      LossTrajs: {loss_epoch_node[0]:-.8f}     ContextsNorm: {jnp.mean(term2):-.8f}     ValIndCrit: {ind_crit:-.8f}", flush=True)
+                else:
+                    print(f"    Epoch: {epoch:-5d}      LossTrajs: {loss_epoch_node[0]:-.8f}     ContextsNorm: {jnp.mean(term2):-.8f}", flush=True)
 
 
         wall_time = time.time() - start_time
@@ -150,6 +168,9 @@ class Trainer:
         self.losses_ctx.append(jnp.vstack(losses_ctx))
         self.nb_steps_node.append(jnp.array(nb_steps_node))
         self.nb_steps_ctx.append(jnp.array(nb_steps_ctx))
+
+        if val_dataloader is not None:
+            self.val_losses.append(np.vstack(val_losses))
 
         self.opt_node_state = opt_state_node
         self.opt_ctx_state = opt_state_ctx
@@ -170,6 +191,9 @@ class Trainer:
                  losses_ctx=jnp.vstack(self.losses_ctx), 
                  nb_steps_node=jnp.concatenate(self.nb_steps_node), 
                  nb_steps_ctx=jnp.concatenate(self.nb_steps_ctx))
+        
+        if hasattr(self, 'val_losses'):
+            np.save(path+"val_losses.npy", np.vstack(self.val_losses))
 
         pickle.dump(self.opt_node_state, open(path+"opt_state_node.pkl", "wb"))
         pickle.dump(self.opt_ctx_state, open(path+"opt_state_ctx.pkl", "wb"))
@@ -186,6 +210,9 @@ class Trainer:
         self.losses_ctx = [histories['losses_ctx']]
         self.nb_steps_node = [histories['nb_steps_node']]
         self.nb_steps_ctx = [histories['nb_steps_ctx']]
+
+        if os.path.exists(path+"val_losses.npy"):
+            self.val_losses = [np.load(path+"val_losses.npy")]
 
         self.opt_state_node = pickle.load(open(path+"opt_state_node.pkl", "rb"))
         self.opt_state_ctx = pickle.load(open(path+"opt_state_ctx.pkl", "rb"))
