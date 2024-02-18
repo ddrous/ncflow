@@ -22,7 +22,7 @@ class Trainer:
 
         self.val_losses = []
 
-    def train(self, nb_epochs, update_context_every=1, print_error_every=100, save_path=False, val_dataloader=None, val_criterion=None, key=None):
+    def train(self, nb_epochs, int_prop=1.0, update_context_every=1, print_error_every=100, save_path=False, val_dataloader=None, val_criterion=None, key=None):
         key = key if key is not None else self.key
 
         opt_state_node = self.opt_node_state
@@ -64,8 +64,10 @@ class Trainer:
         nb_train_steps_per_epoch = int(np.ceil(self.dataloader.nb_trajs_per_env / self.dataloader.batch_size))
         total_steps = nb_epochs * nb_train_steps_per_epoch
 
-        assert update_context_every <= nb_train_steps_per_epoch, "update_context_every must be smaller than nb_train_steps_per_epoch"
+        assert update_context_every <= nb_train_steps_per_epoch, "Update_context_every must be smaller than nb_train_steps_per_epoch"
 
+        assert int_prop>0 and int_prop<=1.0, "The proportion of trajectory length to consider for training must be between 0 and 1"
+        self.dataloader.int_cutoff = int(int_prop*self.dataloader.nb_steps_per_traj)
 
         if val_dataloader is not None:
             tester = VisualTester(self)
@@ -221,6 +223,7 @@ class Trainer:
 
 
     def adapt(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):
+        """Adapt the model to a new environment using the provided dataset. """
         # key = key if key is not None else self.key
 
         loss_fn = self.learner.loss_fn

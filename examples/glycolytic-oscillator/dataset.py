@@ -95,15 +95,14 @@ def glycolytic_oscilator(t, x, params):
 
 if split == "train" or split=="test":
   # Training environments
-
-    k1_range = [100, 90, 80]  
+    k1_range = [100, 90, 80]
     K1_range = [1, 0.75, 0.5]
     environments = [{'J0': 2.5, 'k1': k1, 'k2': 6, 'k3': 16, 'k4': 100, 'k5': 1.28, 'k6': 12, 'K1': K1, 'q': 4, 'N': 1, 'A': 4, 'kappa': 13, 'psi': 0.1, 'k': 1.8} for k1 in k1_range for K1 in K1_range]
 
 
 elif split == "adapt":
   ## Adaptation environments
-    k1_range = [85, 95]  
+    k1_range = [85, 95]
     K1_range = [0.625, 0.875]
     environments = [{'J0': 2.5, 'k1': k1, 'k2': 6, 'k3': 16, 'k4': 100, 'k5': 1.28, 'k6': 12, 'K1': K1, 'q': 4, 'N': 1, 'A': 4, 'kappa': 13, 'psi': 0.1, 'k': 1.8} for k1 in k1_range for K1 in K1_range]
 
@@ -111,7 +110,7 @@ elif split == "adapt":
 
 
 if split == "train":
-  n_traj_per_env = 4     ## training
+  n_traj_per_env = 32     ## training
 elif split == "test":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
@@ -144,13 +143,13 @@ for j in range(n_traj_per_env):
         # data[i, j, :, :] = solution.y.T
 
         ## use diffrax instead, with the DoPri5 integrator
-        solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator), 
+        solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
                                        diffrax.Dopri5(),
                                        args=(selected_params,),
-                                       t0=t_span[0], 
-                                       t1=t_span[1], 
+                                       t0=t_span[0],
+                                       t1=t_span[1],
                                        dt0=t_eval[1]-t_eval[0],
-                                       y0=initial_state, 
+                                       y0=initial_state,
                                        stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
                                        saveat=diffrax.SaveAt(ts=t_eval))
         data[i, j, :, :] = solution.ys

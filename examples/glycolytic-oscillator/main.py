@@ -20,7 +20,7 @@ from nodax import *
 
 seed = 2026
 
-flow_pool_count = 6               ## Number of neighboring contexts j to use for a flow in env e
+flow_pool_count = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 nb_epochs = 24000*1
 nb_epochs_adapt = 24000*1
@@ -62,7 +62,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/16022024-205415/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/17022024-104027/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -88,7 +88,7 @@ if adapt_huge == True:
 #%%
 
 ## Define dataloader for training and validation
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=0.25, shuffle=True, key=seed)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=1.0, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -172,6 +172,7 @@ contexts = ContextParams(nb_envs, context_size, key=None)
 # integrator = diffrax.Tsit5()  ## Has to conform to my API
 # integrator = rk4_integrator
 integrator = diffrax.Dopri5()
+# integrator = diffrax.Tsit5()
 
 
 # ## Define a custom loss function here
@@ -244,8 +245,8 @@ trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
-        trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, val_criterion=None)
+        # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
+        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
 
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
@@ -307,6 +308,10 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 
+#%%
+# ## Load the validation loss
+# val_loss = np.load(run_folder+"val_losses.npy")
+# val_loss
 
 
 
