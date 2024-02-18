@@ -20,10 +20,10 @@ from nodax import *
 
 seed = 2026
 
-ncf_sample_size = 5*5               ## Number of neighboring contexts j to use for a flow in env e
+ncf_sample_size = 4               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 nb_epochs = 24000*1
-nb_epochs_adapt = 2400
+nb_epochs_adapt = 24000
 
 print_error_every = 1000
 

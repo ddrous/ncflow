@@ -296,7 +296,7 @@ class VisualTester:
         label_ctx = "Context Loss" if data_loader.adaptation == False else "Context Loss Adapt"
         ax['C'].plot(losses_ctx[:,0], "x-", markevery=mke, markersize=mks, label=label_ctx, color="grey", linewidth=1, alpha=0.5)
 
-        if hasattr(self.trainer, 'val_losses') and data_loader.adaptation==False:
+        if data_loader.adaptation==False and hasattr(self.trainer, 'val_losses') and len(self.trainer.val_losses)>0:
             val_losses = np.vstack(self.trainer.val_losses)
             ax['C'].plot(val_losses[:,0], val_losses[:,1], "o", label="Validation Loss", color="brown", linewidth=3, alpha=0.5)
 

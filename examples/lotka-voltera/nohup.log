@@ -1,29 +1,16 @@
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
- Split: train
- Savepath: ./runs/17022024-105655/
- Seed: 2026
-
-Running this script in ipython (Jupyter) session ? False
-=== Parsed arguments to generate data ===
- Split: test
- Savepath: ./runs/17022024-105655/
- Seed: 4052
-
-Running this script in ipython (Jupyter) session ? False
-=== Parsed arguments to generate data ===
- Split: adapt
- Savepath: ./runs/17022024-105655/adapt/
- Seed: 6078
+ Split: adapt_huge
+ Savepath: ./runs/16022024-161301/adapt/
+ Seed: 8104
 
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
 Jax version: 0.4.23
 Available devices: [cuda(id=0)]
-Data folder created successfuly: ./runs/17022024-105655/
-Completed copied scripts 
-WARNING: You did not provide a dataloader id. A new one has been generated: 105657
+No training. Loading data and results from: ./runs/16022024-161301/
+WARNING: You did not provide a dataloader id. A new one has been generated: 185256
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 
 
@@ -32,66 +19,43 @@ Total number of parameters in the model: 319506
 
 WARNING: No key provided for the context initialization. Initializing at 0.
 
+No training, loading model and results from ./runs/16022024-161301/ folder ...
 
-=== Beginning training ... ===
-    Number of examples in a batch: 4
-    Number of train steps per epoch: 1
-    Number of training epochs: 24000
-    Total number of training steps: 24000
-
-Compiling function "train_step" for neural ode ...
-Shapes of elements in a batch: (9, 4, 20, 2) (20,)
-
-Compiling function "train_step" for context ...
-Shapes of elements in a batch: (9, 4, 20, 2) (20,)
-    Epoch:     0      LossTrajs: 15.28007317     ContextsNorm: 0.00000000
-    Epoch:     1      LossTrajs: 9.44131565     ContextsNorm: 0.00098262
-    Epoch:     2      LossTrajs: 5.22013140     ContextsNorm: 0.00194841
-    Epoch:     3      LossTrajs: 2.49063706     ContextsNorm: 0.00296057
-    Epoch:  1000      LossTrajs: 0.00136095     ContextsNorm: 0.10618223
-    Epoch:  2000      LossTrajs: 0.00220837     ContextsNorm: 0.10561302
-    Epoch:  3000      LossTrajs: 0.00032682     ContextsNorm: 0.10394433
-    Epoch:  4000      LossTrajs: 0.00052733     ContextsNorm: 0.10050614
-    Epoch:  5000      LossTrajs: 0.00013672     ContextsNorm: 0.09928737
-    Epoch:  6000      LossTrajs: 0.00012988     ContextsNorm: 0.09953912
-    Epoch:  7000      LossTrajs: 0.00027694     ContextsNorm: 0.09947789
-    Epoch:  8000      LossTrajs: 0.00013332     ContextsNorm: 0.09741511
-    Epoch:  9000      LossTrajs: 0.00002482     ContextsNorm: 0.09764668
-    Epoch: 10000      LossTrajs: 0.00002060     ContextsNorm: 0.09792060
-    Epoch: 11000      LossTrajs: 0.00001603     ContextsNorm: 0.09823678
-    Epoch: 12000      LossTrajs: 0.00001491     ContextsNorm: 0.09852980
-    Epoch: 13000      LossTrajs: 0.00001232     ContextsNorm: 0.09882155
-    Epoch: 14000      LossTrajs: 0.00013208     ContextsNorm: 0.09815717
-    Epoch: 15000      LossTrajs: 0.00002174     ContextsNorm: 0.09950840
-    Epoch: 16000      LossTrajs: 0.00001342     ContextsNorm: 0.10012424
-    Epoch: 17000      LossTrajs: 0.00002110     ContextsNorm: 0.10017744
-    Epoch: 18000      LossTrajs: 0.00001050     ContextsNorm: 0.10024323
-    Epoch: 19000      LossTrajs: 0.00000991     ContextsNorm: 0.10027617
-    Epoch: 20000      LossTrajs: 0.00002999     ContextsNorm: 0.10033341
-    Epoch: 21000      LossTrajs: 0.00000975     ContextsNorm: 0.10040019
-    Epoch: 22000      LossTrajs: 0.00000874     ContextsNorm: 0.10042737
-    Epoch: 23000      LossTrajs: 0.00000746     ContextsNorm: 0.10043686
-    Epoch: 23999      LossTrajs: 0.00000831     ContextsNorm: 0.10048354
-
-Total gradient descent training time: 0 hours 21 mins 25 secs
-Environment weights at the end of the training: [0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111
- 0.11111111 0.11111111 0.11111111]
-WARNING: You did not provide a dataloader id. A new one has been generated: 111827
+WARNING: You did not provide a dataloader id. A new one has been generated: 185257
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 WARNING: No key provided, using time as seed
 ==  Begining in-domain testing ... ==
     Number of training environments: 9
-    Final length of the training trajectories: 20
+    Final length of the training trajectories: 5
     Length of the testing trajectories: 20
-Test Score (In-Domain): 0.00012321104
+Test Score (In-Domain): 5.9835886e-05
 
 ==  Begining in-domain visualisation ... ==
-    Environment id: 8
-    Trajectory id: 22
-    Final length of the training trajectories: 20
+    Environment id: 0
+    Trajectory id: 1
+    Final length of the training trajectories: 5
     Length of the testing trajectories: 20
-Testing finished. Figure saved in: ./runs/17022024-105655/results_in_domain.png
+Testing finished. Figure saved in: ./runs/16022024-161301/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+save_id: 170846
+
+No adaptation, loading adaptation parameters from ./runs/16022024-161301/adapt/ folder with id: 170846 ...
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 9
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Test Score (OOD): 4.925985e-05
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 3
+    Trajectory id: 0
+    Final length of the training trajectories: 5
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/16022024-161301/adapt/results_ood.png
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 WARNING: No key provided for the context initialization. Initializing at 0.
 
@@ -105,62 +69,51 @@ WARNING: No key provided, using time as seed
 
 Compiling function "train_step" for context ...
 Shapes of elements in a batch: (4, 1, 20, 2) (20,)
-    Epoch:     0     LossContext: 0.06016979
-    Epoch:     1     LossContext: 0.06761862
-    Epoch:     2     LossContext: 0.06702752
-    Epoch:     3     LossContext: 0.06639947
-    Epoch:  1000     LossContext: 0.01435809
-    Epoch:  2000     LossContext: 0.01080350
-    Epoch:  3000     LossContext: 0.00737300
-    Epoch:  4000     LossContext: 0.00641808
-    Epoch:  5000     LossContext: 0.00116506
-    Epoch:  6000     LossContext: 0.00106924
-    Epoch:  7000     LossContext: 0.00098286
-    Epoch:  8000     LossContext: 0.00090780
-    Epoch:  9000     LossContext: 0.00091170
-    Epoch: 10000     LossContext: 0.00090259
-    Epoch: 11000     LossContext: 0.00090318
-    Epoch: 12000     LossContext: 0.00091473
-    Epoch: 13000     LossContext: 0.00089456
-    Epoch: 14000     LossContext: 0.00089909
-    Epoch: 15000     LossContext: 0.00086752
-    Epoch: 16000     LossContext: 0.00088005
-    Epoch: 17000     LossContext: 0.00084528
-    Epoch: 18000     LossContext: 0.00087905
-    Epoch: 19000     LossContext: 0.00086509
-    Epoch: 20000     LossContext: 0.00085096
-    Epoch: 21000     LossContext: 0.00086115
-    Epoch: 22000     LossContext: 0.00084078
-    Epoch: 23000     LossContext: 0.00088322
-    Epoch: 23999     LossContext: 0.00088282
+    Epoch:     0     LossContext: 2.00185800
+    Epoch:     1     LossContext: 1.99399769
+    Epoch:     2     LossContext: 1.98910177
+    Epoch:     3     LossContext: 1.97694814
+    Epoch:  1000     LossContext: 0.19567932
+    Epoch:  2000     LossContext: 0.12733695
+    Epoch:  3000     LossContext: 0.10914860
+    Epoch:  4000     LossContext: 0.09886017
+    Epoch:  5000     LossContext: 0.08846124
+    Epoch:  6000     LossContext: 0.08036166
+    Epoch:  7000     LossContext: 0.07456353
+    Epoch:  8000     LossContext: 0.06873414
+    Epoch:  9000     LossContext: 0.06871495
+    Epoch: 10000     LossContext: 0.06745659
+    Epoch: 11000     LossContext: 0.06842413
+    Epoch: 12000     LossContext: 0.06669667
+    Epoch: 13000     LossContext: 0.06646918
+    Epoch: 14000     LossContext: 0.06654723
+    Epoch: 15000     LossContext: 0.06541377
+    Epoch: 16000     LossContext: 0.06625982
+    Epoch: 17000     LossContext: 0.06538546
+    Epoch: 18000     LossContext: 0.06532001
+    Epoch: 19000     LossContext: 0.06451593
+    Epoch: 20000     LossContext: 0.06581067
+    Epoch: 21000     LossContext: 0.06464531
+    Epoch: 22000     LossContext: 0.06517278
+    Epoch: 23000     LossContext: 0.06540310
+    Epoch: 23999     LossContext: 0.06437790
 
-Total gradient descent adaptation time: 0 hours 8 mins 8 secs
-Environment weights at the end of the adaptation: [0.31953415 0.2249725  0.23628242 0.21921092]
+Total gradient descent adaptation time: 0 hours 19 mins 2 secs
+Environment weights at the end of the adaptation: [0.25 0.25 0.25 0.25]
 
-Saving adaptation parameters into ./runs/17022024-105655/adapt/ folder with id 170846 ...
+Saving adaptation parameters into ./runs/16022024-161301/adapt/ folder with id 090142 ...
 
 ==  Begining out-of-distribution testing ... ==
     Number of training environments: 9
     Number of adaptation environments: 4
-    Final length of the training trajectories: 20
+    Final length of the training trajectories: 5
     Length of the testing trajectories: 20
-Test Score (OOD): 0.00084175036
+Test Score (OOD): 11.730269
 
 ==  Begining out-of-distribution visualisation ... ==
-    Environment id: 0
+    Environment id: 2
     Trajectory id: 0
-    Final length of the training trajectories: 20
+    Final length of the training trajectories: 5
     Length of the testing trajectories: 20
-Testing finished. Figure saved in: ./runs/17022024-105655/adapt/results_ood.png
-Traceback (most recent call last):
-  File "/home/gb21553/Projects/Nodax/examples/lotka-voltera/main_0.py", line 468, in <module>
-  File "/home/gb21553/Projects/Nodax/nodax/dataloader.py", line 12, in __init__
-    raw_dat = jnp.load(dataset)
-              ^^^^^^^^^^^^^^^^^
-  File "/home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py", line 288, in load
-    out = np.load(*args, **kwargs)
-          ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/numpy/lib/npyio.py", line 427, in load
-    fid = stack.enter_context(open(os_fspath(file), "rb"))
-                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: './runs/17022024-105655/adapt/adapt_huge_data.npz'
+Testing finished. Figure saved in: ./runs/16022024-161301/adapt/results_ood_huge.png
+[ 2.5007687  8.84316    5.8873353 29.689814 ]

@@ -56,9 +56,8 @@ def plot_errorbars(arg, **kws):
 
 #%%
 
-folder_names = ['16022024-115227', '16022024-122638', '16022024-131350', '16022024-140720', '16022024-150923', '16022024-161301', '16022024-172037', '16022024-183601', '16022024-195713']
 mean_order = np.argsort(df_1["mean_ind"].to_numpy())
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w', 'orange']
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w', 'orange', 'purple']
 # ## colors such that the brighter the color, the higher the mean
 # colors = sns.color_palette("magma", len(folder_names))
 # colors = np.array(colors)[mean_order]
@@ -66,12 +65,12 @@ colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w', 'orange']
 
 ## Load the tests scores from each folder's anaylsis subfolder
 for i, folder in enumerate(folder_names):
-    print(i+1, folder)
+    print(i, folder)
     ## Load the test scores
-    scores = pd.read_csv(f'runs/{folder}/analysis/test_scores.csv')
+    scores = pd.read_csv(f'{folder}/analysis/test_scores.csv')
     # print(scores)
     ## Load the ncf sample size
-    ncf_sample_size = np.array([i+1]*10)
+    ncf_sample_size = np.array([i]*10)
     scores['ncf_sample_size'] = ncf_sample_size
     scores['color'] = colors[i]*10
     if i==0:
@@ -100,3 +99,84 @@ sns.pointplot(df, x="ncf_sample_size", y="ind_crit", errorbar="se", ax=ax, legen
 
 ax.set(xlabel='Neighbour Sample Size', ylabel='Log MSE')
 # ax.grid(True)
+ax.set_xticklabels([str(0)+"*", 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+## Save figure as a pdf
+plt.savefig('ncf_sample_size_analysis_ind.pdf', format='pdf', dpi=1200, bbox_inches='tight')
+
+#%%
+
+f, ax = plt.subplots(figsize=(10, 6))
+ax.set(yscale="log")
+sns.pointplot(df, x="ncf_sample_size", y="ood_crit", markers="", ci=None, color="k", alpha=0.2)
+sns.pointplot(df, x="ncf_sample_size", y="ood_crit", errorbar="se", ax=ax, legend=False, log_scale=True, hue="color")
+ax.set(xlabel='Neighbour Sample Size', ylabel='Log MSE')
+ax.set_xticklabels([str(0)+"*", 1, 2, 3, 4, 5, 6, 7, 8, 9])
+plt.savefig('ncf_sample_size_analysis_ood.pdf', format='pdf', dpi=1200, bbox_inches='tight')
+
+#%%
+
+## Training times
+training_times = [[0, 0, 21, 25]+data0[1:3],
+                  [1, 0, 24, 27]+data1[1:3],
+                  [2, 0, 35, 46]+data2[1:3],
+                  [3, 0, 40, 41]+data3[1:3],
+                  [4, 0, 49, 43]+data4[1:3],
+                  [5, 0, 51, 47]+data5[1:3],
+                  [6, 0, 56, 3]+data6[1:3],
+                  [7, 1, 2, 55]+data7[1:3],
+                  [8, 1, 8, 37]+data8[1:3],
+                  [9, 1, 14, 8]+data9[1:3]]
+
+adaptation_times = [[0, 0, 8, 8]+data0[3:],
+                    [1, 0, 9, 15]+data1[3:],
+                    [2, 0, 10, 57]+data2[3:],
+                    [3, 0, 12, 20]+data3[3:],
+                    [4, 0, 11, 51]+data4[3:],
+                    [5, 0, 11, 22]+data5[3:],
+                    [6, 0, 11, 3]+data6[3:],
+                    [7, 0, 12, 0]+data7[3:],
+                    [8, 0, 12, 7]+data8[3:],
+                    [9, 0, 12, 17]+data9[3:]]
+
+## Create a dataframe with the ncf sample size, training times and adaptation times
+df_2 = pd.DataFrame(data = training_times, columns = ['ncf_sample_size', 'hours', 'minutes', 'seconds', 'mean_ind', 'std_ind'])
+df_2['color'] = colors
+
+## Build df_3 with adaptation times
+df_3 = pd.DataFrame(data = adaptation_times, columns = ['ncf_sample_size', 'hours', 'minutes', 'seconds', 'mean_ood', 'std_ood'])
+df_3['color'] = colors
+
+
+## Add a colum for total training times in seconds
+# df_2['total_training_time'] = df_2['hours']*3600 + df_2['minutes']*60 + df_2['seconds']
+df_2['total_training_time'] = df_2['hours']*60 + df_2['minutes'] + df_2['seconds']/60
+df_3['total_adaptation_time'] = df_3['hours']*60 + df_3['minutes'] + df_3['seconds']/60
+
+## Plot mean_ind against total_training_time
+f, ax = plt.subplots(figsize=(10, 6))
+ax.set(yscale="log")
+# ax.set(xscale="log")
+# sns.pointplot(df_2, x="ncf_sample_size", y="mean_ind", ax=ax, markers="", ci=None, color="y", alpha=0.2)
+# sns.pointplot(df_2, x="ncf_sample_size", y="mean_ind", ax=ax , markers="o", hue='color', legend=False)
+
+sns.pointplot(df_2, x="ncf_sample_size", y="mean_ind", ax=ax , markers="o", color="red", label="In-Domain Loss")
+sns.pointplot(df_3, x="ncf_sample_size", y="mean_ood", ax=ax , markers="o", color="crimson", label="OOD Loss", alpha=0.2)
+ax.set_ylabel('Log MSE')
+
+ax2 = ax.twinx()
+# sns.pointplot(df_2, x="ncf_sample_size", y="total_training_time", ax=ax2, markers="", ci=None, color="k", alpha=0.2)
+# sns.pointplot(df_2, x="ncf_sample_size", y="total_training_time", ax=ax2, markers="s", hue='color', legend=False)
+
+sns.pointplot(df_2, x="ncf_sample_size", y="total_training_time", ax=ax2, markers="s", color="blue", label="Training Time")
+sns.pointplot(df_3, x="ncf_sample_size", y="total_adaptation_time", ax=ax2, markers="s", color="skyblue", label="Adaptation Time", alpha=0.5)
+ax2.set_ylabel('Time (mins)')
+
+ax2.set_xticklabels([str(0)+"*", 1, 2, 3, 4, 5, 6, 7, 8, 9])
+ax.set_xlabel('Neighbour Sample Size')
+
+ax.legend()
+ax2.legend()
+
+## Save figure as a pdf
+plt.savefig('ncf_sample_size_analysis_training_time.pdf', format='pdf', dpi=1200, bbox_inches='tight')
