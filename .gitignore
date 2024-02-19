@@ -71,3 +71,4 @@ venv/*
 !examples/lotka-voltera/runs/SampleSizeExperiment
 
 !examples/glycolytic-oscillator/runs/16022024-205415
+!examples/glycolytic-oscillator/runs/18022024-221505

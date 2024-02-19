@@ -150,17 +150,3 @@ Saving adaptation parameters into ./runs/18022024-221505/adapt/ folder with id 1
     Length of the testing trajectories: 20
 Test Score (OOD): 0.0016007004
 
-sh: 1: open: not found
-==  Begining out-of-distribution visualisation ... ==
-    Environment id: 1
-    Trajectory id: 0
-    Final length of the training trajectories: 20
-    Length of the testing trajectories: 20
-Testing finished. Figure saved in: ./runs/18022024-221505/adapt/results_ood.png
-
-Full evaluation of the model on 10 random seeds
-
-          seed  ind_crit  ood_crit
-count 1.00e+01  1.00e+01  1.00e+01
-mean  5.25e+03  4.02e-03  3.75e-03
-std   3.39e+03  5.55e-04  2.80e-03
