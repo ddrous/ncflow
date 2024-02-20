@@ -19,9 +19,9 @@ import argparse
 
 if _in_ipython_session:
 	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=2026, verbose=1)
+	args = argparse.Namespace(split='test', savepath="./tmp/", seed=2026, verbose=1)
 else:
-	parser = argparse.ArgumentParser(description='Description of your program')
+	parser = argparse.ArgumentParser(description='Gray-Scott dataset generation script.')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
 	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
 	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=2026, required=False)
@@ -68,73 +68,112 @@ from matplotlib.animation import FuncAnimation
 import jax.numpy as jnp
 import diffrax
 
-# Define the Lotka-Volterra system
-keys = ['J0', 'k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'K1', 'q', 'N', 'A', 'kappa', 'psi', 'k']
+dx = 1
+res = 32  # 32x32 grid resolution
 
-def glycolytic_oscilator(t, x, params):
-    J0, k1, k2, k3, k4, k5, k6, K1, q, N, A, kappa, psi, k = [params[0][k] for k in keys]
+def laplacian2D(a):
+    # a_nn | a_nz | a_np
+    # a_zn | a    | a_zp
+    # a_pn | a_pz | a_pp
+    a_zz = a
 
-    # d = np.zeros(7)
-    k1s1s6 = k1 * x[0] * x[5] / (1 + (x[5]/K1) ** q)
-    # print("k1s1s6", k1s1s6, "JO", J0, "\n\n")
-    d0 = J0 - k1s1s6
-    d1 = 2 * k1s1s6 - k2 * x[1] * (N - x[4]) - k6 * x[1] * x[4]
-    d2 = k2 * x[1] * (N - x[4]) - k3 * x[2] * (A - x[5])
-    d3 = k3 * x[2] * (A - x[5]) - k4 * x[3] * x[4] - kappa * (x[3] - x[6])
-    d4 = k2 * x[1] * (N - x[4]) - k4 * x[3] * x[4] - k6 * x[1] * x[4] 
-    d5 = -2 * k1s1s6 + 2 * k3 * x[2] * (A - x[5]) - k5 * x[5]
-    d6 = psi * kappa * (x[3] - x[6]) - k * x[6]
+    a_nz = jnp.roll(a_zz, (+1, 0), (0, 1))
+    a_pz = jnp.roll(a_zz, (-1, 0), (0, 1))
+    a_zn = jnp.roll(a_zz, (0, +1), (0, 1))
+    a_zp = jnp.roll(a_zz, (0, -1), (0, 1))
 
-    return jnp.array([d0, d1, d2, d3, d4, d5, d6])
+    a_nn = jnp.roll(a_zz, (+1, +1), (0, 1))
+    a_np = jnp.roll(a_zz, (+1, -1), (0, 1))
+    a_pn = jnp.roll(a_zz, (-1, +1), (0, 1))
+    a_pp = jnp.roll(a_zz, (-1, -1), (0, 1))
+
+    return (- 3 * a + 0.5 * (a_nz + a_pz + a_zn + a_zp) + 0.25 * (a_nn + a_np + a_pn + a_pp)) / (dx ** 2)   ## At the numerator, we are still computing the weighted difference. The sum of stencil values must be 0.
+
+def vec_to_mat(vec_uv, res=32):
+    UV = jnp.split(vec_uv, 2)
+    U = jnp.reshape(UV[0], (res, res))
+    V = jnp.reshape(UV[1], (res, res))
+    return U, V
+
+def mat_to_vec(mat_U, mat_V, res):
+    dudt = jnp.reshape(mat_U, res * res)
+    dvdt = jnp.reshape(mat_V, res * res)
+    return jnp.concatenate((dudt, dvdt))
+
+## Define initial conditions
+def get_init_cond(res):
+    # np.random.seed(index if not self.test else self.max - index)
+    U = 0.95 * np.ones((res, res))
+    V = 0.05 * np.ones((res, res))
+    n_block = 3
+    for _ in range(n_block):
+        r = int(res / 10)
+        N2 = np.random.randint(low=0, high=res-r, size=2)
+        U[N2[0]:N2[0] + r, N2[1]:N2[1] + r] = 0.
+        V[N2[0]:N2[0] + r, N2[1]:N2[1] + r] = 1.
+    # return U, V
+    return mat_to_vec(U, V, res)
 
 
-#   _, ys = jax.lax.scan(step, (y0, t[0]), t[1:])
-#   return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
+
+
+## Define the ODE
+def gray_scott(t, uv, params):
+    U, V = vec_to_mat(uv, res)
+    deltaU = laplacian2D(U)
+    deltaV = laplacian2D(V)
+    dUdt = (params['r_u'] * deltaU - U * (V ** 2) + params['f'] * (1. - U))
+    dVdt = (params['r_v'] * deltaV + U * (V ** 2) - (params['f'] + params['k']) * V)
+    duvdt = mat_to_vec(dUdt, dVdt, res)
+
+    ## Do NaN to NuM
+    duvdt = jnp.nan_to_num(duvdt)
+    return duvdt
 
 
 
 if split == "train" or split=="test":
   # Training environments
-    k1_range = [100, 90, 80]
-    K1_range = [1, 0.75, 0.5]
-    environments = [{'J0': 2.5, 'k1': k1, 'k2': 6, 'k3': 16, 'k4': 100, 'k5': 1.28, 'k6': 12, 'K1': K1, 'q': 4, 'N': 1, 'A': 4, 'kappa': 13, 'psi': 0.1, 'k': 1.8} for k1 in k1_range for K1 in K1_range]
+  environments = [
+      {"f": 0.03, "k": 0.062, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
+  ]
+
 
 
 elif split == "adapt":
   ## Adaptation environments
-    k1_range = [85, 95]
-    K1_range = [0.625, 0.875]
-    environments = [{'J0': 2.5, 'k1': k1, 'k2': 6, 'k3': 16, 'k4': 100, 'k5': 1.28, 'k6': 12, 'K1': K1, 'q': 4, 'N': 1, 'A': 4, 'kappa': 13, 'psi': 0.1, 'k': 1.8} for k1 in k1_range for K1 in K1_range]
-
+	from itertools import product
+	f = [0.033, 0.036]
+	k = [0.059, 0.061]
+	environments = [{"f": f_i, "k": k_i, "r_u": 0.2097, "r_v": 0.105} for f_i, k_i in product(f, k)]
 
 
 
 if split == "train":
-  n_traj_per_env = 32     ## training
+  n_traj_per_env = 1     ## training
 elif split == "test":
-  n_traj_per_env = 32     ## testing
+  n_traj_per_env = 1     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
-n_steps_per_traj = int(1.0/0.05)
+n_steps_per_traj = int(400/40)
 # n_steps_per_traj = 201
 
-data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 7))
+data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2*res*res))
 
 # Time span for simulation
-t_span = (0, 1)  # Shortened time span
+t_span = (0, 400)  # Shortened time span
 t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
-
-ic_range = [(0.15, 1.60), (0.19, 2.16), (0.04, 0.20), (0.10, 0.35), (0.08, 0.30), (0.14, 2.67), (0.05, 0.10)]
 
 for j in range(n_traj_per_env):
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
-        # Initial conditions (prey and predator concentrations)
-        # np.random.seed(index if not self.test else self.max - index)
-        initial_state = np.random.random(7) * np.array([b-a for a, b in ic_range]) + np.array([a for a, _ in ic_range])
+        initial_state = get_init_cond(res)
 
         # print("Initial state", initial_state)
 
@@ -143,16 +182,18 @@ for j in range(n_traj_per_env):
         # data[i, j, :, :] = solution.y.T
 
         ## use diffrax instead, with the DoPri5 integrator
-        solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
-                                       diffrax.Dopri5(),
-                                       args=(selected_params,),
+        solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
+                                       diffrax.Tsit5(),
+                                       args=(selected_params),
                                        t0=t_span[0],
                                        t1=t_span[1],
-                                       dt0=t_eval[1]-t_eval[0],
+                                       dt0=1e-1,
                                        y0=initial_state,
                                        stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
-                                       saveat=diffrax.SaveAt(ts=t_eval))
+                                       saveat=diffrax.SaveAt(ts=t_eval),
+                                       max_steps=4096*1)
         data[i, j, :, :] = solution.ys
+        # print("Stats", solution.stats['num_steps'])
 
 # Save t_eval and the solution to a npz file
 if split == "train":
@@ -174,20 +215,35 @@ np.savez(filename, t=t_eval, X=data)
 
 
 
-
+#%%
 
 if _in_ipython_session:
-  # Extract and plot the gycolytic oscillator
-  solution = data[0, 0, :, :]
-  t = t_eval
-  plt.plot(t, solution[:, 0], label="S1")
-  plt.plot(t, solution[:, 1], label="S2")
-  plt.plot(t, solution[:, 2], label="S3")
-  plt.plot(t, solution[:, 3], label="S4")
-  plt.plot(t, solution[:, 4], label="S5")
-  plt.plot(t, solution[:, 5], label="S6")
-  plt.plot(t, solution[:, 6], label="S7")
-  plt.xlabel("Time")
-  plt.ylabel("Concentration")
-  plt.legend()
-  plt.show()
+    # Extract and plot the gycolytic oscillator
+    print("data min and max", data.min(), data.max())
+    solution = data[0, 0, :, :]
+    t = t_eval
+    U, V = vec_to_mat(solution[0], res)
+    fig, ax = plt.subplots()
+    ax.imshow(U, cmap='hot', interpolation='nearest', origin='lower')
+    ax.set_title('U')
+    plt.show()
+
+    # Define a function to update the plot for each frame
+    def update(frame):
+        U, V = vec_to_mat(solution[frame], res)
+        im.set_array(U)  # Update the image data for the current frame
+        return im,  # Return the updated artist objects
+
+    fig, ax = plt.subplots()
+    ax.set_title('Gray-Scott U')
+
+    U, V = vec_to_mat(solution[0], res)  # Assuming solution[0] is available for initial setup
+    im = ax.imshow(U, cmap='gist_ncar', interpolation='bilinear', origin='lower')
+
+    # Create the animation with the update function
+    ani = FuncAnimation(fig, update, frames=n_steps_per_traj, blit=True)
+
+    # Save the animation
+    ani.save(savepath + 'gray_scott.gif', writer='imagemagick', fps=10)
+
+# %%

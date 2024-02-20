@@ -143,3 +143,14 @@ def get_id_current_time():
     """ Returns a string of the current time in the format as an ID """
     # return time.strftime("%Y%m%d-%H%M%S")
     return time.strftime("%H%M%S")
+
+
+
+def vec_to_mats(vec_uv, res=32, nb_mats=2):
+    """ Reshapes a vector into a set of 2D matrices """
+    UV = jnp.split(vec_uv, nb_mats)
+    return [jnp.reshape(UV[i], (res, res)) for i in range(nb_mats)]
+
+def mats_to_vec(mats, res):
+    """ Flattens a set of 2D matrices into a single vector """
+    return jnp.concatenate([jnp.reshape(mats[i], res * res) for i in range(len(mats))])

@@ -10,28 +10,20 @@ from nodax import *
 
 #%%
 
-## Hyperparams
-
-# ## Take seed as a paramter with argparse !! ONLY during testing.
-# import argparse
-# parser = argparse.ArgumentParser()
-# parser.add_argument("--seed", type=int, default=1176)
-# seed = parser.parse_args().seed
 
 seed = 2026
 
 flow_pool_count = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-nb_epochs = 24000*1
-nb_epochs_adapt = 24000*1
+nb_epochs = 100*1
+nb_epochs_adapt = 2*1
 
 print_error_every = 1000
 
-train = True
+train = False
 save_trainer = True
 
 finetune = False
-# run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = True
 adapt_huge = False
@@ -62,7 +54,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/17022024-104027/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/20022024-173401/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -105,41 +97,111 @@ activation = jax.nn.softplus
 # activation = jax.nn.swish
 
 
+def circular_pad_2d(x, pad_width):
+    """ Circular padding for 2D arrays """
+    if isinstance(pad_width, int):
+        pad_width = ((pad_width, pad_width), (pad_width, pad_width))
+    # return jnp.pad(x, pad_width, mode='wrap')
+    
+    if x.ndim == 2:
+        return jnp.pad(x, pad_width, mode='wrap')
+    else:
+        zero_pad = [(0,0)]*(x.ndim-2)
+        return jnp.pad(x, zero_pad+list(pad_width), mode='wrap')
+    # return jnp.pad(x, pad_width, mode='wrap')
+
 class Augmentation(eqx.Module):
     layers_data: list
     layers_context: list
     layers_shared: list
 
-    def __init__(self, data_size, width_size, depth, context_size, key=None):
+
+
+    def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
+
         keys = generate_new_keys(key, num=12)
-        self.layers_data = [eqx.nn.Linear(data_size, width_size//4, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size//4, width_size, key=keys[10]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[2])]
+        circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
-                        eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[5])]
+        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation,
+                                lambda x: jnp.stack(vec_to_mats(x, data_res, nb_int_channels), axis=0)]
 
-        self.layers_shared = [eqx.nn.Linear(width_size*2, int(width_size*1.5), key=keys[6]), activation,
-                        eqx.nn.Linear(int(width_size*1.5), width_size, key=keys[7]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
-                        eqx.nn.Linear(width_size, data_size, key=keys[9])]
+        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
+                            circular_pad, 
+                            eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
 
+        self.layers_shared = [circular_pad, 
+                              eqx.nn.Conv2d(nb_int_channels*2, 8, kernel_size, key=keys[6]), activation,
+                              circular_pad, 
+                              eqx.nn.Conv2d(8, 8, kernel_size, key=keys[7]), activation,
+                              circular_pad, 
+                              eqx.nn.Conv2d(8, 8, kernel_size, key=keys[8]), activation,
+                              circular_pad, 
+                              eqx.nn.Conv2d(8, 2, kernel_size, key=keys[9]),
+                              lambda x: x.flatten()]
 
-    def __call__(self, t, x, ctx):
-        y = x
-        ctx = ctx
-        for i in range(len(self.layers_data)):
-            y = self.layers_data[i](y)
-            ctx = self.layers_context[i](ctx)
+    def __call__(self, t, y, ctx):
+
+        for layer in self.layers_context:
+            ctx = layer(ctx)
+
+        for layer in self.layers_data:
+            y = layer(y)
 
         y = jnp.concatenate([y, ctx], axis=0)
-        # y = jnp.dstack([y,ctx]).ravel()
         for layer in self.layers_shared:
             y = layer(y)
+
         return y
+
+
+
+
+
+
+    # data_res: int
+    # int_channels: int
+    # pad_width: int
+
+    # def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
+    #     keys = generate_new_keys(key, num=12)
+
+    #     self.data_res = data_res
+    #     self.int_channels = nb_int_channels
+    #     self.pad_width = (kernel_size//2)
+
+    #     self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation]
+
+    #     self.layers_data = [eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
+
+    #     self.layers_shared = [eqx.nn.Conv2d(nb_int_channels*2, 64, kernel_size, key=keys[6]), activation,
+    #                           eqx.nn.Conv2d(64, 64, kernel_size, key=keys[7]), activation,
+    #                           eqx.nn.Conv2d(64, 64, kernel_size, key=keys[8]), activation,
+    #                           eqx.nn.Conv2d(64, 2, kernel_size, key=keys[9])]
+
+
+
+    # def __call__(self, t, x, ctx):
+
+    #     for i in range(len(self.layers_context)):
+    #         ctx = self.layers_context[i](ctx)
+    #     ctx = jnp.stack(vec_to_mats(ctx, self.data_res, self.int_channels), axis=0)
+
+    #     y = jnp.stack(vec_to_mats(x, res=self.data_res, nb_mats=2), axis=0)
+    #     for i in range(len(self.layers_data)):
+    #         if i%2==0:
+    #             y = circular_pad_2d(y, self.pad_width)
+    #         y = self.layers_data[i](y)
+
+    #     y = jnp.concatenate([y, ctx], axis=0)
+    #     for i in range(len(self.layers_shared)):
+    #         if i%2==0:
+    #             y = circular_pad_2d(y, self.pad_width)
+    #         y = self.layers_shared[i](y)
+
+    #     return y.flatten()
+
+
+
 
 class ContextFlowVectorField(eqx.Module):
     physics: eqx.Module
@@ -147,7 +209,6 @@ class ContextFlowVectorField(eqx.Module):
 
     def __init__(self, augmentation, physics=None):
         self.augmentation = augmentation
-        # self.physics = physics if physics is not None else NoPhysics()
         self.physics = physics
 
     def __call__(self, t, x, ctxs):
@@ -162,36 +223,15 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + gradvf(ctx_, ctx)
 
 
-augmentation = Augmentation(data_size=7, width_size=64, depth=4, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=None)
 print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
 
 contexts = ContextParams(nb_envs, context_size, key=None)
 
-# integrator = diffrax.Tsit5()  ## Has to conform to my API
-# integrator = rk4_integrator
-integrator = diffrax.Dopri5()
-# integrator = diffrax.Tsit5()
-
-
-# ## Define a custom loss function here
-# def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
-
-#     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
-#     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
-
-#     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
-#     # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat))  ## reconstruction
-#     # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat)/new_trajs)  ## MAPE
-
-#     # term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
-#     term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
-
-#     loss_val = term1 + 0*term2
-
-#     return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
-
+# integrator = diffrax.Dopri5()
+integrator = diffrax.Tsit5()
 
 ## Define a custom loss function here
 def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
@@ -206,10 +246,6 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
-    # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat))  ## reconstruction
-    # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat)/new_trajs)  ## MAPE
-
-    # term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
     term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
 
     # loss_val = term1 + 0*term2
@@ -258,6 +294,14 @@ else:
 
 
 #%%
+
+
+
+
+
+
+
+
 
 
 
