@@ -1,3 +1,5 @@
+beta = 0.6176
+delta = 0.5860
 
 # %%
 
@@ -124,8 +126,9 @@ elif split == "adapt" or split == "adapt_test":
       {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
   ]
 elif split == "adapt_huge":
-  environments = [
-      {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 1) for d in np.linspace(0.25, 1.25, 1)]
+  # environments = [
+  #     {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 1) for d in np.linspace(0.25, 1.25, 1)]
+  environments = [{"alpha": 0.5, "beta": beta, "gamma": 0.5, "delta": delta}]
 
 # ## Lots of data environment
 # environments = []
