@@ -15,12 +15,12 @@ seed = 2026
 
 flow_pool_count = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-nb_epochs = 100*1
-nb_epochs_adapt = 2*1
+nb_epochs = 180*360
+nb_epochs_adapt = 180*360
 
 print_error_every = 1000
 
-train = False
+train = True
 save_trainer = True
 
 finetune = False
@@ -54,7 +54,7 @@ if train == True:
 
 
 else:
-    run_folder = "./runs/20022024-173401/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./runs/21022024-121527/"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -80,7 +80,7 @@ if adapt_huge == True:
 #%%
 
 ## Define dataloader for training and validation
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=1.0, shuffle=True, key=seed)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=1, int_cutoff=1.0, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -140,6 +140,7 @@ class Augmentation(eqx.Module):
                               lambda x: x.flatten()]
 
     def __call__(self, t, y, ctx):
+        # return jnp.zeros_like(y)*ctx[0]
 
         for layer in self.layers_context:
             ctx = layer(ctx)
@@ -223,7 +224,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + gradvf(ctx_, ctx)
 
 
-augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=1, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=None)
 print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
@@ -353,11 +354,13 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 #%%
-# ## Load the validation loss
-# val_loss = np.load(run_folder+"val_losses.npy")
-# val_loss
 
-
+## Custom Gray-Scott trajectory visualiser
+if finetune:
+    savefigdir = finetunedir+"results_2D_ind.png"
+else:
+    savefigdir = run_folder+"results_2D_ind.png"
+visualtester.visualize2D(test_dataloader, int_cutoff=1.0, res=32, save_path=savefigdir);
 
 
 #%%
@@ -497,7 +500,7 @@ for seed in seeds:
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
 
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=4, data_id="082026")
+    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=1, data_id="082026")
     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
 
     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
@@ -553,3 +556,5 @@ print(test_scores.iloc[:3])
 
 # ## Save the odd_crit_all in numpy
 # np.save('mapes.npy', odd_crit_all)
+
+# %%

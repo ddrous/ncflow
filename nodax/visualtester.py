@@ -215,7 +215,7 @@ class VisualTester:
 
 
 
-    def visualize(self, data_loader, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):
+    def visualize(self, data_loader, e=None, traj=None, dims=(0,1), context_dims=(0,1), int_cutoff=1.0, save_path=False, key=None):
 
         # assert data_loader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
 
@@ -234,6 +234,7 @@ class VisualTester:
             print("==  Begining out-of-distribution visualisation ... ==")
         print("    Environment id:", e)
         print("    Trajectory id:", traj)
+        print("    Visualized dimensions:", dims)
         print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
         print("    Length of the testing trajectories:", test_length)
 
@@ -255,12 +256,13 @@ class VisualTester:
         fig, ax = plt.subplot_mosaic('AB;CC;DD;EF', figsize=(6*2, 3.5*4))
 
         mks = 2
+        dim0, dim1 = dims
 
-        ax['A'].plot(t_test, X[:, 0], c="deepskyblue", label=r"$x_1$ (GT)")
-        ax['A'].plot(t_test, X_hat[:, 0], "o", c="royalblue", label=r"$\hat{x}_1$ (NCF)", markersize=mks)
+        ax['A'].plot(t_test, X[:, 0], c="deepskyblue", label=f"$x_{{{dim0}}}$ (GT)")
+        ax['A'].plot(t_test, X_hat[:, 0], "o", c="royalblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
 
-        ax['A'].plot(t_test, X[:, 1], c="violet", label=r"$x_1$ (GT)")
-        ax['A'].plot(t_test, X_hat[:, 1], "x", c="purple", label=r"$\hat{x}_2$ (NCF)", markersize=mks)
+        ax['A'].plot(t_test, X[:, 1], c="violet", label=f"$x_{{{dim1}}}$ (GT)")
+        ax['A'].plot(t_test, X_hat[:, 1], "x", c="purple", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
 
         ax['A'].set_xlabel("Time")
         ax['A'].set_ylabel("State")
@@ -269,8 +271,8 @@ class VisualTester:
 
         ax['B'].plot(X[:, 0], X[:, 1], c="turquoise", label="GT")
         ax['B'].plot(X_hat[:, 0], X_hat[:, 1], ".", c="teal", label="NCF")
-        ax['B'].set_xlabel(r"$x_1$")
-        ax['B'].set_ylabel(r"$x_2$")
+        ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
+        ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
         ax['B'].set_title("Phase space")
         ax['B'].legend()
 
@@ -314,20 +316,21 @@ class VisualTester:
         eps = 0.1
         colors = ['dodgerblue', 'r', 'b', 'g', 'm', 'c', 'y', 'orange', 'purple', 'brown']
         colors = colors*(nb_envs)
+        cdim0, cdim1 = context_dims
 
-        ax['F'].scatter(xis[:,0], xis[:,1], s=50, c=colors[:nb_envs], marker='o')
-        for i, (x, y) in enumerate(xis[:, :2]):
-            ax['F'].annotate(str(i), (x, y), fontsize=8)
-        ax['F'].set_title(r'Final Contexts ($\xi^e$)')
-
-        ax['E'].scatter(init_xis[:,0], init_xis[:,1], s=30, c=colors[:nb_envs], marker='X')
-        ax['F'].scatter(xis[:,0], xis[:,1], s=50, c=colors[:nb_envs], marker='o')
-        for i, (x, y) in enumerate(init_xis[:, :2]):
+        ax['E'].scatter(init_xis[:,cdim0], init_xis[:,cdim1], s=30, c=colors[:nb_envs], marker='X')
+        ax['F'].scatter(xis[:,cdim0], xis[:,cdim1], s=50, c=colors[:nb_envs], marker='o')
+        for i, (x, y) in enumerate(init_xis[:, context_dims]):
             ax['E'].annotate(str(i), (x, y), fontsize=8)
-        for i, (x, y) in enumerate(xis[:, :2]):
+        for i, (x, y) in enumerate(xis[:, context_dims]):
             ax['F'].annotate(str(i), (x, y), fontsize=8)
-        ax['E'].set_title(r'Initial Contexts (first 2 dims)')
-        ax['F'].set_title(r'Final Contexts (first 2 dims)')
+        ax['E'].set_title(r'Initial Contexts')
+        ax['E'].set_xlabel(f'dim {cdim0}')
+        ax['E'].set_ylabel(f'dim {cdim1}')
+
+        ax['F'].set_title(r'Final Contexts')
+        ax['F'].set_xlabel(f'dim {cdim0}')
+        ax['F'].set_ylabel(f'dim {cdim1}')
 
         plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
 
@@ -338,3 +341,84 @@ class VisualTester:
         if save_path:
             plt.savefig(save_path, dpi=100, bbox_inches='tight')
             print("Testing finished. Figure saved in:", save_path);
+
+
+
+    def visualize2D(self, data_loader, e=None, traj=None, res=(32,32), int_cutoff=1.0, nb_plot_timesteps=10, save_path=False, key=None):
+
+        """
+        The visualize2D function is used to visualize the results of a trained neural ODE model.
+        
+        :param self: Access the trainer object
+        :param data_loader: Get the data from the dataset
+        :param e: Select the environment to visualize
+        :param traj: Specify which trajectory to visualize
+        :param res: Specify the resolution of the gif
+        :param 32): Set the resolution of the gif
+        :param int_cutoff: Specify the length of the trajectory to be visualized
+        :param nb_plot_timesteps: Specify the number of timesteps to be visualized
+        :param save_path: Specify the path where to save the figure
+        :param key: Generate a random key for the jax
+        :return: A figure with two subplots
+        :doc-author: Trelent
+        """
+        e_key, traj_key = get_new_key(time.time_ns(), num=2)
+        e = e if e else jax.random.randint(e_key, (1,), 0, data_loader.nb_envs)[0]
+        traj = traj if traj else jax.random.randint(traj_key, (1,), 0, data_loader.nb_trajs_per_env)[0]
+
+        t_eval = data_loader.t_eval
+        test_length = int(data_loader.nb_steps_per_traj*int_cutoff)
+        X = data_loader.dataset[e, traj:traj+1, :test_length, :]
+        t_test = t_eval[:test_length]
+
+        if data_loader.adaptation == False:
+            print("==  Begining in-domain 2D visualisation ... ==")
+        else:
+            print("==  Begining out-of-distribution 2D visualisation ... ==")
+        print("    Environment id:", e)
+        print("    Trajectory id:", traj)
+        print("    Length of the testing trajectories:", test_length)
+
+        if data_loader.adaptation == False:
+            contexts = self.trainer.learner.contexts.params
+        else:
+            contexts = self.trainer.learner.contexts_adapt.params
+        X_hat, _ = self.trainer.learner.neuralode(X[:, 0, :],
+                                            t_test, 
+                                            contexts[e],
+                                            contexts[e])
+
+        X_hat = X_hat.squeeze()
+        X = X.squeeze()
+
+        # if isinstance(res, int):
+        #     res = (res, res)
+        nb_mats = X_hat.shape[1] // (res*res)
+        assert nb_mats > 0, f"Not enough dimensions to form a {res}x{res} matrix"
+        # mats = vec_to_mats(X_hat, res, nb_mats)
+
+        fig, ax = plt.subplots(nrows=nb_mats*2, ncols=nb_plot_timesteps, figsize=(2*nb_plot_timesteps, 2*nb_mats*2))
+        for j in range(0, test_length, test_length//nb_plot_timesteps):
+            gt_j = vec_to_mats(X[j], res, nb_mats)
+            ncf_j = vec_to_mats(X_hat[j], res, nb_mats)
+            for i in range(nb_mats):
+                ax[2*i, j].imshow(gt_j[i], cmap='gist_ncar', interpolation='bilinear', origin='lower')
+                ax[2*i+1, j].imshow(ncf_j[i], cmap='gist_ncar', interpolation='bilinear', origin='lower')
+
+        ## Remove the ticks and labels
+        for a in ax.flatten():
+            a.set_xticks([])
+            a.set_yticks([])
+            a.set_xticklabels([])
+            a.set_yticklabels([])
+
+        plt.suptitle(f"2D visualisation results for env={e}, traj={traj}", fontsize=20)
+
+        plt.tight_layout()
+        plt.draw();
+
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            print("Testing finished. Figure saved in:", save_path);
+
+        ## Save the gifs as well
