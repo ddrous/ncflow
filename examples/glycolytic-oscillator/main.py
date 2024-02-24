@@ -19,22 +19,35 @@ from nodax import *
 # seed = parser.parse_args().seed
 
 seed = 2026
+# seed = int(np.random.randint(0, 10000))
 
-flow_pool_count = 2               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 1024
-nb_epochs = 24000*1
-nb_epochs_adapt = 24000*1
+context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
+context_size = 256//2
+nb_epochs = 1000
+nb_epochs_adapt = 1000
+init_lr = 1e-3
 
 print_error_every = 1000
 
 train = True
+run_folder = "./runs/24022024-161157/"      ## Run folder to use when not training
+
 save_trainer = True
 
 finetune = False
-# run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = True
 adapt_huge = False
+
+
+activation = jax.nn.softplus
+# activation = jax.nn.swish
+
+
+# integrator = diffrax.Dopri5
+integrator = RK4
+ivp_args = {"dt_init":1e-3, "rtol":1e-3, "atol":1e-6, "max_steps":1000, "subdivision":5}
+## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
 
@@ -169,12 +182,6 @@ print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tr
 
 contexts = ContextParams(nb_envs, context_size, key=None)
 
-# integrator = diffrax.Tsit5()  ## Has to conform to my API
-# integrator = rk4_integrator
-integrator = diffrax.Dopri5()
-# integrator = diffrax.Tsit5()
-
-
 # ## Define a custom loss function here
 # def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
 
@@ -196,8 +203,8 @@ integrator = diffrax.Dopri5()
 ## Define a custom loss function here
 def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
 
-    # ind = jax.random.randint(key, shape=(flow_pool_count,), minval=0, maxval=all_ctx_s.shape[0])
-    ind = jax.random.permutation(key, all_ctx_s.shape[0])[:flow_pool_count]
+    # ind = jax.random.randint(key, shape=(context_pool_size,), minval=0, maxval=all_ctx_s.shape[0])
+    ind = jax.random.permutation(key, all_ctx_s.shape[0])[:context_pool_size]
     ctx_s = all_ctx_s[ind, :]
 
     # jax.debug.print("indices chosen for this loss {}", ind)
@@ -220,7 +227,7 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
 
 
 
-learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
+learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=seed)
 
 
 #%%
@@ -424,50 +431,50 @@ except NameError:
 #### Generate data for analysis
 
 
-## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
+# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
 
 
-print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
+# print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
 
-# First, check if the file exists. If not, create it and write the header
-if not os.path.exists(run_folder+'analysis'):
-    os.mkdir(run_folder+'analysis')
+# # First, check if the file exists. If not, create it and write the header
+# if not os.path.exists(run_folder+'analysis'):
+#     os.mkdir(run_folder+'analysis')
 
-csv_file = run_folder+'analysis/test_scores.csv'
-if not os.path.exists(csv_file):
-    os.system(f"touch {csv_file}")
+# csv_file = run_folder+'analysis/test_scores.csv'
+# if not os.path.exists(csv_file):
+#     os.system(f"touch {csv_file}")
 
-with open(csv_file, 'r') as f:
-    lines = f.readlines()
-    if len(lines) == 0:
-        with open(csv_file, 'w') as f:
-            f.write("seed,ind_crit,ood_crit\n")
-
-
-## Get results on test and adaptation datasets, then append them to the csv
-
-np.random.seed(seed)
-seeds = np.random.randint(0, 10000, 10)
-for seed in seeds:
-# for seed in range(8000, 6*10**3, 10):
-    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
-
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=4, data_id="082026")
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
-
-    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
-    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
-
-    with open(csv_file, 'a') as f:
-        f.write(f"{seed},{ind_crit},{ood_crit}\n")
+# with open(csv_file, 'r') as f:
+#     lines = f.readlines()
+#     if len(lines) == 0:
+#         with open(csv_file, 'w') as f:
+#             f.write("seed,ind_crit,ood_crit\n")
 
 
-## Print the mean and stds of the scores
-import pandas as pd
-pd.set_option('display.float_format', '{:.2e}'.format)
-test_scores = pd.read_csv(csv_file).describe()
-print(test_scores.iloc[:3])
+# ## Get results on test and adaptation datasets, then append them to the csv
+
+# np.random.seed(seed)
+# seeds = np.random.randint(0, 10000, 10)
+# for seed in seeds:
+# # for seed in range(8000, 6*10**3, 10):
+#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
+#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
+
+#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=4, data_id="082026")
+#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
+
+#     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
+#     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
+
+#     with open(csv_file, 'a') as f:
+#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
+
+
+# ## Print the mean and stds of the scores
+# import pandas as pd
+# pd.set_option('display.float_format', '{:.2e}'.format)
+# test_scores = pd.read_csv(csv_file).describe()
+# print(test_scores.iloc[:3])
 
 
 #%%
