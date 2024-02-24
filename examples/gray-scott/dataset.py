@@ -65,7 +65,8 @@ from matplotlib.animation import FuncAnimation
 
 # import jax
 # jax.config.update("jax_platform_name", "cpu")
-import jax.numpy as jnp
+# import jax.numpy as jnp
+import numpy as jnp
 import diffrax
 
 dx = 1
@@ -136,9 +137,9 @@ if split == "train" or split=="test":
   # Training environments
   environments = [
       {"f": 0.03, "k": 0.062, "r_u": 0.2097, "r_v": 0.105},
-      {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
-      {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
-      {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
+      # {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      # {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      # {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
   ]
 
 
@@ -155,7 +156,7 @@ elif split == "adapt":
 if split == "train":
   n_traj_per_env = 1     ## training
 elif split == "test":
-  n_traj_per_env = 1     ## testing
+  n_traj_per_env = 32     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
@@ -178,21 +179,21 @@ for j in range(n_traj_per_env):
         # print("Initial state", initial_state)
 
         # # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(glycolytic_oscilator, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
+        solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
+        data[i, j, :, :] = solution.y.T
 
         ## use diffrax instead, with the DoPri5 integrator
-        solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
-                                       diffrax.Tsit5(),
-                                       args=(selected_params),
-                                       t0=t_span[0],
-                                       t1=t_span[1],
-                                       dt0=1e-1,
-                                       y0=initial_state,
-                                       stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
-                                       saveat=diffrax.SaveAt(ts=t_eval),
-                                       max_steps=4096*1)
-        data[i, j, :, :] = solution.ys
+        # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
+        #                                diffrax.Tsit5(),
+        #                                args=(selected_params),
+        #                                t0=t_span[0],
+        #                                t1=t_span[1],
+        #                                dt0=1e-1,
+        #                                y0=initial_state,
+        #                                stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
+        #                                saveat=diffrax.SaveAt(ts=t_eval),
+        #                                max_steps=4096*1)
+        # data[i, j, :, :] = solution.ys
         # print("Stats", solution.stats['num_steps'])
 
 # Save t_eval and the solution to a npz file

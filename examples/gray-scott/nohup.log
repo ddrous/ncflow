@@ -1,36 +1,36 @@
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: train
- Savepath: ./runs/21022024-121527/
- Seed: 2026
+ Savepath: ./runs/23022024-081741/
+ Seed: 2024
 
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: test
- Savepath: ./runs/21022024-121527/
- Seed: 4052
+ Savepath: ./runs/23022024-081741/
+ Seed: 4048
 
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: adapt
- Savepath: ./runs/21022024-121527/adapt/
- Seed: 6078
+ Savepath: ./runs/23022024-081741/adapt/
+ Seed: 6072
 
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
 Jax version: 0.4.23
 Available devices: [cuda(id=0)]
-Data folder created successfuly: ./runs/21022024-121527/
+Data folder created successfuly: ./runs/23022024-081741/
 Completed copied scripts 
-WARNING: You did not provide a dataloader id. A new one has been generated: 121535
+WARNING: You did not provide a dataloader id. A new one has been generated: 081752
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
-WARNING: You did not provide a dataloader id. A new one has been generated: 121536
+WARNING: You did not provide a dataloader id. A new one has been generated: 081752
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 
 
-Total number of parameters in the model: 4200374 
+Total number of parameters in the model: 549870 
 
 
 WARNING: No key provided for the context initialization. Initializing at 0.
@@ -40,113 +40,116 @@ WARNING: No key provided, using time as seed
 === Beginning training ... ===
     Number of examples in a batch: 1
     Number of train steps per epoch: 1
-    Number of training epochs: 18000
-    Total number of training steps: 18000
+    Number of training epochs: 60000
+    Total number of training steps: 60000
 
 Compiling function "train_step" for neural ode ...
 Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
 
 Compiling function "train_step" for context ...
 Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
-    Epoch:     0      LossTrajs: 8937.43457031     ContextsNorm: 0.00000000     ValIndCrit: 21615.28125000
-    Epoch:     1      LossTrajs: 21615.42968750     ContextsNorm: 0.00999988     ValIndCrit: 10067.46289062
-    Epoch:     2      LossTrajs: 10067.57812500     ContextsNorm: 0.01846115     ValIndCrit: 47097.55859375
-    Epoch:     3      LossTrajs: 47097.61328125     ContextsNorm: 0.01237317     ValIndCrit: 1540.37536621
-    Epoch:  1000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  2000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  3000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  4000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  5000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  6000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  7000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  8000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch:  9000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 10000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 11000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 12000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 13000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 14000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 15000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 16000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 17000      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
-    Epoch: 17999      LossTrajs: 0.05446807     ContextsNorm: 0.12620294     ValIndCrit: 0.05316104
+    Epoch:     0      LossTrajs: 7733.90625000     ContextsNorm: 0.00000000     ValIndCrit: 3660.72729492
+    Epoch:     1      LossTrajs: 3660.44384766     ContextsNorm: 0.00099999     ValIndCrit: 7273.08447266
+    Epoch:     2      LossTrajs: 7272.45654297     ContextsNorm: 0.00189499     ValIndCrit: 6139.03027344
+    Epoch:     3      LossTrajs: 6138.41601562     ContextsNorm: 0.00286733     ValIndCrit: 2807.53417969
+    Epoch:  1000      LossTrajs: 0.03137570     ContextsNorm: 0.02911548     ValIndCrit: 0.04580380
+    Epoch:  2000      LossTrajs: 0.01253762     ContextsNorm: 0.05869272     ValIndCrit: 0.06148464
+    Epoch:  3000      LossTrajs: 0.01215037     ContextsNorm: 0.05921233     ValIndCrit: 0.06275600
+    Epoch:  4000      LossTrajs: 0.02467063     ContextsNorm: 0.05836523     ValIndCrit: 0.07289794
+    Epoch:  5000      LossTrajs: 0.01220703     ContextsNorm: 0.05781667     ValIndCrit: 0.06058560
+    Epoch:  6000      LossTrajs: 0.01198811     ContextsNorm: 0.05653265     ValIndCrit: 0.06067359
+    Epoch:  7000      LossTrajs: 0.01278519     ContextsNorm: 0.05482025     ValIndCrit: 0.05963959
+    Epoch:  8000      LossTrajs: 0.01176734     ContextsNorm: 0.05286783     ValIndCrit: 0.05838995
+    Epoch:  9000      LossTrajs: 0.01152056     ContextsNorm: 0.05036392     ValIndCrit: 0.05713511
+    Epoch: 10000      LossTrajs: 0.01132515     ContextsNorm: 0.04765424     ValIndCrit: 0.05538532
+    Epoch: 11000      LossTrajs: 0.01130706     ContextsNorm: 0.04759405     ValIndCrit: 0.05339167
+    Epoch: 12000      LossTrajs: 0.01143979     ContextsNorm: 0.04715564     ValIndCrit: 0.05179159
+    Epoch: 13000      LossTrajs: 0.01163059     ContextsNorm: 0.04731516     ValIndCrit: 0.05035119
+    Epoch: 14000      LossTrajs: 0.01166826     ContextsNorm: 0.04683121     ValIndCrit: 0.04916186
+    Epoch: 15000      LossTrajs: 0.01173744     ContextsNorm: 0.04715322     ValIndCrit: 0.04818629
+    Epoch: 16000      LossTrajs: 0.01161590     ContextsNorm: 0.04539053     ValIndCrit: 0.04724538
+    Epoch: 17000      LossTrajs: 0.01144163     ContextsNorm: 0.04120865     ValIndCrit: 0.04644308
+    Epoch: 18000      LossTrajs: 0.01165739     ContextsNorm: 0.03866800     ValIndCrit: 0.04604582
+    Epoch: 19000      LossTrajs: 0.01131894     ContextsNorm: 0.03592739     ValIndCrit: 0.04564621
+    Epoch: 20000      LossTrajs: 0.01143502     ContextsNorm: 0.03246925     ValIndCrit: 0.04523609
+    Epoch: 21000      LossTrajs: 0.01122295     ContextsNorm: 0.02917148     ValIndCrit: 0.04544338
+    Epoch: 22000      LossTrajs: 0.01119672     ContextsNorm: 0.02663128     ValIndCrit: 0.04529788
+    Epoch: 23000      LossTrajs: 0.01225907     ContextsNorm: 0.02343354     ValIndCrit: 0.04735946
+    Epoch: 24000      LossTrajs: 0.01117448     ContextsNorm: 0.02135528     ValIndCrit: 0.04538869
+    Epoch: 25000      LossTrajs: 0.01119105     ContextsNorm: 0.01992438     ValIndCrit: 0.04526932
+    Epoch: 26000      LossTrajs: 0.01117759     ContextsNorm: 0.01819684     ValIndCrit: 0.04529785
+    Epoch: 27000      LossTrajs: 0.01117214     ContextsNorm: 0.01676589     ValIndCrit: 0.04531626
+    Epoch: 28000      LossTrajs: 0.01116778     ContextsNorm: 0.01582666     ValIndCrit: 0.04547590
+    Epoch: 29000      LossTrajs: 0.01117856     ContextsNorm: 0.02523892     ValIndCrit: 0.04528962
+    Epoch: 30000      LossTrajs: 0.01117567     ContextsNorm: 0.01993202     ValIndCrit: 0.04530641
+    Epoch: 31000      LossTrajs: 0.01116216     ContextsNorm: 0.01635673     ValIndCrit: 0.04531064
+    Epoch: 32000      LossTrajs: 0.01116050     ContextsNorm: 0.01362194     ValIndCrit: 0.04534656
+    Epoch: 33000      LossTrajs: 0.01116009     ContextsNorm: 0.01342055     ValIndCrit: 0.04532815
+2024-02-24 06:02:35.284227: W external/xla/xla/service/gpu/runtime/support.cc:58] Intercepted XLA runtime error:
+INTERNAL: CpuCallback error: EqxRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
 
-Total gradient descent training time: 0 hours 25 mins 43 secs
-Environment weights at the end of the training: [0.25 0.25 0.25 0.25]
-WARNING: You did not provide a dataloader id. A new one has been generated: 124122
-WARNING: Note that this id used to distuinguish between adaptations to different environments.
-WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
-WARNING: No key provided, using time as seed
-==  Begining in-domain testing ... ==
-    Number of training environments: 4
-    Final length of the training trajectories: 10
-    Length of the testing trajectories: 10
-Test Score (In-Domain): 0.05316104
+At:
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_errors.py(70): raises
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/callback.py(262): _flat_callback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/callback.py(53): pure_callback_impl
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/callback.py(192): _callback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/interpreters/mlir.py(2367): _wrapped_callback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/interpreters/pxla.py(1151): __call__
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/profiler.py(336): wrapper
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(1185): _pjit_call_impl_python
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(1229): call_impl_cache_miss
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(1245): _pjit_call_impl
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/core.py(935): process_primitive
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/core.py(447): bind_with_trace
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/core.py(2740): bind
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(168): _python_pjit_helper
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(257): cache_miss
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/traceback_util.py(179): reraise_with_filtered_traceback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_jit.py(200): _call
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_module.py(935): __call__
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_jit.py(206): __call__
+  /home/gb21553/Projects/Nodax/nodax/trainer.py(120): train
+  /home/gb21553/Projects/Nodax/examples/gray-scott/main.py(289): <module>
 
-==  Begining in-domain visualisation ... ==
-    Environment id: 2
-    Trajectory id: 0
-    Final length of the training trajectories: 10
-    Length of the testing trajectories: 10
-Testing finished. Figure saved in: ./runs/21022024-121527/results_in_domain.png
-WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
-WARNING: No key provided for the context initialization. Initializing at 0.
+2024-02-24 06:02:35.284283: E external/xla/xla/pjrt/pjrt_stream_executor_client.cc:2732] Execution of replica 0 failed: INTERNAL: Failed to execute XLA Runtime executable: run time error: custom call 'xla.gpu.custom_call' failed: CpuCallback error: EqxRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
 
+At:
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_errors.py(70): raises
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/callback.py(262): _flat_callback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/callback.py(53): pure_callback_impl
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/callback.py(192): _callback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/interpreters/mlir.py(2367): _wrapped_callback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/interpreters/pxla.py(1151): __call__
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/profiler.py(336): wrapper
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(1185): _pjit_call_impl_python
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(1229): call_impl_cache_miss
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(1245): _pjit_call_impl
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/core.py(935): process_primitive
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/core.py(447): bind_with_trace
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/core.py(2740): bind
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(168): _python_pjit_helper
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/pjit.py(257): cache_miss
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/jax/_src/traceback_util.py(179): reraise_with_filtered_traceback
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_jit.py(200): _call
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_module.py(935): __call__
+  /home/gb21553/miniconda3/envs/jax/lib/python3.12/site-packages/equinox/_jit.py(206): __call__
+  /home/gb21553/Projects/Nodax/nodax/trainer.py(120): train
+  /home/gb21553/Projects/Nodax/examples/gray-scott/main.py(289): <module>
+; current tracing scope: custom-call.3; current profiling annotation: XlaModule:#prefix=jit(train_step_ctx)/jit(main),hlo_module=jit_train_step_ctx,program_id=54#.
+Traceback (most recent call last):
+  File "/home/gb21553/Projects/Nodax/examples/gray-scott/main.py", line 289, in <module>
+    trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
+  File "/home/gb21553/Projects/Nodax/nodax/trainer.py", line 120, in train
+    node, contexts, opt_state_ctx, loss_ctx, (nb_steps_ctx_, term1, term2) = train_step_ctx(node, contexts, batch, weights, opt_state_ctx, loss_key)
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jaxlib.xla_extension.XlaRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
+-------
+This error occurred during the runtime of your JAX program. Setting the environment
+variable `EQX_ON_ERROR=breakpoint` is usually the most useful way to debug such errors.
+(This can be navigated using most of the usual commands for the Python debugger:
+`u` and `d` to move through stack frames, the name of a variable to print its value,
+etc.) See also `https://docs.kidger.site/equinox/api/errors/#equinox.error_if` for more
+information.
 
-=== Beginning adaptation ... ===
-    Number of examples in a batch: 1
-    Number of train steps per epoch: 1
-    Number of training epochs: 18000
-    Total number of training steps: 18000
-WARNING: No key provided, using time as seed
-
-Compiling function "train_step" for context ...
-Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
-    Epoch:     0     LossContext: 0.05053605
-    Epoch:     1     LossContext: 0.05032079
-    Epoch:     2     LossContext: 0.05032144
-    Epoch:     3     LossContext: 0.05032148
-    Epoch:  1000     LossContext: 0.05032149
-    Epoch:  2000     LossContext: 0.05032149
-    Epoch:  3000     LossContext: 0.05032149
-    Epoch:  4000     LossContext: 0.05032149
-    Epoch:  5000     LossContext: 0.05032149
-    Epoch:  6000     LossContext: 0.05032149
-    Epoch:  7000     LossContext: 0.05032149
-    Epoch:  8000     LossContext: 0.05032149
-    Epoch:  9000     LossContext: 0.05032149
-    Epoch: 10000     LossContext: 0.05032149
-    Epoch: 11000     LossContext: 0.05032149
-    Epoch: 12000     LossContext: 0.05032149
-    Epoch: 13000     LossContext: 0.05032149
-    Epoch: 14000     LossContext: 0.05032149
-    Epoch: 15000     LossContext: 0.05032149
-    Epoch: 16000     LossContext: 0.05032149
-    Epoch: 17000     LossContext: 0.05032149
-    Epoch: 17999     LossContext: 0.05032149
-
-Total gradient descent adaptation time: 0 hours 6 mins 58 secs
-Environment weights at the end of the adaptation: [0.25 0.25 0.25 0.25]
-
-Saving adaptation parameters into ./runs/21022024-121527/adapt/ folder with id 170846 ...
-
-==  Begining out-of-distribution testing ... ==
-    Number of training environments: 4
-    Number of adaptation environments: 4
-    Final length of the training trajectories: 10
-    Length of the testing trajectories: 10
-Test Score (OOD): 0.050321486
-
-==  Begining out-of-distribution visualisation ... ==
-    Environment id: 1
-    Trajectory id: 0
-    Final length of the training trajectories: 10
-    Length of the testing trajectories: 10
-Testing finished. Figure saved in: ./runs/21022024-121527/adapt/results_ood.png
-
-Full evaluation of the model on 10 random seeds
-
-          seed  ind_crit  ood_crit
-count 1.00e+01  1.00e+01  1.00e+01
-mean  5.25e+03  5.25e-02  5.04e-02
-std   3.39e+03  2.50e-03  5.76e-04
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.

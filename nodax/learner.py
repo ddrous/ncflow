@@ -2,7 +2,7 @@ from ._utils import *
 
 
 class Learner:
-    def __init__(self, vectorfield, contexts, loss_fn_ctx, integrator, key=None):
+    def __init__(self, vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=None):
 
         # self.nb_envs = nb_envs
         # self.context_size = context_size
@@ -15,7 +15,7 @@ class Learner:
 
         # vectorfield = VectorField(neuralnet, physics)
         # self.neuralode = NeuralODE(vectorfield, integrator, invariant)
-        self.neuralode = NeuralODE(vectorfield, integrator)      ## TODO call this Universal ODE
+        self.neuralode = NeuralODE(vectorfield, integrator, ivp_args)      ## TODO call this Universal ODE
 
         # ctx_key, loss_key = generate_new_keys(key, num=2)
         # self.contexts = ContextParams(self.nb_envs, self.context_size, key=ctx_key)
@@ -72,27 +72,6 @@ class NoPhysics(eqx.Module):
         return jnp.zeros_like(x)
 
 
-# class VectorField(eqx.Module):
-#     physics: eqx.Module
-#     neuralnet: eqx.Module
-
-#     def __init__(self, neuralnet, physics=None):
-#         self.neuralnet = neuralnet
-#         self.physics = physics if physics is not None else ID()
-
-#     def __call__(self, t, x, ctx, ctx_):
-#     # def __call__(self, t, x, args):
-#     #     ctx, ctx_ = args
-
-#         # print("Shapes of elements:", t.shape, x.shape, ctx.shape, ctx_.shape)
-
-#         # return self.physics(t, x, ctx) + self.neuralnet(t, x, ctx)
-
-#         vf = lambda xi_: self.physics(t, x, xi_) + self.neuralnet(t, x, xi_)
-#         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-#         return vf(ctx_) + gradvf(ctx_, ctx)
-#         # return vf(ctx)
-
 
 class DefaultVectorField(eqx.Module):
     physics: eqx.Module
@@ -110,48 +89,6 @@ class DefaultVectorField(eqx.Module):
 
 
 
-# class NeuralODE(eqx.Module):
-#     vectorfield: VectorField
-#     integrator: callable
-#     # invariant: eqx.Module
-
-#     def __init__(self, vectorfield, integrator, invariant=None, key=None):
-#         self.vectorfield = vectorfield
-#         self.integrator = integrator
-#         # self.invariant = invariant
-
-#     def __call__(self, x0s, t_eval, ctx):
-
-#         # def integrate(x0):
-#         #     solution = diffrax.diffeqsolve(
-#         #                 diffrax.ODETerm(self.vectorfield),
-#         #                 diffrax.Tsit5(),
-#         #                 args=ctx,
-#         #                 t0=t_eval[0],
-#         #                 t1=t_eval[-1],
-#         #                 dt0=t_eval[1] - t_eval[0],
-#         #                 y0=x0,
-#         #                 stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-4),
-#         #                 saveat=diffrax.SaveAt(ts=t_eval),
-#         #                 max_steps=4096*1,
-#         #             )
-#         #     return solution.ys, solution.stats["num_steps"]
-
-#         # batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
-#         # return batched_ys, batched_num_steps
-
-#         rhs = lambda x, t: self.vectorfield(t, x, ctx)
-#         batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
-#         return batched_ys, t_eval.size
-
-
-
-
-
-
-
-
-
 
 
 
@@ -160,47 +97,46 @@ class DefaultVectorField(eqx.Module):
 class NeuralODE(eqx.Module):
     vectorfield: eqx.Module
     integrator: callable
+    ivp_args: dict
 
-    def __init__(self, vectorfield, integrator, key=None):
+    def __init__(self, vectorfield, integrator, ivp_args, key=None):
         self.integrator = integrator
+        self.ivp_args = ivp_args
         self.vectorfield = vectorfield
         # # self.vectorfield = lambda t, x, ctxs: vectorfield(t, x, *ctxs)
         # self.vectorfield = lambda t, x, ctxs: vectorfield(t, x, ctxs[0], ctxs[1])
 
-
     def __call__(self, x0s, t_eval, ctx, ctx_):
 
-        ctx_ = ctx_.squeeze()
+        if isinstance(self.integrator, diffrax._solver.base._MetaAbstractSolver):
+                def integrate(y0): 
+                    sol = diffrax.diffeqsolve(
+                            diffrax.ODETerm(self.vectorfield),
+                            self.integrator(),
+                            args=(ctx, ctx_.squeeze()),
+                            t0=t_eval[0],
+                            t1=t_eval[-1],
+                            dt0=self.ivp_args["dt_init"],
+                            y0=y0,
+                            stepsize_controller=diffrax.PIDController(rtol=self.ivp_args.get("rtol", 1e-3), 
+                                                                      atol=self.ivp_args.get("atol", 1e-6)),
+                            saveat=diffrax.SaveAt(ts=t_eval),
+                            adjoint=self.ivp_args.get("adjoint", diffrax.BacksolveAdjoint()),
+                            max_steps=self.ivp_args.get("max_steps", 4096*1)
+                        )
+                    return sol.ys, sol.stats["num_steps"]
 
-        def integrate(x0):
-            solution = diffrax.diffeqsolve(
-                        diffrax.ODETerm(self.vectorfield),
-                        # diffrax.Dopri5(),
-                        self.integrator,
-                        args=(ctx, ctx_),
-                        t0=t_eval[0],
-                        t1=t_eval[-1],
-                        # dt0=t_eval[1] - t_eval[0],
-                        dt0=1e-2,
-                        y0=x0,
-                        stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
-                        saveat=diffrax.SaveAt(ts=t_eval),
-                        # adjoint=diffrax.BacksolveAdjoint(),
-                        max_steps=4096*1,
-                    )
-            return solution.ys, solution.stats["num_steps"]
+        else:   ## Custom-made integrator
+            def integrate(y0):
+                ys = self.integrator(self.vectorfield, 
+                                     (t_eval[0], t_eval[-1]), 
+                                     y0,
+                                     (ctx, ctx_.squeeze()), 
+                                     t_eval=t_eval, 
+                                     **self.ivp_args)
+                return ys, t_eval.size
 
-        batched_ys, batched_num_steps = jax.vmap(integrate)(x0s)
-        return batched_ys, batched_num_steps
-
-        # # rhs = lambda x, t: self.vectorfield(t, x, ctx, ctx_)
-        # rhs = lambda x, t: self.vectorfield(t, x, (ctx, ctx_))
-        # batched_ys = jax.vmap(rk4_integrator, in_axes=(None, 0, None))(rhs, x0s, t_eval)
-        # return batched_ys, t_eval.size
-
-
-
-
+        return jax.vmap(integrate)(x0s)
 
 
 
@@ -209,27 +145,59 @@ class NeuralODE(eqx.Module):
 
 
 
-# def rk4_integrator(rhs, y0, t, rtol, atol, hmax, mxstep, max_steps_rev, kind):
-def rk4_integrator(rhs, y0, t):
-  def step(state, t):
-    y_prev, t_prev = state
-    h = t - t_prev
-    k1 = h * rhs(y_prev, t_prev)
-    k2 = h * rhs(y_prev + k1/2., t_prev + h/2.)
-    k3 = h * rhs(y_prev + k2/2., t_prev + h/2.)
-    k4 = h * rhs(y_prev + k3, t + h)
-    y = y_prev + 1./6 * (k1 + 2 * k2 + 2 * k3 + k4)
-    return (y, t), y
-  _, ys = jax.lax.scan(step, (y0, t[0]), t[1:])
-  # return ys
-  return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
+def RK4(fun, t_span, y0, *args, t_eval=None, subdivision=1, **kwargs):
+    """ Perform numerical integration with a time step divided by the evaluation subdivision factor (Not necessarily equally spaced). If we get NaNs, we can try to increasing the subdivision factor for finer time steps."""
+    if t_eval is None:
+        if t_span[0] is None:
+            t_eval = jnp.array([t_span[1]])
+            raise Warning("t_span[0] is None. Setting t_span[0] to 0.")
+        elif t_span[1] is None:
+            raise ValueError("t_span[1] must be provided if t_eval is not.")
+        else:
+            t_eval = jnp.array(t_span)
+
+    hs = t_eval[1:] - t_eval[:-1]
+    t_ = t_eval[:-1, None] + jnp.arange(subdivision)[None, :]*hs[:, None]/subdivision
+    t_solve = jnp.concatenate([t_.flatten(), t_eval[-1:]])
+    eval_indices = jnp.arange(0, t_solve.size, subdivision)
+
+    def step(state, t):
+        t_prev, y_prev = state
+        h = t - t_prev
+        k1 = h * fun(t_prev, y_prev, *args)
+        k2 = h * fun(t_prev + h/2., y_prev + k1/2., *args)
+        k3 = h * fun(t_prev + h/2., y_prev + k2/2., *args)
+        k4 = h * fun(t + h, y_prev + k3, *args)
+        y = y_prev + (k1 + 2*k2 + 2*k3 + k4) / 6.
+        return (t, y), y
+
+    _, ys = jax.lax.scan(step, (t_solve[0], y0), t_solve[:])
+    return ys[eval_indices, :]
 
 
 
 
+# @partial(jax.jit, static_argnames=("fun", "t_span", "t_eval", "dt_max"))
+# @partial(eqx.filter_jit, static_argnames=("fun", "t_span", "t_eval", "dt_max"))
+# def RK4(fun, t_span, y0, *args, t_eval=None, dt_max=1e-2, **kwargs):
+#     t_eval = jnp.array(t_span[1]) if t_eval is None else t_eval
+#     t_solve = jnp.arange(t_span[0], t_span[1], dt_max)
 
+#     t_all = jnp.insert(t_solve, jnp.searchsorted(t_solve, t_eval), t_eval)
+#     eval_indices = jnp.searchsorted(t_all, t_eval)
+  
+#     def step(t, state):
+#         y_prev, t_prev = state
+#         h = t - t_prev
+#         k1 = h * fun(t_prev, y_prev, *args)
+#         k2 = h * fun(t_prev + h/2., y_prev + k1/2., *args)
+#         k3 = h * fun(t_prev + h/2., y_prev + k2/2., *args)
+#         k4 = h * fun(t + h, y_prev + k3, *args)
+#         y = y_prev + (k1 + 2*k2 + 2*k3 + k4) / 6.
+#         return (y, t), y
 
-
+#     _, ys = jax.lax.scan(step, (t_all[0], y0), t_all[:])
+#     return ys[eval_indices, :]
 
 
 
