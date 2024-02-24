@@ -16,8 +16,8 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
-nb_epochs = 1000
-nb_epochs_adapt = 1000
+nb_epochs = 10
+nb_epochs_adapt = 10
 init_lr = 1e-3
 
 print_error_every = 1000

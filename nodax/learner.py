@@ -108,7 +108,7 @@ class NeuralODE(eqx.Module):
 
     def __call__(self, x0s, t_eval, ctx, ctx_):
 
-        if isinstance(self.integrator, diffrax._solver.base._MetaAbstractSolver):
+        if isinstance(self.integrator, type(eqx.Module)):
                 def integrate(y0): 
                     sol = diffrax.diffeqsolve(
                             diffrax.ODETerm(self.vectorfield),
