@@ -18,7 +18,7 @@ context_pool_size = 2               ## Number of neighboring contexts j to use f
 context_size = 256//2
 nb_epochs = 1000
 nb_epochs_adapt = 1000
-init_lr = 1e-3
+init_lr = 1e-5
 
 print_error_every = 100
 
@@ -41,7 +41,7 @@ activation = jax.nn.softplus
 
 # integrator = diffrax.Dopri5
 integrator = RK4
-ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivision":150}
+ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivision":50}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -202,6 +202,42 @@ def laplacian2D(a):
 
     return (- 3 * a + 0.5 * (a_nz + a_pz + a_zn + a_zp) + 0.25 * (a_nn + a_np + a_pn + a_pp)) / (1. ** 2)
 
+# class Physics(eqx.Module):
+#     layers: list
+#     # number: jnp.ndarray
+
+#     def __init__(self, key=None):
+#         keys = generate_new_keys(key, num=4)
+#         width_size = 8
+#         # # new_act = jax.nn.sigmoid
+#         self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[2]), activation,
+#                         eqx.nn.Linear(width_size*2, 4, key=keys[3])]
+#         # self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
+
+#     def __call__(self, t, uv, ctx):
+#         params = ctx
+#         for layer in self.layers:
+#             params = layer(params)
+#         params = jnp.abs(params)
+#         # params = jnp.array([0.2097, 0.105, 0.03, 0.062])
+#         # params = jnp.array([0.2097, 0.105, 0.03, self.number[0]*ctx[0]])
+
+#         U, V = vec_to_mat(uv, 32)
+#         deltaU = laplacian2D(U)
+#         deltaV = laplacian2D(V)
+#         dUdt = (params[0] * deltaU - U * (V ** 2) + params[2] * (1. - U))
+#         dVdt = (params[1] * deltaV + U * (V ** 2) - (params[2] + params[3]) * V)
+#         duvdt = mat_to_vec(dUdt, dVdt, 32)
+
+#         duvdt = jnp.nan_to_num(duvdt, nan=0.0, posinf=0.0, neginf=0.0)
+#         return duvdt
+
+
+# init_lr = 1e-6
+circular_pad = lambda x: circular_pad_2d(x, 3//2)
+
 class Physics(eqx.Module):
     layers: list
     # number: jnp.ndarray
@@ -210,31 +246,41 @@ class Physics(eqx.Module):
         keys = generate_new_keys(key, num=4)
         width_size = 8
         # # new_act = jax.nn.sigmoid
-        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[2]), activation,
-                        eqx.nn.Linear(width_size*2, 4, key=keys[3])]
+        self.layers = [eqx.nn.Conv2d(1, 1, 3, use_bias=False, key=keys[1]),
+                        eqx.nn.Conv2d(1, 1, 3, use_bias=False, key=keys[2])]
         # self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
 
+        true_kernel = jnp.array([[[[0.25, 0.5, 0.25], [0.5, -3., 0.5], [0.25, 0.5, 0.25]]]])
+        # self.layers[0] = eqx.tree_at(lambda l:l.weight, self.layers[0], true_kernel)
+        # self.layers[1] = eqx.tree_at(lambda l:l.weight, self.layers[1], true_kernel)
+
+        # guess_kernel1 = jax.random.uniform(keys[0], shape=(1, 1, 3, 3), minval=-3, maxval=3)/20.
+        # guess_kernel2 = jax.random.uniform(keys[1], shape=(1, 1, 3, 3), minval=-3, maxval=3)/10.
+        guess_kernel1 = true_kernel + 1e-3*jax.random.normal(keys[0], shape=(1, 1, 3, 3))
+        guess_kernel2 = true_kernel + 1e-3*jax.random.normal(keys[1], shape=(1, 1, 3, 3))
+        self.layers[0] = eqx.tree_at(lambda l:l.weight, self.layers[0], guess_kernel1)
+        self.layers[1] = eqx.tree_at(lambda l:l.weight, self.layers[1], guess_kernel2)
+
+
     def __call__(self, t, uv, ctx):
-        params = ctx
-        for layer in self.layers:
-            params = layer(params)
-        params = jnp.abs(params)
-        # params = jnp.array([0.2097, 0.105, 0.03, 0.062])
+        # params = ctx
+        # for layer in self.layers:
+        #     params = layer(params)
+        # params = jnp.abs(params)
+        params = jnp.array([0.2097, 0.105, 0.03, 0.062])
         # params = jnp.array([0.2097, 0.105, 0.03, self.number[0]*ctx[0]])
 
         U, V = vec_to_mat(uv, 32)
-        deltaU = laplacian2D(U)
-        deltaV = laplacian2D(V)
+        deltaU = self.layers[0](circular_pad(U[None,...]))[0,...]
+        deltaV = self.layers[1](circular_pad(V[None,...]))[0,...]
+        # deltaU = laplacian2D(U)
+        # deltaV = laplacian2D(V)
         dUdt = (params[0] * deltaU - U * (V ** 2) + params[2] * (1. - U))
         dVdt = (params[1] * deltaV + U * (V ** 2) - (params[2] + params[3]) * V)
         duvdt = mat_to_vec(dUdt, dVdt, 32)
 
-        duvdt = jnp.nan_to_num(duvdt, nan=0.0, posinf=0.0, neginf=0.0)
+        # duvdt = jnp.nan_to_num(duvdt, nan=0.0, posinf=0.0, neginf=0.0)
         return duvdt
-
-
 
 
 
@@ -251,14 +297,14 @@ class ContextFlowVectorField(eqx.Module):
         if self.physics is None:
             vf = lambda xi_: self.augmentation(t, x, xi_)
         else:
-            vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
-            # vf = lambda xi_: self.physics(t, x, xi_)
+            # vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+            vf = lambda xi_: self.physics(t, x, xi_)
 
         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
 
         ctx, ctx_ = ctxs
-        return vf(ctx_) + gradvf(ctx_, ctx)
-        # return vf(ctx_)
+        # return vf(ctx_) + gradvf(ctx_, ctx)
+        return vf(ctx)
 
 
 augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
