@@ -5,6 +5,9 @@ from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
 from IPython.display import Image
 
+import diffrax
+from nodax import RK4
+import jax.numpy as jnp
 
 try:
     __IPYTHON__
@@ -58,16 +61,6 @@ np.random.seed(seed)
 
 
 #%%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import solve_ivp
-from matplotlib.animation import FuncAnimation
-
-# import jax
-# jax.config.update("jax_platform_name", "cpu")
-# import jax.numpy as jnp
-import numpy as jnp
-import diffrax
 
 dx = 1
 res = 32  # 32x32 grid resolution
@@ -137,9 +130,9 @@ if split == "train" or split=="test":
   # Training environments
   environments = [
       {"f": 0.03, "k": 0.062, "r_u": 0.2097, "r_v": 0.105},
-      # {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
-      # {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
-      # {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
+      {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
   ]
 
 
@@ -179,8 +172,8 @@ for j in range(n_traj_per_env):
         # print("Initial state", initial_state)
 
         # # Solve the ODEs using SciPy's solve_ivp
-        solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
-        data[i, j, :, :] = solution.y.T
+        # solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
+        # data[i, j, :, :] = solution.y.T
 
         ## use diffrax instead, with the DoPri5 integrator
         # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
@@ -195,6 +188,19 @@ for j in range(n_traj_per_env):
         #                                max_steps=4096*1)
         # data[i, j, :, :] = solution.ys
         # print("Stats", solution.stats['num_steps'])
+
+        ys = RK4(gray_scott, 
+                    (t_eval[0], t_eval[-1]),
+                    initial_state,
+                    *(selected_params,), 
+                    t_eval=t_eval, 
+                    subdivision=50)
+        data[i, j, :, :] = ys
+
+
+
+
+
 
 # Save t_eval and the solution to a npz file
 if split == "train":

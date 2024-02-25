@@ -15,12 +15,12 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 2
+context_size = 256//2
 nb_epochs = 1000
 nb_epochs_adapt = 1000
 init_lr = 1e-3
 
-print_error_every = 1000
+print_error_every = 100
 
 train = True
 run_folder = "./runs/24022024-161157/"      ## Run folder to use when not training
@@ -41,7 +41,7 @@ activation = jax.nn.softplus
 
 # integrator = diffrax.Dopri5
 integrator = RK4
-ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivision":100}
+ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivision":150}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -203,26 +203,26 @@ def laplacian2D(a):
     return (- 3 * a + 0.5 * (a_nz + a_pz + a_zn + a_zp) + 0.25 * (a_nn + a_np + a_pn + a_pp)) / (1. ** 2)
 
 class Physics(eqx.Module):
-    # layers: list
-    number: jnp.ndarray
+    layers: list
+    # number: jnp.ndarray
 
     def __init__(self, key=None):
         keys = generate_new_keys(key, num=4)
-        # width_size = 4
+        width_size = 8
         # # new_act = jax.nn.sigmoid
-        # self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-        #                 eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-        #                 eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
-        #                 eqx.nn.Linear(width_size, 4, key=keys[3]), jax.nn.sigmoid]
-        self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
+        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[2]), activation,
+                        eqx.nn.Linear(width_size*2, 4, key=keys[3])]
+        # self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
 
     def __call__(self, t, uv, ctx):
-        # params = ctx
-        # for layer in self.layers:
-        #     params = layer(params)
-        # params = jax.nn.sigmoid(params)
+        params = ctx
+        for layer in self.layers:
+            params = layer(params)
+        params = jnp.abs(params)
         # params = jnp.array([0.2097, 0.105, 0.03, 0.062])
-        params = jnp.array([0.2097, 0.105, 0.03, self.number[0]])
+        # params = jnp.array([0.2097, 0.105, 0.03, self.number[0]*ctx[0]])
 
         U, V = vec_to_mat(uv, 32)
         deltaU = laplacian2D(U)
@@ -251,14 +251,14 @@ class ContextFlowVectorField(eqx.Module):
         if self.physics is None:
             vf = lambda xi_: self.augmentation(t, x, xi_)
         else:
-            # vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
-            vf = lambda xi_: self.physics(t, x, xi_)
+            vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+            # vf = lambda xi_: self.physics(t, x, xi_)
 
         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
 
         ctx, ctx_ = ctxs
-        # return vf(ctx_) + gradvf(ctx_, ctx)
-        return vf(ctx_)
+        return vf(ctx_) + gradvf(ctx_, ctx)
+        # return vf(ctx_)
 
 
 augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
@@ -319,7 +319,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
-    for i, prop in enumerate(np.linspace(0.5, 0.5, 1)):
+    for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
 
