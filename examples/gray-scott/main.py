@@ -15,9 +15,9 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256//2
-nb_epochs = 10
-nb_epochs_adapt = 10
+context_size = 2
+nb_epochs = 1000
+nb_epochs_adapt = 1000
 init_lr = 1e-3
 
 print_error_every = 1000
@@ -35,11 +35,13 @@ adapt_huge = False
 
 activation = jax.nn.softplus
 # activation = jax.nn.swish
+# activation = lambda x:x
+# activation = jax.nn.sigmoid
 
 
-integrator = diffrax.Dopri5
-# integrator = RK4
-ivp_args = {"dt_init":1e-3, "rtol":1e-3, "atol":1e-6, "max_steps":1000, "subdivision":10}
+# integrator = diffrax.Dopri5
+integrator = RK4
+ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivision":100}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -94,7 +96,7 @@ if adapt_huge == True:
 #%%
 
 ## Define dataloader for training and validation
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=1, int_cutoff=1.0, shuffle=True, key=seed)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=-1, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -138,15 +140,15 @@ class Augmentation(eqx.Module):
         self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation,
                                 lambda x: jnp.stack(vec_to_mats(x, data_res, nb_int_channels), axis=0)]
 
-        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
-                            circular_pad, 
-                            eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
+        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0)]
+                            # circular_pad,
+                            # eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
 
         self.layers_shared = [circular_pad, 
-                              eqx.nn.Conv2d(nb_int_channels*2, chans, kernel_size, key=keys[6]), activation,
+                              eqx.nn.Conv2d(nb_int_channels+2, chans, kernel_size, key=keys[6]), activation,
                               circular_pad, 
-                              eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
-                              circular_pad, 
+                            #   eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
+                            #   circular_pad, 
                               eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[8]), activation,
                               circular_pad, 
                               eqx.nn.Conv2d(chans, 2, kernel_size, key=keys[9]),
@@ -162,57 +164,77 @@ class Augmentation(eqx.Module):
             y = layer(y)
 
         y = jnp.concatenate([y, ctx], axis=0)
+        # y = jnp.concatenate([y, y], axis=0)
         for layer in self.layers_shared:
             y = layer(y)
 
         return y
+        # return jnp.zeros_like(y)
 
 
 
+def vec_to_mat(vec_uv, res=32):
+    UV = jnp.split(vec_uv, 2)
+    U = jnp.reshape(UV[0], (res, res))
+    V = jnp.reshape(UV[1], (res, res))
+    return U, V
+
+def mat_to_vec(mat_U, mat_V, res):
+    dudt = jnp.reshape(mat_U, res * res)
+    dvdt = jnp.reshape(mat_V, res * res)
+    return jnp.concatenate((dudt, dvdt))
+
+def laplacian2D(a):
+    # a_nn | a_nz | a_np
+    # a_zn | a    | a_zp
+    # a_pn | a_pz | a_pp
+    a_zz = a
+
+    a_nz = jnp.roll(a_zz, (+1, 0), (0, 1))
+    a_pz = jnp.roll(a_zz, (-1, 0), (0, 1))
+    a_zn = jnp.roll(a_zz, (0, +1), (0, 1))
+    a_zp = jnp.roll(a_zz, (0, -1), (0, 1))
+
+    a_nn = jnp.roll(a_zz, (+1, +1), (0, 1))
+    a_np = jnp.roll(a_zz, (+1, -1), (0, 1))
+    a_pn = jnp.roll(a_zz, (-1, +1), (0, 1))
+    a_pp = jnp.roll(a_zz, (-1, -1), (0, 1))
+
+    return (- 3 * a + 0.5 * (a_nz + a_pz + a_zn + a_zp) + 0.25 * (a_nn + a_np + a_pn + a_pp)) / (1. ** 2)
+
+class Physics(eqx.Module):
+    # layers: list
+    number: jnp.ndarray
+
+    def __init__(self, key=None):
+        keys = generate_new_keys(key, num=4)
+        # width_size = 4
+        # # new_act = jax.nn.sigmoid
+        # self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+        #                 eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+        #                 eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
+        #                 eqx.nn.Linear(width_size, 4, key=keys[3]), jax.nn.sigmoid]
+        self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
+
+    def __call__(self, t, uv, ctx):
+        # params = ctx
+        # for layer in self.layers:
+        #     params = layer(params)
+        # params = jax.nn.sigmoid(params)
+        # params = jnp.array([0.2097, 0.105, 0.03, 0.062])
+        params = jnp.array([0.2097, 0.105, 0.03, self.number[0]])
+
+        U, V = vec_to_mat(uv, 32)
+        deltaU = laplacian2D(U)
+        deltaV = laplacian2D(V)
+        dUdt = (params[0] * deltaU - U * (V ** 2) + params[2] * (1. - U))
+        dVdt = (params[1] * deltaV + U * (V ** 2) - (params[2] + params[3]) * V)
+        duvdt = mat_to_vec(dUdt, dVdt, 32)
+
+        duvdt = jnp.nan_to_num(duvdt, nan=0.0, posinf=0.0, neginf=0.0)
+        return duvdt
 
 
-
-    # data_res: int
-    # int_channels: int
-    # pad_width: int
-
-    # def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
-    #     keys = generate_new_keys(key, num=12)
-
-    #     self.data_res = data_res
-    #     self.int_channels = nb_int_channels
-    #     self.pad_width = (kernel_size//2)
-
-    #     self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation]
-
-    #     self.layers_data = [eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
-
-    #     self.layers_shared = [eqx.nn.Conv2d(nb_int_channels*2, 64, kernel_size, key=keys[6]), activation,
-    #                           eqx.nn.Conv2d(64, 64, kernel_size, key=keys[7]), activation,
-    #                           eqx.nn.Conv2d(64, 64, kernel_size, key=keys[8]), activation,
-    #                           eqx.nn.Conv2d(64, 2, kernel_size, key=keys[9])]
-
-
-
-    # def __call__(self, t, x, ctx):
-
-    #     for i in range(len(self.layers_context)):
-    #         ctx = self.layers_context[i](ctx)
-    #     ctx = jnp.stack(vec_to_mats(ctx, self.data_res, self.int_channels), axis=0)
-
-    #     y = jnp.stack(vec_to_mats(x, res=self.data_res, nb_mats=2), axis=0)
-    #     for i in range(len(self.layers_data)):
-    #         if i%2==0:
-    #             y = circular_pad_2d(y, self.pad_width)
-    #         y = self.layers_data[i](y)
-
-    #     y = jnp.concatenate([y, ctx], axis=0)
-    #     for i in range(len(self.layers_shared)):
-    #         if i%2==0:
-    #             y = circular_pad_2d(y, self.pad_width)
-    #         y = self.layers_shared[i](y)
-
-    #     return y.flatten()
 
 
 
@@ -229,17 +251,22 @@ class ContextFlowVectorField(eqx.Module):
         if self.physics is None:
             vf = lambda xi_: self.augmentation(t, x, xi_)
         else:
-            vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+            # vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+            vf = lambda xi_: self.physics(t, x, xi_)
 
         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
 
         ctx, ctx_ = ctxs
-        return vf(ctx_) + gradvf(ctx_, ctx)
+        # return vf(ctx_) + gradvf(ctx_, ctx)
+        return vf(ctx_)
 
 
 augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
 
-vectorfield = ContextFlowVectorField(augmentation, physics=None)
+physics = Physics(key=seed)
+# physics = None
+
+vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
 
 contexts = ContextParams(nb_envs, context_size, key=None)
@@ -257,10 +284,11 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
-    term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
+    term2 = jnp.mean(ctx**2)             ## regularisation
 
-    loss_val = term1 + 1e-3*term2
-    # loss_val = term1
+    # loss_val = term1 + 1e-3*term2
+    # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
+    loss_val = term1
 
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 
@@ -291,7 +319,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
-    for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
+    for i, prop in enumerate(np.linspace(0.5, 0.5, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
 
