@@ -23,8 +23,8 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
-nb_epochs = 10
-nb_epochs_adapt = 10
+nb_epochs = 50*60*8
+nb_epochs_adapt = 50*60*8
 init_lr = 1e-3
 
 print_error_every = 1000
@@ -101,7 +101,7 @@ if adapt_huge == True:
 #%%
 
 ## Define dataloader for training and validation
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=1.0, shuffle=True, key=seed)
+train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=-1, int_cutoff=1.0, shuffle=True, key=seed)
 
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
@@ -411,7 +411,6 @@ except NameError:
 #%%
 
 # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
-
 
 
 

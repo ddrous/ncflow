@@ -5,6 +5,13 @@ from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
 from IPython.display import Image
 
+import diffrax
+from nodax import RK4
+import jax.numpy as jnp
+
+## Set jax platform to CPU
+import jax
+# jax.config.update('jax_platform_name', 'cpu')
 
 try:
     __IPYTHON__
@@ -19,7 +26,7 @@ import argparse
 
 if _in_ipython_session:
 	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='test', savepath="./runs/24012024-084802/", seed=2026, verbose=1)
+	args = argparse.Namespace(split='test', savepath="./tmp/", seed=2026, verbose=1)
 else:
 	parser = argparse.ArgumentParser(description='Description of your program')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
@@ -58,15 +65,6 @@ np.random.seed(seed)
 
 
 #%%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import solve_ivp
-from matplotlib.animation import FuncAnimation
-
-# import jax
-# jax.config.update("jax_platform_name", "cpu")
-import jax.numpy as jnp
-import diffrax
 
 # Define the Lotka-Volterra system
 keys = ['J0', 'k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'K1', 'q', 'N', 'A', 'kappa', 'psi', 'k']
@@ -120,6 +118,7 @@ n_steps_per_traj = int(1.0/0.05)
 # n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 7))
+# data = jnp.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 7))
 
 # Time span for simulation
 t_span = (0, 1)  # Shortened time span
@@ -143,16 +142,24 @@ for j in range(n_traj_per_env):
         # data[i, j, :, :] = solution.y.T
 
         ## use diffrax instead, with the DoPri5 integrator
-        solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
-                                       diffrax.Dopri5(),
-                                       args=(selected_params,),
-                                       t0=t_span[0],
-                                       t1=t_span[1],
-                                       dt0=t_eval[1]-t_eval[0],
-                                       y0=initial_state,
-                                       stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
-                                       saveat=diffrax.SaveAt(ts=t_eval))
-        data[i, j, :, :] = solution.ys
+        # solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
+        #                                diffrax.Dopri5(),
+        #                                args=(selected_params,),
+        #                                t0=t_span[0],
+        #                                t1=t_span[1],
+        #                                dt0=t_eval[1]-t_eval[0],
+        #                                y0=initial_state,
+        #                                stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
+        #                                saveat=diffrax.SaveAt(ts=t_eval))
+        # data[i, j, :, :] = solution.ys
+
+        ys = RK4(glycolytic_oscilator, 
+                    (t_eval[0], t_eval[-1]),
+                    initial_state,
+                    (selected_params,), 
+                    t_eval=t_eval, 
+                    subdivision=5)
+        data[i, j, :, :] = ys
 
 # Save t_eval and the solution to a npz file
 if split == "train":
