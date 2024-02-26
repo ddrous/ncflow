@@ -6,7 +6,7 @@ from nodax import *
 jax.config.update("jax_debug_nans", True)
 
 ## Execute jax on CPU
-# jax.config.update("jax_platform_name", "cpu")
+jax.config.update("jax_platform_name", "cpu")
 
 
 
@@ -22,7 +22,7 @@ context_pool_size = 2               ## Number of neighboring contexts j to use f
 context_size = 256//2
 nb_epochs = 1000
 nb_epochs_adapt = 1000
-init_lr = 1e-5
+init_lr = 5e-5
 
 print_error_every = 100
 
@@ -260,8 +260,8 @@ class Physics(eqx.Module):
 
         # guess_kernel1 = jax.random.uniform(keys[0], shape=(1, 1, 3, 3), minval=-3, maxval=3)/20.
         # guess_kernel2 = jax.random.uniform(keys[1], shape=(1, 1, 3, 3), minval=-3, maxval=3)/10.
-        guess_kernel1 = true_kernel + 1e-3*jax.random.normal(keys[0], shape=(1, 1, 3, 3))
-        guess_kernel2 = true_kernel + 1e-3*jax.random.normal(keys[1], shape=(1, 1, 3, 3))
+        guess_kernel1 = true_kernel + 1e-2*jax.random.normal(keys[0], shape=(1, 1, 3, 3))
+        guess_kernel2 = true_kernel + 1e-2*jax.random.normal(keys[1], shape=(1, 1, 3, 3))
         self.layers[0] = eqx.tree_at(lambda l:l.weight, self.layers[0], guess_kernel1)
         self.layers[1] = eqx.tree_at(lambda l:l.weight, self.layers[1], guess_kernel2)
 
@@ -359,12 +359,16 @@ sched_node = optax.piecewise_constant_schedule(init_value=init_lr,
 sched_ctx = optax.piecewise_constant_schedule(init_value=init_lr,
                         boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.1})
 
-opt_node = optax.adabelief(sched_node)
-opt_ctx = optax.adabelief(sched_ctx)
+opt_node = optax.adam(sched_node)
+opt_ctx = optax.adam(sched_ctx)
 
 trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 
 #%%
+
+# ## Print the dataset
+# print("Dataset shape now:", train_dataloader.dataset)
+# print()
 
 trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
@@ -539,7 +543,8 @@ except NameError:
 #%%
 
 # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
-
+print("Kernel layer 1\n", trainer.learner.neuralode.vectorfield.physics.layers[0].weight)
+print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
 
 

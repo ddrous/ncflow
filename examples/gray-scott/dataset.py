@@ -160,7 +160,7 @@ data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2*res*res)
 
 # Time span for simulation
 t_span = (0, 400)  # Shortened time span
-t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
+t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
 
 for j in range(n_traj_per_env):
 
@@ -171,11 +171,11 @@ for j in range(n_traj_per_env):
 
         # print("Initial state", initial_state)
 
-        # # Solve the ODEs using SciPy's solve_ivp
+        # Solve the ODEs using SciPy's solve_ivp
         # solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
         # data[i, j, :, :] = solution.y.T
 
-        ## use diffrax instead, with the DoPri5 integrator
+        # # use diffrax instead, with the DoPri5 integrator
         # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
         #                                diffrax.Tsit5(),
         #                                args=(selected_params),
@@ -194,7 +194,7 @@ for j in range(n_traj_per_env):
                     initial_state,
                     *(selected_params,), 
                     t_eval=t_eval, 
-                    subdivision=50)
+                    subdivisions=100)
         data[i, j, :, :] = ys
 
 
@@ -210,14 +210,11 @@ elif split == "test":
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
 
-np.savez(filename, t=t_eval, X=data)
-
-
-
-
-
-
-
+## Check if nan or inf in data
+if np.isnan(data).any() or np.isinf(data).any():
+  print("NaN or Inf in data. Exiting without saving...")
+else:
+  np.savez(filename, t=t_eval, X=data)
 
 
 

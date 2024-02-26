@@ -122,7 +122,7 @@ data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 7))
 
 # Time span for simulation
 t_span = (0, 1)  # Shortened time span
-t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
+t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
 
 ic_range = [(0.15, 1.60), (0.19, 2.16), (0.04, 0.20), (0.10, 0.35), (0.08, 0.30), (0.14, 2.67), (0.05, 0.10)]
 
