@@ -3,7 +3,11 @@
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
 
 from nodax import *
-# jax.config.update("jax_debug_nans", True)
+jax.config.update("jax_debug_nans", True)
+
+## Execute jax on CPU
+# jax.config.update("jax_platform_name", "cpu")
+
 
 
 
@@ -41,7 +45,7 @@ activation = jax.nn.softplus
 
 # integrator = diffrax.Dopri5
 integrator = RK4
-ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivision":50}
+ivp_args = {"dt_init":1e-7, "rtol":1e-2, "atol":1e-4, "max_steps":40000, "subdivisions":50}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%

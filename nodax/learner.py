@@ -121,7 +121,7 @@ class NeuralODE(eqx.Module):
                             stepsize_controller=diffrax.PIDController(rtol=self.ivp_args.get("rtol", 1e-3), 
                                                                       atol=self.ivp_args.get("atol", 1e-6)),
                             saveat=diffrax.SaveAt(ts=t_eval),
-                            adjoint=self.ivp_args.get("adjoint", diffrax.BacksolveAdjoint()),
+                            adjoint=self.ivp_args.get("adjoint", diffrax.RecursiveCheckpointAdjoint()),
                             max_steps=self.ivp_args.get("max_steps", 4096*1)
                         )
                     return sol.ys, sol.stats["num_steps"]
@@ -145,7 +145,7 @@ class NeuralODE(eqx.Module):
 
 
 
-def RK4(fun, t_span, y0, *args, t_eval=None, subdivision=1, **kwargs):
+def RK4(fun, t_span, y0, *args, t_eval=None, subdivisions=1, **kwargs):
     """ Perform numerical integration with a time step divided by the evaluation subdivision factor (Not necessarily equally spaced). If we get NaNs, we can try to increasing the subdivision factor for finer time steps."""
     if t_eval is None:
         if t_span[0] is None:
@@ -157,9 +157,9 @@ def RK4(fun, t_span, y0, *args, t_eval=None, subdivision=1, **kwargs):
             t_eval = jnp.array(t_span)
 
     hs = t_eval[1:] - t_eval[:-1]
-    t_ = t_eval[:-1, None] + jnp.arange(subdivision)[None, :]*hs[:, None]/subdivision
+    t_ = t_eval[:-1, None] + jnp.arange(subdivisions)[None, :]*hs[:, None]/subdivisions
     t_solve = jnp.concatenate([t_.flatten(), t_eval[-1:]])
-    eval_indices = jnp.arange(0, t_solve.size, subdivision)
+    eval_indices = jnp.arange(0, t_solve.size, subdivisions)
 
     def step(state, t):
         t_prev, y_prev = state

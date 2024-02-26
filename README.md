@@ -1,5 +1,7 @@
-# Nodax
-Inductive bias learning for dynamical systems
+<div style="text-align:center"><img src="docs/assets/Tax.png" /></div>
+
+# Tax
+Generalisable Neural ODEs with Taylor Expansion and JAX
 
 This is a one-stop shop for all things neural odes for dynamical systems.
 
@@ -9,7 +11,6 @@ Nodax is built around 5 extensible modules:
 - a Learner: a model and loss function
 - A Trainer: to train
 - a VisualTester: to test and visualize the results
-- a HPFactory: to find hyper-parameters for our models
 
 Diagram showing the flow across the modules.
 
