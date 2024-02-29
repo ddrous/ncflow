@@ -3,10 +3,10 @@
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
 
 from nodax import *
-jax.config.update("jax_debug_nans", True)
+# jax.config.update("jax_debug_nans", True)
 
 ## Execute jax on CPU
-jax.config.update("jax_platform_name", "cpu")
+# jax.config.update("jax_platform_name", "cpu")
 
 
 
@@ -14,27 +14,27 @@ jax.config.update("jax_platform_name", "cpu")
 
 #%%
 
-
 seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
-nb_epochs = 1000
+nb_epochs = 1500
 nb_epochs_adapt = 1000
-init_lr = 5e-5
+init_lr = 1e-3
+sched_factor = 0.5            ## Multiply the lr by this factor at each third of the training
 
 print_error_every = 100
 
 train = True
-run_folder = "./runs/24022024-161157/"      ## Run folder to use when not training
+run_folder = "./runs/27022024-104335/"      ## Run folder to use when not training
 
 save_trainer = True
 
 finetune = False
 
-adapt = True
-adapt_huge = False
+adapt_test = False
+adapt_restore = False
 
 
 activation = jax.nn.softplus
@@ -45,7 +45,7 @@ activation = jax.nn.softplus
 
 # integrator = diffrax.Dopri5
 integrator = RK4
-ivp_args = {"dt_init":1e-7, "rtol":1e-2, "atol":1e-4, "max_steps":40000, "subdivisions":50}
+ivp_args = {"dt_init":1e-7, "rtol":1e-2, "atol":1e-4, "max_steps":40000, "subdivisions":500}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -88,11 +88,6 @@ if train == True:
     # Run the dataset script to generate the data
     os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-if adapt == True:
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-if adapt_huge == True:
-    os.system(f'python dataset.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
-
 
 
 
@@ -127,19 +122,67 @@ def circular_pad_2d(x, pad_width):
         return jnp.pad(x, zero_pad+list(pad_width), mode='wrap')
     # return jnp.pad(x, pad_width, mode='wrap')
 
+
+class My2DConv(eqx.Module):
+    """ A conbcolution meant to approximate a differential operator : https://arxiv.org/abs/2402.16845"""
+    in_channels: int
+    out_channels: int
+    kernel_size: int
+    weight: jnp.ndarray
+
+    def __init__(self, in_channels, out_channels, kernel_size, use_bias=False, key=None):
+        keys = generate_new_keys(key, num=2)
+
+        kernel_size = (kernel_size, kernel_size)
+        lim = 1 / np.sqrt(in_channels * np.prod(kernel_size))
+        self.weight = jax.random.uniform(keys[0], (out_channels, in_channels) + kernel_size, minval=-lim, maxval=lim)
+        # if use_bias:
+        #     self.bias = jax.random.uniform(keys[1], (out_channels,) + (1,) * 2, minval=-lim, maxval=lim,)
+        # else:
+        #     self.bias = None
+
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.kernel_size = kernel_size
+
+    def __call__(self, x):
+        x = circular_pad(x[None,...])
+        x = jax.lax.conv_general_dilated(
+            lhs=x,
+            rhs=self.weight - jnp.mean(self.weight),        ## trick to obtain diff operator
+            window_strides=(1,1),
+            padding="VALID",
+            rhs_dilation=(1,1),
+            feature_group_count=1,
+        )
+        x = jnp.squeeze(x, axis=0)
+        # if self.use_bias:
+        #     x = x + self.bias
+        return x
+
+
+class Swish(eqx.Module):
+    beta: jnp.ndarray
+    def __init__(self, key=None):
+        self.beta = jax.random.uniform(key, shape=(1,), minval=0.01, maxval=1.0)
+    def __call__(self, x):
+        return x * jax.nn.sigmoid(self.beta * x)
+
 class Augmentation(eqx.Module):
     layers_data: list
     layers_context: list
     layers_shared: list
-
+    activation: Swish
 
 
     def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
 
-        chans = 2
+        chans = 16
 
         keys = generate_new_keys(key, num=12)
         circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
+        # activation = self.activation = Swish(key=keys[10])
+        activation = self.activation = jax.nn.sigmoid
 
         self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation,
                                 lambda x: jnp.stack(vec_to_mats(x, data_res, nb_int_channels), axis=0)]
@@ -148,15 +191,22 @@ class Augmentation(eqx.Module):
                             # circular_pad,
                             # eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
 
-        self.layers_shared = [circular_pad, 
-                              eqx.nn.Conv2d(nb_int_channels+2, chans, kernel_size, key=keys[6]), activation,
-                              circular_pad, 
+        self.layers_shared = [
+            # circular_pad, 
+                              My2DConv(4, chans, kernel_size, key=keys[6]), activation,
+                            #   circular_pad, 
                             #   eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
                             #   circular_pad, 
-                              eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[8]), activation,
-                              circular_pad, 
-                              eqx.nn.Conv2d(chans, 2, kernel_size, key=keys[9]),
+                              My2DConv(chans, chans, kernel_size, key=keys[8]), activation,
+                            #   circular_pad, 
+                              My2DConv(chans, 2, kernel_size, key=keys[9]), activation,
                               lambda x: x.flatten()]
+
+
+        # ## Attempt with MLP
+        # self.layers_shared = [eqx.nn.Linear(32*32*2, 128, key=keys[6]), activation,
+        #                         eqx.nn.Linear(128, 128, key=keys[7]), activation,
+        #                         eqx.nn.Linear(128, 32*32*2, key=keys[8])]
 
     def __call__(self, t, y, ctx):
         # return jnp.zeros_like(y)*ctx[0]
@@ -167,8 +217,9 @@ class Augmentation(eqx.Module):
         for layer in self.layers_data:
             y = layer(y)
 
-        y = jnp.concatenate([y, ctx], axis=0)
-        # y = jnp.concatenate([y, y], axis=0)
+        # # y = jnp.concatenate([y, ctx], axis=0)
+        y = jnp.concatenate([y, y], axis=0)
+        # y_ = y
         for layer in self.layers_shared:
             y = layer(y)
 
@@ -241,29 +292,39 @@ def laplacian2D(a):
 
 # init_lr = 1e-6
 circular_pad = lambda x: circular_pad_2d(x, 3//2)
+# new_act = lambda x: jnp.clip(x, a_min=0.0, a_max=1.0)
+# new_act = jax.nn.sigmoid
+new_act = jax.nn.swish
+
 
 class Physics(eqx.Module):
     layers: list
     # number: jnp.ndarray
 
     def __init__(self, key=None):
-        keys = generate_new_keys(key, num=4)
+        keys = generate_new_keys(key, num=6)
         width_size = 8
         # # new_act = jax.nn.sigmoid
-        self.layers = [eqx.nn.Conv2d(1, 1, 3, use_bias=False, key=keys[1]),
-                        eqx.nn.Conv2d(1, 1, 3, use_bias=False, key=keys[2])]
-        # self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
+        # self.layers = [eqx.nn.Conv2d(1, 1, 3, use_bias=False, key=keys[1]),
+        #                 eqx.nn.Conv2d(1, 1, 3, use_bias=False, key=keys[2])]
+        # true_kernel = jnp.array([[[[0.25, 0.5, 0.25], [0.5, -3., 0.5], [0.25, 0.5, 0.25]]]])
+        # guess_kernel1 = true_kernel + 1e-2*jax.random.normal(keys[0], shape=(1, 1, 3, 3))
+        # guess_kernel2 = true_kernel + 1e-2*jax.random.normal(keys[1], shape=(1, 1, 3, 3))
+        # self.layers[0] = eqx.tree_at(lambda l:l.weight, self.layers[0], guess_kernel1)
+        # self.layers[1] = eqx.tree_at(lambda l:l.weight, self.layers[1], guess_kernel2)
 
-        true_kernel = jnp.array([[[[0.25, 0.5, 0.25], [0.5, -3., 0.5], [0.25, 0.5, 0.25]]]])
-        # self.layers[0] = eqx.tree_at(lambda l:l.weight, self.layers[0], true_kernel)
-        # self.layers[1] = eqx.tree_at(lambda l:l.weight, self.layers[1], true_kernel)
+        # pad = 0
+        # self.layers = [eqx.nn.Conv2d(1, 1, 3, use_bias=False, padding=pad, key=keys[1]),
+        #                 # eqx.nn.Conv2d(1, 1, 3, use_bias=False, padding=1, key=keys[2]),
+        #                 # eqx.nn.Conv2d(1, 1, 3, use_bias=False, padding=1, key=keys[3]),
+        #                 # eqx.nn.Conv2d(1, 1, 3, use_bias=False, padding=1, key=keys[4]),
+        #                 eqx.nn.Conv2d(1, 1, 3, use_bias=False, padding=pad, key=keys[5]),
+        #                 eqx.nn.Conv2d(1, 1, 3, use_bias=False, padding=pad, key=keys[0])]
 
-        # guess_kernel1 = jax.random.uniform(keys[0], shape=(1, 1, 3, 3), minval=-3, maxval=3)/20.
-        # guess_kernel2 = jax.random.uniform(keys[1], shape=(1, 1, 3, 3), minval=-3, maxval=3)/10.
-        guess_kernel1 = true_kernel + 1e-2*jax.random.normal(keys[0], shape=(1, 1, 3, 3))
-        guess_kernel2 = true_kernel + 1e-2*jax.random.normal(keys[1], shape=(1, 1, 3, 3))
-        self.layers[0] = eqx.tree_at(lambda l:l.weight, self.layers[0], guess_kernel1)
-        self.layers[1] = eqx.tree_at(lambda l:l.weight, self.layers[1], guess_kernel2)
+        pad = 0
+        self.layers = [My2DConv(1, 1, 3, use_bias=False, key=keys[0]),
+                        My2DConv(1, 1, 3, use_bias=False, key=keys[1])]
+
 
 
     def __call__(self, t, uv, ctx):
@@ -275,8 +336,30 @@ class Physics(eqx.Module):
         # params = jnp.array([0.2097, 0.105, 0.03, self.number[0]*ctx[0]])
 
         U, V = vec_to_mat(uv, 32)
-        deltaU = self.layers[0](circular_pad(U[None,...]))[0,...]
-        deltaV = self.layers[1](circular_pad(V[None,...]))[0,...]
+        # deltaU = self.layers[2](circular_pad(self.layers[1](circular_pad(self.layers[0](circular_pad(U[None,...]))))))[0,...]
+        # deltaV = self.layers[5](circular_pad(self.layers[4](circular_pad(self.layers[3](circular_pad(V[None,...]))))))[0,...]
+        # deltaU = activation(deltaU)
+        # deltaV = activation(deltaV)
+
+        # deltaU = U[None,...]
+        # deltaV = V[None,...]
+        # for i in range(3):
+        #     deltaU = circular_pad(deltaU)
+        #     deltaV = circular_pad(deltaV)
+        #     deltaU = self.layers[i](deltaU)
+        #     deltaV = self.layers[i](deltaV)
+        # deltaU = new_act(deltaU)
+        # deltaV = new_act(deltaV)
+        # deltaU = deltaU[0,...]
+        # deltaV = deltaV[0,...]
+
+        deltaU = U[None,...]
+        deltaV = V[None,...]
+        for i in range(2):
+            deltaU = self.layers[i](deltaU)
+            deltaV = self.layers[i](deltaV)
+
+        # deltaV = self.layers[1](circular_pad(V[None,...]))[0,...]
         # deltaU = laplacian2D(U)
         # deltaV = laplacian2D(V)
         dUdt = (params[0] * deltaU - U * (V ** 2) + params[2] * (1. - U))
@@ -313,8 +396,8 @@ class ContextFlowVectorField(eqx.Module):
 
 augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
 
-physics = Physics(key=seed)
-# physics = None
+# physics = Physics(key=seed)
+physics = None
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
@@ -354,10 +437,10 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=
 
 nb_total_epochs = nb_epochs * 1
 sched_node = optax.piecewise_constant_schedule(init_value=init_lr,
-                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
 
 sched_ctx = optax.piecewise_constant_schedule(init_value=init_lr,
-                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
 
 opt_node = optax.adam(sched_node)
 opt_ctx = optax.adam(sched_ctx)
@@ -372,7 +455,7 @@ trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 
 trainer_save_path = run_folder if save_trainer == True else False
 if train == True:
-    # for propostion in [0.25, 0.5, 0.75]:
+    # for i, prop in enumerate(np.linspace(0.25, 1.0, 3)):
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
@@ -498,29 +581,33 @@ visualtester.visualize2D(test_dataloader, int_cutoff=1.0, res=32, save_path=save
 
 ## Give the dataloader an id to help with restoration later on
 
-adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+if adapt_test and not adapt_restore:
+    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 
-# sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
-#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
-#                                                 int(nb_epochs_adapt*0.5):0.1,
-#                                                 int(nb_epochs_adapt*0.75):1.})
-sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr,
-                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:1.0})
-# sched_ctx_new = 1e-5
-opt_adapt = optax.adabelief(sched_ctx_new)
+if adapt_test:
+    adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
 
-if adapt == True:
-    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-else:
-    print("save_id:", adapt_dataloader.data_id)
+    # sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
+    #                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
+    #                                                 int(nb_epochs_adapt*0.5):0.1,
+    #                                                 int(nb_epochs_adapt*0.75):1.})
+    sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr,
+                            boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
+    # sched_ctx_new = 1e-5
+    opt_adapt = optax.adabelief(sched_ctx_new)
 
-    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+    if adapt_restore == False:
+        trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+    else:
+        print("Save_id for restoring trained adapation model:", adapt_dataloader.data_id)
+        trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
 
 #%%
-ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+if adapt_test:
+    ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
 
-visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+    visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
 
@@ -534,17 +621,17 @@ except NameError:
         if finetune == True:
             os.system(f"cp nohup.log {finetunedir}")
             ## Open the results_in_domain in the terminal
-            os.system(f"open {finetunedir}results_in_domain.png")
+            # os.system(f"open {finetunedir}results_in_domain.png")
         else:
             os.system(f"cp nohup.log {run_folder}")
-            os.system(f"open {run_folder}results_in_domain.png")
+            # os.system(f"open {run_folder}results_in_domain.png")
 
 
 #%%
 
-# eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
-print("Kernel layer 1\n", trainer.learner.neuralode.vectorfield.physics.layers[0].weight)
-print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
+# # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
+# print("Kernel layer 1\n", trainer.learner.neuralode.vectorfield.physics.layers[0].weight)
+# print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
 
 
