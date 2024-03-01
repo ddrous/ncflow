@@ -43,7 +43,7 @@ examples/tmp/
 ## Cprofile
 examples/runs/cprofile/*
 
-## Data
+## Tmp data
 examples/pendulums/tmp/*
 examples/dahlquist/tmp/*
 examples/lotka-voltera/tmp/*
@@ -51,14 +51,17 @@ examples/lotka-voltera/lightning_logs/*
 examples/glycolytic-oscillator/tmp/*
 examples/pendulum/tmp/*
 examples/gray-scott/tmp/*
+examples/navier-stokes/tmp/*
+examples/forced-oscillator/tmp/*
 
 
-## Tmp and Runs
+## Runs
 examples/lotka-voltera/runs/*
 examples/glycolytic-oscillator/runs/*
 examples/pendulum/runs/*
 examples/gray-scott/runs/*
-
+examples/navier-stokes/runs/*
+examples/forced-oscillator/runs/*
 
 ## Ingnore all folders named "tmp", recursively
 **/tmp/
