@@ -81,3 +81,5 @@ venv/*
 
 !examples/gray-scott/runs/25022024-033325
 !examples/gray-scott/runs/25022024-125454
+
+!examples/forced-oscillator/runs/02032024-120306
