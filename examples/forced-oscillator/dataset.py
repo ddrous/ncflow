@@ -72,9 +72,10 @@ def forced_oscillator(t, X, params):
     return jnp.array([dxdt, dvdt])
 
 def get_init_cond():
-    x0 = np.random.uniform(-1, 1, (1,))
-    v0 = np.random.uniform(-1, 1, (1,))
-    return np.concatenate([x0, v0])
+    # x0 = np.random.uniform(-1, 1, (1,))
+    # v0 = np.random.uniform(-1, 1, (1,))
+    # return np.concatenate([x0, v0])
+    return np.random.random(2) + 1.
 
 
 def sin(t):
@@ -129,7 +130,7 @@ elif split == "adapt":
 
 
 if split == "train":
-  n_traj_per_env = 12     ## training
+  n_traj_per_env = 4     ## training
 elif split == "test":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
@@ -156,8 +157,8 @@ for j in range(n_traj_per_env):
         # print("Initial state", initial_state)
 
         # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
+        solution = solve_ivp(forced_oscillator, t_span, initial_state, args=(selected_params,), t_eval=t_eval, method='RK45')
+        data[i, j, :, :] = solution.y.T
 
         # # use diffrax instead, with the DoPri5 integrator
         # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
@@ -173,13 +174,13 @@ for j in range(n_traj_per_env):
         # data[i, j, :, :] = solution.ys
         # print("Stats", solution.stats['num_steps'])
 
-        ys = RK4(forced_oscillator, 
-                    (t_eval[0], t_eval[-1]),
-                    initial_state,
-                    *(selected_params,), 
-                    t_eval=t_eval, 
-                    subdivisions=100)
-        data[i, j, :, :] = ys
+        # ys = RK4(forced_oscillator, 
+        #             (t_eval[0], t_eval[-1]),
+        #             initial_state,
+        #             *(selected_params,), 
+        #             t_eval=t_eval, 
+        #             subdivisions=100)
+        # data[i, j, :, :] = ys
 
 
 

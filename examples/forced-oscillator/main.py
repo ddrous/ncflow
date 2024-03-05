@@ -1,4 +1,7 @@
 # import os
+# %load_ext autoreload
+# %autoreload 2
+
 ## Do not preallocate GPU memory
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
 
@@ -19,10 +22,10 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-nb_epochs = 2400*2
-nb_epochs_adapt = 2400*2
+nb_epochs = 24000*1
+nb_epochs_adapt = 24*1
 init_lr = 1e-3
-sched_factor = 0.5            ## Multiply the lr by this factor at each third of the training
+sched_factor = 0.2            ## Multiply the lr by this factor at each third of the training
 
 print_error_every = 100
 
@@ -36,9 +39,9 @@ finetune = False
 adapt_test = True
 adapt_restore = False
 
-# integrator = diffrax.Dopri5
-integrator = RK4
-ivp_args = {"dt_init":1e-7, "rtol":1e-2, "atol":1e-4, "max_steps":40000, "subdivisions":2}
+integrator = diffrax.Dopri5
+# integrator = RK4
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":2}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -116,13 +119,19 @@ class Augmentation(eqx.Module):
 
     def __init__(self, data_size, int_size, context_size, key=None):
         keys = generate_new_keys(key, num=12)
-        self.activations = [Swish(key=key_i) for key_i in keys[:6]]
+        self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), self.activations[0], eqx.nn.Linear(context_size//4, int_size, key=keys[4]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[5])]
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
+                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
 
-        self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], eqx.nn.Linear(int_size, int_size, key=keys[3]), self.activations[3], eqx.nn.Linear(int_size, int_size, key=keys[3])]
+        self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
+                            eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
+                            eqx.nn.Linear(int_size, int_size, key=keys[5])]
 
-        self.layers_shared = [eqx.nn.Linear(2*int_size, int_size, key=keys[3]), self.activations[4], eqx.nn.Linear(int_size, int_size, key=keys[3]), self.activations[5], eqx.nn.Linear(int_size, data_size, key=keys[3])]
+        self.layers_shared = [eqx.nn.Linear(2*int_size, int_size, key=keys[6]), self.activations[4], 
+                              eqx.nn.Linear(int_size, int_size, key=keys[7]), self.activations[5], 
+                              eqx.nn.Linear(int_size, int_size, key=keys[8]), self.activations[6], 
+                              eqx.nn.Linear(int_size, data_size, key=keys[9])]
 
     def __call__(self, t, y, ctx):
 
@@ -160,7 +169,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + gradvf(ctx_, ctx)
 
 
-augmentation = Augmentation(data_size=2, int_size=64, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=2, int_size=122, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
