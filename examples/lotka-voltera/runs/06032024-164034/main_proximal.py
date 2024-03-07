@@ -23,16 +23,16 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-nb_epochs =  24000
 nb_epochs_adapt = 24*1
 init_lr = 1e-4
-sched_factor = 0.2            ## Multiply the lr by this factor at each third of the training
+sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
-nb_outer_steps = 4*30*4*10*2
-nb_inner_steps_max = 500
-proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+nb_outer_steps_max = 4*30*4*10*2 //10
+nb_inner_steps_max = 400
+proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 2e-8
 inner_tol_ctx = 1e-7
+early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
 
 print_error_every = 10
 
@@ -46,9 +46,9 @@ finetune = False
 adapt_test = True
 adapt_restore = False
 
-integrator = diffrax.Dopri5
-# integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":2}
+# integrator = diffrax.Dopri5
+integrator = RK4
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":50}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -218,7 +218,7 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=
 
 ## Define optimiser and traine the model
 
-nb_total_epochs = nb_epochs * 1
+nb_total_epochs = nb_outer_steps_max * 1
 sched_node = optax.piecewise_constant_schedule(init_value=init_lr,
                         boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
 
@@ -238,8 +238,17 @@ if train == True:
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
         # trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
-        trainer.train_proximal(nb_outer_steps=nb_outer_steps, nb_inner_steps_max=nb_inner_steps_max, proximal_reg=proximal_beta, inner_tol_node=inner_tol_node, inner_tol_ctx=inner_tol_ctx,
-                               print_error_every=print_error_every*(2**0), save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
+        trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
+                               nb_inner_steps_max=nb_inner_steps_max, 
+                               proximal_reg=proximal_beta, 
+                               inner_tol_node=inner_tol_node, 
+                               inner_tol_ctx=inner_tol_ctx,
+                               print_error_every=print_error_every*(2**0), 
+                               save_path=trainer_save_path, 
+                               val_dataloader=val_dataloader, 
+                               patience=early_stopping_patience,
+                               int_prop=prop,
+                               key=seed)
 
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
