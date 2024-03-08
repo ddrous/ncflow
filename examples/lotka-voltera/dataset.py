@@ -176,7 +176,7 @@ for j in range(n_traj_per_env):
                     initial_state,
                    *(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), 
                     t_eval=t_eval, 
-                    subdivisions=50)
+                    subdivisions=5)
         data[i, j, :, :] = ys
 
 # Save t_eval and the solution to a npz file

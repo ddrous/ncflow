@@ -19,7 +19,7 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
-nb_epochs = 1500
+nb_epochs = 150
 nb_epochs_adapt = 1000
 init_lr = 1e-3
 sched_factor = 0.5            ## Multiply the lr by this factor at each third of the training
@@ -155,7 +155,7 @@ class My2DConv(eqx.Module):
             rhs_dilation=(1,1),
             feature_group_count=1,
         )
-        x = jnp.squeeze(x, axis=0)
+        x = jnp.squeeze(x, axis=0) / (32/32.)
         # if self.use_bias:
         #     x = x + self.bias
         return x

@@ -160,6 +160,29 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + gradvf(ctx_, ctx)
 
 
+
+# class ContextFlowVectorField(eqx.Module):
+#     physics: eqx.Module
+#     augmentation: eqx.Module
+
+#     def __init__(self, augmentation, physics=None):
+#         self.augmentation = augmentation
+#         self.physics = physics
+
+#     def __call__(self, t, x, ctxs):
+#         ctx, ctx_ = ctxs
+
+#         if self.physics is None:
+#             vf = lambda xi: self.augmentation(t, x, xi)
+#         else:
+#             vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
+
+#         gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
+#         scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+
+#         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
+
+
 augmentation = Augmentation(data_size=2, width_size=64, depth=4, context_size=context_size, key=seed)
 
 vectorfield = ContextFlowVectorField(augmentation, physics=None)

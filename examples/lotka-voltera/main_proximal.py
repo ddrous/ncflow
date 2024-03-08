@@ -24,12 +24,13 @@ seed = 2026
 context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 nb_epochs_adapt = 24*1
-init_lr = 1e-4
+init_lr = 5e-4
 sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
-nb_outer_steps_max = 4*30*4*10*2 //10
-nb_inner_steps_max = 25
-proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+nb_outer_steps_max = 4*30*4*10*2*2 //10
+# nb_outer_steps_max = 10
+nb_inner_steps_max = 20
+proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 2e-8
 inner_tol_ctx = 1e-7
 early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
@@ -48,7 +49,7 @@ adapt_restore = False
 
 # integrator = diffrax.Dopri5
 integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":50}
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -156,6 +157,26 @@ class Augmentation(eqx.Module):
 
 
 
+# class ContextFlowVectorField(eqx.Module):
+#     physics: eqx.Module
+#     augmentation: eqx.Module
+
+#     def __init__(self, augmentation, physics=None):
+#         self.augmentation = augmentation
+#         self.physics = physics
+
+#     def __call__(self, t, x, ctxs):
+#         if self.physics is None:
+#             vf = lambda xi_: self.augmentation(t, x, xi_)
+#         else:
+#             vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
+
+#         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
+
+#         ctx, ctx_ = ctxs
+#         return vf(ctx_) + gradvf(ctx_, ctx)
+
+
 class ContextFlowVectorField(eqx.Module):
     physics: eqx.Module
     augmentation: eqx.Module
@@ -165,15 +186,17 @@ class ContextFlowVectorField(eqx.Module):
         self.physics = physics
 
     def __call__(self, t, x, ctxs):
-        if self.physics is None:
-            vf = lambda xi_: self.augmentation(t, x, xi_)
-        else:
-            vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
-
-        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-
         ctx, ctx_ = ctxs
-        return vf(ctx_) + gradvf(ctx_, ctx)
+
+        if self.physics is None:
+            vf = lambda xi: self.augmentation(t, x, xi)
+        else:
+            vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
+
+        gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
+        scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+
+        return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
 augmentation = Augmentation(data_size=2, int_size=122, context_size=context_size, key=seed)
@@ -200,11 +223,12 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
-    term2 = jnp.mean(ctx**2)             ## regularisation
+    # term2 = jnp.mean(ctx**2)             ## regularisation
+    term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
 
-    # loss_val = term1 + 1e-3*term2
+    loss_val = term1 + 1e-3*term2
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
-    loss_val = term1
+    # loss_val = term1
 
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 
@@ -417,48 +441,50 @@ except NameError:
 #### Generate data for analysis
 
 
-# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
+## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
 
 
-# print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
+print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
 
-# # First, check if the file exists. If not, create it and write the header
-# if not os.path.exists(run_folder+'analysis'):
-#     os.mkdir(run_folder+'analysis')
+# First, check if the file exists. If not, create it and write the header
+if not os.path.exists(run_folder+'analysis'):
+    os.mkdir(run_folder+'analysis')
 
-# csv_file = run_folder+'analysis/test_scores.csv'
-# if not os.path.exists(csv_file):
-#     os.system(f"touch {csv_file}")
+csv_file = run_folder+'analysis/test_scores.csv'
+if not os.path.exists(csv_file):
+    os.system(f"touch {csv_file}")
 
-# with open(csv_file, 'r') as f:
-#     lines = f.readlines()
-#     if len(lines) == 0:
-#         with open(csv_file, 'w') as f:
-#             f.write("seed,ind_crit,ood_crit\n")
-
-
-# ## Get results on test and adaptation datasets, then append them to the csv
-
-# np.random.seed(seed)
-# seeds = np.random.randint(0, 10000, 10)
-# for seed in seeds:
-# # for seed in range(8000, 6*10**3, 10):
-#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
-#     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
-
-#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=1, data_id="082026")
-#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
-
-#     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
-#     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
-
-#     with open(csv_file, 'a') as f:
-#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
+with open(csv_file, 'r') as f:
+    lines = f.readlines()
+    if len(lines) == 0:
+        with open(csv_file, 'w') as f:
+            f.write("seed,ind_crit,ood_crit\n")
 
 
-# ## Print the mean and stds of the scores
-# import pandas as pd
-# pd.set_option('display.float_format', '{:.2e}'.format)
-# test_scores = pd.read_csv(csv_file).describe()
-# print(test_scores.iloc[:3])
+## Get results on test and adaptation datasets, then append them to the csv
+
+np.random.seed(seed)
+seeds = np.random.randint(0, 10000, 10)
+for seed in seeds:
+# for seed in range(8000, 6*10**3, 10):
+    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
+    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
+
+    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=1, data_id="082026")
+    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
+
+    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
+    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
+
+    with open(csv_file, 'a') as f:
+        f.write(f"{seed},{ind_crit},{ood_crit}\n")
+
+
+## Print the mean and stds of the scores
+import pandas as pd
+pd.set_option('display.float_format', '{:.2e}'.format)
+test_scores = pd.read_csv(csv_file).describe()
+
+print("\n\nMean and std of the scores across various datasets\n", flush=True)
+print(test_scores.iloc[:3])
 
