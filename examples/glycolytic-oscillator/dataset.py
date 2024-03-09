@@ -141,25 +141,26 @@ for j in range(n_traj_per_env):
         # solution = solve_ivp(glycolytic_oscilator, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
         # data[i, j, :, :] = solution.y.T
 
-        ## use diffrax instead, with the DoPri5 integrator
-        # solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
-        #                                diffrax.Dopri5(),
-        #                                args=(selected_params,),
-        #                                t0=t_span[0],
-        #                                t1=t_span[1],
-        #                                dt0=t_eval[1]-t_eval[0],
-        #                                y0=initial_state,
-        #                                stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
-        #                                saveat=diffrax.SaveAt(ts=t_eval))
-        # data[i, j, :, :] = solution.ys
+        # use diffrax instead, with the DoPri5 integrator
+        solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
+                                       diffrax.Dopri5(),
+                                       args=(selected_params,),
+                                       t0=t_span[0],
+                                       t1=t_span[1],
+                                      #  dt0=t_eval[1]-t_eval[0],
+                                       dt0=1e-4,
+                                       y0=initial_state,
+                                       stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
+                                       saveat=diffrax.SaveAt(ts=t_eval))
+        data[i, j, :, :] = solution.ys
 
-        ys = RK4(glycolytic_oscilator, 
-                    (t_eval[0], t_eval[-1]),
-                    initial_state,
-                    (selected_params,), 
-                    t_eval=t_eval, 
-                    subdivision=5)
-        data[i, j, :, :] = ys
+        # ys = RK4(glycolytic_oscilator, 
+        #             (t_eval[0], t_eval[-1]),
+        #             initial_state,
+        #             (selected_params,), 
+        #             t_eval=t_eval, 
+        #             subdivisions=1)
+        # data[i, j, :, :] = ys
 
 # Save t_eval and the solution to a npz file
 if split == "train":
@@ -180,7 +181,7 @@ np.savez(filename, t=t_eval, X=data)
 
 
 
-
+#%%
 
 
 if _in_ipython_session:
@@ -198,3 +199,7 @@ if _in_ipython_session:
   plt.ylabel("Concentration")
   plt.legend()
   plt.show()
+
+n_steps_per_traj
+
+# %%

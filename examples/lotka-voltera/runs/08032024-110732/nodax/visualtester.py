@@ -309,7 +309,7 @@ class VisualTester:
 
         ax['D'].plot(nb_steps, c="brown")
         ax['D'].set_xlabel("Epochs")
-        ax['D'].set_title("(Avg/Tot) Number of Steps Taken (Proportional to NFEs)")
+        ax['D'].set_title("Total Number of Steps Taken per Epoch (Proportional to NFEs)")
         if np.all(nb_steps>0):
             ax['D'].set_yscale('log')
 

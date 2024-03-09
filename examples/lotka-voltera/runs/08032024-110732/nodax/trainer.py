@@ -335,8 +335,8 @@ class Trainer:
 
             losses_node.append(loss_epoch_node)
             losses_ctx.append(loss_epoch_ctx)
-            nb_steps_node.append(nb_steps_eph_node / (in_step_node+1))
-            nb_steps_ctx.append(nb_steps_eph_ctx / (in_step_ctx+1))
+            nb_steps_node.append(nb_steps_eph_node)
+            nb_steps_ctx.append(nb_steps_eph_ctx)
 
             if out_step%print_error_every==0 or out_step<=3 or out_step==nb_outer_steps_max-1:
 
