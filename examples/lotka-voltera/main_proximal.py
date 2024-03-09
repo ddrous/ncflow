@@ -27,7 +27,7 @@ nb_epochs_adapt = 24*1
 init_lr = 5e-4
 sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
-nb_outer_steps_max = 4*30*4*10*2*2 //10
+nb_outer_steps_max = 4*30*4*10*2*3 //10
 # nb_outer_steps_max = 10
 nb_inner_steps_max = 20
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
