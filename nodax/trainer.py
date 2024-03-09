@@ -367,8 +367,8 @@ class Trainer:
 
         self.losses_node.append(jnp.vstack(losses_node))
         self.losses_ctx.append(jnp.vstack(losses_ctx))
-        self.nb_steps_node.append(jnp.array(nb_steps_node))
-        self.nb_steps_ctx.append(jnp.array(nb_steps_ctx))
+        self.nb_steps_node.append(jnp.array(nb_steps_node) / (in_step_node+1))
+        self.nb_steps_ctx.append(jnp.array(nb_steps_ctx)/ (in_step_ctx+1))
 
         if val_dataloader is not None:
             self.val_losses.append(np.vstack(val_losses))
