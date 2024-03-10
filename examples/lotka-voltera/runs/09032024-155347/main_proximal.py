@@ -21,42 +21,36 @@ from nodax import *
 seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
-## Neural Context Flow hyperparameters ##
 context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-print_error_every = 10
-# integrator = diffrax.Dopri5
-integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
-## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
-run_folder = "./runs/08032024-110732/"      ## Run folder to use when not training
-
-
-## Training hyperparameters ##
-train = False
-save_trainer = True
-finetune = False
-
+nb_epochs_adapt = 2400
 init_lr = 5e-4
-sched_factor = 1.0
+sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
 nb_outer_steps_max = 4*30*4*10*2*4 //10
+# nb_outer_steps_max = 10
 nb_inner_steps_max = 20
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 2e-8
 inner_tol_ctx = 1e-7
 early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
 
+print_error_every = 10
 
-## Adaptation hyperparameters ##
+train = True
+run_folder = "./runs/02032024-102715/"      ## Run folder to use when not training
+
+save_trainer = True
+
+finetune = False
+
 adapt_test = True
 adapt_restore = False
 
-init_lr_adapt = 5e-3
-sched_factor_adapt = 0.5
-nb_epochs_adapt = 5000
-
-
+# integrator = diffrax.Dopri5
+integrator = RK4
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
+## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
 
@@ -387,8 +381,8 @@ if adapt_test:
     #                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
     #                                                 int(nb_epochs_adapt*0.5):0.1,
     #                                                 int(nb_epochs_adapt*0.75):1.})
-    sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
-                            boundaries_and_scales={nb_total_epochs//3:sched_factor_adapt, 2*nb_total_epochs//3:sched_factor_adapt})
+    sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr,
+                            boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
     # sched_ctx_new = 1e-5
     opt_adapt = optax.adabelief(sched_ctx_new)
 
@@ -405,6 +399,22 @@ if adapt_test:
 
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
+
+
+
+#%%
+## If the nohup.log file exists, copy it to the run folder
+try:
+    __IPYTHON__ ## in a jupyter notebook
+except NameError:
+    if os.path.exists("nohup.log"):
+        if finetune == True:
+            os.system(f"cp nohup.log {finetunedir}")
+            ## Open the results_in_domain in the terminal
+            # os.system(f"open {finetunedir}results_in_domain.png")
+        else:
+            os.system(f"cp nohup.log {run_folder}")
+            # os.system(f"open {run_folder}results_in_domain.png")
 
 
 #%%
@@ -478,20 +488,3 @@ test_scores = pd.read_csv(csv_file).describe()
 print("\n\nMean and std of the scores across various datasets\n", flush=True)
 print(test_scores.iloc[:3])
 
-
-
-#%%
-## If the nohup.log file exists, copy it to the run folder
-try:
-    __IPYTHON__ ## in a jupyter notebook
-except NameError:
-    if os.path.exists("nohup.log"):
-        if finetune == True:
-            os.system(f"cp nohup.log {finetunedir}")
-            ## Open the results_in_domain in the terminal
-            # os.system(f"open {finetunedir}results_in_domain.png")
-        elif adapt_test==True: ## Adaptation
-            os.system(f"cp nohup.log {adapt_folder}")
-        else:
-            os.system(f"cp nohup.log {run_folder}")
-            # os.system(f"open {run_folder}results_in_domain.png")

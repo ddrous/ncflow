@@ -691,7 +691,3 @@ Available devices: [cuda(id=0)]
 
 Mean and std of the scores across various datasets
 
-          seed  ind_crit  ood_crit
-count 2.00e+01  2.00e+01  2.00e+01
-mean  5.25e+03  8.59e-06  7.51e-04
-std   3.30e+03  6.53e-07  7.51e-04
