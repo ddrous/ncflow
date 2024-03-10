@@ -264,10 +264,6 @@ class Trainer:
 
         for out_step in range(nb_outer_steps_max):
 
-            nb_steps_eph_node = 0
-            nb_steps_eph_ctx = 0
-
-
             node_old = jax.tree_util.tree_map(lambda x: x, node)
             contexts_old = jax.tree_util.tree_map(lambda x: x, contexts)
 
@@ -278,6 +274,7 @@ class Trainer:
 
                 nb_batches_node = 0
                 loss_sum_node = jnp.zeros(1)
+                nb_steps_eph_node = 0
 
                 for i, batch in enumerate(self.dataloader):
                     loss_key = get_new_key(loss_key)
@@ -307,10 +304,11 @@ class Trainer:
             # diff_ctx_prev = 2*inner_tol
             for in_step_ctx in range(nb_inner_steps_max):
 
-                for i, batch in enumerate(self.dataloader):
+                nb_batches_ctx = 0
+                loss_sum_ctx = jnp.zeros(1)
+                nb_steps_eph_ctx = 0
 
-                    nb_batches_ctx = 0
-                    loss_sum_ctx = jnp.zeros(1)
+                for i, batch in enumerate(self.dataloader):
 
                     node, contexts, opt_state_ctx, loss_ctx, (nb_steps_ctx_, term1, term2, diff_ctx_) = train_step_ctx(node, contexts, contexts_old, batch, weights, opt_state_ctx, loss_key)
 
@@ -335,8 +333,8 @@ class Trainer:
 
             losses_node.append(loss_epoch_node)
             losses_ctx.append(loss_epoch_ctx)
-            nb_steps_node.append(nb_steps_eph_node / (in_step_node+1))
-            nb_steps_ctx.append(nb_steps_eph_ctx / (in_step_ctx+1))
+            nb_steps_node.append(nb_steps_eph_node)
+            nb_steps_ctx.append(nb_steps_eph_ctx)
 
             if out_step%print_error_every==0 or out_step<=3 or out_step==nb_outer_steps_max-1:
 
