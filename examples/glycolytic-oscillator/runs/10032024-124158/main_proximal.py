@@ -400,6 +400,23 @@ if adapt_test:
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
+
+
+#%%
+## If the nohup.log file exists, copy it to the run folder
+try:
+    __IPYTHON__ ## in a jupyter notebook
+except NameError:
+    if os.path.exists("nohup.log"):
+        if finetune == True:
+            os.system(f"cp nohup.log {finetunedir}")
+            ## Open the results_in_domain in the terminal
+            # os.system(f"open {finetunedir}results_in_domain.png")
+        else:
+            os.system(f"cp nohup.log {run_folder}")
+            # os.system(f"open {run_folder}results_in_domain.png")
+
+
 #%%
 
 # # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
@@ -427,7 +444,7 @@ if adapt_test:
 ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
 
 
-print("\nFull evaluation of the model on many random seeds\n", flush=True)
+print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
 
 # First, check if the file exists. If not, create it and write the header
 if not os.path.exists(run_folder+'analysis'):
@@ -447,7 +464,7 @@ with open(csv_file, 'r') as f:
 ## Get results on test and adaptation datasets, then append them to the csv
 
 np.random.seed(seed)
-seeds = np.random.randint(0, 10000, 20)
+seeds = np.random.randint(0, 10000, 10)
 for seed in seeds:
 # for seed in range(8000, 6*10**3, 10):
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
@@ -471,21 +488,3 @@ test_scores = pd.read_csv(csv_file).describe()
 print("\n\nMean and std of the scores across various datasets\n", flush=True)
 print(test_scores.iloc[:3])
 
-
-
-
-
-
-#%%
-## If the nohup.log file exists, copy it to the run folder
-try:
-    __IPYTHON__ ## in a jupyter notebook
-except NameError:
-    if os.path.exists("nohup.log"):
-        if finetune == True:
-            os.system(f"cp nohup.log {finetunedir}")
-            ## Open the results_in_domain in the terminal
-            # os.system(f"open {finetunedir}results_in_domain.png")
-        else:
-            os.system(f"cp nohup.log {run_folder}")
-            # os.system(f"open {run_folder}results_in_domain.png")
