@@ -29,8 +29,8 @@ print_error_every = 10
 integrator = RK4
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
-run_folder = "./runs/08032024-110732/"      ## Run folder to use when not training
-
+# run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
+run_folder = "./runs/08032024-110732/"
 
 ## Training hyperparameters ##
 train = False
@@ -434,15 +434,17 @@ if adapt_test:
 ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
 
 
-print("\nFull evaluation of the model on 10 random seeds\n", flush=True)
+print("\nFull evaluation of the model on many random seeds\n", flush=True)
 
-# First, check if the file exists. If not, create it and write the header
+# First, create the test_scores.csv file
 if not os.path.exists(run_folder+'analysis'):
     os.mkdir(run_folder+'analysis')
 
 csv_file = run_folder+'analysis/test_scores.csv'
-if not os.path.exists(csv_file):
-    os.system(f"touch {csv_file}")
+if os.path.exists(csv_file):
+    os.system(f"rm {csv_file}")
+
+os.system(f"touch {csv_file}")
 
 with open(csv_file, 'r') as f:
     lines = f.readlines()
@@ -453,8 +455,8 @@ with open(csv_file, 'r') as f:
 
 ## Get results on test and adaptation datasets, then append them to the csv
 
-np.random.seed(seed)
-seeds = np.random.randint(0, 10000, 10)
+np.random.seed(seed*2)
+seeds = np.random.randint(0, 10000, 20)
 for seed in seeds:
 # for seed in range(8000, 6*10**3, 10):
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
