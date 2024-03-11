@@ -37,8 +37,8 @@ early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps 
 
 print_error_every = 10
 
-train = True
-run_folder = "./runs/09032024-205247/"      ## Run folder to use when not training
+train = False
+run_folder = "./runs/10032024-124158/"      ## Run folder to use when not training
 
 save_trainer = True
 
@@ -434,8 +434,9 @@ if not os.path.exists(run_folder+'analysis'):
     os.mkdir(run_folder+'analysis')
 
 csv_file = run_folder+'analysis/test_scores.csv'
-if not os.path.exists(csv_file):
-    os.system(f"touch {csv_file}")
+if os.path.exists(csv_file):
+    os.system(f"rm {csv_file}")
+os.system(f"touch {csv_file}")
 
 with open(csv_file, 'r') as f:
     lines = f.readlines()
