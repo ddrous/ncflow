@@ -39,7 +39,7 @@ finetune = False
 init_lr = 5e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 12000
+nb_outer_steps_max = 1600
 nb_inner_steps_max = 20
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 2e-9
@@ -186,15 +186,14 @@ class Augmentation(eqx.Module):
 
     def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
 
-        chans = 16
-
         keys = generate_new_keys(key, num=12)
         # circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
         # activation = self.activation = Swish(key=keys[10])
-        activation = self.activation = jax.nn.sigmoid
+        activation = self.activation = Swish(key=keys[10])
+        # activation = self.activation = jax.nn.sigmoid
 
-        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation,
-                                lambda x: jnp.stack(vec_to_mats(x, data_res, nb_int_channels), axis=0)]
+        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*2, key=keys[3]), activation,
+                                lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0)]
 
         self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0)]
                             # circular_pad,
@@ -202,14 +201,14 @@ class Augmentation(eqx.Module):
 
         self.layers_shared = [
             # circular_pad, 
-                              My2DConv(4, chans, kernel_size, key=keys[6]), activation,
+                              My2DConv(4, nb_int_channels, kernel_size, key=keys[6]), activation,
                             #   circular_pad, 
                             #   eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
                             #   circular_pad, 
-                              My2DConv(chans, chans, kernel_size, key=keys[8]), activation,
-                              My2DConv(chans, chans, kernel_size, key=keys[8]), activation,
+                              My2DConv(nb_int_channels, nb_int_channels, kernel_size, key=keys[8]), activation,
+                              My2DConv(nb_int_channels, nb_int_channels, kernel_size, key=keys[8]), activation,
                             #   circular_pad, 
-                              My2DConv(chans, 2, kernel_size, key=keys[9]), activation,
+                              My2DConv(nb_int_channels, 2, kernel_size, key=keys[9]), activation,
                               lambda x: x.flatten()]
 
 
@@ -227,6 +226,7 @@ class Augmentation(eqx.Module):
         for layer in self.layers_data:
             y = layer(y)
 
+        # y = y + ctx/100.
         y = jnp.concatenate([y, ctx], axis=0)
         # y = jnp.concatenate([y, y], axis=0)
         # y_ = y
@@ -283,7 +283,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=2, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=12, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
