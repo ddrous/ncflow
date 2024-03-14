@@ -397,6 +397,15 @@ class VisualTester:
         assert nb_mats > 0, f"Not enough dimensions to form a {res}x{res} matrix"
         # mats = vec_to_mats(X_hat, res, nb_mats)
 
+        if test_length < nb_plot_timesteps:
+            print(f"Warning: trajectory visualisation length={test_length} is less than number of plots per row={nb_plot_timesteps}.")
+            nb_plot_timesteps = 1
+            print(f"Setting the number of plots per row to {nb_plot_timesteps}")
+        elif test_length%nb_plot_timesteps !=0:
+            print(f"Warning: trajectory visualisation length={test_length} is not divisible by number of plots per row={nb_plot_timesteps}.")
+            nb_plot_timesteps = int(test_length / (test_length//nb_plot_timesteps))
+            print(f"Setting the number of plots per row to {nb_plot_timesteps}")
+
         fig, ax = plt.subplots(nrows=nb_mats*2, ncols=nb_plot_timesteps, figsize=(2*nb_plot_timesteps, 2*nb_mats*2))
         for j in range(0, test_length, test_length//nb_plot_timesteps):
             gt_j = vec_to_mats(X[j], res, nb_mats)
