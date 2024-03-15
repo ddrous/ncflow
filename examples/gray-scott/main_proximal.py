@@ -1,10 +1,11 @@
 #%%
-# import os
+import os
 # %load_ext autoreload
 # %autoreload 2
 
 ## Do not preallocate GPU memory
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
+os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 from nodax import *
 # jax.config.update("jax_debug_nans", True)
@@ -22,12 +23,12 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##
-context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 print_error_every = 10
-# integrator = diffrax.Dopri5
-integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
+integrator = diffrax.Dopri5
+# integrator = RK4
+ivp_args = {"dt_init":1e-4, "rtol":1e-4, "atol":1e-7, "max_steps":40000, "subdivisions":8}
 # run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
 run_folder = "./runs/27022024-104335/"
 
@@ -39,11 +40,11 @@ finetune = False
 init_lr = 5e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 1600
+nb_outer_steps_max = 800
 nb_inner_steps_max = 20
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 2e-9
-inner_tol_ctx = 1e-8
+inner_tol_node = 2e-7
+inner_tol_ctx = 1e-6
 early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
 
 
@@ -157,14 +158,14 @@ class My2DConv(eqx.Module):
         x = circular_pad_2d(x[None,...], pad_width=self.kernel_size[0]//2)
         x = jax.lax.conv_general_dilated(
             lhs=x,
-            rhs=self.weight - jnp.mean(self.weight),        ## trick to obtain diff operator
-            # rhs=self.weight,        ## trick to obtain diff operator
+            # rhs=self.weight - jnp.mean(self.weight),        ## trick to obtain diff operator
+            rhs=self.weight,        ## trick to obtain diff operator
             window_strides=(1,1),
             padding="VALID",
             rhs_dilation=(1,1),
             feature_group_count=1,
         )
-        x = jnp.squeeze(x, axis=0) / (32/32.)
+        x = jnp.squeeze(x, axis=0) / (1.)
         # if self.use_bias:
         #     x = x + self.bias
         return x
@@ -181,7 +182,7 @@ class Augmentation(eqx.Module):
     layers_data: list
     layers_context: list
     layers_shared: list
-    activation: Swish
+    activations: Swish
 
 
     def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
@@ -189,26 +190,30 @@ class Augmentation(eqx.Module):
         keys = generate_new_keys(key, num=12)
         # circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
         # activation = self.activation = Swish(key=keys[10])
-        activation = self.activation = Swish(key=keys[10])
+        # activation = self.activation = Swish(key=keys[10])
         # activation = self.activation = jax.nn.sigmoid
+        self.activations = [Swish(key=keys[i]) for i in range(0, 6)]
+        cnt_chans = 8
 
-        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*2, key=keys[3]), activation,
-                                lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0)]
 
-        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0)]
+        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*cnt_chans, key=keys[3]), self.activations[0],
+                                lambda x: jnp.stack(vec_to_mats(x, data_res, cnt_chans), axis=0)]
+
+        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
+                            My2DConv(2, cnt_chans, kernel_size, key=keys[6]), self.activations[5]]
                             # circular_pad,
                             # eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
 
         self.layers_shared = [
             # circular_pad, 
-                              My2DConv(4, nb_int_channels, kernel_size, key=keys[6]), activation,
+                              My2DConv(cnt_chans*2, nb_int_channels, kernel_size, key=keys[6]), self.activations[1],
                             #   circular_pad, 
                             #   eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
                             #   circular_pad, 
-                              My2DConv(nb_int_channels, nb_int_channels, kernel_size, key=keys[8]), activation,
-                              My2DConv(nb_int_channels, nb_int_channels, kernel_size, key=keys[8]), activation,
+                              My2DConv(nb_int_channels, nb_int_channels, kernel_size, key=keys[8]), self.activations[2],
+                              My2DConv(nb_int_channels, nb_int_channels, kernel_size, key=keys[8]), self.activations[3],
                             #   circular_pad, 
-                              My2DConv(nb_int_channels, 2, kernel_size, key=keys[9]), activation,
+                              My2DConv(nb_int_channels, 2, kernel_size, key=keys[9]), self.activations[4],
                               lambda x: x.flatten()]
 
 
@@ -283,7 +288,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=12, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=32, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None

@@ -5,6 +5,9 @@ from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
 from IPython.display import Image
 
+import os
+os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
+
 import diffrax
 from nodax import RK4
 import jax.numpy as jnp
@@ -130,9 +133,9 @@ if split == "train" or split=="test":
   # Training environments
   environments = [
       {"f": 0.03, "k": 0.062, "r_u": 0.2097, "r_v": 0.105},
-      # {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
-      # {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
-      # {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
+      {"f": 0.039, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.03, "k": 0.058, "r_u": 0.2097, "r_v": 0.105},
+      {"f": 0.039, "k": 0.062, "r_u": 0.2097, "r_v": 0.105}
   ]
 
 
@@ -140,8 +143,10 @@ if split == "train" or split=="test":
 elif split == "adapt":
   ## Adaptation environments
 	from itertools import product
-	f = [0.033, 0.036]
-	k = [0.059, 0.061]
+	# f = [0.033, 0.036]
+	# k = [0.059, 0.061]
+	f = [0.033]
+	k = [0.059]
 	environments = [{"f": f_i, "k": k_i, "r_u": 0.2097, "r_v": 0.105} for f_i, k_i in product(f, k)]
 
 
@@ -175,27 +180,27 @@ for j in range(n_traj_per_env):
         # solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
         # data[i, j, :, :] = solution.y.T
 
-        # # use diffrax instead, with the DoPri5 integrator
-        # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
-        #                                diffrax.Tsit5(),
-        #                                args=(selected_params),
-        #                                t0=t_span[0],
-        #                                t1=t_span[1],
-        #                                dt0=1e-1,
-        #                                y0=initial_state,
-        #                                stepsize_controller=diffrax.PIDController(rtol=1e-3, atol=1e-6),
-        #                                saveat=diffrax.SaveAt(ts=t_eval),
-        #                                max_steps=4096*1)
-        # data[i, j, :, :] = solution.ys
+        # use diffrax instead, with the DoPri5 integrator
+        solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
+                                       diffrax.Tsit5(),
+                                       args=(selected_params),
+                                       t0=t_span[0],
+                                       t1=t_span[1],
+                                       dt0=1e-1,
+                                       y0=initial_state,
+                                       stepsize_controller=diffrax.PIDController(rtol=1e-4, atol=1e-7),
+                                       saveat=diffrax.SaveAt(ts=t_eval),
+                                       max_steps=4096*1)
+        data[i, j, :, :] = solution.ys
         # print("Stats", solution.stats['num_steps'])
 
-        ys = RK4(gray_scott, 
-                    (t_eval[0], t_eval[-1]),
-                    initial_state,
-                    *(selected_params,), 
-                    t_eval=t_eval, 
-                    subdivisions=100)
-        data[i, j, :, :] = ys
+        # ys = RK4(gray_scott, 
+        #             (t_eval[0], t_eval[-1]),
+        #             initial_state,
+        #             *(selected_params,), 
+        #             t_eval=t_eval, 
+        #             subdivisions=100)
+        # data[i, j, :, :] = ys
 
 
 
