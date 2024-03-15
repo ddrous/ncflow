@@ -1,7 +1,7 @@
 <div style="text-align:center"><img src="docs/assets/Tax.png" /></div>
 
-# Tax
-Generalisable Neural ODEs with Taylor Expansion and JAX
+# TiJAX
+Taylor in JAX: A library for Generalisable Neural ODEs
 
 This is a one-stop shop for all things neural odes for dynamical systems.
 

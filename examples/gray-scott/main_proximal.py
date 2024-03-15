@@ -28,7 +28,7 @@ context_size = 1024
 print_error_every = 10
 integrator = diffrax.Dopri5
 # integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-4, "atol":1e-7, "max_steps":40000, "subdivisions":8}
+ivp_args = {"dt_init":1e-4, "rtol":1e-5, "atol":1e-8, "max_steps":400000, "subdivisions":8}
 # run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
 run_folder = "./runs/27022024-104335/"
 
@@ -43,8 +43,8 @@ sched_factor = 1.0
 nb_outer_steps_max = 800
 nb_inner_steps_max = 20
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 2e-7
-inner_tol_ctx = 1e-6
+inner_tol_node = 8e-7
+inner_tol_ctx = 4e-6
 early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
 
 
@@ -193,7 +193,7 @@ class Augmentation(eqx.Module):
         # activation = self.activation = Swish(key=keys[10])
         # activation = self.activation = jax.nn.sigmoid
         self.activations = [Swish(key=keys[i]) for i in range(0, 6)]
-        cnt_chans = 8
+        cnt_chans = 12
 
 
         self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*cnt_chans, key=keys[3]), self.activations[0],

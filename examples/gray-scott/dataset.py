@@ -188,7 +188,7 @@ for j in range(n_traj_per_env):
                                        t1=t_span[1],
                                        dt0=1e-1,
                                        y0=initial_state,
-                                       stepsize_controller=diffrax.PIDController(rtol=1e-4, atol=1e-7),
+                                       stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-8),
                                        saveat=diffrax.SaveAt(ts=t_eval),
                                        max_steps=4096*1)
         data[i, j, :, :] = solution.ys
