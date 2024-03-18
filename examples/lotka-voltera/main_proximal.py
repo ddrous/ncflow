@@ -24,7 +24,7 @@ seed = 2026
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
-print_error_every = 10
+print_error_every = 100
 # integrator = diffrax.Dopri5
 integrator = RK4
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
@@ -54,7 +54,7 @@ adapt_restore = False
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
-nb_epochs_adapt = 5000
+nb_epochs_adapt = 1500
 
 
 
@@ -380,28 +380,58 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 if adapt_test and not adapt_restore:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 
-if adapt_test:
-    adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+# if adapt_test:
+#     raw_dat = np.load(adapt_folder+"adapt_data.npz")
+#     adapt_dataset, adapt_t_eval = jnp.asarray(raw_dat['X']), jnp.asarray(raw_dat['t'])
 
-    # sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
-    #                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
-    #                                                 int(nb_epochs_adapt*0.5):0.1,
-    #                                                 int(nb_epochs_adapt*0.75):1.})
+#     total_ood_crit = 0
+#     nb_envs_adapt = adapt_dataset.shape[0]
+#     # contexts = []
+
+#     for a in range(nb_envs_adapt):
+#         adapt_dataloader = DataLoader(adapt_dataset[a:a+1,...], t_eval=adapt_t_eval, adaptation=True, data_id="170846_"+str(a), key=seed)
+
+#         sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
+#                                 boundaries_and_scales={nb_total_epochs//3:sched_factor_adapt, 2*nb_total_epochs//3:sched_factor_adapt})
+#         opt_adapt = optax.adabelief(sched_ctx_new)
+
+#         if adapt_restore == False:
+#             trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+#         else:
+#             print("Save_id for restoring trained adapation model:", adapt_dataloader.data_id)
+#             trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+
+#         ood_crit, _ = visualtester.test(adapt_dataloader, int_cutoff=1.0)
+#         total_ood_crit += ood_crit
+#         # contexts = np.append(contexts, trainer.learner.contexts.params)
+
+#     ood_crit = total_ood_crit/nb_envs_adapt
+
+#     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+
+#     # ## Set the context to the stack of the contexts
+#     # trainer.learner.contexts = eqx.tree_at(lambda c: c.params, trainer.learner.contexts, jnp.stack(contexts))
+
+
+
+
+if adapt_test:
+
+    adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+    # print("shape of adapt_dataloader", adapt_dataloader.dataset.shape)
+
     sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
                             boundaries_and_scales={nb_total_epochs//3:sched_factor_adapt, 2*nb_total_epochs//3:sched_factor_adapt})
-    # sched_ctx_new = 1e-5
     opt_adapt = optax.adabelief(sched_ctx_new)
 
     if adapt_restore == False:
-        trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+        trainer.adapt_sequential(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
     else:
         print("Save_id for restoring trained adapation model:", adapt_dataloader.data_id)
         trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-
-#%%
-if adapt_test:
-    ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+    ood_crit, _ = visualtester.test(adapt_dataloader, int_cutoff=1.0)
+    # contexts = np.append(contexts, trainer.learner.contexts.params)
 
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
@@ -456,14 +486,14 @@ with open(csv_file, 'r') as f:
 ## Get results on test and adaptation datasets, then append them to the csv
 
 np.random.seed(seed*2)
-seeds = np.random.randint(0, 10000, 20)
+seeds = np.random.randint(0, 10000, 5)
 for seed in seeds:
 # for seed in range(8000, 6*10**3, 10):
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
 
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=1, data_id="082026")
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
+    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=-1, data_id="082026")
+    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=-1, key=seed, data_id="082026")
 
     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)

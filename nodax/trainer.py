@@ -1,5 +1,6 @@
 import pickle
 
+from nodax.dataloader import DataLoader
 from nodax.learner import ContextParams
 from nodax.visualtester import VisualTester
 from ._utils import *
@@ -422,7 +423,7 @@ class Trainer:
 
 
     def adapt(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):
-        """Adapt the model to a new environment using the provided dataset. """
+        """Adapt the model to new environments (in bulk) using the provided dataset. """
         # key = key if key is not None else self.key
 
         loss_fn = self.learner.loss_fn
@@ -516,6 +517,142 @@ class Trainer:
 
         if save_path:
             self.save_adapted_trainer(save_path, data_loader.data_id)
+
+
+
+
+
+
+
+    def adapt_sequential(self, data_loader, nb_epochs, optimizer=None, print_error_every=100, save_path=False, key=None):
+        """Adapt the model to a new environment using the provided dataset. """
+        # key = key if key is not None else self.key
+
+        loss_fn = self.learner.loss_fn
+        node = self.learner.neuralode
+
+        if optimizer is None:       ## You want to continue a previous adaptation !!!
+            # if self.opt_adapt is not None:
+            if hasattr(self, 'opt_adapt'):
+                print("WARNING: No optimizer provided for adaptation, using any previrouly defined for adapation")
+                opt = self.opt_adapt
+                contexts = self.learner.contexts_adapt
+                opt_state = self.opt_state_adapt
+            else:
+                raise ValueError("No optimizer provided for adaptation, and none previously defined")
+        else:
+            opt = optimizer
+            # contexts = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], key)
+            # contexts = ContextParams(4, self.learner.contexts.params.shape[1], key)
+            # opt_state = opt.init(contexts)
+            # self.learner.init_ctx_params_adapt = contexts.params.copy()
+            self.losses_adapt = []
+            self.nb_steps_adapt = []
+
+        @eqx.filter_jit
+        def train_step(node, contexts, batch, weights, opt_state, key):
+            print('\nCompiling function "train_step" for context ...')
+
+            loss_fn_ = lambda contexts, node, batch, weights, key: loss_fn(node, contexts, batch, weights, key)
+
+            (loss, aux_data), grads = eqx.filter_value_and_grad(loss_fn_, has_aux=True)(contexts, node, batch, weights, key)
+
+            updates, opt_state = opt.update(grads, opt_state)
+            contexts = eqx.apply_updates(contexts, updates)
+
+            return node, contexts, opt_state, loss, aux_data
+
+        nb_train_steps_per_epoch = int(np.ceil(data_loader.nb_trajs_per_env / data_loader.batch_size))
+        total_steps = nb_epochs * nb_train_steps_per_epoch
+
+        print(f"\n\n=== Beginning sequential adaptation ... ===")
+        print(f"    Number of examples in a batch: {data_loader.batch_size}")
+        print(f"    Number of train steps per epoch: {nb_train_steps_per_epoch}")
+        print(f"    Number of training epochs: {nb_epochs}")
+        print(f"    Total number of training steps: {total_steps}")
+
+        nb_adapt_envs = data_loader.nb_envs
+
+        contexts = []
+        all_losses = []
+        all_nb_steps = []
+        inits_ctx = []
+        for env_id in range(nb_adapt_envs):
+
+            start_time = time.time()
+
+            print(f"\nAdapting to environment {env_id} ...")
+
+            new_dataset = data_loader.dataset[env_id:env_id+1,...]
+
+            new_dataloader = DataLoader(new_dataset, t_eval=data_loader.t_eval, adaptation=True, data_id=data_loader.data_id+str(env_id), key=key)
+
+            opt = optimizer
+            context = ContextParams(1, self.learner.contexts.params.shape[1], key)
+            inits_ctx.append(context.params)
+            opt_state = opt.init(context)
+
+            losses = []
+            nb_steps = []
+
+            weights = jnp.ones(1)
+            loss_key = get_new_key(key)
+
+            for epoch in range(nb_epochs):
+                nb_batches = 0
+                loss_sum = jnp.zeros(1)
+                nb_steps_eph = 0
+
+                for i, batch in enumerate(new_dataloader):
+                    loss_key = get_new_key(loss_key)
+
+                    node, context, opt_state, loss, (nb_steps_, term1, term2) = train_step(node, context, batch, weights, opt_state, loss_key)
+
+                    loss_sum += jnp.array([loss])
+                    nb_steps_eph += nb_steps_
+
+                    nb_batches += 1
+
+                loss_epoch = loss_sum/nb_batches
+
+                losses.append(loss_epoch)
+                nb_steps.append(nb_steps_eph)
+
+                if epoch%print_error_every==0 or epoch<=3 or epoch==nb_epochs-1:
+                    print(f"    Epoch: {epoch:-5d}     LossContext: {loss_epoch[0]:-.8f}", flush=True)
+
+            wall_time = time.time() - start_time
+            time_in_hmsecs = seconds_to_hours(wall_time)
+            print("\nGradient descent adaptation time: %d hours %d mins %d secs" %time_in_hmsecs)
+
+            contexts.append(context.params)
+            all_losses.append(jnp.stack(losses))
+            all_nb_steps.append(jnp.array(nb_steps))
+
+
+        # data_loader.dataset = orig_dataset
+        contexts = eqx.tree_at(lambda c: c.params, 
+                                ContextParams(nb_adapt_envs, self.learner.contexts.params.shape[1], None), 
+                                jnp.concatenate(contexts))
+
+        self.losses_adapt.append(jnp.mean(jnp.stack(all_losses), axis=0))
+        self.nb_steps_adapt.append(jnp.mean(jnp.stack(all_nb_steps), axis=0))
+
+        self.opt_adapt = opt
+        self.opt_state_adapt = opt.init(contexts)
+
+        self.learner.contexts_adapt = contexts
+        self.learner.init_ctx_params_adapt = jnp.concatenate(inits_ctx)
+
+        if save_path:
+            self.save_adapted_trainer(save_path, data_loader.data_id)
+
+
+
+
+
+
+
 
 
 
