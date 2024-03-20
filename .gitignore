@@ -75,6 +75,8 @@ venv/*
 !examples/lotka-voltera/runs/08032024-110732
 !examples/lotka-voltera/runs/09032024-155347
 
+!examples/lotka-voltera/runs/MseSequentialExp
+
 !examples/lotka-voltera/runs/12022024-223202
 !examples/lotka-voltera/runs/15022024-133847
 !examples/lotka-voltera/runs/SampleSizeExperiment
