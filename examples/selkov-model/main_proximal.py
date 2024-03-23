@@ -22,8 +22,8 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##
-context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 64
+context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
+context_size = 256
 print_error_every = 25
 integrator = diffrax.Dopri5
 # integrator = RK4
@@ -37,14 +37,14 @@ train = True
 save_trainer = True
 finetune = False
 
-init_lr = 5e-4
+init_lr = 1e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 1000
-nb_inner_steps_max = 20
-proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 5e-9
-inner_tol_ctx = 1e-8
+nb_outer_steps_max = 200
+nb_inner_steps_max = 10
+proximal_beta = 1e0 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+inner_tol_node = 1e-8
+inner_tol_ctx = 5e-8
 early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
 
 
@@ -54,7 +54,7 @@ adapt_restore = False
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
-nb_epochs_adapt = 3000
+nb_epochs_adapt = 150
 
 
 
@@ -135,8 +135,8 @@ class Augmentation(eqx.Module):
         keys = generate_new_keys(key, num=12)
         self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        self.layers_context = [eqx.nn.Linear(context_size, int_size, key=keys[0]), self.activations[0],
-                               eqx.nn.Linear(int_size, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
+                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
 
         self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
                             eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
@@ -219,9 +219,11 @@ contexts = ContextParams(nb_envs, context_size, key=None)
 ## Define a custom loss function here
 def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
 
-    # ind = jax.random.randint(key, shape=(context_pool_size,), minval=0, maxval=all_ctx_s.shape[0])
     ind = jax.random.permutation(key, all_ctx_s.shape[0])[:context_pool_size]
     ctx_s = all_ctx_s[ind, :]
+
+    # closest = jnp.argmin(jnp.mean(jnp.abs(all_ctx_s-ctx), axis=1))
+    # ctx_s = all_ctx_s[closest:closest+1 :]
 
     # jax.debug.print("indices chosen for this loss {}", ind)
 
@@ -444,7 +446,7 @@ if adapt_test:
 # print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
 
-# visualtester.visualize(adapt_dataloader, e=1, save_path=adapt_folder+"results_ood.png");
+# visualtester.visualize(adapt_dataloader, e=2, save_path=adapt_folder+"results_ood.png");
 
 
 

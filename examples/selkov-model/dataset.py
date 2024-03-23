@@ -113,13 +113,19 @@ def selkov(t, y, a, b):
 
 if split == "train" or split=="test":
   # Training environments
-  environments = [(0.1, b) for b in np.linspace(-1.0, 1.0, 21)]
+  # environments = [(0.1, b) for b in np.linspace(-1.0, 1.0, 21)]
+
+  environments = [(0.1, b) for b in list(np.linspace(-1, -0.25, 7))\
+        + list(np.linspace(-0.1, 0.1, 7))\
+        + list(np.linspace(0.25, 1., 7))]
+
   # environments = [(0.1, b) for b in np.linspace(0.2, 1.0, 16)]
   # environments = [(0.1, b) for b in np.linspace(0.5, 0.6, 1)]
 elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
-  environments = [(0.1, b) for b in np.linspace(-1.25, 1.25, 21)[::4]]
+  # environments = [(0.1, b) for b in np.linspace(-1.25, 1.25, 21)[::4]]
   # environments = [(0.1, b) for b in np.linspace(0.1, 1.1, 16)[::4]]
+  environments = [(0.1, b) for b in [-1.25, -0.65, -0.05, 0.02, 0.6, 1.2]]
 
 # elif split == "adapt_huge":
 #   environments = [
@@ -146,19 +152,20 @@ data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
 
 # Time span for simulation
 t_span = (0, 40)  # Shortened time span
-t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
+t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
 
 max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
+
+    np.random.seed(j if not split=="test" else max_seed - j)
+    initial_state = np.random.uniform(0, 3, 2)
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
         # Initial conditions (prey and predator concentrations)
         # initial_state = [0, 2]
-        np.random.seed(i if not split=="test" else max_seed - i)
-        initial_state = np.random.uniform(0, 3, 2)
 
         # Solve the ODEs using SciPy's solve_ivp
         solution = solve_ivp(selkov, t_span, initial_state, args=(selected_params[0], selected_params[1]), t_eval=t_eval)

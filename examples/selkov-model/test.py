@@ -158,7 +158,12 @@ y0 = [0, 2]
 
 # pick 15 values of b. 3 of them with stable fixed points, 9 with limits cycles, and 3 more with fixed points
 # for b in np.linspace(0.1, 1.2, 16)[:]:
-for b in np.linspace(-1.0, 1.0, 11)[:]:
+# for b in np.linspace(-1.0, 1.0, 11)[3:7]:
+# for b in np.random.normal(0, 0.2, 15):
+for b in list(np.linspace(-1, -0.25, 4))\
+        + list(np.linspace(-0.1, 0.1, 7))\
+        + list(np.linspace(0.25, 1., 4)):
+
 # for b in np.linspace(0.9, 2.2, 8)[:8]:
 
 # for b in np.linspace(0.2, 1.0, 16)[:4]:

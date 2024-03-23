@@ -268,7 +268,6 @@ class Trainer:
             node_old = jax.tree_util.tree_map(lambda x: x, node)
             contexts_old = jax.tree_util.tree_map(lambda x: x, contexts)
 
-
             # node_prev = node        ## TODO check that this is passed by value and not by reference
             node_prev = jax.tree_util.tree_map(lambda x: x, node)
             for in_step_node in range(nb_inner_steps_max):
@@ -283,14 +282,14 @@ class Trainer:
                     node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2, diff_node_) = train_step_node(node, node_old, contexts, batch, weights, opt_state_node, loss_key)
 
                     # if i%1==0:
-                        # term1 = term1 + 1e-8
+                        # term1 = term1 + 1e-16
                         # weights = term1 / jnp.sum(term1)
 
                     loss_sum_node += jnp.array([loss_node])
                     nb_steps_eph_node += nb_steps_node_
 
                     nb_batches_node += 1
-                
+
                 diff_node = params_diff_norm_squared(node, node_prev) / params_norm_squared(node_prev)
                 if diff_node < inner_tol_node or out_step==0:       ## Break early to see how big the loss is at the beginning
                     break
@@ -355,9 +354,13 @@ class Trainer:
             else:
                 early_stopping_count = 0
 
+            # term1 = term1 + 1e-16
+            # weights = term1 / jnp.sum(term1)
+
             if (patience is not None) and (early_stopping_count >= patience):
                 print(f"Stopping early after {patience} steps with no improvement in the loss. Consider increasing the tolerances for the inner minimizations.")
                 break
+
 
         wall_time = time.time() - start_time
         time_in_hmsecs = seconds_to_hours(wall_time)
