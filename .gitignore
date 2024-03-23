@@ -52,6 +52,7 @@ examples/glycolytic-oscillator/tmp/*
 examples/pendulum/tmp/*
 examples/gray-scott/tmp/*
 examples/navier-stokes/tmp/*
+examples/selkov-model/tmp/*
 examples/forced-oscillator/tmp/*
 
 
@@ -62,6 +63,7 @@ examples/pendulum/runs/*
 examples/gray-scott/runs/*
 examples/navier-stokes/runs/*
 examples/forced-oscillator/runs/*
+examples/selkov-model/runs/*
 
 ## Ingnore all folders named "tmp", recursively
 **/tmp/
@@ -90,3 +92,5 @@ venv/*
 !examples/gray-scott/runs/15032024-180946
 
 !examples/forced-oscillator/runs/02032024-120306
+
+!examples/selkov-model/runs/02032024-120306

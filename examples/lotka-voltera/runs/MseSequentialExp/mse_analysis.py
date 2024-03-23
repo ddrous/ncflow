@@ -42,10 +42,14 @@ print(zz.shape)
 # Plot contourf against x and y coordinates
 fig, ax = plt.subplots()
 # ax.contour(xx, yy, zz, levels=[np.log(i) for i in [5, 10, 15, 20]], cmap='grey')
-ax.contour(xx, yy, zz, levels=5, cmap='grey')
+# ax.contour(xx, yy, zz, levels=10, cmap='grey')
 c = ax.contourf(xx, yy, zz, levels=500, cmap='coolwarm')
 plt.colorbar(c)
 plt.show()
+
+## Save the figure
+fig.savefig('mapes_contourf.png', dpi=300)
+# fig.savefig('mse_contourf.pdf', dpi=300)
 
 #%%
 ## Do the same thing as above without interpolating
@@ -64,3 +68,4 @@ plt.colorbar(c)
 plt.show()
 
 # %%
+

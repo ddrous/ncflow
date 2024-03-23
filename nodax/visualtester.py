@@ -220,8 +220,8 @@ class VisualTester:
         # assert data_loader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
 
         e_key, traj_key = get_new_key(time.time_ns(), num=2)
-        e = e if e else jax.random.randint(e_key, (1,), 0, data_loader.nb_envs)[0]
-        traj = traj if traj else jax.random.randint(traj_key, (1,), 0, data_loader.nb_trajs_per_env)[0]
+        e = e if e is not None else jax.random.randint(e_key, (1,), 0, data_loader.nb_envs)[0]
+        traj = traj is not None if traj else jax.random.randint(traj_key, (1,), 0, data_loader.nb_trajs_per_env)[0]
 
         t_eval = data_loader.t_eval
         test_length = int(data_loader.nb_steps_per_traj*int_cutoff)

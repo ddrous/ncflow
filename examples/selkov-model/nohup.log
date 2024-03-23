@@ -1,0 +1,340 @@
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/23032024-030940/
+ Seed: 2026
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/23032024-030940/
+ Seed: 4052
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Run folder created successfuly: ./runs/23032024-030940/
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 030943
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: You did not provide a dataloader id. A new one has been generated: 030943
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+Total number of parameters in the model: 10672 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+
+=== Beginning training with proximal alternating minimization ... ===
+    Number of examples in a batch: 4
+    Maximum number of steps per inner minimization: 20
+    Maximum number of outer minimizations: 1000
+    Maximum total number of training steps: 20000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (15, 4, 100, 2) (100,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (15, 4, 100, 2) (100,)
+    Outer Step:     0      LossTrajs: 591.17822266     ContextsNorm: 0.00000000     ValIndCrit: 448.40460205
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.03e-05
+        -DiffCxt:  inf
+    Outer Step:     1      LossTrajs: 1.77554309     ContextsNorm: 0.00188793     ValIndCrit: 2.55013871
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.85e-06
+        -DiffCxt:  7.47e-03
+    Outer Step:     2      LossTrajs: 1.80671239     ContextsNorm: 0.00468837     ValIndCrit: 1.59517133
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.96e-06
+        -DiffCxt:  1.31e-03
+    Outer Step:     3      LossTrajs: 0.83559501     ContextsNorm: 0.00654449     ValIndCrit: 0.82942605
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.01e-06
+        -DiffCxt:  4.57e-04
+    Outer Step:   100      LossTrajs: 0.08805700     ContextsNorm: 0.05521803     ValIndCrit: 0.08694044
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.04e-08
+        -DiffCxt:  4.24e-08
+    Outer Step:   200      LossTrajs: 0.06989230     ContextsNorm: 0.07658638     ValIndCrit: 0.06779853
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.82e-09
+        -DiffCxt:  3.04e-07
+    Outer Step:   300      LossTrajs: 0.06523246     ContextsNorm: 0.07677413     ValIndCrit: 0.06365379
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.60e-10
+        -DiffCxt:  6.17e-08
+    Outer Step:   400      LossTrajs: 0.06292283     ContextsNorm: 0.07869986     ValIndCrit: 0.06121286
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.39e-10
+        -DiffCxt:  4.87e-07
+    Outer Step:   500      LossTrajs: 0.06083014     ContextsNorm: 0.08102980     ValIndCrit: 0.05929806
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.88e-10
+        -DiffCxt:  5.76e-07
+    Outer Step:   600      LossTrajs: 0.05904232     ContextsNorm: 0.08373135     ValIndCrit: 0.05747988
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.80e-10
+        -DiffCxt:  3.17e-07
+    Outer Step:   700      LossTrajs: 0.05742818     ContextsNorm: 0.08661858     ValIndCrit: 0.05591215
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.81e-10
+        -DiffCxt:  1.57e-06
+    Outer Step:   800      LossTrajs: 0.05589833     ContextsNorm: 0.09010585     ValIndCrit: 0.05454877
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.38e-09
+        -DiffCxt:  1.05e-07
+    Outer Step:   900      LossTrajs: 0.05369259     ContextsNorm: 0.10076293     ValIndCrit: 0.05223392
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.98e-09
+        -DiffCxt:  2.31e-06
+    Outer Step:   999      LossTrajs: 0.05204365     ContextsNorm: 0.10066234     ValIndCrit: 0.05059034
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 5.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.26e-09
+        -DiffCxt:  7.56e-09
+
+Total gradient descent training time: 1 hours 16 mins 1 secs
+Environment weights at the end of the training: [0.06666667 0.06666667 0.06666667 0.06666667 0.06666667 0.06666667
+ 0.06666667 0.06666667 0.06666667 0.06666667 0.06666667 0.06666667
+ 0.06666667 0.06666667 0.06666667]
+WARNING: You did not provide a dataloader id. A new one has been generated: 042546
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 15
+    Final length of the training trajectories: 100
+    Length of the testing trajectories: 100
+Test Score (In-Domain): 0.05059034
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/23032024-030940/adapt/
+ Seed: 6078
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 6
+    Trajectory id: 1
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 100
+    Length of the testing trajectories: 100
+Testing finished. Figure saved in: ./runs/23032024-030940/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+=== Beginning sequential adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 500
+    Total number of training steps: 500
+
+Adapting to environment 0 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (1, 1, 100, 2) (100,)
+    Epoch:     0     LossContext: 0.12307330
+    Epoch:     1     LossContext: 0.11356509
+    Epoch:     2     LossContext: 0.10395044
+    Epoch:     3     LossContext: 0.09430801
+    Epoch:   100     LossContext: 0.01302110
+    Epoch:   200     LossContext: 0.01301740
+    Epoch:   300     LossContext: 0.01301630
+    Epoch:   400     LossContext: 0.01301545
+    Epoch:   499     LossContext: 0.01301470
+
+Gradient descent adaptation time: 0 hours 0 mins 25 secs
+
+Adapting to environment 1 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.24248078
+    Epoch:     1     LossContext: 0.23183560
+    Epoch:     2     LossContext: 0.22136201
+    Epoch:     3     LossContext: 0.21118882
+    Epoch:   100     LossContext: 0.15161727
+    Epoch:   200     LossContext: 0.15161468
+    Epoch:   300     LossContext: 0.15161350
+    Epoch:   400     LossContext: 0.15161239
+    Epoch:   499     LossContext: 0.15161203
+
+Gradient descent adaptation time: 0 hours 0 mins 15 secs
+
+Adapting to environment 2 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.16123754
+    Epoch:     1     LossContext: 0.15209551
+    Epoch:     2     LossContext: 0.14283274
+    Epoch:     3     LossContext: 0.13350515
+    Epoch:   100     LossContext: 0.01683965
+    Epoch:   200     LossContext: 0.01683531
+    Epoch:   300     LossContext: 0.01683339
+    Epoch:   400     LossContext: 0.01683185
+    Epoch:   499     LossContext: 0.01683049
+
+Gradient descent adaptation time: 0 hours 0 mins 16 secs
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+Saving adaptation parameters into ./runs/23032024-030940/adapt/ folder with id 170846 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 15
+    Number of adaptation environments: 3
+    Final length of the training trajectories: 100
+    Length of the testing trajectories: 100
+Test Score (OOD): 0.060379572
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 1
+    Trajectory id: 0
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 100
+    Length of the testing trajectories: 100
+Testing finished. Figure saved in: ./runs/23032024-030940/adapt/results_ood.png
+
+Full evaluation of the model on many random seeds
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+Mean and std of the scores across various datasets
+
+          seed  ind_crit  ood_crit
+count 5.00e+00  5.00e+00  5.00e+00
+mean  7.06e+03  4.98e-02  7.25e-02
+std   2.05e+03  1.65e-03  8.04e-03
