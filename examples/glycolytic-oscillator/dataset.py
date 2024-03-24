@@ -7,7 +7,8 @@ from IPython.display import Image
 
 import diffrax
 from nodax import RK4
-import jax.numpy as jnp
+# import jax.numpy as jnp
+import numpy as jnp   ## Ugly, just cuz I don't wanna change the code below
 
 ## Set jax platform to CPU
 import jax
@@ -100,10 +101,10 @@ if split == "train" or split=="test":
 
 elif split == "adapt":
   ## Adaptation environments
-    # k1_range = [85, 95]
-    # K1_range = [0.625, 0.875]
-    k1_range = [85]
-    K1_range = [0.625]
+    k1_range = [85, 95]
+    K1_range = [0.625, 0.875]
+    # k1_range = [85]
+    # K1_range = [0.625]
     environments = [{'J0': 2.5, 'k1': k1, 'k2': 6, 'k3': 16, 'k4': 100, 'k5': 1.28, 'k6': 12, 'K1': K1, 'q': 4, 'N': 1, 'A': 4, 'kappa': 13, 'psi': 0.1, 'k': 1.8} for k1 in k1_range for K1 in K1_range]
 
 
@@ -127,34 +128,35 @@ t_span = (0, 1)  # Shortened time span
 t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
 
 ic_range = [(0.15, 1.60), (0.19, 2.16), (0.04, 0.20), (0.10, 0.35), (0.08, 0.30), (0.14, 2.67), (0.05, 0.10)]
+max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
+
+    np.random.seed(j if not split =="test" else max_seed - j)
+    initial_state = np.random.random(7) * np.array([b-a for a, b in ic_range]) + np.array([a for a, _ in ic_range])
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
         # Initial conditions (prey and predator concentrations)
-        # np.random.seed(index if not self.test else self.max - index)
-        initial_state = np.random.random(7) * np.array([b-a for a, b in ic_range]) + np.array([a for a, _ in ic_range])
-
         # print("Initial state", initial_state)
 
-        # # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(glycolytic_oscilator, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
+        # Solve the ODEs using SciPy's solve_ivp
+        solution = solve_ivp(glycolytic_oscilator, t_span, initial_state, args=((selected_params,),), t_eval=t_eval)
+        data[i, j, :, :] = solution.y.T
 
-        # use diffrax instead, with the DoPri5 integrator
-        solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
-                                       diffrax.Dopri5(),
-                                       args=(selected_params,),
-                                       t0=t_span[0],
-                                       t1=t_span[1],
-                                      #  dt0=t_eval[1]-t_eval[0],
-                                       dt0=1e-4,
-                                       y0=initial_state,
-                                       stepsize_controller=diffrax.PIDController(rtol=1e-4, atol=1e-7),
-                                       saveat=diffrax.SaveAt(ts=t_eval))
-        data[i, j, :, :] = solution.ys
+        # # use diffrax instead, with the DoPri5 integrator
+        # solution = diffrax.diffeqsolve(diffrax.ODETerm(glycolytic_oscilator),
+        #                                diffrax.Dopri5(),
+        #                                args=(selected_params,),
+        #                                t0=t_span[0],
+        #                                t1=t_span[1],
+        #                               #  dt0=t_eval[1]-t_eval[0],
+        #                                dt0=1e-4,
+        #                                y0=initial_state,
+        #                                stepsize_controller=diffrax.PIDController(rtol=1e-4, atol=1e-7),
+        #                                saveat=diffrax.SaveAt(ts=t_eval))
+        # data[i, j, :, :] = solution.ys
 
         # ys = RK4(glycolytic_oscilator, 
         #             (t_eval[0], t_eval[-1]),

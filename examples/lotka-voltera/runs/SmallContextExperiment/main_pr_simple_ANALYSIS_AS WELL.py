@@ -21,36 +21,42 @@ from nodax import *
 seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
-context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256
-nb_epochs_adapt = 1000
-init_lr = 1e-3
-sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
+## Neural Context Flow hyperparameters ##
+context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
+context_size = 2
+print_error_every = 100
+integrator = diffrax.Dopri5
+# integrator = RK4
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
+## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
+# run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
+run_folder = "./runs/08032024-110732/"
 
-nb_outer_steps_max = 1000
-# nb_outer_steps_max = 10
-nb_inner_steps_max = 10
-proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 1e-7
-inner_tol_ctx = 2e-6
-early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
-
-print_error_every = 10
-
+## Training hyperparameters ##
 train = True
-run_folder = "./runs/10032024-124158/"      ## Run folder to use when not training
-
 save_trainer = True
-
 finetune = False
 
+init_lr = 5e-4
+sched_factor = 1.0
+
+nb_outer_steps_max = 1000
+nb_inner_steps_max = 10
+proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+inner_tol_node = 2e-8
+inner_tol_ctx = 1e-7
+early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
+
+
+## Adaptation hyperparameters ##
 adapt_test = True
 adapt_restore = False
 
-integrator = diffrax.Dopri5
-# integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-4, "atol":1e-7, "max_steps":40000, "subdivisions":2}
-## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
+init_lr_adapt = 5e-3
+sched_factor_adapt = 0.5
+nb_epochs_adapt = 1500
+
+
 
 #%%
 
@@ -129,8 +135,8 @@ class Augmentation(eqx.Module):
         keys = generate_new_keys(key, num=12)
         self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
-                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
+        self.layers_context = [eqx.nn.Linear(context_size, int_size, key=keys[0]), self.activations[0],
+                               eqx.nn.Linear(int_size, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
 
         self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
                             eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
@@ -199,7 +205,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_size=7, int_size=122, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=2, int_size=122, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
@@ -374,30 +380,63 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 if adapt_test and not adapt_restore:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
 
-if adapt_test:
-    adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+# if adapt_test:
+#     raw_dat = np.load(adapt_folder+"adapt_data.npz")
+#     adapt_dataset, adapt_t_eval = jnp.asarray(raw_dat['X']), jnp.asarray(raw_dat['t'])
 
-    # sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
-    #                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
-    #                                                 int(nb_epochs_adapt*0.5):0.1,
-    #                                                 int(nb_epochs_adapt*0.75):1.})
-    sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr,
-                            boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
-    # sched_ctx_new = 1e-5
+#     total_ood_crit = 0
+#     nb_envs_adapt = adapt_dataset.shape[0]
+#     # contexts = []
+
+#     for a in range(nb_envs_adapt):
+#         adapt_dataloader = DataLoader(adapt_dataset[a:a+1,...], t_eval=adapt_t_eval, adaptation=True, data_id="170846_"+str(a), key=seed)
+
+#         sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
+#                                 boundaries_and_scales={nb_total_epochs//3:sched_factor_adapt, 2*nb_total_epochs//3:sched_factor_adapt})
+#         opt_adapt = optax.adabelief(sched_ctx_new)
+
+#         if adapt_restore == False:
+#             trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+#         else:
+#             print("Save_id for restoring trained adapation model:", adapt_dataloader.data_id)
+#             trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
+
+#         ood_crit, _ = visualtester.test(adapt_dataloader, int_cutoff=1.0)
+#         total_ood_crit += ood_crit
+#         # contexts = np.append(contexts, trainer.learner.contexts.params)
+
+#     ood_crit = total_ood_crit/nb_envs_adapt
+
+#     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+
+#     # ## Set the context to the stack of the contexts
+#     # trainer.learner.contexts = eqx.tree_at(lambda c: c.params, trainer.learner.contexts, jnp.stack(contexts))
+
+
+
+
+if adapt_test:
+
+    adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+    # adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=jax.random.PRNGKey(seed))
+    # print("shape of adapt_dataloader", adapt_dataloader.dataset.shape)
+
+    sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
+                            boundaries_and_scales={nb_total_epochs//3:sched_factor_adapt, 2*nb_total_epochs//3:sched_factor_adapt})
     opt_adapt = optax.adabelief(sched_ctx_new)
 
     if adapt_restore == False:
-        trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+        trainer.adapt_sequential(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+        # trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
     else:
         print("Save_id for restoring trained adapation model:", adapt_dataloader.data_id)
         trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-
-#%%
-if adapt_test:
-    ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+    ood_crit, _ = visualtester.test(adapt_dataloader, int_cutoff=1.0)
+    # contexts = np.append(contexts, trainer.learner.contexts.params)
 
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+
 
 
 #%%
@@ -407,15 +446,83 @@ if adapt_test:
 # print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
 
+## print the training context parameters
+print("Contexts\n", trainer.learner.contexts.params)
+
+## print the adaptation context parameters
+print("Adaptation contexts\n", trainer.learner.contexts_adapt.params)
 
 
+def loss_context(context):
+    key = jax.random.PRNGKey(0)
+    model = trainer.learner.neuralode
+    trajs = jnp.asarray(train_dataloader.dataset)
+    trajs = trajs.reshape((-1, trajs.shape[2], trajs.shape[3]))
+    t_eval = jnp.asarray(train_dataloader.t_eval)
+    ctx = jnp.asarray(context)
+    all_ctx_s = ctx[None, ...]
+    return loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key)
+
+loss_context(trainer.learner.contexts.params[0])
+
+train_ctxs = trainer.learner.contexts.params
+adapt_ctxs = trainer.learner.contexts_adapt.params
 
 
+# limit = 0.15
+# dim0_lim = (-limit, limit)
+# dim1_lim = (-limit, limit)
+
+# set the limits based on the training and adaptation contexts
+eps=5e-2
+dim0_lim = (min(jnp.min(train_ctxs[:, 0]), jnp.min(adapt_ctxs[:, 0]))-eps, max(jnp.max(train_ctxs[:, 0]), jnp.max(adapt_ctxs[:, 0]))+eps)
+dim1_lim = (min(jnp.min(train_ctxs[:, 1]), jnp.min(adapt_ctxs[:, 1]))-eps, max(jnp.max(train_ctxs[:, 1]), jnp.max(adapt_ctxs[:, 1]))+eps)
+
+dim0s = np.linspace(dim0_lim[0], dim0_lim[1], 200)
+dim1s = np.linspace(dim1_lim[0], dim1_lim[1], 200)
+X, Y = np.meshgrid(dim0s, dim1s)
+CTXs = np.stack([X, Y], axis=-1)
 
 
+losses, _ = jax.vmap(jax.vmap(loss_context))(CTXs)
+
+#%%
+plt.figure(figsize=(12, 10))
+# plt.contourf(X, Y, losses, levels=500, cmap='nipy_spectral')
+c = plt.contourf(X, Y, losses, levels=500, cmap='turbo')
+# plt.colorbar(c)
+
+##Label the colorbar y axis
+cbar = plt.colorbar(c)
+cbar.set_label('Regularised MSE', fontsize=24)
+
+## Place the context points on the plot
+plt.scatter(train_ctxs[:, 0], train_ctxs[:, 1], c='white', marker="x", s=400, label='training')
+plt.scatter(adapt_ctxs[:, 0], adapt_ctxs[:, 1], c='magenta', marker="+", s=400, label='adaptation')
+
+## Number the trainng contexts
+for i, txt in enumerate(range(train_ctxs.shape[0])):
+    plt.annotate(txt, (train_ctxs[i, 0]-eps/5, train_ctxs[i, 1]+eps/10), fontsize=14, color='white')
+
+## Number the adaptation contexts
+# for i, txt in enumerate(range(adapt_ctxs.shape[0])):
+#     if i<2:
+#         plt.annotate(txt, (adapt_ctxs[i, 0]-eps/5, adapt_ctxs[i, 1]+eps/10), fontsize=14, color='magenta')
+#     else:
+#         plt.annotate(txt, (adapt_ctxs[i, 0]-eps/5, adapt_ctxs[i, 1]-eps/50), fontsize=14, color='magenta')
 
 
+plt.annotate("0,2", (adapt_ctxs[0, 0]-eps/4.5, adapt_ctxs[0, 1]+eps/10), fontsize=14, color='magenta')
+plt.annotate("1,3", (adapt_ctxs[1, 0]-eps/4.5, adapt_ctxs[1, 1]+eps/10), fontsize=14, color='magenta')
 
+plt.xlabel("dim 0", fontsize=14)
+plt.ylabel("dim 1", fontsize=14)
+plt.legend(fontsize=20, loc='lower right')
+
+plt.show()
+
+## Save high-quality PDF as small context_loss.pdf
+plt.savefig(run_folder+"context_loss.pdf", format='pdf', dpi=300)
 
 
 
@@ -429,13 +536,14 @@ if adapt_test:
 
 print("\nFull evaluation of the model on many random seeds\n", flush=True)
 
-# First, check if the file exists. If not, create it and write the header
+# First, create the test_scores.csv file
 if not os.path.exists(run_folder+'analysis'):
     os.mkdir(run_folder+'analysis')
 
 csv_file = run_folder+'analysis/test_scores.csv'
 if os.path.exists(csv_file):
     os.system(f"rm {csv_file}")
+
 os.system(f"touch {csv_file}")
 
 with open(csv_file, 'r') as f:
@@ -447,15 +555,15 @@ with open(csv_file, 'r') as f:
 
 ## Get results on test and adaptation datasets, then append them to the csv
 
-np.random.seed(seed)
-seeds = np.random.randint(0, 10000, 20)
+np.random.seed(seed*2)
+seeds = np.random.randint(0, 10000, 5)
 for seed in seeds:
 # for seed in range(8000, 6*10**3, 10):
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
 
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=1, data_id="082026")
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
+    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=-1, data_id="082026")
+    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=-1, key=seed, data_id="082026")
 
     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
@@ -474,9 +582,6 @@ print(test_scores.iloc[:3])
 
 
 
-
-
-
 #%%
 ## If the nohup.log file exists, copy it to the run folder
 try:
@@ -487,6 +592,8 @@ except NameError:
             os.system(f"cp nohup.log {finetunedir}")
             ## Open the results_in_domain in the terminal
             # os.system(f"open {finetunedir}results_in_domain.png")
+        elif adapt_test==True: ## Adaptation
+            os.system(f"cp nohup.log {adapt_folder}")
         else:
             os.system(f"cp nohup.log {run_folder}")
             # os.system(f"open {run_folder}results_in_domain.png")
