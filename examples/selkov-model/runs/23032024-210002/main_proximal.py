@@ -18,7 +18,7 @@ from nodax import *
 
 #%%
 
-seed = 20260
+seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##

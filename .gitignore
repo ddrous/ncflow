@@ -94,3 +94,5 @@ venv/*
 !examples/forced-oscillator/runs/02032024-120306
 
 !examples/selkov-model/runs/02032024-120306
+!examples/selkov-model/runs/23032024-210002
+!examples/selkov-model/runs/23032024-233458
