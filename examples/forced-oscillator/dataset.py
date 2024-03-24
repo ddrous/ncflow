@@ -144,15 +144,16 @@ n_steps_per_traj = math.ceil(t_span[-1]/0.1)
 t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
+max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
 
     # initial_state = get_init_cond()
+    np.random.seed(j if not split=="test" else max_seed - j)
+    initial_state = get_init_cond()
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
-
-        initial_state = get_init_cond()
 
         # print("Initial state", initial_state)
 
