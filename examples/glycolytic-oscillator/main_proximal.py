@@ -22,16 +22,16 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256
-nb_epochs_adapt = 1000
+context_size = 1024
+nb_epochs_adapt = 2000
 init_lr = 1e-3
 sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
-nb_outer_steps_max = 1000
+nb_outer_steps_max = 2000
 # nb_outer_steps_max = 10
 nb_inner_steps_max = 10
-proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 1e-7
+proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+inner_tol_node = 4e-7
 inner_tol_ctx = 2e-6
 early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
 
