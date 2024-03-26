@@ -99,3 +99,5 @@ venv/*
 
 
 !examples/lotka-voltera/runs/SmallContextExperiment
+!examples/lotka-voltera/runs/25032024-162853
+
