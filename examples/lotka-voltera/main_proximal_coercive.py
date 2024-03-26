@@ -23,7 +23,7 @@ seed = 2026
 
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256
+context_size = 1024
 print_error_every = 10
 # integrator = diffrax.Dopri5
 integrator = RK4
@@ -37,12 +37,12 @@ train = True
 save_trainer = True
 finetune = False
 
-init_lr = 5e-4
+init_lr = 1e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 1500
-nb_inner_steps_max = 10
-proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+nb_outer_steps_max = 250
+nb_inner_steps_max = 25
+proximal_beta = 1e-2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-9
 inner_tol_ctx = 1e-8
 early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
@@ -231,8 +231,10 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
     # term2 = jnp.mean(ctx**2)             ## regularisation
     term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
+    # term2 = params_norm_squared(ctx)
+    term3 = params_norm_squared(model)
 
-    loss_val = term1 + 1e-3*term2
+    loss_val = term1 + 1e-3*term2 + 1e-3*term3
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
     # loss_val = term1
 
