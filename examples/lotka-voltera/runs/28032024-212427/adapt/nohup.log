@@ -2037,7 +2037,3 @@ WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size t
 
 Mean and std of the scores across various datasets
 
-          seed  ind_crit  ood_crit
-count 5.00e+00  5.00e+00  5.00e+00
-mean  7.06e+03  6.86e-04  5.76e-02
-std   2.05e+03  0.00e+00  7.76e-18
