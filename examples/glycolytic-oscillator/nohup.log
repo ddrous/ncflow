@@ -1,7 +1,7 @@
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
@@ -12,7 +12,7 @@ Running this script in ipython (Jupyter) session ? False
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
@@ -23,7 +23,7 @@ Running this script in ipython (Jupyter) session ? False
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 Run folder created successfuly: ./runs/28032024-181249/
 Completed copied scripts 
@@ -314,7 +314,7 @@ Test Score (In-Domain): 0.0040295124
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
@@ -336,8 +336,8 @@ WARNING: No key provided for the context initialization. Initializing at 0.
 === Beginning adaptation ... ===
     Number of examples in a batch: 1
     Number of train steps per epoch: 1
-    Number of training epochs: 1000
-    Total number of training steps: 1000
+    Number of training epochs: 2000
+    Total number of training steps: 2000
 WARNING: No key provided, using time as seed
 
 Compiling function "train_step" for context ...
@@ -472,202 +472,202 @@ Full evaluation of the model on many random seeds
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
-Jax version: 0.4.19
+Jax version: 0.4.23
 Available devices: [cuda(id=0)]
 
 

@@ -141,9 +141,9 @@ elif split == "adapt_huge":
 
 if split == "train":
   n_traj_per_env = 4     ## training
-elif split == "test":
+elif split == "test" or split == "adapt_test" or split == "adapt_huge":
   n_traj_per_env = 32     ## testing
-elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
+elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.5)
@@ -160,11 +160,12 @@ max_seed = np.iinfo(np.int32).max
 for j in range(n_traj_per_env):
 
     # Initial conditions (prey and predator concentrations)
-    np.random.seed(j if not split=="test" else max_seed - j)
+    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
     initial_state = np.random.uniform(size=(2,)) + 1.
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
+        # initial_state = np.random.uniform(size=(2,)) + 1.
 
         # Solve the ODEs using SciPy's solve_ivp
         # solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
@@ -190,7 +191,7 @@ elif split == "test":
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
 elif split == "adapt_test":
-  filename = savepath+'adapt_test_data.npz'
+  filename = savepath+'adapt_data_test.npz'
 elif split == "adapt_huge":
   filename = savepath+'adapt_huge_data.npz'
 

@@ -23,8 +23,8 @@ seed = 2026
 
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 1024
-print_error_every = 100
+context_size = 256
+print_error_every = 10
 # integrator = diffrax.Dopri5
 integrator = RK4
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
@@ -33,19 +33,19 @@ ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdiv
 run_folder = "./runs/08032024-110732/"
 
 ## Training hyperparameters ##
-train = False
+train = True
 save_trainer = True
 finetune = False
 
 init_lr = 5e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 4*30*4*10*2*4 //10
-nb_inner_steps_max = 20
-proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 2e-8
-inner_tol_ctx = 1e-7
-early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
+nb_outer_steps_max = 1500
+nb_inner_steps_max = 10
+proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
+inner_tol_node = 1e-9
+inner_tol_ctx = 1e-8
+early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
 
 
 ## Adaptation hyperparameters ##
@@ -54,7 +54,7 @@ adapt_restore = False
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
-nb_epochs_adapt = 1500
+nb_epochs_adapt = 15
 
 
 
@@ -205,7 +205,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_size=2, int_size=122, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=2, int_size=64, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
