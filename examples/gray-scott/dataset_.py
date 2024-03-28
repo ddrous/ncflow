@@ -172,7 +172,7 @@ max_seed = np.iinfo(np.int32).max
 for j in range(n_traj_per_env):
 
 
-    np.random.seed(j if not split =="test" else max_seed - j)
+    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
     initial_state = get_init_cond(res)
 
     for i, selected_params in enumerate(environments):

@@ -122,10 +122,10 @@ if split == "train" or split=="test":
 elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
   environments = [
-      {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-      {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
-      {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-      {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 1.125},
+    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 0.625},
+    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
   ]
 elif split == "adapt_huge":
   environments = [

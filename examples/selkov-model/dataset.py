@@ -158,7 +158,7 @@ max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
 
-    np.random.seed(j if not split=="test" else max_seed - j)
+    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
     initial_state = np.random.uniform(0, 3, 2)
 
     for i, selected_params in enumerate(environments):
@@ -213,15 +213,75 @@ if _in_ipython_session:
   a = .1
   y0 = [0, 2]
   # y0 = [1, 1]
-  t = np.linspace(*t_span, 1000)
 
-  for b in np.linspace(0., 1.2, 15)[:]:
-      t_span = [0, 1000]
-      sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
-      y = sol.sol(t)
-      plt.plot(y[0], y[1], label=f'b={b:.2f}')
+  # for b in np.linspace(0., 1.2, 15)[:]:
+  #     t_span = [0, 1000]
+  #     sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+  #     y = sol.sol(t)
+  #     plt.plot(y[0], y[1], label=f'b={b:.2f}')
 
-  plt.xlabel('x')
-  plt.ylabel('y')
+  group1 = list(np.linspace(-1, -0.25, 7))
+  group2 = list(np.linspace(-0.1, 0.1, 7))
+  group3 = list(np.linspace(0.25, 1., 7))
+  groups = group1 + group2 + group3
+
+  ## Set size and style for presentation in a paper
+  plt.rcParams.update({'font.size': 24})
+  # plt.rcParams.update({'font.family': 'serif'})
+  # plt.rcParams.update({'font.serif': 'Times New Roman'})
+
+  ## Set the figure size
+  plt.figure(figsize=(10, 10))
+
+  for j, y0 in enumerate([[-2, 1], [2, -1]]):
+    ## Plot y0 
+    plt.plot(y0[0], y0[1], 'ko', label='Init. conditions' if j == 0 else None)
+
+    ## Plot group1 and label it
+    colors = ['r', 'crimson']
+    for i, b in enumerate(group1):
+        t_span = [0, 40]
+        t = np.linspace(*t_span, 5000)
+        sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+        y = sol.sol(t)
+        # plt.plot(y[0], y[1], label=f'b={b:.2f}')
+        plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
+        ## Put a single label
+        if i+j == 0:
+          plt.plot(y[0], y[1], "r", alpha=0.5, label='Group 1')
+
+    ## Plot group1 and label it
+    colors = ['b', 'dodgerblue']
+    for i, b in enumerate(group2):
+        t_span = [0, 40]
+        t = np.linspace(*t_span, 5000)
+        sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+        y = sol.sol(t)
+        # plt.plot(y[0], y[1], label=f'b={b:.2f}')
+        plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
+        ## Put a single label
+        if i+j == 0:
+          plt.plot(y[0], y[1], "b", alpha=0.5, label='Group 2')
+
+    ## Plot group1 and label it
+    colors = ['g', 'teal']
+    for i, b in enumerate(group3):
+        t_span = [0, 40]
+        t = np.linspace(*t_span, 5000)
+        sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+        y = sol.sol(t)
+        # plt.plot(y[0], y[1], label=f'b={b:.2f}')
+        plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
+        ## Put a single label
+        if i+j == 0:
+          plt.plot(y[0], y[1], "g", alpha=0.5, label='Group 3')
+
+
+  plt.xlabel(r'$x$', fontsize=24)
+  plt.ylabel(r'$y$', fontsize=24)
   plt.legend()
-  plt.show()
+  plt.draw()
+
+
+## Save to pdf
+plt.savefig('tmp/selkov_attractors.pdf', dpi=400, bbox_inches='tight')

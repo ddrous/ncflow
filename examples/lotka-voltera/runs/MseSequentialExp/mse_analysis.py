@@ -65,7 +65,48 @@ print(cbar.ax.get_yticks())
 
 
 ## Colorbar y label
-cbar.set_label('Log MAPE (%)', rotation=270, labelpad=20, fontsize=24)
+cbar.set_label('Log MAPE', labelpad=20, fontsize=34)
+
+## Increase font size of colorbar ticks
+cbar.ax.tick_params(labelsize=24)
+
+## Place the training data points on the plot with a X
+train_envs = [
+    {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.5},
+    {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.5},
+    {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.5},
+    {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.75},
+    {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.75},
+    {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.75},
+    {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 1.0},
+    {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 1.0},
+    {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
+]
+adapt_envs = [
+    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
+    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 1.125},
+    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 0.625},
+    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
+]
+
+
+beta_train = [env["beta"] for env in train_envs]
+delta_train = [env["delta"] for env in train_envs]
+plt.scatter(beta_train, delta_train, c='yellow', marker='o', s=700, label='Training Environments')
+## Connect these points with lines in a circular manner
+# for i in range(len(beta_train)):
+#     plt.plot([beta_train[i], beta_train[(i+1)%len(beta_train)]], [delta_train[i], delta_train[(i+1)%len(beta_train)]], c='yellow')
+
+
+beta_adapt = [env["beta"] for env in adapt_envs]
+delta_adapt = [env["delta"] for env in adapt_envs]
+print(beta_adapt)
+print(delta_adapt)
+plt.scatter(beta_adapt, delta_adapt, c='indigo', marker='+', s=700, label='Adaptation Environments')
+## Label the adaptation environments
+for i, txt in enumerate(adapt_envs):
+    plt.annotate(r"$e_"+str(i)+"$", (beta_adapt[i]-5e-2, delta_adapt[i]+3e-2), fontsize=28, color='indigo')
+
 
 ## Set the x and y labels from 0.25 to 1.25
 plt.xticks(np.linspace(0.25, 1.25, 5))
@@ -77,6 +118,8 @@ plt.ylabel(r'$\delta$', fontsize=24)
 ## Ticks size as well as labels
 plt.xticks(fontsize=18)
 plt.yticks(fontsize=18)
+
+
 
 # plt.legend()
 plt.show()
