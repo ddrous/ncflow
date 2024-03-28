@@ -21,13 +21,13 @@ from nodax import *
 seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
-context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 9               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 nb_epochs_adapt = 2000
 init_lr = 1e-3
 sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
-nb_outer_steps_max = 2000
+nb_outer_steps_max = 500
 # nb_outer_steps_max = 10
 nb_inner_steps_max = 10
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
@@ -199,7 +199,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_size=7, int_size=122, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=7, int_size=68, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
@@ -224,9 +224,11 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
     # term2 = jnp.mean(ctx**2)             ## regularisation
-    term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
+    # term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
+    term2 = params_norm_squared(ctx)
+    term3 = params_norm_squared(model)
 
-    loss_val = term1 + 1e-3*term2
+    loss_val = term1 + 1e-2*term2 + 1e-2*term3
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
     # loss_val = term1
 
