@@ -32,7 +32,7 @@ save_trainer = True
 finetune = False
 run_folder = "./runs/30012024-165151/"      ## Only needed if not training
 
-adapt = True
+adapt = False
 adapt_huge = False
 
 #%%
@@ -192,8 +192,8 @@ vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
 contexts = ContextParams(nb_envs, context_size, key=None)
 
-# integrator = diffrax.Tsit5()  ## Has to conform to my API
-integrator = rk4_integrator
+integrator = diffrax.Tsit5()  ## Has to conform to my API
+# integrator = rk4_integrator
 
 
 # loss_fn_ctx = basic_loss_fn_ctx

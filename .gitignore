@@ -101,5 +101,6 @@ venv/*
 !examples/lotka-voltera/runs/SmallContextExperiment
 
 !examples/glycolytic-oscillator/runs/24032024-125527
+!examples/pendulum/runs/28032024-201048
 
 !examples/lotka-voltera/runs/28032024-212427
