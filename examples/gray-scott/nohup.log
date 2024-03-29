@@ -6,7 +6,7 @@ Available devices: [gpu(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: train
- Savepath: ./runs/18032024-102422/
+ Savepath: ./runs/29032024-094232/
  Seed: 2026
 
 
@@ -17,471 +17,148 @@ Available devices: [gpu(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: test
- Savepath: ./runs/18032024-102422/
+ Savepath: ./runs/29032024-094232/
  Seed: 4052
+
+2024-03-29 09:44:02.528423: W external/xla/xla/service/hlo_rematerialization.cc:2202] Can't reduce memory use below 29.54GiB (31722356736 bytes) by rematerialization; only reduced to 33.25GiB (35703700584 bytes), down from 33.28GiB (35739201112 bytes) originally
+2024-03-29 09:44:27.934116: W external/tsl/tsl/framework/bfc_allocator.cc:485] Allocator (GPU_0_bfc) ran out of memory trying to allocate 33.27GiB (rounded to 35719487744)requested by op 
+2024-03-29 09:44:27.934506: W external/tsl/tsl/framework/bfc_allocator.cc:497] ______________________________________________________________________________________****___****xx*
+2024-03-29 09:44:27.941427: E external/xla/xla/pjrt/pjrt_stream_executor_client.cc:2593] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 35719487584 bytes.
+BufferAssignment OOM Debugging.
+BufferAssignment stats:
+             parameter allocation:    4.70MiB
+              constant allocation:        80B
+        maybe_live_out allocation:    3.29MiB
+     preallocated temp allocation:   33.27GiB
+                 total allocation:   33.27GiB
+Peak buffers:
+	Buffer 1:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 2:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 3:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 4:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 5:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 6:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 7:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 8:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 9:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 10:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 11:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 12:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 13:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 14:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 15:
+		Size: 82.41MiB
+		Operator: op_name="jit(train_step_node)/jit(main)/broadcast_in_dim[shape=(73, 8, 32, 34, 34) broadcast_dimensions=()]" source_file="/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py" source_line=174
+		XLA Label: broadcast
+		Shape: f32[73,8,32,34,34]
+		==========================
+
 
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
 Jax version: 0.4.14
 Available devices: [gpu(id=0)]
-New run folder created successfuly: ./runs/18032024-102422/
+New run folder created successfuly: ./runs/29032024-094232/
 Completed copied scripts 
-WARNING: You did not provide a dataloader id. A new one has been generated: 102449
+WARNING: You did not provide a dataloader id. A new one has been generated: 094334
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
-WARNING: You did not provide a dataloader id. A new one has been generated: 102449
+WARNING: You did not provide a dataloader id. A new one has been generated: 094334
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 
 
-Total number of parameters in the model: 824868 
+Total number of parameters in the model: 287636 
 
 
 WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
 
-No training, loading model and results from ./runs/25022024-033325/ folder ...
+
+=== Beginning training with proximal alternating minimization ... ===
+    Number of examples in a batch: 1
+    Maximum number of steps per inner minimization: 20
+    Maximum number of outer minimizations: 800
+    Maximum total number of training steps: 16000
 
 Compiling function "train_step" for neural ode ...
 Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
-
-Compiling function "train_step" for context ...
-Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
-    Outer Step:     0      LossTrajs: 0.08825511     ContextsNorm: 0.00000000     ValIndCrit: 0.07455942
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 2.28e-06
-        -DiffCxt:  inf
-    Outer Step:     1      LossTrajs: 0.04002185     ContextsNorm: 0.00195967     ValIndCrit: 0.03885199
-        -NbInnerStepsNode:   20
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 1.12e-06
-        -DiffCxt:  1.66e-03
-    Outer Step:     2      LossTrajs: 0.03488906     ContextsNorm: 0.01000527     ValIndCrit: 0.03648645
-        -NbInnerStepsNode:   20
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 1.75e-05
-        -DiffCxt:  1.73e-03
-    Outer Step:     3      LossTrajs: 0.02408923     ContextsNorm: 0.01602460     ValIndCrit: 0.04107193
-        -NbInnerStepsNode:   20
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.93e-05
-        -DiffCxt:  5.27e-04
-    Outer Step:    10      LossTrajs: 0.01359280     ContextsNorm: 0.01667523     ValIndCrit: 0.04934455
-        -NbInnerStepsNode:   20
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.49e-07
-        -DiffCxt:  1.88e-06
-    Outer Step:    20      LossTrajs: 0.00736151     ContextsNorm: 0.01660798     ValIndCrit: 0.12629232
-        -NbInnerStepsNode:   20
-        -NbInnerStepsCxt:   18
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 2.56e-06
-        -DiffCxt:  3.51e-06
-    Outer Step:    30      LossTrajs: 0.00563960     ContextsNorm: 0.01709498     ValIndCrit: 0.16503817
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.73e-07
-        -DiffCxt:  2.91e-06
-    Outer Step:    40      LossTrajs: 0.00552352     ContextsNorm: 0.01688013     ValIndCrit: 0.18539335
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.54e-07
-        -DiffCxt:  3.50e-06
-    Outer Step:    50      LossTrajs: 0.00544006     ContextsNorm: 0.01671206     ValIndCrit: 0.17117235
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.82e-07
-        -DiffCxt:  2.88e-06
-    Outer Step:    60      LossTrajs: 0.00561937     ContextsNorm: 0.01750448     ValIndCrit: 0.17690019
-        -NbInnerStepsNode:    4
-        -NbInnerStepsCxt:   18
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.68e-07
-        -DiffCxt:  3.39e-06
-    Outer Step:    70      LossTrajs: 0.00521810     ContextsNorm: 0.01750478     ValIndCrit: 0.19246350
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   13
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.40e-07
-        -DiffCxt:  3.84e-06
-    Outer Step:    80      LossTrajs: 0.00510446     ContextsNorm: 0.01706675     ValIndCrit: 0.20479944
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    9
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.13e-07
-        -DiffCxt:  4.00e-06
-    Outer Step:    90      LossTrajs: 0.00498063     ContextsNorm: 0.01734723     ValIndCrit: 0.20404279
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   15
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.96e-07
-        -DiffCxt:  3.92e-06
-    Outer Step:   100      LossTrajs: 0.00490886     ContextsNorm: 0.01786798     ValIndCrit: 0.19233108
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   14
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.03e-07
-        -DiffCxt:  3.90e-06
-    Outer Step:   110      LossTrajs: 0.00484278     ContextsNorm: 0.01877077     ValIndCrit: 0.20182024
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.54e-07
-        -DiffCxt:  1.67e-05
-    Outer Step:   120      LossTrajs: 0.00475098     ContextsNorm: 0.01911133     ValIndCrit: 0.20777085
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    4
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.74e-07
-        -DiffCxt:  3.82e-06
-    Outer Step:   130      LossTrajs: 0.00558962     ContextsNorm: 0.01963958     ValIndCrit: 0.15275043
-        -NbInnerStepsNode:   20
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 2.57e-06
-        -DiffCxt:  1.95e-05
-    Outer Step:   140      LossTrajs: 0.00464434     ContextsNorm: 0.02043298     ValIndCrit: 0.20024449
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    5
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.84e-07
-        -DiffCxt:  2.81e-06
-    Outer Step:   150      LossTrajs: 0.00457534     ContextsNorm: 0.02071233     ValIndCrit: 0.19363150
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    6
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.13e-07
-        -DiffCxt:  3.54e-06
-    Outer Step:   160      LossTrajs: 0.00452283     ContextsNorm: 0.02369016     ValIndCrit: 0.21270585
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 6.28e-07
-        -DiffCxt:  1.11e-05
-    Outer Step:   170      LossTrajs: 0.00445285     ContextsNorm: 0.02473411     ValIndCrit: 0.19151634
-        -NbInnerStepsNode:    3
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.17e-07
-        -DiffCxt:  3.65e-06
-    Outer Step:   180      LossTrajs: 0.00434084     ContextsNorm: 0.02564635     ValIndCrit: 0.21831404
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 6.65e-07
-        -DiffCxt:  1.45e-05
-    Outer Step:   190      LossTrajs: 0.00427740     ContextsNorm: 0.02534936     ValIndCrit: 0.21455917
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 3.87e-07
-        -DiffCxt:  2.84e-06
-    Outer Step:   200      LossTrajs: 0.00469476     ContextsNorm: 0.02628905     ValIndCrit: 0.20018569
-        -NbInnerStepsNode:   19
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.12e-07
-        -DiffCxt:  6.05e-06
-    Outer Step:   210      LossTrajs: 0.00412408     ContextsNorm: 0.02489971     ValIndCrit: 0.23833826
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    6
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.95e-07
-        -DiffCxt:  3.57e-06
-    Outer Step:   220      LossTrajs: 0.00410668     ContextsNorm: 0.02283302     ValIndCrit: 0.24616334
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   17
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 3.14e-07
-        -DiffCxt:  3.34e-06
-    Outer Step:   230      LossTrajs: 0.00426889     ContextsNorm: 0.02156017     ValIndCrit: 0.23167281
-        -NbInnerStepsNode:    2
-        -NbInnerStepsCxt:    6
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.89e-07
-        -DiffCxt:  2.67e-06
-    Outer Step:   240      LossTrajs: 0.00398814     ContextsNorm: 0.02317775     ValIndCrit: 0.25818568
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   17
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.85e-07
-        -DiffCxt:  3.47e-06
-    Outer Step:   250      LossTrajs: 0.00408696     ContextsNorm: 0.02101107     ValIndCrit: 0.22583386
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 5.95e-07
-        -DiffCxt:  3.34e-06
-    Outer Step:   260      LossTrajs: 0.00410388     ContextsNorm: 0.02000662     ValIndCrit: 0.24225259
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.49e-07
-        -DiffCxt:  6.98e-06
-    Outer Step:   270      LossTrajs: 0.00399063     ContextsNorm: 0.02019473     ValIndCrit: 0.24577148
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   13
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 3.50e-07
-        -DiffCxt:  3.35e-06
-    Outer Step:   280      LossTrajs: 0.00391845     ContextsNorm: 0.02003483     ValIndCrit: 0.25813186
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.43e-07
-        -DiffCxt:  5.91e-06
-    Outer Step:   290      LossTrajs: 0.00382941     ContextsNorm: 0.01995326     ValIndCrit: 368093.06250000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    3
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 2.30e-07
-        -DiffCxt:  2.43e-06
-    Outer Step:   300      LossTrajs: 0.00387591     ContextsNorm: 0.01907726     ValIndCrit: 591723.68750000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 6.65e-07
-        -DiffCxt:  2.65e-05
-    Outer Step:   310      LossTrajs: 0.00386487     ContextsNorm: 0.02074630     ValIndCrit: 911500.43750000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.13e-07
-        -DiffCxt:  1.10e-05
-    Outer Step:   320      LossTrajs: 0.00372450     ContextsNorm: 0.02217411     ValIndCrit: 88120.69531250
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 6.34e-07
-        -DiffCxt:  6.75e-06
-    Outer Step:   330      LossTrajs: 0.00368828     ContextsNorm: 0.02285389     ValIndCrit: 0.22778906
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    6
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 3.05e-07
-        -DiffCxt:  3.94e-06
-    Outer Step:   340      LossTrajs: 0.00366139     ContextsNorm: 0.02229524     ValIndCrit: 1774694.12500000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    1
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 3.03e-07
-        -DiffCxt:  2.78e-06
-    Outer Step:   350      LossTrajs: 0.00431757     ContextsNorm: 0.02060232     ValIndCrit: 2692998.25000000
-        -NbInnerStepsNode:    3
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.34e-07
-        -DiffCxt:  1.52e-05
-    Outer Step:   360      LossTrajs: 0.00358208     ContextsNorm: 0.02084803     ValIndCrit: 4195585.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.40e-07
-        -DiffCxt:  3.86e-06
-    Outer Step:   370      LossTrajs: 0.00362686     ContextsNorm: 0.02273672     ValIndCrit: 4642819.50000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:    5
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.02e-07
-        -DiffCxt:  3.25e-06
-    Outer Step:   380      LossTrajs: 0.00340406     ContextsNorm: 0.02155438     ValIndCrit: 16280990.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.90e-07
-        -DiffCxt:  6.11e-06
-    Outer Step:   390      LossTrajs: 0.00332985     ContextsNorm: 0.02040191     ValIndCrit: 26288240.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 4.22e-07
-        -DiffCxt:  5.50e-06
-    Outer Step:   400      LossTrajs: 0.00335768     ContextsNorm: 0.01871018     ValIndCrit: 28060134.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 7.75e-07
-        -DiffCxt:  7.72e-06
-    Outer Step:   410      LossTrajs: 0.00319270     ContextsNorm: 0.01980586     ValIndCrit: 27965380.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   18
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 6.11e-07
-        -DiffCxt:  3.20e-06
-    Outer Step:   420      LossTrajs: 0.00307999     ContextsNorm: 0.02004243     ValIndCrit: 29083838.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   16
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 2.90e-07
-        -DiffCxt:  3.39e-06
-    Outer Step:   430      LossTrajs: 0.00300370     ContextsNorm: 0.01965607     ValIndCrit: 30644784.00000000
-        -NbInnerStepsNode:    1
-        -NbInnerStepsCxt:   20
-        -InnerToleranceNode: 8.00e-07
-        -InnerToleranceCtx:  4.00e-06
-        -DiffNode: 2.45e-07
-        -DiffCxt:  4.20e-06
-2024-03-18 16:08:04.622982: W external/xla/xla/service/gpu/runtime/support.cc:58] Intercepted XLA runtime error:
-INTERNAL: CpuCallback error: EqxRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
-
-At:
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_errors.py(70): raises
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(186): _flat_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(46): pure_callback_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(108): _callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/mlir.py(1964): _wrapped_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1209): _pjit_call_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(821): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(166): _python_pjit_helper
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(253): cache_miss
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(200): _call
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py(875): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(206): __call__
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(113): integrate
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(139): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/visualtester.py(88): test
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py(344): train_proximal
-  /lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_proximal.py(353): <module>
-
-2024-03-18 16:08:05.013532: E external/xla/xla/pjrt/pjrt_stream_executor_client.cc:2593] Execution of replica 0 failed: INTERNAL: Failed to execute XLA Runtime executable: run time error: custom call 'xla.gpu.custom_call' failed: CpuCallback error: EqxRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
-
-At:
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_errors.py(70): raises
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(186): _flat_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(46): pure_callback_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(108): _callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/mlir.py(1964): _wrapped_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1209): _pjit_call_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(821): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(166): _python_pjit_helper
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(253): cache_miss
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(200): _call
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py(875): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(206): __call__
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(113): integrate
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(139): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/visualtester.py(88): test
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py(344): train_proximal
-  /lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_proximal.py(353): <module>
-; current tracing scope: custom-call.2456; current profiling annotation: XlaModule:#hlo_module=jit_diffeqsolve,program_id=1301#.
 Traceback (most recent call last):
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_proximal.py", line 353, in <module>
+  File "/lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_T2.py", line 353, in <module>
     trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max,
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py", line 344, in train_proximal
-    self.learner.contexts = contexts
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/visualtester.py", line 88, in test
-    X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0, 0))(X[:, :, 0, :],
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py", line 166, in reraise_with_filtered_traceback
-    return fun(*args, **kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py", line 1258, in vmap_f
-    out_flat = batching.batch(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py", line 188, in call_wrapped
-    ans = self.f(*args, **dict(self.params, **kwargs))
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py", line 139, in __call__
-    return jax.vmap(integrate)(x0s)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py", line 166, in reraise_with_filtered_traceback
-    return fun(*args, **kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py", line 1258, in vmap_f
-    out_flat = batching.batch(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py", line 188, in call_wrapped
-    ans = self.f(*args, **dict(self.params, **kwargs))
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py", line 113, in integrate
-    sol = diffrax.diffeqsolve(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py", line 206, in __call__
-    return self._call(False, args, kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py", line 875, in __call__
-    return self.__func__(self.__self__, *args, **kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py", line 200, in _call
-    out = self._cached(dynamic_donate, dynamic_nodonate, static)
+  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py", line 282, in train_proximal
+    node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2, diff_node_) = train_step_node(node, node_old, contexts, batch, weights, opt_state_node, loss_key)
   File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py", line 166, in reraise_with_filtered_traceback
     return fun(*args, **kwargs)
   File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 253, in cache_miss
@@ -492,64 +169,117 @@ Traceback (most recent call last):
     return self.bind_with_trace(top_trace, args, params)
   File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 389, in bind_with_trace
     out = trace.process_primitive(self, map(trace.full_raise, args), params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py", line 431, in process_primitive
-    val_out, dim_out = batched_primitive(vals_in, dims_in, **params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1431, in _pjit_batcher
-    vals_out = pjit_p.bind(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 2596, in bind
-    return self.bind_with_trace(top_trace, args, params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 389, in bind_with_trace
-    out = trace.process_primitive(self, map(trace.full_raise, args), params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py", line 431, in process_primitive
-    val_out, dim_out = batched_primitive(vals_in, dims_in, **params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1431, in _pjit_batcher
-    vals_out = pjit_p.bind(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 2596, in bind
-    return self.bind_with_trace(top_trace, args, params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 389, in bind_with_trace
-    out = trace.process_primitive(self, map(trace.full_raise, args), params)
   File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 821, in process_primitive
     return primitive.impl(*tracers, **params)
   File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1209, in _pjit_call_impl
     return xc._xla.pjit(name, f, call_impl_cache_miss, [], [], donated_argnums,
-jax._src.traceback_util.UnfilteredStackTrace: ValueError: INTERNAL: Failed to execute XLA Runtime executable: run time error: custom call 'xla.gpu.custom_call' failed: CpuCallback error: EqxRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1192, in call_impl_cache_miss
+    out_flat, compiled = _pjit_call_impl_python(
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1148, in _pjit_call_impl_python
+    return compiled.unsafe_call(*args), compiled
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/profiler.py", line 314, in wrapper
+    return func(*args, **kwargs)
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/pxla.py", line 1229, in __call__
+    results = self.xla_executable.execute_sharded(input_bufs)
+jax._src.traceback_util.UnfilteredStackTrace: jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 35719487584 bytes.
+BufferAssignment OOM Debugging.
+BufferAssignment stats:
+             parameter allocation:    4.70MiB
+              constant allocation:        80B
+        maybe_live_out allocation:    3.29MiB
+     preallocated temp allocation:   33.27GiB
+                 total allocation:   33.27GiB
+Peak buffers:
+	Buffer 1:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
 
-At:
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_errors.py(70): raises
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(186): _flat_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(46): pure_callback_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(108): _callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/mlir.py(1964): _wrapped_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1209): _pjit_call_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(821): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(166): _python_pjit_helper
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(253): cache_miss
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(200): _call
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py(875): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(206): __call__
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(113): integrate
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(139): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/visualtester.py(88): test
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py(344): train_proximal
-  /lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_proximal.py(353): <module>
-; current tracing scope: custom-call.2456; current profiling annotation: XlaModule:#hlo_module=jit_diffeqsolve,program_id=1301#.
+	Buffer 2:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 3:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 4:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 5:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 6:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 7:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 8:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 9:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 10:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 11:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 12:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 13:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 14:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 15:
+		Size: 82.41MiB
+		Operator: op_name="jit(train_step_node)/jit(main)/broadcast_in_dim[shape=(73, 8, 32, 34, 34) broadcast_dimensions=()]" source_file="/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py" source_line=174
+		XLA Label: broadcast
+		Shape: f32[73,8,32,34,34]
+		==========================
 
 The stack trace below excludes JAX-internal frames.
 The preceding is the original exception that occurred, unmodified.
@@ -559,51 +289,114 @@ The preceding is the original exception that occurred, unmodified.
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_proximal.py", line 353, in <module>
+  File "/lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_T2.py", line 353, in <module>
     trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max,
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py", line 344, in train_proximal
-    self.learner.contexts = contexts
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/visualtester.py", line 88, in test
-    X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0, 0))(X[:, :, 0, :],
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py", line 139, in __call__
-    return jax.vmap(integrate)(x0s)
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py", line 113, in integrate
-    sol = diffrax.diffeqsolve(
-ValueError: INTERNAL: Failed to execute XLA Runtime executable: run time error: custom call 'xla.gpu.custom_call' failed: CpuCallback error: EqxRuntimeError: The maximum number of solver steps was reached. Try increasing `max_steps`.
+  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py", line 282, in train_proximal
+    node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2, diff_node_) = train_step_node(node, node_old, contexts, batch, weights, opt_state_node, loss_key)
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py", line 206, in __call__
+    return self._call(False, args, kwargs)
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py", line 875, in __call__
+    return self.__func__(self.__self__, *args, **kwargs)
+  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py", line 200, in _call
+    out = self._cached(dynamic_donate, dynamic_nodonate, static)
+jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 35719487584 bytes.
+BufferAssignment OOM Debugging.
+BufferAssignment stats:
+             parameter allocation:    4.70MiB
+              constant allocation:        80B
+        maybe_live_out allocation:    3.29MiB
+     preallocated temp allocation:   33.27GiB
+                 total allocation:   33.27GiB
+Peak buffers:
+	Buffer 1:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
 
-At:
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_errors.py(70): raises
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(186): _flat_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(46): pure_callback_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/callback.py(108): _callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/mlir.py(1964): _wrapped_callback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1209): _pjit_call_impl
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(821): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(1431): _pjit_batcher
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/batching.py(431): process_primitive
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(389): bind_with_trace
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py(2596): bind
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(166): _python_pjit_helper
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py(253): cache_miss
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(200): _call
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py(875): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py(206): __call__
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(113): integrate
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py(139): __call__
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/linear_util.py(188): call_wrapped
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/api.py(1258): vmap_f
-  /lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py(166): reraise_with_filtered_traceback
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/visualtester.py(88): test
-  /lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py(344): train_proximal
-  /lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_proximal.py(353): <module>
-; current tracing scope: custom-call.2456; current profiling annotation: XlaModule:#hlo_module=jit_diffeqsolve,program_id=1301#.
+	Buffer 2:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 3:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 4:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 5:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 6:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 7:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 8:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 9:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 10:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 11:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 12:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 13:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 14:
+		Size: 82.41MiB
+		XLA Label: fusion
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+	Buffer 15:
+		Size: 82.41MiB
+		Operator: op_name="jit(train_step_node)/jit(main)/broadcast_in_dim[shape=(73, 8, 32, 34, 34) broadcast_dimensions=()]" source_file="/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py" source_line=174
+		XLA Label: broadcast
+		Shape: f32[73,8,32,34,34]
+		==========================
+
+
