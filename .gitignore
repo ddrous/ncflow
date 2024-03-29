@@ -34,8 +34,8 @@ nodax/tests/tmp/*
 ## Pytorch tmp savings
 *-ubyte
 
-## Don't save equinox models
-*.eqx
+# ## Don't save equinox models
+# *.eqx
 
 ## Ignore the example tmp
 examples/tmp/
