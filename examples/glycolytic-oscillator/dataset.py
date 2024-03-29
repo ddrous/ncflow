@@ -99,7 +99,7 @@ if split == "train" or split=="test":
     environments = [{'J0': 2.5, 'k1': k1, 'k2': 6, 'k3': 16, 'k4': 100, 'k5': 1.28, 'k6': 12, 'K1': K1, 'q': 4, 'N': 1, 'A': 4, 'kappa': 13, 'psi': 0.1, 'k': 1.8} for k1 in k1_range for K1 in K1_range]
 
 
-elif split == "adapt":
+elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   ## Adaptation environments
     k1_range = [85, 95]
     K1_range = [0.625, 0.875]
@@ -112,7 +112,7 @@ elif split == "adapt":
 
 if split == "train":
   n_traj_per_env = 32     ## training
-elif split == "test":
+elif split == "test" or split == "adapt_test":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
@@ -132,7 +132,7 @@ max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
 
-    np.random.seed(j if not split =="test" else max_seed - j)
+    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
     initial_state = np.random.random(7) * np.array([b-a for a, b in ic_range]) + np.array([a for a, _ in ic_range])
 
     for i, selected_params in enumerate(environments):
@@ -173,6 +173,8 @@ elif split == "test":
   filename = savepath+'test_data.npz'
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
+elif split == "adapt_test":
+  filename = savepath+'adapt_data_test.npz'
 
 np.savez(filename, t=t_eval, X=data)
 

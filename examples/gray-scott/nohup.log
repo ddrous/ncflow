@@ -39,14 +39,8 @@ Total number of parameters in the model: 824868
 
 
 WARNING: No key provided for the context initialization. Initializing at 0.
-WARNING: No key provided, using time as seed
 
-
-=== Beginning training with proximal alternating minimization ... ===
-    Number of examples in a batch: 1
-    Maximum number of steps per inner minimization: 20
-    Maximum number of outer minimizations: 800
-    Maximum total number of training steps: 16000
+No training, loading model and results from ./runs/25022024-033325/ folder ...
 
 Compiling function "train_step" for neural ode ...
 Shapes of elements in a batch: (4, 1, 10, 2048) (10,)

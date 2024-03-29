@@ -30,10 +30,10 @@ integrator = diffrax.Dopri5
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 # run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
-run_folder = "./runs/08032024-110732/"
+run_folder = "./"
 
 ## Training hyperparameters ##
-train = True
+train = False
 save_trainer = True
 finetune = False
 
@@ -485,16 +485,21 @@ CTXs = np.stack([X, Y], axis=-1)
 
 
 losses, _ = jax.vmap(jax.vmap(loss_context))(CTXs)
+# losses = jnp.log(losses)
 
 #%%
 plt.figure(figsize=(12, 10))
+## Setup plot for presentation in paper by increasing the font size
+plt.rc('font', size=20)          # controls default text sizes
+
+
 # plt.contourf(X, Y, losses, levels=500, cmap='nipy_spectral')
 c = plt.contourf(X, Y, losses, levels=500, cmap='turbo')
 # plt.colorbar(c)
 
 ##Label the colorbar y axis
 cbar = plt.colorbar(c)
-cbar.set_label('Regularised MSE', fontsize=24)
+cbar.set_label('MSE', fontsize=24)
 
 ## Place the context points on the plot
 plt.scatter(train_ctxs[:, 0], train_ctxs[:, 1], c='white', marker="x", s=400, label='training')
@@ -512,14 +517,16 @@ for i, txt in enumerate(range(train_ctxs.shape[0])):
 #         plt.annotate(txt, (adapt_ctxs[i, 0]-eps/5, adapt_ctxs[i, 1]-eps/50), fontsize=14, color='magenta')
 
 
-plt.annotate("0,2", (adapt_ctxs[0, 0]-eps/4.5, adapt_ctxs[0, 1]+eps/10), fontsize=14, color='magenta')
-plt.annotate("1,3", (adapt_ctxs[1, 0]-eps/4.5, adapt_ctxs[1, 1]+eps/10), fontsize=14, color='magenta')
+for i, txt in enumerate(range(adapt_ctxs.shape[0])):
+    plt.annotate(r"$e_"+str(txt)+"$", (adapt_ctxs[i, 0]+eps/14, adapt_ctxs[i, 1]+eps/10), fontsize=18, color='magenta')
+# plt.annotate("0", (adapt_ctxs[0, 0]-eps/4.5, adapt_ctxs[0, 1]+eps/10), fontsize=14, color='magenta')
+# plt.annotate("1", (adapt_ctxs[1, 0]-eps/4.5, adapt_ctxs[1, 1]+eps/10), fontsize=14, color='magenta')
 
-plt.xlabel("dim 0", fontsize=14)
-plt.ylabel("dim 1", fontsize=14)
+plt.xlabel("dim 0", fontsize=24)
+plt.ylabel("dim 1", fontsize=24)
 plt.legend(fontsize=20, loc='lower right')
 
-plt.show()
+plt.draw()
 
 ## Save high-quality PDF as small context_loss.pdf
 plt.savefig(run_folder+"context_loss.pdf", format='pdf', dpi=300)

@@ -22,7 +22,7 @@ import argparse
 
 if _in_ipython_session:
 	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='train', savepath="./tmp/", seed=2026, verbose=1)
+	args = argparse.Namespace(split='adapt_test', savepath="./tmp/", seed=2026, verbose=1)
 else:
 	parser = argparse.ArgumentParser(description='Gray-Scott dataset generation script.')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
@@ -137,7 +137,7 @@ if split == "train" or split=="test":
 
 
 
-elif split == "adapt":
+elif split in ["adapt", "adapt_test", "adapt_huge"]:
   ## Adaptation environments
 	from itertools import product
 	f = [0.033, 0.036]
@@ -148,7 +148,7 @@ elif split == "adapt":
 
 if split == "train":
   n_traj_per_env = 1     ## training
-elif split == "test":
+elif split in ["test", "adapt_test"]:
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
@@ -161,13 +161,16 @@ data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2*res*res)
 # Time span for simulation
 t_span = (0, 400)  # Shortened time span
 t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
+max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
+
+    np.random.seed(j if not split =="test" else max_seed - j)
+    initial_state = get_init_cond(res)
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
-        initial_state = get_init_cond(res)
 
         # print("Initial state", initial_state)
 
@@ -194,7 +197,7 @@ for j in range(n_traj_per_env):
                     initial_state,
                     *(selected_params,), 
                     t_eval=t_eval, 
-                    subdivision=100)
+                    subdivisions=100)
         data[i, j, :, :] = ys
 
 
@@ -209,6 +212,8 @@ elif split == "test":
   filename = savepath+'test_data.npz'
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
+elif split == "adapt_test":
+  filename = savepath+'adapt_data_test.npz'
 
 np.savez(filename, t=t_eval, X=data)
 

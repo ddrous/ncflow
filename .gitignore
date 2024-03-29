@@ -34,8 +34,8 @@ nodax/tests/tmp/*
 ## Pytorch tmp savings
 *-ubyte
 
-## Don't save equinox models
-*.eqx
+# ## Don't save equinox models
+# *.eqx
 
 ## Ignore the example tmp
 examples/tmp/
@@ -99,3 +99,8 @@ venv/*
 
 
 !examples/lotka-voltera/runs/SmallContextExperiment
+
+!examples/glycolytic-oscillator/runs/24032024-125527
+!examples/pendulum/runs/28032024-201048
+
+!examples/lotka-voltera/runs/28032024-212427

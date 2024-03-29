@@ -10,7 +10,8 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 import diffrax
 from nodax import RK4
-import jax.numpy as jnp
+# import jax.numpy as jnp
+import numpy as jnp   ## Ugly, just cuz I don't wanna change the code below
 
 try:
     __IPYTHON__
@@ -140,7 +141,7 @@ if split == "train" or split=="test":
 
 
 
-elif split == "adapt":
+elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   ## Adaptation environments
 	from itertools import product
 	# f = [0.033, 0.036]
@@ -153,7 +154,7 @@ elif split == "adapt":
 
 if split == "train":
   n_traj_per_env = 1     ## training
-elif split == "test":
+elif split == "test" or split == "adapt_test" or split == "adapt_huge":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
@@ -166,32 +167,35 @@ data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2*res*res)
 # Time span for simulation
 t_span = (0, 400)  # Shortened time span
 t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
+max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
+
+
+    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
+    initial_state = get_init_cond(res)
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
-        initial_state = get_init_cond(res)
-
         # print("Initial state", initial_state)
 
         # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
+        solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
+        data[i, j, :, :] = solution.y.T
 
         # use diffrax instead, with the DoPri5 integrator
-        solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
-                                       diffrax.Tsit5(),
-                                       args=(selected_params),
-                                       t0=t_span[0],
-                                       t1=t_span[1],
-                                       dt0=1e-1,
-                                       y0=initial_state,
-                                       stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-8),
-                                       saveat=diffrax.SaveAt(ts=t_eval),
-                                       max_steps=4096*1)
-        data[i, j, :, :] = solution.ys
+        # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
+        #                                diffrax.Tsit5(),
+        #                                args=(selected_params),
+        #                                t0=t_span[0],
+        #                                t1=t_span[1],
+        #                                dt0=1e-1,
+        #                                y0=initial_state,
+        #                                stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-8),
+        #                                saveat=diffrax.SaveAt(ts=t_eval),
+        #                                max_steps=4096*1)
+        # data[i, j, :, :] = solution.ys
         # print("Stats", solution.stats['num_steps'])
 
         # ys = RK4(gray_scott, 
@@ -214,6 +218,8 @@ elif split == "test":
   filename = savepath+'test_data.npz'
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
+elif split == "adapt_test":
+  filename = savepath+'adapt_data_test.npz'
 
 ## Check if nan or inf in data
 if np.isnan(data).any() or np.isinf(data).any():
