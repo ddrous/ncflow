@@ -143,10 +143,10 @@ if split == "train" or split=="test":
 elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   ## Adaptation environments
 	from itertools import product
-	# f = [0.033, 0.036]
-	# k = [0.059, 0.061]
-	f = [0.033]
-	k = [0.059]
+	f = [0.033, 0.036]
+	k = [0.059, 0.061]
+	# f = [0.033]
+	# k = [0.059]
 	environments = [{"f": f_i, "k": k_i, "r_u": 0.2097, "r_v": 0.105} for f_i, k_i in product(f, k)]
 
 
@@ -202,7 +202,7 @@ for j in range(n_traj_per_env):
                     initial_state,
                     *(selected_params,), 
                     t_eval=t_eval, 
-                    subdivisions=20)
+                    subdivisions=50)
         data[i, j, :, :] = ys
 
 

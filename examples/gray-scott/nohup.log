@@ -6,7 +6,7 @@ Available devices: [gpu(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: train
- Savepath: ./runs/29032024-094232/
+ Savepath: ./runs/29032024-180719/
  Seed: 2026
 
 
@@ -17,129 +17,25 @@ Available devices: [gpu(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: test
- Savepath: ./runs/29032024-094232/
+ Savepath: ./runs/29032024-180719/
  Seed: 4052
-
-2024-03-29 09:44:02.528423: W external/xla/xla/service/hlo_rematerialization.cc:2202] Can't reduce memory use below 29.54GiB (31722356736 bytes) by rematerialization; only reduced to 33.25GiB (35703700584 bytes), down from 33.28GiB (35739201112 bytes) originally
-2024-03-29 09:44:27.934116: W external/tsl/tsl/framework/bfc_allocator.cc:485] Allocator (GPU_0_bfc) ran out of memory trying to allocate 33.27GiB (rounded to 35719487744)requested by op 
-2024-03-29 09:44:27.934506: W external/tsl/tsl/framework/bfc_allocator.cc:497] ______________________________________________________________________________________****___****xx*
-2024-03-29 09:44:27.941427: E external/xla/xla/pjrt/pjrt_stream_executor_client.cc:2593] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 35719487584 bytes.
-BufferAssignment OOM Debugging.
-BufferAssignment stats:
-             parameter allocation:    4.70MiB
-              constant allocation:        80B
-        maybe_live_out allocation:    3.29MiB
-     preallocated temp allocation:   33.27GiB
-                 total allocation:   33.27GiB
-Peak buffers:
-	Buffer 1:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 2:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 3:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 4:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 5:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 6:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 7:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 8:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 9:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 10:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 11:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 12:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 13:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 14:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 15:
-		Size: 82.41MiB
-		Operator: op_name="jit(train_step_node)/jit(main)/broadcast_in_dim[shape=(73, 8, 32, 34, 34) broadcast_dimensions=()]" source_file="/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py" source_line=174
-		XLA Label: broadcast
-		Shape: f32[73,8,32,34,34]
-		==========================
-
 
 
 ############# Inductive Bias Learning for Dynamical Systems #############
 
 Jax version: 0.4.14
 Available devices: [gpu(id=0)]
-New run folder created successfuly: ./runs/29032024-094232/
+New run folder created successfuly: ./runs/29032024-180719/
 Completed copied scripts 
-WARNING: You did not provide a dataloader id. A new one has been generated: 094334
+WARNING: You did not provide a dataloader id. A new one has been generated: 180824
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
-WARNING: You did not provide a dataloader id. A new one has been generated: 094334
+WARNING: You did not provide a dataloader id. A new one has been generated: 180824
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 
 
-Total number of parameters in the model: 287636 
+Total number of parameters in the model: 531856 
 
 
 WARNING: No key provided for the context initialization. Initializing at 0.
@@ -149,254 +45,608 @@ WARNING: No key provided, using time as seed
 === Beginning training with proximal alternating minimization ... ===
     Number of examples in a batch: 1
     Maximum number of steps per inner minimization: 20
-    Maximum number of outer minimizations: 800
-    Maximum total number of training steps: 16000
+    Maximum number of outer minimizations: 400
+    Maximum total number of training steps: 8000
 
 Compiling function "train_step" for neural ode ...
 Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
-Traceback (most recent call last):
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_T2.py", line 353, in <module>
-    trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max,
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py", line 282, in train_proximal
-    node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2, diff_node_) = train_step_node(node, node_old, contexts, batch, weights, opt_state_node, loss_key)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/traceback_util.py", line 166, in reraise_with_filtered_traceback
-    return fun(*args, **kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 253, in cache_miss
-    outs, out_flat, out_tree, args_flat, jaxpr = _python_pjit_helper(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 166, in _python_pjit_helper
-    out_flat = pjit_p.bind(*args_flat, **params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 2596, in bind
-    return self.bind_with_trace(top_trace, args, params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 389, in bind_with_trace
-    out = trace.process_primitive(self, map(trace.full_raise, args), params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/core.py", line 821, in process_primitive
-    return primitive.impl(*tracers, **params)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1209, in _pjit_call_impl
-    return xc._xla.pjit(name, f, call_impl_cache_miss, [], [], donated_argnums,
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1192, in call_impl_cache_miss
-    out_flat, compiled = _pjit_call_impl_python(
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/pjit.py", line 1148, in _pjit_call_impl_python
-    return compiled.unsafe_call(*args), compiled
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/profiler.py", line 314, in wrapper
-    return func(*args, **kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/jax/_src/interpreters/pxla.py", line 1229, in __call__
-    results = self.xla_executable.execute_sharded(input_bufs)
-jax._src.traceback_util.UnfilteredStackTrace: jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 35719487584 bytes.
-BufferAssignment OOM Debugging.
-BufferAssignment stats:
-             parameter allocation:    4.70MiB
-              constant allocation:        80B
-        maybe_live_out allocation:    3.29MiB
-     preallocated temp allocation:   33.27GiB
-                 total allocation:   33.27GiB
-Peak buffers:
-	Buffer 1:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
 
-	Buffer 2:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
+    Outer Step:     0      LossTrajs: 0.06688809     ContextsNorm: 0.00000000     ValIndCrit: 0.05567633
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 2.67e-06
+        -DiffCxt:  inf
+    Outer Step:     1      LossTrajs: 0.04309926     ContextsNorm: 0.00775140     ValIndCrit: 0.04105966
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.75e-06
+        -DiffCxt:  1.32e-03
+    Outer Step:     2      LossTrajs: 0.02944760     ContextsNorm: 0.01294512     ValIndCrit: 0.04241521
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 2.10e-04
+        -DiffCxt:  7.72e-04
+    Outer Step:     3      LossTrajs: 0.01672286     ContextsNorm: 0.01487901     ValIndCrit: 0.04609899
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 6.63e-05
+        -DiffCxt:  2.46e-04
+    Outer Step:    10      LossTrajs: 0.01038531     ContextsNorm: 0.01607790     ValIndCrit: 0.06415833
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 5.15e-06
+        -DiffCxt:  5.65e-06
+    Outer Step:    20      LossTrajs: 0.00730167     ContextsNorm: 0.01638934     ValIndCrit: 0.09474003
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.39e-06
+        -DiffCxt:  7.25e-06
+    Outer Step:    30      LossTrajs: 0.00598508     ContextsNorm: 0.01662540     ValIndCrit: 0.12920600
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.62e-06
+        -DiffCxt:  1.19e-05
+    Outer Step:    40      LossTrajs: 0.00520094     ContextsNorm: 0.01655692     ValIndCrit: 0.15952536
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 1.05e-07
+        -DiffCxt:  6.25e-07
+    Outer Step:    50      LossTrajs: 0.00509932     ContextsNorm: 0.01651707     ValIndCrit: 0.16993630
+        -NbInnerStepsNode:   14
+        -NbInnerStepsCxt:   16
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.86e-08
+        -DiffCxt:  8.60e-07
+    Outer Step:    60      LossTrajs: 0.00507012     ContextsNorm: 0.01634172     ValIndCrit: 0.17653582
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:    8
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 3.59e-07
+        -DiffCxt:  8.25e-07
+    Outer Step:    70      LossTrajs: 0.00495519     ContextsNorm: 0.01620324     ValIndCrit: 0.18476534
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    5
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.11e-08
+        -DiffCxt:  4.98e-07
+    Outer Step:    80      LossTrajs: 0.00487105     ContextsNorm: 0.01609348     ValIndCrit: 0.19396035
+        -NbInnerStepsNode:    5
+        -NbInnerStepsCxt:    8
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.67e-08
+        -DiffCxt:  9.27e-07
+    Outer Step:    90      LossTrajs: 0.00480246     ContextsNorm: 0.01605146     ValIndCrit: 0.19897720
+        -NbInnerStepsNode:   13
+        -NbInnerStepsCxt:    5
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 4.80e-08
+        -DiffCxt:  4.77e-07
+    Outer Step:   100      LossTrajs: 0.00474862     ContextsNorm: 0.01602131     ValIndCrit: 0.19875520
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    2
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.79e-08
+        -DiffCxt:  4.44e-07
+    Outer Step:   110      LossTrajs: 0.00473216     ContextsNorm: 0.01601095     ValIndCrit: 0.20438889
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   17
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.19e-08
+        -DiffCxt:  5.65e-07
+    Outer Step:   120      LossTrajs: 0.00470734     ContextsNorm: 0.01593405     ValIndCrit: 0.21271703
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 6.38e-08
+        -DiffCxt:  8.63e-07
+    Outer Step:   130      LossTrajs: 0.00465085     ContextsNorm: 0.01600770     ValIndCrit: 1.99714983
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    8
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.29e-08
+        -DiffCxt:  7.07e-07
+    Outer Step:   140      LossTrajs: 0.00458505     ContextsNorm: 0.01600572     ValIndCrit: 10.05008984
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    8
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 5.37e-08
+        -DiffCxt:  6.04e-07
+    Outer Step:   150      LossTrajs: 0.00451950     ContextsNorm: 0.01584955     ValIndCrit: 9.95706367
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    3
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.28e-08
+        -DiffCxt:  5.53e-07
+    Outer Step:   160      LossTrajs: 0.00447895     ContextsNorm: 0.01565832     ValIndCrit: 6.77278900
+        -NbInnerStepsNode:    7
+        -NbInnerStepsCxt:    7
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.39e-08
+        -DiffCxt:  8.67e-07
+    Outer Step:   170      LossTrajs: 0.00445346     ContextsNorm: 0.01576622     ValIndCrit: 13.52417946
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   15
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 6.87e-08
+        -DiffCxt:  8.39e-07
+    Outer Step:   180      LossTrajs: 0.00444364     ContextsNorm: 0.01562009     ValIndCrit: 14.34983540
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    7
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 5.45e-08
+        -DiffCxt:  6.89e-07
+    Outer Step:   190      LossTrajs: 0.00443225     ContextsNorm: 0.01557338     ValIndCrit: 16.79170990
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    7
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 6.45e-08
+        -DiffCxt:  9.42e-07
+    Outer Step:   200      LossTrajs: 0.00439334     ContextsNorm: 0.01552216     ValIndCrit: 16.16796684
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    7
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.05e-08
+        -DiffCxt:  9.88e-07
+    Outer Step:   210      LossTrajs: 0.00438209     ContextsNorm: 0.01539629     ValIndCrit: 20.30577087
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 5.42e-08
+        -DiffCxt:  3.19e-07
+    Outer Step:   220      LossTrajs: 0.00439932     ContextsNorm: 0.01545493     ValIndCrit: 14.08725071
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 4.18e-07
+        -DiffCxt:  3.30e-06
+    Outer Step:   230      LossTrajs: 0.00429552     ContextsNorm: 0.01542001     ValIndCrit: 8.61991692
+        -NbInnerStepsNode:    9
+        -NbInnerStepsCxt:    9
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.88e-08
+        -DiffCxt:  7.88e-07
+    Outer Step:   240      LossTrajs: 0.00428611     ContextsNorm: 0.01543872     ValIndCrit: 10.50517178
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    7
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.89e-08
+        -DiffCxt:  9.34e-07
+    Outer Step:   250      LossTrajs: 0.00426247     ContextsNorm: 0.01524742     ValIndCrit: 12.72807789
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   15
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.00e-08
+        -DiffCxt:  9.43e-07
+    Outer Step:   260      LossTrajs: 0.00424208     ContextsNorm: 0.01536827     ValIndCrit: 16.44042969
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.04e-08
+        -DiffCxt:  2.94e-06
+    Outer Step:   270      LossTrajs: 0.00426631     ContextsNorm: 0.01517764     ValIndCrit: 8.77780151
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 3.84e-07
+        -DiffCxt:  8.74e-06
+    Outer Step:   280      LossTrajs: 0.00413946     ContextsNorm: 0.01522947     ValIndCrit: 14.62586212
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 2.45e-07
+        -DiffCxt:  3.23e-06
+    Outer Step:   290      LossTrajs: 0.00407782     ContextsNorm: 0.01491406     ValIndCrit: 7.60353565
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.56e-08
+        -DiffCxt:  6.88e-07
+    Outer Step:   300      LossTrajs: 0.00405528     ContextsNorm: 0.01490476     ValIndCrit: 12.43035507
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   17
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 6.87e-08
+        -DiffCxt:  8.60e-07
+    Outer Step:   310      LossTrajs: 0.00402298     ContextsNorm: 0.01505860     ValIndCrit: 13.39283180
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   15
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.80e-08
+        -DiffCxt:  9.71e-07
+    Outer Step:   320      LossTrajs: 0.00400938     ContextsNorm: 0.01485962     ValIndCrit: 0.83661067
+        -NbInnerStepsNode:   19
+        -NbInnerStepsCxt:    8
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.62e-08
+        -DiffCxt:  9.42e-07
+    Outer Step:   330      LossTrajs: 0.00399644     ContextsNorm: 0.01465318     ValIndCrit: 1.60402358
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    2
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.74e-08
+        -DiffCxt:  9.10e-07
+    Outer Step:   340      LossTrajs: 0.00397346     ContextsNorm: 0.01462763     ValIndCrit: 2.48808813
+        -NbInnerStepsNode:    3
+        -NbInnerStepsCxt:   17
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.46e-08
+        -DiffCxt:  8.40e-07
+    Outer Step:   350      LossTrajs: 0.00396878     ContextsNorm: 0.01467718     ValIndCrit: 3.53760195
+        -NbInnerStepsNode:    3
+        -NbInnerStepsCxt:   15
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 7.22e-08
+        -DiffCxt:  7.85e-07
+    Outer Step:   360      LossTrajs: 0.00393228     ContextsNorm: 0.01453464     ValIndCrit: 6.26159620
+        -NbInnerStepsNode:    6
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 9.64e-08
+        -DiffCxt:  1.18e-06
+    Outer Step:   370      LossTrajs: 0.00392682     ContextsNorm: 0.01461358     ValIndCrit: 7.10062218
+        -NbInnerStepsNode:   16
+        -NbInnerStepsCxt:   15
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 8.32e-08
+        -DiffCxt:  7.08e-07
+    Outer Step:   380      LossTrajs: 0.00381552     ContextsNorm: 0.01508893     ValIndCrit: 5.83788586
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 6.91e-08
+        -DiffCxt:  1.12e-06
+    Outer Step:   390      LossTrajs: 0.00384704     ContextsNorm: 0.01522079     ValIndCrit: 6.45761681
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 4.63e-07
+        -DiffCxt:  7.93e-06
+    Outer Step:   399      LossTrajs: 0.00374674     ContextsNorm: 0.01506172     ValIndCrit: 10.92931175
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   12
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  1.00e-06
+        -DiffNode: 5.94e-08
+        -DiffCxt:  9.36e-07
 
-	Buffer 3:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 4:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 5:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 6:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 7:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 8:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 9:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 10:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 11:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 12:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 13:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 14:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 15:
-		Size: 82.41MiB
-		Operator: op_name="jit(train_step_node)/jit(main)/broadcast_in_dim[shape=(73, 8, 32, 34, 34) broadcast_dimensions=()]" source_file="/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py" source_line=174
-		XLA Label: broadcast
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-The stack trace below excludes JAX-internal frames.
-The preceding is the original exception that occurred, unmodified.
-
---------------------
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/examples/gray-scott/main_T2.py", line 353, in <module>
-    trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max,
-  File "/lustre/home/br-rnzoyem/Projects/Nodax/nodax/trainer.py", line 282, in train_proximal
-    node, contexts, opt_state_node, loss_node, (nb_steps_node_, term1, term2, diff_node_) = train_step_node(node, node_old, contexts, batch, weights, opt_state_node, loss_key)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py", line 206, in __call__
-    return self._call(False, args, kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_module.py", line 875, in __call__
-    return self.__func__(self.__self__, *args, **kwargs)
-  File "/lustre/home/br-rnzoyem/Projects/GraphPint/venv/lib/python3.9/site-packages/equinox/_jit.py", line 200, in _call
-    out = self._cached(dynamic_donate, dynamic_nodonate, static)
-jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 35719487584 bytes.
-BufferAssignment OOM Debugging.
-BufferAssignment stats:
-             parameter allocation:    4.70MiB
-              constant allocation:        80B
-        maybe_live_out allocation:    3.29MiB
-     preallocated temp allocation:   33.27GiB
-                 total allocation:   33.27GiB
-Peak buffers:
-	Buffer 1:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 2:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 3:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 4:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 5:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 6:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 7:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 8:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 9:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 10:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 11:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 12:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 13:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 14:
-		Size: 82.41MiB
-		XLA Label: fusion
-		Shape: f32[73,8,32,34,34]
-		==========================
-
-	Buffer 15:
-		Size: 82.41MiB
-		Operator: op_name="jit(train_step_node)/jit(main)/broadcast_in_dim[shape=(73, 8, 32, 34, 34) broadcast_dimensions=()]" source_file="/lustre/home/br-rnzoyem/Projects/Nodax/nodax/learner.py" source_line=174
-		XLA Label: broadcast
-		Shape: f32[73,8,32,34,34]
-		==========================
+Total gradient descent training time: 1 hours 40 mins 48 secs
+Environment weights at the end of the training: [0.25 0.25 0.25 0.25]
+WARNING: You did not provide a dataloader id. A new one has been generated: 194917
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 4
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Test Score (In-Domain): 10.929312
 
 
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/29032024-180719/adapt/
+ Seed: 6078
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 2
+    Trajectory id: 3
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Testing finished. Figure saved in: ./runs/29032024-180719/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+
+=== Beginning adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 50
+    Total number of training steps: 50
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
+    Epoch:     0     LossContext: 1477.19982910
+    Epoch:     1     LossContext: 1299.78649902
+    Epoch:     2     LossContext: 856.58782959
+    Epoch:     3     LossContext: 0.10074244
+    Epoch:    10     LossContext: 3.33519411
+    Epoch:    20     LossContext: 7.92128038
+    Epoch:    30     LossContext: 9.34179115
+    Epoch:    40     LossContext: 7.96572495
+    Epoch:    49     LossContext: 7.29256010
+
+Total gradient descent adaptation time: 0 hours 0 mins 49 secs
+Environment weights at the end of the adaptation: [0.25 0.25 0.25 0.25]
+
+Saving adaptation parameters into ./runs/29032024-180719/adapt/ folder with id 170846 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 4
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Test Score (OOD): 7.233176
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 3
+    Trajectory id: 0
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Testing finished. Figure saved in: ./runs/29032024-180719/adapt/results_ood.png
+==  Begining in-domain 2D visualisation ... ==
+    Environment id: 0
+    Trajectory id: 9
+    Length of the testing trajectories: 10
+Testing finished. Figure saved in: ./runs/29032024-180719/results_2D_ind.png
+
+Full evaluation of the model on many random seeds
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+
+
+Mean and std of the scores across various datasets
+
+          seed  ind_crit  ood_crit
+count 2.00e+01  2.00e+01  2.00e+01
+mean  5.61e+03  1.09e+01  7.23e+00
+std   2.52e+03  0.00e+00  0.00e+00

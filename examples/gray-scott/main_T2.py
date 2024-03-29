@@ -24,11 +24,11 @@ seed = 2026
 
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 64
+context_size = 256
 print_error_every = 10
 # integrator = diffrax.Dopri5
 integrator = RK4
-ivp_args = {"dt_init":1e-4, "rtol":1e-5, "atol":1e-8, "max_steps":400000, "subdivisions":8}
+ivp_args = {"dt_init":1e-4, "rtol":1e-5, "atol":1e-8, "max_steps":400000, "subdivisions":10}
 # run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
 run_folder = "./runs/27022024-104335/"
 
@@ -40,12 +40,12 @@ finetune = False
 init_lr = 5e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 800
+nb_outer_steps_max = 400
 nb_inner_steps_max = 20
 proximal_beta = 1e1 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 8e-7
-inner_tol_ctx = 4e-6
-early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps to wait before early stopping
+inner_tol_node = 1e-7
+inner_tol_ctx = 1e-6
+early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
 
 
 ## Adaptation hyperparameters ##
@@ -193,7 +193,7 @@ class Augmentation(eqx.Module):
         # activation = self.activation = Swish(key=keys[10])
         # activation = self.activation = jax.nn.sigmoid
         self.activations = [Swish(key=keys[i]) for i in range(0, 6)]
-        cnt_chans = 4
+        cnt_chans = 2
 
 
         self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*cnt_chans, key=keys[3]), self.activations[0],
@@ -288,7 +288,7 @@ class ContextFlowVectorField(eqx.Module):
         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=32, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=16, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
