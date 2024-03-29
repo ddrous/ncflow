@@ -24,7 +24,7 @@ seed = 2026
 
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 1024
+context_size = 64
 print_error_every = 10
 integrator = diffrax.Dopri5
 # integrator = RK4
