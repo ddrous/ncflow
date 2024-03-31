@@ -106,3 +106,5 @@ venv/*
 
 !examples/lotka-voltera/runs/28032024-212427
 !examples/gray-scott/runs/31032024-164433
+!examples/gray-scott/runs/31032024-222842
+

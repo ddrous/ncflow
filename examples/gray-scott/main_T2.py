@@ -1,6 +1,7 @@
-# import os
+import os
 ## Do not preallocate GPU memory
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
+os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = '\"false\"'
 
 from nodax import *
 # jax.config.update("jax_debug_nans", True)
@@ -17,13 +18,13 @@ seed = 2026
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
 nb_epochs = 4000
-nb_epochs_adapt = 1
+nb_epochs_adapt = 1000
 init_lr = 1e-3
 lr_factor = 1
 
 print_error_every = 10
 
-train = False
+train = True
 run_folder = "./runs/31032024-164433/"      ## Run folder to use when not training
 
 save_trainer = True
@@ -48,8 +49,8 @@ activation = jax.nn.swish
 # activation = jax.nn.sigmoid
 
 
-# integrator = diffrax.Dopri5
-integrator = RK4
+integrator = diffrax.Dopri5
+# integrator = RK4
 ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivisions":100}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
@@ -142,7 +143,7 @@ class Augmentation(eqx.Module):
 
     def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
 
-        chans = 2
+        chans = 64
 
         keys = generate_new_keys(key, num=12)
         circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
@@ -157,8 +158,8 @@ class Augmentation(eqx.Module):
         self.layers_shared = [circular_pad, 
                               eqx.nn.Conv2d(nb_int_channels+2, chans, kernel_size, key=keys[6]), activation,
                               circular_pad, 
-                            #   eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
-                            #   circular_pad, 
+                              eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
+                              circular_pad, 
                               eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[8]), activation,
                               circular_pad, 
                               eqx.nn.Conv2d(chans, 2, kernel_size, key=keys[9]),
@@ -294,7 +295,7 @@ class ContextFlowVectorField(eqx.Module):
 #         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=2, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
