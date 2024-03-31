@@ -16,14 +16,15 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
-nb_epochs = 2000
-nb_epochs_adapt = 100
+nb_epochs = 4000
+nb_epochs_adapt = 1
 init_lr = 1e-3
+lr_factor = 1
 
 print_error_every = 10
 
-train = True
-run_folder = "./runs/24022024-161157/"      ## Run folder to use when not training
+train = False
+run_folder = "./runs/31032024-164433/"      ## Run folder to use when not training
 
 save_trainer = True
 
@@ -41,8 +42,8 @@ adapt = True
 adapt_huge = False
 
 
-activation = jax.nn.softplus
-# activation = jax.nn.swish
+# activation = jax.nn.softplus
+activation = jax.nn.swish
 # activation = lambda x:x
 # activation = jax.nn.sigmoid
 
@@ -161,7 +162,8 @@ class Augmentation(eqx.Module):
                               eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[8]), activation,
                               circular_pad, 
                               eqx.nn.Conv2d(chans, 2, kernel_size, key=keys[9]),
-                              lambda x: x.flatten()]
+                            #   lambda x: x.flatten()]
+                            lambda x: jnp.concatenate([x[0].flatten(), x[1].flatten()], axis=0)]
 
     def __call__(self, t, y, ctx):
         # return jnp.zeros_like(y)*ctx[0]
@@ -177,7 +179,7 @@ class Augmentation(eqx.Module):
         for layer in self.layers_shared:
             y = layer(y)
 
-        return y
+        return y * 1e-2
         # return jnp.zeros_like(y)
 
 
@@ -336,10 +338,10 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=
 
 nb_total_epochs = nb_outer_steps_max * 1
 sched_node = optax.piecewise_constant_schedule(init_value=init_lr,
-                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:lr_factor, 2*nb_total_epochs//3:lr_factor})
 
 sched_ctx = optax.piecewise_constant_schedule(init_value=init_lr,
-                        boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:0.1})
+                        boundaries_and_scales={nb_total_epochs//3:lr_factor, 2*nb_total_epochs//3:lr_factor})
 
 opt_node = optax.adabelief(sched_node)
 opt_ctx = optax.adabelief(sched_ctx)
@@ -441,6 +443,7 @@ if finetune:
 else:
     savefigdir = run_folder+"results_2D_ind.png"
 visualtester.visualize2D(test_dataloader, int_cutoff=1.0, res=32, save_path=savefigdir);
+visualtester.visualize2D(train_dataloader, int_cutoff=1.0, res=32, save_path=run_folder+"results_2D_ind_train.png");
 
 
 #%%
