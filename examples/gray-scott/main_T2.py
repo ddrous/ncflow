@@ -16,7 +16,7 @@ seed = 2026
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//2
-# nb_epochs = 200
+nb_epochs = 2000
 nb_epochs_adapt = 100
 init_lr = 1e-3
 
@@ -30,10 +30,10 @@ save_trainer = True
 finetune = False
 
 nb_outer_steps_max = 100
-nb_inner_steps_max = 20
+nb_inner_steps_max = 10
 proximal_beta = 1e1
-inner_tol_node = 1e-8
-inner_tol_ctx = 1e-7
+inner_tol_node = 1e-9
+inner_tol_ctx = 1e-8
 early_stopping_patience = nb_outer_steps_max//1
 
 
@@ -247,8 +247,7 @@ class Physics(eqx.Module):
 
 
 
-
-## Second-order Taylor approximation
+# First-order Taylor approximation
 class ContextFlowVectorField(eqx.Module):
     physics: eqx.Module
     augmentation: eqx.Module
@@ -258,24 +257,45 @@ class ContextFlowVectorField(eqx.Module):
         self.physics = physics
 
     def __call__(self, t, x, ctxs):
-        ctx, ctx_ = ctxs
-
         if self.physics is None:
-            vf = lambda xi: self.augmentation(t, x, xi)
+            vf = lambda xi_: self.augmentation(t, x, xi_)
         else:
-            vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
+            vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
 
-        gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
-        scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
 
-        # print("all operand types:", type(vf), type(gradvf), type(scd_order_term))
-        return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
+        ctx, ctx_ = ctxs
+        return vf(ctx_) + gradvf(ctx_, ctx)
+
+
+# ## Second-order Taylor approximation
+# class ContextFlowVectorField(eqx.Module):
+#     physics: eqx.Module
+#     augmentation: eqx.Module
+
+#     def __init__(self, augmentation, physics=None):
+#         self.augmentation = augmentation
+#         self.physics = physics
+
+#     def __call__(self, t, x, ctxs):
+#         ctx, ctx_ = ctxs
+
+#         if self.physics is None:
+#             vf = lambda xi: self.augmentation(t, x, xi)
+#         else:
+#             vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
+
+#         gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
+#         scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+
+#         # print("all operand types:", type(vf), type(gradvf), type(scd_order_term))
+#         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
 augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=4, context_size=context_size, key=seed)
 
-physics = Physics(key=seed)
-# physics = None
+# physics = Physics(key=seed)
+physics = None
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
@@ -296,8 +316,9 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
     term2 = jnp.mean(ctx**2)             ## regularisation
+    term3 = params_norm_squared(model)
 
-    # loss_val = term1 + 1e-3*term2
+    # loss_val = term1 + 1e-3*term2 + 1e-3*term3
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
     loss_val = term1
 
@@ -332,18 +353,18 @@ if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-        # trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
-        trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
-                               nb_inner_steps_max=nb_inner_steps_max, 
-                               proximal_reg=proximal_beta, 
-                               inner_tol_node=inner_tol_node, 
-                               inner_tol_ctx=inner_tol_ctx,
-                               print_error_every=print_error_every*(2**0), 
-                               save_path=trainer_save_path, 
-                               val_dataloader=val_dataloader, 
-                               patience=early_stopping_patience,
-                               int_prop=prop,
-                               key=seed)
+        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
+        # trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
+        #                        nb_inner_steps_max=nb_inner_steps_max, 
+        #                        proximal_reg=proximal_beta, 
+        #                        inner_tol_node=inner_tol_node, 
+        #                        inner_tol_ctx=inner_tol_ctx,
+        #                        print_error_every=print_error_every*(2**0), 
+        #                        save_path=trainer_save_path, 
+        #                        val_dataloader=val_dataloader, 
+        #                        patience=early_stopping_patience,
+        #                        int_prop=prop,
+        #                        key=seed)
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
