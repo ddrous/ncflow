@@ -16,13 +16,13 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256//2
-nb_epochs = 4000
+context_size = 256//1
+nb_epochs = 10000
 nb_epochs_adapt = 1000
 init_lr = 1e-3
-lr_factor = 1
+lr_factor = 0.5
 
-print_error_every = 10
+print_error_every = 100
 
 train = True
 run_folder = "./runs/31032024-164433/"      ## Run folder to use when not training
@@ -134,35 +134,44 @@ def circular_pad_2d(x, pad_width):
         return jnp.pad(x, zero_pad+list(pad_width), mode='wrap')
     # return jnp.pad(x, pad_width, mode='wrap')
 
+
+class Swish(eqx.Module):
+    beta: jnp.ndarray
+    def __init__(self, key=None):
+        self.beta = jax.random.uniform(key, shape=(1,), minval=0.01, maxval=1.0)
+    def __call__(self, x):
+        return x * jax.nn.sigmoid(self.beta * x)
+
 class Augmentation(eqx.Module):
     layers_data: list
     layers_context: list
     layers_shared: list
+    activations: list
 
 
-
-    def __init__(self, data_res, kernel_size, nb_int_channels, context_size, key=None):
-
-        chans = 64
-
+    def __init__(self, data_res, kernel_size, nb_comp_chans, nb_hidden_chans, context_size, key=None):
         keys = generate_new_keys(key, num=12)
         circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
+        self.activations = [Swish(key=keys[i]) for i in range(0, 6)]
 
-        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*nb_int_channels, key=keys[3]), activation,
-                                lambda x: jnp.stack(vec_to_mats(x, data_res, nb_int_channels), axis=0)]
 
-        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0)]
-                            # circular_pad,
-                            # eqx.nn.Conv2d(2, nb_int_channels, kernel_size, key=keys[0]), activation]
+        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*2, key=keys[3]), self.activations[0],
+                                lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
+                            circular_pad,
+                            eqx.nn.Conv2d(2, nb_comp_chans, kernel_size, key=keys[0]), self.activations[5]]
+
+        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
+                            circular_pad,
+                            eqx.nn.Conv2d(2, nb_comp_chans, kernel_size, key=keys[0]), self.activations[4]]
 
         self.layers_shared = [circular_pad, 
-                              eqx.nn.Conv2d(nb_int_channels+2, chans, kernel_size, key=keys[6]), activation,
+                              eqx.nn.Conv2d(nb_comp_chans*2, nb_hidden_chans, kernel_size, key=keys[6]), self.activations[1],
                               circular_pad, 
-                              eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[7]), activation,
+                              eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[7]), self.activations[2],
                               circular_pad, 
-                              eqx.nn.Conv2d(chans, chans, kernel_size, key=keys[8]), activation,
+                              eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[8]), self.activations[3],
                               circular_pad, 
-                              eqx.nn.Conv2d(chans, 2, kernel_size, key=keys[9]),
+                              eqx.nn.Conv2d(nb_hidden_chans, 2, kernel_size, key=keys[9]),
                             #   lambda x: x.flatten()]
                             lambda x: jnp.concatenate([x[0].flatten(), x[1].flatten()], axis=0)]
 
@@ -295,7 +304,7 @@ class ContextFlowVectorField(eqx.Module):
 #         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_res=32, kernel_size=3, nb_int_channels=2, context_size=context_size, key=seed)
+augmentation = Augmentation(data_res=32, kernel_size=3, nb_comp_chans=8, nb_hidden_chans=64, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None
@@ -318,12 +327,13 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
-    term2 = jnp.mean(ctx**2)             ## regularisation
-    term3 = params_norm_squared(model)
+    # term2 = jnp.mean(ctx**2)             ## regularisation
+    term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
+    # term3 = params_norm_squared(model)
 
     # loss_val = term1 + 1e-3*term2 + 1e-3*term3
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
-    loss_val = term1
+    loss_val = term1 + 1e-3*term2
 
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 
