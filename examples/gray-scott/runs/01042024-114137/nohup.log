@@ -1,0 +1,285 @@
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/01042024-114137/
+ Seed: 2026
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/01042024-114137/
+ Seed: 4052
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/01042024-114137/adapt/
+ Seed: 6078
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt_test
+ Savepath: ./runs/01042024-114137/adapt/
+ Seed: 6078
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.14
+Available devices: [gpu(id=0)]
+Run folder created successfuly: ./runs/01042024-114137/
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 114406
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: You did not provide a dataloader id. A new one has been generated: 114406
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+Total number of parameters in the model: 610942 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+
+=== Beginning training with proximal alternating minimization ... ===
+    Number of examples in a batch: 1
+    Maximum number of steps per inner minimization: 10
+    Maximum number of outer minimizations: 500
+    Maximum total number of training steps: 5000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (4, 1, 10, 2048) (10,)
+    Outer Step:     0      LossTrajs: 0.08817455     ContextsNorm: 0.00000000     ValIndCrit: 0.06713343
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.12e-04
+        -DiffCxt:  inf
+    Outer Step:     1      LossTrajs: 0.05201647     ContextsNorm: 0.00088557     ValIndCrit: 0.04894865
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.29e-05
+        -DiffCxt:  1.26e-02
+    Outer Step:     2      LossTrajs: 0.04675021     ContextsNorm: 0.00084554     ValIndCrit: 0.04280148
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.02e-05
+        -DiffCxt:  1.94e-02
+    Outer Step:     3      LossTrajs: 0.03906597     ContextsNorm: 0.00233585     ValIndCrit: 0.03799471
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.63e-05
+        -DiffCxt:  6.79e-03
+    Outer Step:   100      LossTrajs: 0.00222141     ContextsNorm: 0.03395382     ValIndCrit: 0.02416363
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 3.67e-07
+        -DiffCxt:  4.90e-06
+    Outer Step:   200      LossTrajs: 0.00085845     ContextsNorm: 0.03546998     ValIndCrit: 11999477268779892736.00000000
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.69e-07
+        -DiffCxt:  1.72e-06
+    Outer Step:   300      LossTrajs: 0.00047548     ContextsNorm: 0.02935117     ValIndCrit: 0.02409794
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.31e-07
+        -DiffCxt:  1.76e-06
+    Outer Step:   400      LossTrajs: 0.00025959     ContextsNorm: 0.02587400     ValIndCrit: 0.01990390
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.15e-07
+        -DiffCxt:  4.12e-06
+    Outer Step:   499      LossTrajs: 0.00017609     ContextsNorm: 0.02303600     ValIndCrit: 0.01694791
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.45e-08
+        -DiffCxt:  3.08e-07
+
+Total gradient descent training time: 2 hours 53 mins 21 secs
+Environment weights at the end of the training: [0.25 0.25 0.25 0.25]
+WARNING: You did not provide a dataloader id. A new one has been generated: 143742
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 4
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Test Score (In-Domain): 0.016947914
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 3
+    Trajectory id: 22
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Testing finished. Figure saved in: ./runs/01042024-114137/results_in_domain.png
+==  Begining in-domain 2D visualisation ... ==
+    Environment id: 2
+    Trajectory id: 28
+    Length of the testing trajectories: 10
+Testing finished. Figure saved in: ./runs/01042024-114137/results_2D_ind.png
+==  Begining in-domain 2D visualisation ... ==
+    Environment id: 3
+    Trajectory id: 0
+    Length of the testing trajectories: 10
+Testing finished. Figure saved in: ./runs/01042024-114137/results_2D_ind_train.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+=== Beginning sequential adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 1000
+    Total number of training steps: 1000
+
+Adapting to environment 0 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (1, 1, 10, 2048) (10,)
+    Epoch:     0     LossContext: 0.00708743
+    Epoch:     1     LossContext: 0.00649420
+    Epoch:     2     LossContext: 0.00588317
+    Epoch:     3     LossContext: 0.00527072
+    Epoch:   100     LossContext: 0.00038489
+    Epoch:   200     LossContext: 0.00029941
+    Epoch:   300     LossContext: 0.00028192
+    Epoch:   400     LossContext: 0.00027321
+    Epoch:   500     LossContext: 0.00026707
+    Epoch:   600     LossContext: 0.00026239
+    Epoch:   700     LossContext: 0.00025833
+    Epoch:   800     LossContext: 0.00025498
+    Epoch:   900     LossContext: 0.00025202
+    Epoch:   999     LossContext: 0.00024948
+
+Gradient descent adaptation time: 0 hours 6 mins 0 secs
+
+Adapting to environment 1 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.01918989
+    Epoch:     1     LossContext: 0.01791267
+    Epoch:     2     LossContext: 0.01653183
+    Epoch:     3     LossContext: 0.01505160
+    Epoch:   100     LossContext: 0.00048518
+    Epoch:   200     LossContext: 0.00041249
+    Epoch:   300     LossContext: 0.00038469
+    Epoch:   400     LossContext: 0.00037084
+    Epoch:   500     LossContext: 0.00036173
+    Epoch:   600     LossContext: 0.00035491
+    Epoch:   700     LossContext: 0.00034925
+    Epoch:   800     LossContext: 0.00034437
+    Epoch:   900     LossContext: 0.00034039
+    Epoch:   999     LossContext: 0.00033713
+
+Gradient descent adaptation time: 0 hours 5 mins 39 secs
+
+Adapting to environment 2 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.00349761
+    Epoch:     1     LossContext: 0.00318419
+    Epoch:     2     LossContext: 0.00289546
+    Epoch:     3     LossContext: 0.00264535
+    Epoch:   100     LossContext: 0.00031548
+    Epoch:   200     LossContext: 0.00027793
+    Epoch:   300     LossContext: 0.00026102
+    Epoch:   400     LossContext: 0.00025155
+    Epoch:   500     LossContext: 0.00024586
+    Epoch:   600     LossContext: 0.00024197
+    Epoch:   700     LossContext: 0.00023889
+    Epoch:   800     LossContext: 0.00023644
+    Epoch:   900     LossContext: 0.00023430
+    Epoch:   999     LossContext: 0.00023250
+
+Gradient descent adaptation time: 0 hours 5 mins 40 secs
+
+Adapting to environment 3 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.01377403
+    Epoch:     1     LossContext: 0.01262117
+    Epoch:     2     LossContext: 0.01138475
+    Epoch:     3     LossContext: 0.01007350
+    Epoch:   100     LossContext: 0.00020955
+    Epoch:   200     LossContext: 0.00019154
+    Epoch:   300     LossContext: 0.00018400
+    Epoch:   400     LossContext: 0.00017853
+    Epoch:   500     LossContext: 0.00017433
+    Epoch:   600     LossContext: 0.00017128
+    Epoch:   700     LossContext: 0.00016898
+    Epoch:   800     LossContext: 0.00016716
+    Epoch:   900     LossContext: 0.00016579
+    Epoch:   999     LossContext: 0.00016468
+
+Gradient descent adaptation time: 0 hours 5 mins 36 secs
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+Saving adaptation parameters into ./runs/01042024-114137/adapt/ folder with id 170846 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 4
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 10
+    Length of the testing trajectories: 10
+Test Score (OOD): 0.013873175
+
