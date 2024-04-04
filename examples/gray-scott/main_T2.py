@@ -12,13 +12,13 @@ from nodax import *
 #%%
 
 
-seed = 2026
+seed = 202600
 # seed = int(np.random.randint(0, 10000))
 
-context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 1               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//1
 nb_epochs = 10000
-nb_epochs_adapt = 1000
+nb_epochs_adapt = 1500
 init_lr = 1e-3
 lr_factor = 0.5
 
@@ -31,8 +31,8 @@ save_trainer = True
 
 finetune = False
 
-nb_outer_steps_max = 500
-nb_inner_steps_max = 10
+nb_outer_steps_max = 700
+nb_inner_steps_max = 20
 proximal_beta = 1e1
 inner_tol_node = 1e-9
 inner_tol_ctx = 1e-8
@@ -43,15 +43,10 @@ adapt = True
 adapt_huge = False
 
 
-# activation = jax.nn.softplus
-activation = jax.nn.swish
-# activation = lambda x:x
-# activation = jax.nn.sigmoid
-
 
 integrator = diffrax.Dopri5
 # integrator = RK4
-ivp_args = {"dt_init":1e-5, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivisions":100}
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivisions":100}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 
 #%%
@@ -194,66 +189,66 @@ class Augmentation(eqx.Module):
 
 
 
-def vec_to_mat(vec_uv, res=32):
-    UV = jnp.split(vec_uv, 2)
-    U = jnp.reshape(UV[0], (res, res))
-    V = jnp.reshape(UV[1], (res, res))
-    return U, V
+# def vec_to_mat(vec_uv, res=32):
+#     UV = jnp.split(vec_uv, 2)
+#     U = jnp.reshape(UV[0], (res, res))
+#     V = jnp.reshape(UV[1], (res, res))
+#     return U, V
 
-def mat_to_vec(mat_U, mat_V, res):
-    dudt = jnp.reshape(mat_U, res * res)
-    dvdt = jnp.reshape(mat_V, res * res)
-    return jnp.concatenate((dudt, dvdt))
+# def mat_to_vec(mat_U, mat_V, res):
+#     dudt = jnp.reshape(mat_U, res * res)
+#     dvdt = jnp.reshape(mat_V, res * res)
+#     return jnp.concatenate((dudt, dvdt))
 
-def laplacian2D(a):
-    # a_nn | a_nz | a_np
-    # a_zn | a    | a_zp
-    # a_pn | a_pz | a_pp
-    a_zz = a
+# def laplacian2D(a):
+#     # a_nn | a_nz | a_np
+#     # a_zn | a    | a_zp
+#     # a_pn | a_pz | a_pp
+#     a_zz = a
 
-    a_nz = jnp.roll(a_zz, (+1, 0), (0, 1))
-    a_pz = jnp.roll(a_zz, (-1, 0), (0, 1))
-    a_zn = jnp.roll(a_zz, (0, +1), (0, 1))
-    a_zp = jnp.roll(a_zz, (0, -1), (0, 1))
+#     a_nz = jnp.roll(a_zz, (+1, 0), (0, 1))
+#     a_pz = jnp.roll(a_zz, (-1, 0), (0, 1))
+#     a_zn = jnp.roll(a_zz, (0, +1), (0, 1))
+#     a_zp = jnp.roll(a_zz, (0, -1), (0, 1))
 
-    a_nn = jnp.roll(a_zz, (+1, +1), (0, 1))
-    a_np = jnp.roll(a_zz, (+1, -1), (0, 1))
-    a_pn = jnp.roll(a_zz, (-1, +1), (0, 1))
-    a_pp = jnp.roll(a_zz, (-1, -1), (0, 1))
+#     a_nn = jnp.roll(a_zz, (+1, +1), (0, 1))
+#     a_np = jnp.roll(a_zz, (+1, -1), (0, 1))
+#     a_pn = jnp.roll(a_zz, (-1, +1), (0, 1))
+#     a_pp = jnp.roll(a_zz, (-1, -1), (0, 1))
 
-    return (- 3 * a + 0.5 * (a_nz + a_pz + a_zn + a_zp) + 0.25 * (a_nn + a_np + a_pn + a_pp)) / (1. ** 2)
+#     return (- 3 * a + 0.5 * (a_nz + a_pz + a_zn + a_zp) + 0.25 * (a_nn + a_np + a_pn + a_pp)) / (1. ** 2)
 
-class Physics(eqx.Module):
-    layers: list
-    # number: jnp.ndarray
+# class Physics(eqx.Module):
+#     layers: list
+#     # number: jnp.ndarray
 
-    def __init__(self, key=None):
-        keys = generate_new_keys(key, num=4)
-        width_size = 8
-        # # new_act = jax.nn.sigmoid
-        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[2]), activation,
-                        eqx.nn.Linear(width_size*2, 4, key=keys[3])]
-        # self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
+#     def __init__(self, key=None):
+#         keys = generate_new_keys(key, num=4)
+#         width_size = 8
+#         # # new_act = jax.nn.sigmoid
+#         self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
+#                         eqx.nn.Linear(width_size*2, width_size*2, key=keys[2]), activation,
+#                         eqx.nn.Linear(width_size*2, 4, key=keys[3])]
+#         # self.number = jax.random.uniform(keys[0], shape=(1,), minval=0.01, maxval=0.5)
 
-    def __call__(self, t, uv, ctx):
-        params = ctx
-        for layer in self.layers:
-            params = layer(params)
-        params = jnp.abs(params)
-        # params = jnp.array([0.2097, 0.105, 0.03, 0.062])
-        # params = jnp.array([0.2097, 0.105, 0.03, self.number[0]*ctx[0]])
+#     def __call__(self, t, uv, ctx):
+#         params = ctx
+#         for layer in self.layers:
+#             params = layer(params)
+#         params = jnp.abs(params)
+#         # params = jnp.array([0.2097, 0.105, 0.03, 0.062])
+#         # params = jnp.array([0.2097, 0.105, 0.03, self.number[0]*ctx[0]])
 
-        U, V = vec_to_mat(uv, 32)
-        deltaU = laplacian2D(U)
-        deltaV = laplacian2D(V)
-        dUdt = (params[0] * deltaU - U * (V ** 2) + params[2] * (1. - U))
-        dVdt = (params[1] * deltaV + U * (V ** 2) - (params[2] + params[3]) * V)
-        duvdt = mat_to_vec(dUdt, dVdt, 32)
+#         U, V = vec_to_mat(uv, 32)
+#         deltaU = laplacian2D(U)
+#         deltaV = laplacian2D(V)
+#         dUdt = (params[0] * deltaU - U * (V ** 2) + params[2] * (1. - U))
+#         dVdt = (params[1] * deltaV + U * (V ** 2) - (params[2] + params[3]) * V)
+#         duvdt = mat_to_vec(dUdt, dVdt, 32)
 
-        duvdt = jnp.nan_to_num(duvdt, nan=0.0, posinf=0.0, neginf=0.0)
-        return duvdt
+#         duvdt = jnp.nan_to_num(duvdt, nan=0.0, posinf=0.0, neginf=0.0)
+#         return duvdt
 
 
 
@@ -329,11 +324,11 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
     # term2 = jnp.mean(ctx**2)             ## regularisation
     term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
-    # term3 = params_norm_squared(model)
+    term3 = params_norm_squared(model)
 
-    # loss_val = term1 + 1e-3*term2 + 1e-3*term3
+    loss_val = term1 + 1e-3*term2 + 1e-3*term3
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
-    loss_val = term1 + 1e-3*term2
+    # loss_val = term1 + 1e-3*term2
 
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 

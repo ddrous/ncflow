@@ -11,6 +11,7 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 import diffrax
 from nodax import RK4
 import jax.numpy as jnp
+import numpy as jnp
 
 try:
     __IPYTHON__
@@ -124,7 +125,7 @@ def gray_scott(t, uv, params):
     duvdt = mat_to_vec(dUdt, dVdt, res)
 
     ## Do NaN to NuM
-    duvdt = jnp.nan_to_num(duvdt)
+    # duvdt = jnp.nan_to_num(duvdt)
     return duvdt
 
 
@@ -179,9 +180,9 @@ for j in range(n_traj_per_env):
 
         # print("Initial state", initial_state)
 
-        # # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
+        # Solve the ODEs using SciPy's solve_ivp
+        solution = solve_ivp(gray_scott, t_span, initial_state, args=(selected_params,), t_eval=t_eval)
+        data[i, j, :, :] = solution.y.T
 
         # use diffrax instead, with the DoPri5 integrator
         # solution = diffrax.diffeqsolve(diffrax.ODETerm(gray_scott),
@@ -197,13 +198,13 @@ for j in range(n_traj_per_env):
         # data[i, j, :, :] = solution.ys
         # print("Stats", solution.stats['num_steps'])
 
-        ys = RK4(gray_scott, 
-                    (t_eval[0], t_eval[-1]),
-                    initial_state,
-                    *(selected_params,), 
-                    t_eval=t_eval, 
-                    subdivisions=50)
-        data[i, j, :, :] = ys
+        # ys = RK4(gray_scott, 
+        #             (t_eval[0], t_eval[-1]),
+        #             initial_state,
+        #             *(selected_params,), 
+        #             t_eval=t_eval, 
+        #             subdivisions=50)
+        # data[i, j, :, :] = ys
 
 
 
