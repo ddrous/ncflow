@@ -283,5 +283,5 @@ if _in_ipython_session:
   plt.draw()
 
 
-## Save to pdf
-plt.savefig('tmp/selkov_attractors.pdf', dpi=400, bbox_inches='tight')
+  ## Save to pdf
+  plt.savefig('tmp/selkov_attractors.pdf', dpi=400, bbox_inches='tight')

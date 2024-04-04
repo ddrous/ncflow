@@ -18,7 +18,7 @@ from nodax import *
 
 #%%
 
-seed = 202600
+seed = 2
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##
@@ -40,8 +40,8 @@ finetune = False
 init_lr = 1e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 1500
-nb_inner_steps_max = 10
+nb_outer_steps_max = 250
+nb_inner_steps_max = 20
 proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-9
 inner_tol_ctx = 5e-8
