@@ -12,7 +12,7 @@ from nodax import *
 #%%
 
 
-seed = 202600
+seed = 202
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 1               ## Number of neighboring contexts j to use for a flow in env e
