@@ -595,7 +595,7 @@ except NameError:
             os.system(f"cp nohup.log {finetunedir}")
             ## Open the results_in_domain in the terminal
             # os.system(f"open {finetunedir}results_in_domain.png")
-        elif adapt_test==True: ## Adaptation
+        elif adapt_test==True and train==False: ## Adaptation
             os.system(f"cp nohup.log {adapt_folder}")
         else:
             os.system(f"cp nohup.log {run_folder}")

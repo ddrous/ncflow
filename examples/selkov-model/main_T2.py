@@ -18,7 +18,7 @@ from nodax import *
 
 #%%
 
-seed = 20260
+seed = 2700
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##
@@ -525,7 +525,7 @@ except NameError:
             os.system(f"cp nohup.log {finetunedir}")
             ## Open the results_in_domain in the terminal
             # os.system(f"open {finetunedir}results_in_domain.png")
-        elif adapt_test==True: ## Adaptation
+        elif adapt_test==True and train==False: ## Adaptation
             os.system(f"cp nohup.log {adapt_folder}")
         else:
             os.system(f"cp nohup.log {run_folder}")
