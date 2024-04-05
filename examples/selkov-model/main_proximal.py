@@ -40,7 +40,7 @@ finetune = False
 init_lr = 1e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 250
+nb_outer_steps_max = 1000
 nb_inner_steps_max = 20
 proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-9

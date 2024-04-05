@@ -37,7 +37,7 @@ early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps t
 
 print_error_every = 10
 
-train = False
+train = True
 run_folder = "./runs/24032024-125527/"      ## Run folder to use when not training
 
 save_trainer = True
