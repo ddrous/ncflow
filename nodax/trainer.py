@@ -344,6 +344,15 @@ class Trainer:
                     ind_crit,_ = tester.test(val_dataloader, int_cutoff=1.0, criterion=val_criterion, verbose=False)
                     val_losses.append(np.array([out_step, ind_crit]))
                     print(f"    Outer Step: {out_step:-5d}      LossTrajs: {loss_epoch_node[0]:-.8f}     ContextsNorm: {jnp.mean(term2):-.8f}     ValIndCrit: {ind_crit:-.8f}", flush=True)
+                    ## Check if val loss is lowest to save the model
+                    if ind_crit <= jnp.stack(val_losses)[:,1].min() and save_path:
+                        print(f"        Saving best model so far ...")
+                        self.learner.save_learner(save_path)
+                    ## Restore the learner at the last evaluation step
+                    if out_step == nb_outer_steps_max-1:
+                        # print(f"        Restoring model to the best one found during training ...")
+                        self.learner.load_learner(save_path)
+
                 else:
                     print(f"    Epoch: {out_step:-5d}      LossTrajs: {loss_epoch_node[0]:-.8f}     ContextsNorm: {jnp.mean(term2):-.8f}", flush=True)
 
@@ -378,8 +387,9 @@ class Trainer:
         self.opt_node_state = opt_state_node
         self.opt_ctx_state = opt_state_ctx
 
-        self.learner.neuralode = node
-        self.learner.contexts = contexts
+        if val_dataloader is None:
+            self.learner.neuralode = node
+            self.learner.contexts = contexts
 
         # Save the model and results
         if save_path:
@@ -403,7 +413,8 @@ class Trainer:
         pickle.dump(self.opt_node_state, open(path+"opt_state_node.pkl", "wb"))
         pickle.dump(self.opt_ctx_state, open(path+"opt_state_ctx.pkl", "wb"))
 
-        self.learner.save_learner(path)
+        if not hasattr(self, 'val_losses'):
+            self.learner.save_learner(path)
 
 
     def restore_trainer(self, path):
