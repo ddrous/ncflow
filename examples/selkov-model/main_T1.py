@@ -383,6 +383,7 @@ visualtester.visualize(test_dataloader, e=0, traj=0, save_path=savefigdir);
 
 if adapt_test and not adapt_restore:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+    os.system(f'python dataset.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}"');
 
 # if adapt_test:
 #     raw_dat = np.load(adapt_folder+"adapt_data.npz")
@@ -422,6 +423,7 @@ if adapt_test and not adapt_restore:
 if adapt_test:
 
     adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+    adapt_dataloader_test = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, data_id="170846", key=seed)
     # print("shape of adapt_dataloader", adapt_dataloader.dataset.shape)
 
     sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
@@ -434,10 +436,10 @@ if adapt_test:
         print("Save_id for restoring trained adapation model:", adapt_dataloader.data_id)
         trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-    ood_crit, _ = visualtester.test(adapt_dataloader, int_cutoff=1.0)
+    ood_crit, _ = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)
     # contexts = np.append(contexts, trainer.learner.contexts.params)
 
-    visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+    visualtester.visualize(adapt_dataloader_test, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
 #%%

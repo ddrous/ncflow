@@ -1,3 +1,4 @@
+context_pool_size = 2
 #%%
 # import os
 # %load_ext autoreload
@@ -40,7 +41,7 @@ finetune = False
 init_lr = 1e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 1500
+nb_outer_steps_max = 2000
 nb_inner_steps_max = 25
 proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-9
@@ -211,7 +212,7 @@ physics = None
 
 vectorfield = ContextFlowVectorField(augmentation, physics=physics)
 
-print("\\n\\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\\n\\n")
+print("\n\nTotal number of parameters in the model:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield,eqx.is_array)) if x is not None), "\n\n")
 
 contexts = ContextParams(nb_envs, context_size, key=None)
 
@@ -282,7 +283,7 @@ if train == True:
                                key=seed)
 
 else:
-    # print("\\nNo training, attempting to load model and results from "+ run_folder +" folder ...\\n")
+    # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
     restore_folder = run_folder
     # restore_folder = "./runs/27012024-155719/finetune_193625/"
@@ -326,12 +327,12 @@ if adapt_test:
     opt_adapt = optax.adabelief(sched_ctx_new)
 
     if adapt_restore == False:
-        print("\\n==================== Sequential adaptation ====================")
+        print("\n==================== Sequential adaptation ====================")
         trainer.adapt_sequential(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
         ood_crit, _ = visualtester.test(adapt_dataloader_test, int_cutoff=1.0, verbose=True)
 
 
-        print("\\n==================== Batch adaptation ====================\\n")
+        print("\n==================== Batch adaptation ====================\n")
         trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
         ood_crit, _ = visualtester.test(adapt_dataloader_test, int_cutoff=1.0, verbose=True)
 
@@ -357,4 +358,4 @@ except NameError:
             # os.system(f"open {run_folder}results_in_domain.png")
 
 
-print("\\n ================================== ||||| DONE ||||| ==================================  \\n")
+print("\n ================================== ||||| DONE ||||| ==================================  \n")

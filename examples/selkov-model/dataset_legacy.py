@@ -10,7 +10,6 @@ from IPython.display import Image
 import diffrax
 from nodax import RK4
 import jax.numpy as jnp
-import numpy as jnp ## Lazy habbit !
 
 try:
     __IPYTHON__
@@ -74,13 +73,18 @@ from matplotlib.animation import FuncAnimation
 import jax.numpy as jnp
 # import diffrax
 
-# Define the Lotka-Volterra system
-def lotka_volterra(t, state, alpha, beta, delta, gamma):
-    x, y = state
-    dx_dt = alpha * x - beta * x * y
-    dy_dt = delta * x * y - gamma * y
-    # return [dx_dt, dy_dt]
-    return jnp.array([dx_dt, dy_dt])
+# Define the Selkov system: https://en.wikipedia.org/wiki/Hopf_bifurcation
+def selkov(t, y, a, b):
+    x, y = y
+    dx = -x + a*y + (x**2)*y
+    dy = b - a*y - (x**2)*y
+    return np.array([dx, dy])
+
+# def selkov(t, y, a, b):
+#     x, y = y
+#     dx = 0.5*x - 0.5*x*y
+#     dy = 0.5*x*y - 0.5*y
+#     return np.array([dx, dy])
 
 
 """ Earlier implementation of RK4 integrator. See better implementation in nodax.RK4"""
@@ -109,28 +113,23 @@ def lotka_volterra(t, state, alpha, beta, delta, gamma):
 
 if split == "train" or split=="test":
   # Training environments
-  environments = [
-      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.5},
-      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.5},
-      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.5},
-      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 0.75},
-      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 0.75},
-      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 0.75},
-      {"alpha": 0.5, "beta": 0.5, "gamma": 0.5, "delta": 1.0},
-      {"alpha": 0.5, "beta": 0.75, "gamma": 0.5, "delta": 1.0},
-      {"alpha": 0.5, "beta": 1.0, "gamma": 0.5, "delta": 1.0},
-  ]
+  # environments = [(0.1, b) for b in np.linspace(-1.0, 1.0, 21)]
+
+  environments = [(0.1, b) for b in list(np.linspace(-1, -0.25, 7))\
+        + list(np.linspace(-0.1, 0.1, 7))\
+        + list(np.linspace(0.25, 1., 7))]
+
+  # environments = [(0.1, b) for b in np.linspace(0.2, 1.0, 16)]
+  # environments = [(0.1, b) for b in np.linspace(0.5, 0.6, 1)]
 elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
-  environments = [
-    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
-    {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 1.125},
-    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 0.625},
-    {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
-  ]
-elif split == "adapt_huge":
-  environments = [
-      {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 1) for d in np.linspace(0.25, 1.25, 1)]
+  # environments = [(0.1, b) for b in np.linspace(-1.25, 1.25, 21)[::4]]
+  # environments = [(0.1, b) for b in np.linspace(0.1, 1.1, 16)[::4]]
+  environments = [(0.1, b) for b in [-1.25, -0.65, -0.05, 0.02, 0.6, 1.2]]
+
+# elif split == "adapt_huge":
+#   environments = [
+#       {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 1) for d in np.linspace(0.25, 1.25, 1)]
 
 # ## Lots of data environment
 # environments = []
@@ -142,41 +141,41 @@ elif split == "adapt_huge":
 
 if split == "train":
   n_traj_per_env = 4     ## training
-elif split == "test" or split == "adapt_test" or split == "adapt_huge":
-  n_traj_per_env = 32     ## testing
-elif split == "adapt":
+elif split == "test":
+  n_traj_per_env = 4     ## testing
+elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   n_traj_per_env = 1     ## adaptation
 
-n_steps_per_traj = int(10/0.5)
-# n_steps_per_traj = 201
+n_steps_per_traj = 11
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
 
 # Time span for simulation
-t_span = (0, 10)  # Shortened time span
-t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj, endpoint=False)  # Fewer frames
+t_span = (0, 40)  # Shortened time span
+t_eval = np.linspace(t_span[0], t_span[-1], n_steps_per_traj)  # Fewer frames
 
 max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
 
-    # Initial conditions (prey and predator concentrations)
     np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
-    initial_state = np.random.uniform(size=(2,)) + 1.
+    initial_state = np.random.uniform(0, 3, 2)
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
-        # initial_state = np.random.uniform(size=(2,)) + 1.
+
+        # Initial conditions (prey and predator concentrations)
+        # initial_state = [0, 2]
 
         # Solve the ODEs using SciPy's solve_ivp
-        solution = solve_ivp(lotka_volterra, t_span, initial_state, args=(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), t_eval=t_eval)
+        solution = solve_ivp(selkov, t_span, initial_state, args=(selected_params[0], selected_params[1]), t_eval=t_eval)
         data[i, j, :, :] = solution.y.T
 
         # rhs = lambda x, t: lotka_volterra(t, x, selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"])
         # solution = rk4_integrator(rhs, initial_state, t_eval)
         # data[i, j, :, :] = solution
 
-        # ys = RK4(lotka_volterra, 
+        # ys = RK4(selkov, 
         #             (t_eval[0], t_eval[-1]),
         #             initial_state,
         #            *(selected_params["alpha"], selected_params["beta"], selected_params["delta"], selected_params["gamma"]), 
@@ -192,7 +191,7 @@ elif split == "test":
 elif split == "adapt":
   filename = savepath+'adapt_data.npz'
 elif split == "adapt_test":
-  filename = savepath+'adapt_data_test.npz'
+  filename = savepath+'adapt_test_data.npz'
 elif split == "adapt_huge":
   filename = savepath+'adapt_huge_data.npz'
 
@@ -211,35 +210,78 @@ np.savez(filename, t=t_eval, X=data)
 
 # %%
 if _in_ipython_session:
-  # Extract the solution
-  # prey_concentration, predator_concentration = solution.T
-  # prey_concentration, predator_concentration = solution.y
-  prey_concentration, predator_concentration = ys[...,0], ys[...,1]
+  a = .1
+  y0 = [0, 2]
+  # y0 = [1, 1]
 
-  # Create an animation of the Lotka-Volterra system
-  fig, ax = plt.subplots()
-  eps = 0.5
-  ax.set_xlim(-eps, np.max(prey_concentration)+eps)
-  ax.set_ylim(-eps, np.max(predator_concentration)+eps)
-  ax.set_xlabel('Preys')
-  ax.set_ylabel('Predators')
+  # for b in np.linspace(0., 1.2, 15)[:]:
+  #     t_span = [0, 1000]
+  #     sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+  #     y = sol.sol(t)
+  #     plt.plot(y[0], y[1], label=f'b={b:.2f}')
 
-  concentrations, = ax.plot([], [], 'r-', lw=1, label='Concentrations')
-  time_template = 'Time = %.1fs'
-  time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+  group1 = list(np.linspace(-1, -0.25, 7))
+  group2 = list(np.linspace(-0.1, 0.1, 7))
+  group3 = list(np.linspace(0.25, 1., 7))
+  groups = group1 + group2 + group3
 
-  # Add legend
-  ax.legend()
+  ## Set size and style for presentation in a paper
+  plt.rcParams.update({'font.size': 24})
+  # plt.rcParams.update({'font.family': 'serif'})
+  # plt.rcParams.update({'font.serif': 'Times New Roman'})
 
-  def animate(i):
-      concentrations.set_data(prey_concentration[:i], predator_concentration[:i])
-      time_text.set_text(time_template % t_eval[i])
-      return concentrations, time_text
+  ## Set the figure size
+  plt.figure(figsize=(10, 10))
 
-  ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
-  plt.show()
+  for j, y0 in enumerate([[-2, 1], [2, -1]]):
+    ## Plot y0 
+    plt.plot(y0[0], y0[1], 'ko', label='Init. conditions' if j == 0 else None)
+
+    ## Plot group1 and label it
+    colors = ['r', 'crimson']
+    for i, b in enumerate(group1):
+        t_span = [0, 40]
+        t = np.linspace(*t_span, 5000)
+        sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+        y = sol.sol(t)
+        # plt.plot(y[0], y[1], label=f'b={b:.2f}')
+        plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
+        ## Put a single label
+        if i+j == 0:
+          plt.plot(y[0], y[1], "r", alpha=0.5, label='Group 1')
+
+    ## Plot group1 and label it
+    colors = ['b', 'dodgerblue']
+    for i, b in enumerate(group2):
+        t_span = [0, 40]
+        t = np.linspace(*t_span, 5000)
+        sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+        y = sol.sol(t)
+        # plt.plot(y[0], y[1], label=f'b={b:.2f}')
+        plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
+        ## Put a single label
+        if i+j == 0:
+          plt.plot(y[0], y[1], "b", alpha=0.5, label='Group 2')
+
+    ## Plot group1 and label it
+    colors = ['g', 'teal']
+    for i, b in enumerate(group3):
+        t_span = [0, 40]
+        t = np.linspace(*t_span, 5000)
+        sol = solve_ivp(selkov, t_span, y0, args=(a, b), dense_output=True)
+        y = sol.sol(t)
+        # plt.plot(y[0], y[1], label=f'b={b:.2f}')
+        plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
+        ## Put a single label
+        if i+j == 0:
+          plt.plot(y[0], y[1], "g", alpha=0.5, label='Group 3')
 
 
-  ## Save the movie to a small mp4 file
-  # ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
-  ani.save('tmp/lotka_volterra.gif', fps=30)
+  plt.xlabel(r'$x$', fontsize=24)
+  plt.ylabel(r'$y$', fontsize=24)
+  plt.legend()
+  plt.draw()
+
+
+  ## Save to pdf
+  plt.savefig('tmp/selkov_attractors.pdf', dpi=400, bbox_inches='tight')
