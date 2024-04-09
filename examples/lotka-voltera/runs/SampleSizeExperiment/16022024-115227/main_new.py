@@ -28,11 +28,10 @@ nb_epochs_adapt = 24000
 
 print_error_every = 1000
 
-train = True
+train = False
 save_trainer = True
 
 finetune = False
-# run_folder = "./runs/27012024-155719/"      ## Only needed if not training
 
 adapt = True
 adapt_huge = False
@@ -40,31 +39,8 @@ adapt_huge = False
 #%%
 
 
-if train == True:
 
-    # check that 'tmp' folder exists. If not, create it
-    if not os.path.exists('./runs'):
-        os.mkdir('./runs')
-
-    # Make a new folder inside 'tmp' whose name is the current time
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/23012024-163033/"
-    os.mkdir(run_folder)
-    print("Data folder created successfuly:", run_folder)
-
-    # Save the run and dataset scripts in that folder
-    script_name = os.path.basename(__file__)
-    os.system(f"cp {script_name} {run_folder}")
-    os.system(f"cp dataset.py {run_folder}")
-
-    # Save the nodax module files as well
-    os.system(f"cp -r ../../nodax {run_folder}")
-    print("Completed copied scripts ")
-
-
-else:
-    run_folder = "./runs/15022024-133847/"  ## Needed for loading the model and finetuning TODO: opti
-    print("No training. Loading data and results from:", run_folder)
+run_folder = "./"  ## Needed for loading the model and finetuning TODO: opti
 
 ## Create a folder for the adaptation results
 adapt_folder = run_folder+"adapt/"
@@ -75,13 +51,13 @@ if not os.path.exists(adapt_folder):
 
 if train == True:
     # Run the dataset script to generate the data
-    os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
-    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+    os.system(f'python dataset_new.py --split=train --savepath="{run_folder}" --seed="{seed}"')
+    os.system(f'python dataset_new.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
 if adapt == True:
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+    os.system(f'python dataset_new.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
     os.system(f'python dataset_new.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}"');
 if adapt_huge == True:
-    os.system(f'python dataset.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
+    os.system(f'python dataset_new.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
 
 
 
@@ -352,6 +328,7 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 ## Give the dataloader an id to help with restoration later on
 
 adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+adapt_dataloader_test = DataLoader(adapt_folder+"adapt_data_test.npz", adaptation=True, data_id="170846", key=seed)
 
 # sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
 #                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
@@ -363,14 +340,14 @@ sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-3,
 opt_adapt = optax.adabelief(sched_ctx_new)
 
 if adapt == True:
-    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+    # trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+    trainer.adapt_sequential(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
 else:
-
     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
 
 #%%
-ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+ood_crit = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
 
 visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
@@ -382,123 +359,19 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 try:
     __IPYTHON__ ## in a jupyter notebook
 except NameError:
-    if os.path.exists("nohup.log"):
+    if os.path.exists("nohup_new.log"):
         if finetune == True:
-            os.system(f"cp nohup.log {finetunedir}")
+            os.system(f"cp nohup_new.log {finetunedir}")
             ## Open the results_in_domain in the terminal
-            os.system(f"open {finetunedir}results_in_domain.png")
+            os.system(f"open {finetunedir}results_in_domain_new.png")
         else:
-            os.system(f"cp nohup.log {run_folder}")
-            os.system(f"open {run_folder}results_in_domain.png")
+            os.system(f"cp nohup_new.log {run_folder}")
+            os.system(f"open {run_folder}results_in_domain_new.png")
 
 
 #%%
 
-# eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-#%%
-
-#### Generate data for analysis
-
-
-## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
-
-
-
-# First, check if the file exists. If not, create it and write the header
-if not os.path.exists(run_folder+'analysis'):
-    os.mkdir(run_folder+'analysis')
-
-csv_file = run_folder+'analysis/test_scores.csv'
-if not os.path.exists(csv_file):
-    os.system(f"touch {csv_file}")
-
-with open(csv_file, 'r') as f:
-    lines = f.readlines()
-    if len(lines) == 0:
-        with open(csv_file, 'w') as f:
-            f.write('seed,ind_crit,ood_crit\n')
-
-
-## Get results on test and adaptation datasets, then append them to the csv
-
-np.random.seed(seed)
-seeds = np.random.randint(0, 10000, 10)
-for seed in seeds:
-# for seed in range(8000, 6*10**3, 10):
-    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
-
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=4, data_id="082026")
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
-
-    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
-    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
-
-    with open(csv_file, 'a') as f:
-        f.write(f'{seed},{ind_crit},{ood_crit}\n')
-
-
-## Print the mean and stds of the scores
-import pandas as pd
-pd.set_option('display.float_format', '{:.2e}'.format)
-test_scores = pd.read_csv(csv_file).describe()
-print(test_scores.iloc[:3])
-
-
-print("\n-----------------------------------------------------------------------------------------------------------\n")
-
-
-#%%
-
-## Huge adaptation step to 51*51 environments and MAPE score computation
-
-
-
-## Give the dataloader an id to help with restoration later on
-
-
-
-# adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
-
-# sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-#                                                 int(nb_epochs_adapt*0.5):0.1,
-#                                                 int(nb_epochs_adapt*0.75):0.1})
-# opt_adapt = optax.adabelief(sched_ctx_new)
-
-# # nb_epochs_adapt = 2
-# if adapt_huge == True:
-#     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-# else:
-#     print("save_id:", adapt_dataloader.data_id)
-
-#     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
-
-# ## Define mape criterion over a trajectory
-# def mape(y, y_hat):
-#     norm_traget = jnp.abs(y)
-#     norm_diff = jnp.abs(y-y_hat)
-#     ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
-#     return jnp.sum(ratios)
-
-# ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
-
-# print(odd_crit_all)
-
-# ## Save the odd_crit_all in numpy
-# np.save('mapes.npy', odd_crit_all)
