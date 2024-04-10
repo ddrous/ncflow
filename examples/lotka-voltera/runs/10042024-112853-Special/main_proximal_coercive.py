@@ -22,7 +22,7 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##
-context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 9               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024
 print_error_every = 10
 # integrator = diffrax.Dopri5
@@ -33,7 +33,7 @@ ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdiv
 run_folder = "./"
 
 ## Training hyperparameters ##
-train = False
+train = True
 save_trainer = True
 finetune = False
 
@@ -50,11 +50,11 @@ early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps t
 
 ## Adaptation hyperparameters ##
 adapt_test = True
-adapt_restore = True
+adapt_restore = False
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
-nb_epochs_adapt = 15
+nb_epochs_adapt = 1500
 
 
 
@@ -64,14 +64,11 @@ nb_epochs_adapt = 15
 if train == True:
 
     # check that 'tmp' folder exists. If not, create it
-    if not os.path.exists('./runs'):
-        os.mkdir('./runs')
+    if not os.path.exists('./'):
+        os.mkdir('./')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/23012024-163033/"
-    os.mkdir(run_folder)
-    print("Run folder created successfuly:", run_folder)
+    run_folder = './'
 
     # Save the run and dataset scripts in that folder
     script_name = os.path.basename(__file__)
