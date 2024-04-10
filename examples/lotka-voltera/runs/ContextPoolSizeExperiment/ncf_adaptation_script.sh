@@ -1,0 +1,9 @@
+# cd 09042024-152116 && nohup python main_T2_1.py > nohup_full.log &
+# cd 09042024-161306 && nohup python main_T2_2.py > nohup_full.log &
+# cd 09042024-172705 && nohup python main_T2_3.py > nohup_full.log &
+# cd 09042024-185158 && nohup python main_T2_4.py > nohup_full.log &
+# cd 09042024-202756 && nohup python main_T2_5.py > nohup_full.log &
+# cd 09042024-221340 && nohup python main_T2_6.py > nohup_full.log &
+# cd 10042024-001123 && nohup python main_T2_7.py > nohup_full.log &
+# cd 10042024-022208 && nohup python main_T2_8.py > nohup_full.log &
+# cd 10042024-044528 && nohup python main_T2_9.py > nohup_full.log &

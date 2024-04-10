@@ -34,7 +34,7 @@ ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdiv
 run_folder = "./"
 
 ## Training hyperparameters ##
-train = True
+train = False
 save_trainer = True
 finetune = False
 
@@ -55,7 +55,7 @@ adapt_restore = False
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
-nb_epochs_adapt = 15
+nb_epochs_adapt = 1500
 
 
 
