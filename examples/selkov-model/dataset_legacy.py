@@ -209,6 +209,11 @@ np.savez(filename, t=t_eval, X=data)
 
 
 # %%
+
+import seaborn as sns
+sns.set_theme(style='ticks')
+sns.set_context('poster')
+
 if _in_ipython_session:
   a = .1
   y0 = [0, 2]
@@ -248,7 +253,7 @@ if _in_ipython_session:
         plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
         ## Put a single label
         if i+j == 0:
-          plt.plot(y[0], y[1], "r", alpha=0.5, label='Group 1')
+          plt.plot(y[0], y[1], "r", alpha=0.5, label='Attractor 1 (L1)')
 
     ## Plot group1 and label it
     colors = ['b', 'dodgerblue']
@@ -261,7 +266,7 @@ if _in_ipython_session:
         plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
         ## Put a single label
         if i+j == 0:
-          plt.plot(y[0], y[1], "b", alpha=0.5, label='Group 2')
+          plt.plot(y[0], y[1], "b", alpha=0.5, label='Attractor 2 (E)')
 
     ## Plot group1 and label it
     colors = ['g', 'teal']
@@ -274,12 +279,12 @@ if _in_ipython_session:
         plt.plot(y[0], y[1], color=colors[j], alpha=i/len(group1))
         ## Put a single label
         if i+j == 0:
-          plt.plot(y[0], y[1], "g", alpha=0.5, label='Group 3')
+          plt.plot(y[0], y[1], "g", alpha=0.5, label='Attractor 3 (L2)')
 
 
   plt.xlabel(r'$x$', fontsize=24)
   plt.ylabel(r'$y$', fontsize=24)
-  plt.legend()
+  plt.legend(fontsize=22)
   plt.draw()
 
 

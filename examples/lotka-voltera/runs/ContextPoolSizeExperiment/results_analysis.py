@@ -29,30 +29,51 @@ times9 = [9, (120+32)*60+43, 34, 26, 29, 28, 72]
 ## Create a dataframe with each line a data point
 df_1 = pd.DataFrame(data = [losses1, losses2, losses3, losses4, losses5, losses6, losses7, losses8, losses9], columns = ['pool_size', 'ind', 'ood_seq', 'ood_batch'])
 
-# df_2 = pd.DataFrame(data = [times1, times2, times3, times4, times5, times6, times7, times8, times9], columns = ['pool_size', 'ind_train (s)', 'ood_seq_1 (s)', 'ood_seq_2 (s)', 'ood_seq_3 (s)', 'ood_seq_4 (s)', 'ood_batch (s)'])
+df_2 = pd.DataFrame(data = [times1, times2, times3, times4, times5, times6, times7, times8, times9], columns = ['pool_size', 'ind_train (s)', 'ood_seq_1 (s)', 'ood_seq_2 (s)', 'ood_seq_3 (s)', 'ood_seq_4 (s)', 'ood_batch (s)'])
+df_2['train_time'] = df_2['ind_train (s)']/60.
+df_2['adapt_time'] = df_2['ood_batch (s)']/60.
+
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-sns.set_theme(style="whitegrid")
-f, ax = plt.subplots(figsize=(10, 6))
+sns.set_theme(style="darkgrid")
+sns.set_context("poster")
+f, (ax) = plt.subplots(figsize=(7, 6))
 
 ## Plot the in-domain loss vs the pool size
-sns.pointplot(data=df_1, x="pool_size", y="ind", ax=ax, markers="o", color="blue", label="In-Domain Loss")
-
-## Plot the adaptation losses on a twin axis
-ax2 = ax.twinx()
-sns.pointplot(data=df_1, x="pool_size", y="ood_seq", ax=ax2, markers="o", color="red", label="OOD Loss (Sequential)")
-sns.pointplot(data=df_1, x="pool_size", y="ood_batch", ax=ax2, markers="o", color="green", label="OOD Loss (Batch)")
-
-
-
-
-
-
+sns.pointplot(data=df_1, x="pool_size", y="ind", ax=ax, markers="o", color="purple", label="In-Domain")
+sns.pointplot(data=df_1, x="pool_size", y="ood_batch", ax=ax, markers="o", color="green", label="OOD")
 
 ax.legend()
-ax2.legend()
+ax.set(xlabel='Context Pool Size', ylabel='MSE')
+
 
 ## Save figure as a pdf
+plt.savefig('context_pool_size_losses.pdf', format='pdf', dpi=600, bbox_inches='tight')
+
+
+
+#%%
+
+
+
+
+
+
+
+
+## Plot the train and adapt times
+# ax2 = ax.twinx()
+f, ax2 = plt.subplots(figsize=(7, 6))
+ax2.yaxis.set_label_position("right")
+ax2.yaxis.tick_right()
+
+sns.pointplot(data=df_2, x="pool_size", y="train_time", ax=ax2, markers="s", color="blue", label="In-Domain")
+sns.pointplot(data=df_2, x="pool_size", y="adapt_time", ax=ax2, markers="s", color="red", label="OOD")
+
+ax2.legend()
+ax2.set(xlabel='Context Pool Size', ylabel='Wall Time (min)')
+
+
 plt.savefig('context_pool_size_training_times.pdf', format='pdf', dpi=1200, bbox_inches='tight')

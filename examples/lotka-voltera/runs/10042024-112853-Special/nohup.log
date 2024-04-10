@@ -63,3 +63,1237 @@ Shapes of elements in a batch: (9, 4, 20, 2) (20,)
         -InnerToleranceCtx:  1.00e-08
         -DiffNode: 1.71e-06
         -DiffCxt:  inf
+    Outer Step:     1      LossTrajs: 1.52824640     ContextsNorm: 0.00132961     ValIndCrit: 1.43287241
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.67e-06
+        -DiffCxt:  5.61e-04
+    Outer Step:     2      LossTrajs: 1.22563088     ContextsNorm: 0.00391919     ValIndCrit: 1.14542687
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.11e-05
+        -DiffCxt:  7.07e-04
+    Outer Step:     3      LossTrajs: 0.81252801     ContextsNorm: 0.00774634     ValIndCrit: 0.74780458
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 3.19e-05
+        -DiffCxt:  3.82e-04
+    Outer Step:    10      LossTrajs: 0.23047853     ContextsNorm: 0.00969752     ValIndCrit: 0.27365199
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.34e-07
+        -DiffCxt:  6.35e-06
+    Outer Step:    20      LossTrajs: 0.16434419     ContextsNorm: 0.01052069     ValIndCrit: 0.18805502
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.72e-07
+        -DiffCxt:  4.52e-07
+    Outer Step:    30      LossTrajs: 0.07177629     ContextsNorm: 0.01077547     ValIndCrit: 0.07388158
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.16e-07
+        -DiffCxt:  3.03e-06
+    Outer Step:    40      LossTrajs: 0.02078227     ContextsNorm: 0.01382217     ValIndCrit: 0.02233755
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.10e-07
+        -DiffCxt:  1.88e-06
+    Outer Step:    50      LossTrajs: 0.00992399     ContextsNorm: 0.01431612     ValIndCrit: 0.01235408
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.03e-08
+        -DiffCxt:  5.96e-08
+    Outer Step:    60      LossTrajs: 0.00686464     ContextsNorm: 0.01442472     ValIndCrit: 0.00915840
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 3.16e-08
+        -DiffCxt:  2.51e-08
+    Outer Step:    70      LossTrajs: 0.00521162     ContextsNorm: 0.01438112     ValIndCrit: 0.00746847
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 3.37e-08
+        -DiffCxt:  1.77e-08
+    Outer Step:    80      LossTrajs: 0.00411920     ContextsNorm: 0.01439176     ValIndCrit: 0.00631558
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.27e-08
+        -DiffCxt:  1.44e-08
+    Outer Step:    90      LossTrajs: 0.00312807     ContextsNorm: 0.01449302     ValIndCrit: 0.00514130
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.25e-08
+        -DiffCxt:  2.11e-08
+    Outer Step:   100      LossTrajs: 0.00219137     ContextsNorm: 0.01456327     ValIndCrit: 0.00393307
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.05e-09
+        -DiffCxt:  1.21e-08
+    Outer Step:   110      LossTrajs: 0.00154906     ContextsNorm: 0.01456171     ValIndCrit: 0.00295695
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   22
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.56e-09
+        -DiffCxt:  9.56e-09
+    Outer Step:   120      LossTrajs: 0.00107930     ContextsNorm: 0.01454235     ValIndCrit: 0.00220152
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   20
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.30e-09
+        -DiffCxt:  8.36e-09
+    Outer Step:   130      LossTrajs: 0.00073268     ContextsNorm: 0.01450727     ValIndCrit: 0.00160716
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   16
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.54e-09
+        -DiffCxt:  9.04e-09
+    Outer Step:   140      LossTrajs: 0.00050550     ContextsNorm: 0.01448132     ValIndCrit: 0.00115145
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   14
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.55e-09
+        -DiffCxt:  9.02e-09
+    Outer Step:   150      LossTrajs: 0.00036149     ContextsNorm: 0.01446448     ValIndCrit: 0.00082171
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   13
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.76e-09
+        -DiffCxt:  9.40e-09
+    Outer Step:   160      LossTrajs: 0.00026406     ContextsNorm: 0.01445162     ValIndCrit: 0.00058816
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   11
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.25e-09
+        -DiffCxt:  8.76e-09
+    Outer Step:   170      LossTrajs: 0.00019717     ContextsNorm: 0.01444826     ValIndCrit: 0.00043896
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.39e-09
+        -DiffCxt:  6.08e-09
+    Outer Step:   180      LossTrajs: 0.00015268     ContextsNorm: 0.01445159     ValIndCrit: 0.00034855
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.66e-09
+        -DiffCxt:  8.44e-09
+    Outer Step:   190      LossTrajs: 0.00012233     ContextsNorm: 0.01446090     ValIndCrit: 0.00029128
+        Saving best model so far ...
+        -NbInnerStepsNode:   22
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.81e-10
+        -DiffCxt:  9.54e-09
+    Outer Step:   200      LossTrajs: 0.00010522     ContextsNorm: 0.01445481     ValIndCrit: 0.00025869
+        Saving best model so far ...
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:    6
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.45e-10
+        -DiffCxt:  8.98e-09
+    Outer Step:   210      LossTrajs: 0.00009244     ContextsNorm: 0.01446146     ValIndCrit: 0.00023225
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.93e-10
+        -DiffCxt:  8.43e-09
+    Outer Step:   220      LossTrajs: 0.00008647     ContextsNorm: 0.01445236     ValIndCrit: 0.00021971
+        Saving best model so far ...
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.87e-10
+        -DiffCxt:  9.21e-09
+    Outer Step:   230      LossTrajs: 0.00008019     ContextsNorm: 0.01445706     ValIndCrit: 0.00020701
+        Saving best model so far ...
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.00e-09
+        -DiffCxt:  5.47e-09
+    Outer Step:   240      LossTrajs: 0.00007627     ContextsNorm: 0.01445411     ValIndCrit: 0.00019791
+        Saving best model so far ...
+        -NbInnerStepsNode:   13
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.52e-10
+        -DiffCxt:  3.76e-09
+    Outer Step:   250      LossTrajs: 0.00007257     ContextsNorm: 0.01445231     ValIndCrit: 0.00018907
+        Saving best model so far ...
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.36e-10
+        -DiffCxt:  3.65e-09
+    Outer Step:   260      LossTrajs: 0.00006965     ContextsNorm: 0.01444937     ValIndCrit: 0.00018106
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.13e-09
+        -DiffCxt:  7.51e-09
+    Outer Step:   270      LossTrajs: 0.00006667     ContextsNorm: 0.01443903     ValIndCrit: 0.00017627
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.61e-10
+        -DiffCxt:  4.14e-09
+    Outer Step:   280      LossTrajs: 0.00006471     ContextsNorm: 0.01443477     ValIndCrit: 0.00017101
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.95e-10
+        -DiffCxt:  8.84e-09
+    Outer Step:   290      LossTrajs: 0.00006252     ContextsNorm: 0.01442659     ValIndCrit: 0.00016520
+        Saving best model so far ...
+        -NbInnerStepsNode:    8
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.93e-10
+        -DiffCxt:  6.17e-09
+    Outer Step:   300      LossTrajs: 0.00006114     ContextsNorm: 0.01442186     ValIndCrit: 0.00016213
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.34e-10
+        -DiffCxt:  6.77e-09
+    Outer Step:   310      LossTrajs: 0.00005924     ContextsNorm: 0.01441181     ValIndCrit: 0.00015802
+        Saving best model so far ...
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.46e-10
+        -DiffCxt:  7.20e-09
+    Outer Step:   320      LossTrajs: 0.00005674     ContextsNorm: 0.01440431     ValIndCrit: 0.00015197
+        Saving best model so far ...
+        -NbInnerStepsNode:    8
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.37e-10
+        -DiffCxt:  9.22e-09
+    Outer Step:   330      LossTrajs: 0.00005563     ContextsNorm: 0.01440224     ValIndCrit: 0.00014906
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.57e-10
+        -DiffCxt:  6.75e-09
+    Outer Step:   340      LossTrajs: 0.00005334     ContextsNorm: 0.01438768     ValIndCrit: 0.00014449
+        Saving best model so far ...
+        -NbInnerStepsNode:    7
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.49e-10
+        -DiffCxt:  9.12e-09
+    Outer Step:   350      LossTrajs: 0.00005202     ContextsNorm: 0.01438710     ValIndCrit: 0.00014023
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.62e-10
+        -DiffCxt:  5.97e-09
+    Outer Step:   360      LossTrajs: 0.00005145     ContextsNorm: 0.01438495     ValIndCrit: 0.00013823
+        Saving best model so far ...
+        -NbInnerStepsNode:    6
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.57e-10
+        -DiffCxt:  5.22e-09
+    Outer Step:   370      LossTrajs: 0.00005056     ContextsNorm: 0.01438742     ValIndCrit: 0.00013698
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.18e-10
+        -DiffCxt:  3.26e-09
+    Outer Step:   380      LossTrajs: 0.00005005     ContextsNorm: 0.01438291     ValIndCrit: 0.00013462
+        Saving best model so far ...
+        -NbInnerStepsNode:    2
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.84e-10
+        -DiffCxt:  2.30e-09
+    Outer Step:   390      LossTrajs: 0.00004914     ContextsNorm: 0.01437759     ValIndCrit: 0.00013292
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.66e-10
+        -DiffCxt:  4.37e-09
+    Outer Step:   400      LossTrajs: 0.00004831     ContextsNorm: 0.01437033     ValIndCrit: 0.00012972
+        Saving best model so far ...
+        -NbInnerStepsNode:    9
+        -NbInnerStepsCxt:    9
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.04e-10
+        -DiffCxt:  6.91e-09
+    Outer Step:   410      LossTrajs: 0.00004705     ContextsNorm: 0.01435257     ValIndCrit: 0.00012736
+        Saving best model so far ...
+        -NbInnerStepsNode:    6
+        -NbInnerStepsCxt:    4
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.09e-10
+        -DiffCxt:  8.84e-09
+    Outer Step:   420      LossTrajs: 0.00004623     ContextsNorm: 0.01434707     ValIndCrit: 0.00012601
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.27e-10
+        -DiffCxt:  5.37e-09
+    Outer Step:   430      LossTrajs: 0.00004519     ContextsNorm: 0.01432472     ValIndCrit: 0.00012266
+        Saving best model so far ...
+        -NbInnerStepsNode:    7
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.66e-10
+        -DiffCxt:  5.32e-09
+    Outer Step:   440      LossTrajs: 0.00004423     ContextsNorm: 0.01429791     ValIndCrit: 0.00011932
+        Saving best model so far ...
+        -NbInnerStepsNode:    6
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.00e-10
+        -DiffCxt:  5.69e-09
+    Outer Step:   450      LossTrajs: 0.00004364     ContextsNorm: 0.01429218     ValIndCrit: 0.00011758
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.90e-10
+        -DiffCxt:  6.21e-09
+    Outer Step:   460      LossTrajs: 0.00004348     ContextsNorm: 0.01428591     ValIndCrit: 0.00011747
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.02e-10
+        -DiffCxt:  5.58e-09
+    Outer Step:   470      LossTrajs: 0.00004257     ContextsNorm: 0.01426886     ValIndCrit: 0.00011499
+        Saving best model so far ...
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:    8
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.10e-10
+        -DiffCxt:  7.75e-09
+    Outer Step:   480      LossTrajs: 0.00004201     ContextsNorm: 0.01426784     ValIndCrit: 0.00011390
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.83e-10
+        -DiffCxt:  3.01e-09
+    Outer Step:   490      LossTrajs: 0.00004134     ContextsNorm: 0.01426067     ValIndCrit: 0.00011193
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.77e-10
+        -DiffCxt:  6.39e-09
+    Outer Step:   500      LossTrajs: 0.00003976     ContextsNorm: 0.01426964     ValIndCrit: 0.00010723
+        Saving best model so far ...
+        -NbInnerStepsNode:    5
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.12e-10
+        -DiffCxt:  7.07e-09
+    Outer Step:   510      LossTrajs: 0.00003939     ContextsNorm: 0.01426810     ValIndCrit: 0.00010575
+        Saving best model so far ...
+        -NbInnerStepsNode:    2
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.45e-10
+        -DiffCxt:  2.96e-09
+    Outer Step:   520      LossTrajs: 0.00003927     ContextsNorm: 0.01426332     ValIndCrit: 0.00010536
+        Saving best model so far ...
+        -NbInnerStepsNode:    2
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.67e-10
+        -DiffCxt:  4.07e-09
+    Outer Step:   530      LossTrajs: 0.00003874     ContextsNorm: 0.01425544     ValIndCrit: 0.00010493
+        Saving best model so far ...
+        -NbInnerStepsNode:    8
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.33e-10
+        -DiffCxt:  2.55e-09
+    Outer Step:   540      LossTrajs: 0.00003845     ContextsNorm: 0.01425355     ValIndCrit: 0.00010340
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.97e-10
+        -DiffCxt:  5.66e-09
+    Outer Step:   550      LossTrajs: 0.00003807     ContextsNorm: 0.01424394     ValIndCrit: 0.00010205
+        Saving best model so far ...
+        -NbInnerStepsNode:    3
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.72e-10
+        -DiffCxt:  2.80e-09
+    Outer Step:   560      LossTrajs: 0.00003778     ContextsNorm: 0.01425329     ValIndCrit: 0.00010122
+        Saving best model so far ...
+        -NbInnerStepsNode:   19
+        -NbInnerStepsCxt:   11
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.45e-10
+        -DiffCxt:  9.46e-09
+    Outer Step:   570      LossTrajs: 0.00003668     ContextsNorm: 0.01424995     ValIndCrit: 0.00009772
+        Saving best model so far ...
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.74e-10
+        -DiffCxt:  7.10e-09
+    Outer Step:   580      LossTrajs: 0.00003557     ContextsNorm: 0.01418709     ValIndCrit: 0.00009464
+        Saving best model so far ...
+        -NbInnerStepsNode:    3
+        -NbInnerStepsCxt:    6
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.54e-10
+        -DiffCxt:  7.33e-09
+    Outer Step:   590      LossTrajs: 0.00003472     ContextsNorm: 0.01418499     ValIndCrit: 0.00009217
+        Saving best model so far ...
+        -NbInnerStepsNode:    7
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.88e-10
+        -DiffCxt:  5.09e-09
+    Outer Step:   600      LossTrajs: 0.00003453     ContextsNorm: 0.01417944     ValIndCrit: 0.00009158
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.31e-10
+        -DiffCxt:  2.12e-09
+    Outer Step:   610      LossTrajs: 0.00003438     ContextsNorm: 0.01417518     ValIndCrit: 0.00009145
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.65e-10
+        -DiffCxt:  3.00e-09
+    Outer Step:   620      LossTrajs: 0.00003401     ContextsNorm: 0.01416721     ValIndCrit: 0.00008984
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.43e-10
+        -DiffCxt:  5.12e-09
+    Outer Step:   630      LossTrajs: 0.00003309     ContextsNorm: 0.01415932     ValIndCrit: 0.00008748
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   24
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.65e-09
+        -DiffCxt:  9.80e-09
+    Outer Step:   640      LossTrajs: 0.00003276     ContextsNorm: 0.01415780     ValIndCrit: 0.00008589
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.62e-10
+        -DiffCxt:  6.30e-09
+    Outer Step:   650      LossTrajs: 0.00003275     ContextsNorm: 0.01415480     ValIndCrit: 0.00008561
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.75e-10
+        -DiffCxt:  4.48e-09
+    Outer Step:   660      LossTrajs: 0.00003257     ContextsNorm: 0.01415297     ValIndCrit: 0.00008507
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.65e-10
+        -DiffCxt:  7.73e-09
+    Outer Step:   670      LossTrajs: 0.00003233     ContextsNorm: 0.01415108     ValIndCrit: 0.00008368
+        Saving best model so far ...
+        -NbInnerStepsNode:   16
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.00e-10
+        -DiffCxt:  2.15e-09
+    Outer Step:   680      LossTrajs: 0.00003220     ContextsNorm: 0.01414366     ValIndCrit: 0.00008426
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    3
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.72e-10
+        -DiffCxt:  9.90e-09
+    Outer Step:   690      LossTrajs: 0.00003224     ContextsNorm: 0.01414248     ValIndCrit: 0.00008147
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.21e-09
+        -DiffCxt:  1.48e-08
+    Outer Step:   700      LossTrajs: 0.00003681     ContextsNorm: 0.01413005     ValIndCrit: 0.00008287
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.68e-08
+        -DiffCxt:  1.12e-07
+    Outer Step:   710      LossTrajs: 0.00003000     ContextsNorm: 0.01411973     ValIndCrit: 0.00007621
+        Saving best model so far ...
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:    6
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.04e-10
+        -DiffCxt:  9.49e-09
+    Outer Step:   720      LossTrajs: 0.00002981     ContextsNorm: 0.01411166     ValIndCrit: 0.00007641
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.05e-10
+        -DiffCxt:  5.44e-09
+    Outer Step:   730      LossTrajs: 0.00002925     ContextsNorm: 0.01407650     ValIndCrit: 0.00007499
+        Saving best model so far ...
+        -NbInnerStepsNode:   12
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.95e-10
+        -DiffCxt:  2.87e-09
+    Outer Step:   740      LossTrajs: 0.00002856     ContextsNorm: 0.01404253     ValIndCrit: 0.00007285
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    7
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.05e-10
+        -DiffCxt:  9.97e-09
+    Outer Step:   750      LossTrajs: 0.00002800     ContextsNorm: 0.01400340     ValIndCrit: 0.00007065
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   19
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.83e-09
+        -DiffCxt:  9.81e-09
+    Outer Step:   760      LossTrajs: 0.00002726     ContextsNorm: 0.01403517     ValIndCrit: 0.00006870
+        Saving best model so far ...
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.78e-10
+        -DiffCxt:  9.72e-09
+    Outer Step:   770      LossTrajs: 0.00002678     ContextsNorm: 0.01405647     ValIndCrit: 0.00006577
+        Saving best model so far ...
+        -NbInnerStepsNode:   23
+        -NbInnerStepsCxt:   11
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.56e-10
+        -DiffCxt:  8.86e-09
+    Outer Step:   780      LossTrajs: 0.00002682     ContextsNorm: 0.01405396     ValIndCrit: 0.00006420
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   18
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.00e-09
+        -DiffCxt:  8.55e-09
+    Outer Step:   790      LossTrajs: 0.00002588     ContextsNorm: 0.01401006     ValIndCrit: 0.00006327
+        Saving best model so far ...
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.28e-10
+        -DiffCxt:  8.51e-09
+    Outer Step:   800      LossTrajs: 0.00002562     ContextsNorm: 0.01395194     ValIndCrit: 0.00006118
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   23
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.77e-09
+        -DiffCxt:  9.73e-09
+    Outer Step:   810      LossTrajs: 0.00002645     ContextsNorm: 0.01387923     ValIndCrit: 0.00006032
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.07e-08
+        -DiffCxt:  4.23e-08
+    Outer Step:   820      LossTrajs: 0.00002447     ContextsNorm: 0.01385751     ValIndCrit: 0.00005911
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.70e-10
+        -DiffCxt:  8.39e-09
+    Outer Step:   830      LossTrajs: 0.00002424     ContextsNorm: 0.01385219     ValIndCrit: 0.00005828
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.74e-10
+        -DiffCxt:  8.04e-09
+    Outer Step:   840      LossTrajs: 0.00002404     ContextsNorm: 0.01381111     ValIndCrit: 0.00005739
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   14
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.25e-10
+        -DiffCxt:  9.91e-09
+    Outer Step:   850      LossTrajs: 0.00002387     ContextsNorm: 0.01379411     ValIndCrit: 0.00005619
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   21
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.34e-09
+        -DiffCxt:  9.96e-09
+    Outer Step:   860      LossTrajs: 0.00002345     ContextsNorm: 0.01377476     ValIndCrit: 0.00005569
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.35e-10
+        -DiffCxt:  9.40e-09
+    Outer Step:   870      LossTrajs: 0.00002327     ContextsNorm: 0.01375268     ValIndCrit: 0.00005455
+        Saving best model so far ...
+        -NbInnerStepsNode:    6
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.66e-10
+        -DiffCxt:  9.49e-09
+    Outer Step:   880      LossTrajs: 0.00002288     ContextsNorm: 0.01369056     ValIndCrit: 0.00005329
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   19
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.61e-10
+        -DiffCxt:  9.13e-09
+    Outer Step:   890      LossTrajs: 0.00002274     ContextsNorm: 0.01364976     ValIndCrit: 0.00005296
+        Saving best model so far ...
+        -NbInnerStepsNode:   14
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.35e-10
+        -DiffCxt:  1.01e-08
+    Outer Step:   900      LossTrajs: 0.00002260     ContextsNorm: 0.01361529     ValIndCrit: 0.00005291
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   11
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.97e-10
+        -DiffCxt:  8.05e-09
+    Outer Step:   910      LossTrajs: 0.00002276     ContextsNorm: 0.01356638     ValIndCrit: 0.00005248
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.27e-08
+        -DiffCxt:  9.90e-08
+    Outer Step:   920      LossTrajs: 0.00002202     ContextsNorm: 0.01351616     ValIndCrit: 0.00005060
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   15
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.67e-09
+        -DiffCxt:  9.67e-09
+    Outer Step:   930      LossTrajs: 0.00002193     ContextsNorm: 0.01349965     ValIndCrit: 0.00004933
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.37e-09
+        -DiffCxt:  4.41e-08
+    Outer Step:   940      LossTrajs: 0.00002250     ContextsNorm: 0.01346677     ValIndCrit: 0.00004918
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.01e-08
+        -DiffCxt:  6.04e-08
+    Outer Step:   950      LossTrajs: 0.00002186     ContextsNorm: 0.01345310     ValIndCrit: 0.00004843
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.28e-09
+        -DiffCxt:  5.50e-08
+    Outer Step:   960      LossTrajs: 0.00002130     ContextsNorm: 0.01345824     ValIndCrit: 0.00004829
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.42e-10
+        -DiffCxt:  1.42e-08
+    Outer Step:   970      LossTrajs: 0.00002117     ContextsNorm: 0.01344510     ValIndCrit: 0.00004761
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.62e-10
+        -DiffCxt:  2.04e-08
+    Outer Step:   980      LossTrajs: 0.00002108     ContextsNorm: 0.01339280     ValIndCrit: 0.00004744
+        Saving best model so far ...
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:   23
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.58e-10
+        -DiffCxt:  9.71e-09
+    Outer Step:   990      LossTrajs: 0.00002175     ContextsNorm: 0.01341845     ValIndCrit: 0.00004583
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.19e-08
+        -DiffCxt:  8.56e-08
+    Outer Step:  1000      LossTrajs: 0.00002084     ContextsNorm: 0.01338029     ValIndCrit: 0.00004639
+        -NbInnerStepsNode:   12
+        -NbInnerStepsCxt:   23
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.69e-10
+        -DiffCxt:  9.51e-09
+    Outer Step:  1010      LossTrajs: 0.00002071     ContextsNorm: 0.01332505     ValIndCrit: 0.00004644
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.79e-09
+        -DiffCxt:  3.80e-08
+    Outer Step:  1020      LossTrajs: 0.00002255     ContextsNorm: 0.01333019     ValIndCrit: 0.00004543
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.13e-08
+        -DiffCxt:  1.16e-07
+    Outer Step:  1030      LossTrajs: 0.00002033     ContextsNorm: 0.01328851     ValIndCrit: 0.00004465
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.49e-10
+        -DiffCxt:  1.49e-08
+    Outer Step:  1040      LossTrajs: 0.00002029     ContextsNorm: 0.01325578     ValIndCrit: 0.00004500
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.40e-10
+        -DiffCxt:  3.49e-08
+    Outer Step:  1050      LossTrajs: 0.00002027     ContextsNorm: 0.01322983     ValIndCrit: 0.00004431
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.29e-09
+        -DiffCxt:  4.45e-08
+    Outer Step:  1060      LossTrajs: 0.00001996     ContextsNorm: 0.01320703     ValIndCrit: 0.00004400
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.82e-10
+        -DiffCxt:  2.82e-08
+    Outer Step:  1070      LossTrajs: 0.00001997     ContextsNorm: 0.01317607     ValIndCrit: 0.00004393
+        Saving best model so far ...
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.88e-10
+        -DiffCxt:  1.88e-08
+    Outer Step:  1080      LossTrajs: 0.00002207     ContextsNorm: 0.01316980     ValIndCrit: 0.00004353
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.84e-08
+        -DiffCxt:  4.40e-07
+    Outer Step:  1090      LossTrajs: 0.00002030     ContextsNorm: 0.01311609     ValIndCrit: 0.00004300
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.30e-09
+        -DiffCxt:  8.99e-08
+    Outer Step:  1100      LossTrajs: 0.00001965     ContextsNorm: 0.01310889     ValIndCrit: 0.00004231
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.96e-09
+        -DiffCxt:  4.36e-08
+    Outer Step:  1110      LossTrajs: 0.00002016     ContextsNorm: 0.01307811     ValIndCrit: 0.00004266
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.38e-09
+        -DiffCxt:  7.70e-08
+    Outer Step:  1120      LossTrajs: 0.00002025     ContextsNorm: 0.01310229     ValIndCrit: 0.00004153
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.71e-09
+        -DiffCxt:  1.58e-07
+    Outer Step:  1130      LossTrajs: 0.00002048     ContextsNorm: 0.01307482     ValIndCrit: 0.00004242
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.92e-08
+        -DiffCxt:  2.85e-07
+    Outer Step:  1140      LossTrajs: 0.00001916     ContextsNorm: 0.01305092     ValIndCrit: 0.00004100
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.98e-10
+        -DiffCxt:  8.26e-08
+    Outer Step:  1150      LossTrajs: 0.00001928     ContextsNorm: 0.01302468     ValIndCrit: 0.00004092
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.87e-09
+        -DiffCxt:  1.29e-07
+    Outer Step:  1160      LossTrajs: 0.00001904     ContextsNorm: 0.01301115     ValIndCrit: 0.00004076
+        Saving best model so far ...
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.31e-10
+        -DiffCxt:  3.89e-08
+    Outer Step:  1170      LossTrajs: 0.00001923     ContextsNorm: 0.01300043     ValIndCrit: 0.00004101
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.76e-09
+        -DiffCxt:  9.91e-08
+    Outer Step:  1180      LossTrajs: 0.00001950     ContextsNorm: 0.01299366     ValIndCrit: 0.00003979
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.70e-08
+        -DiffCxt:  3.00e-07
+    Outer Step:  1190      LossTrajs: 0.00001877     ContextsNorm: 0.01297758     ValIndCrit: 0.00003939
+        Saving best model so far ...
+        -NbInnerStepsNode:   24
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.61e-10
+        -DiffCxt:  9.12e-08
+    Outer Step:  1200      LossTrajs: 0.00001877     ContextsNorm: 0.01295800     ValIndCrit: 0.00003980
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.64e-10
+        -DiffCxt:  3.87e-08
+    Outer Step:  1210      LossTrajs: 0.00001898     ContextsNorm: 0.01290467     ValIndCrit: 0.00003932
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.43e-09
+        -DiffCxt:  1.25e-07
+    Outer Step:  1220      LossTrajs: 0.00001855     ContextsNorm: 0.01292331     ValIndCrit: 0.00003919
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.26e-10
+        -DiffCxt:  3.25e-08
+    Outer Step:  1230      LossTrajs: 0.00001852     ContextsNorm: 0.01289049     ValIndCrit: 0.00003941
+        -NbInnerStepsNode:    2
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.62e-10
+        -DiffCxt:  3.08e-08
+    Outer Step:  1240      LossTrajs: 0.00001878     ContextsNorm: 0.01286142     ValIndCrit: 0.00003981
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.02e-08
+        -DiffCxt:  1.89e-07
+    Outer Step:  1250      LossTrajs: 0.00001845     ContextsNorm: 0.01279729     ValIndCrit: 0.00003822
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.20e-10
+        -DiffCxt:  4.97e-08
+    Outer Step:  1260      LossTrajs: 0.00001827     ContextsNorm: 0.01276492     ValIndCrit: 0.00003877
+        -NbInnerStepsNode:    3
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.94e-10
+        -DiffCxt:  6.96e-08
+    Outer Step:  1270      LossTrajs: 0.00001823     ContextsNorm: 0.01274604     ValIndCrit: 0.00003861
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.48e-10
+        -DiffCxt:  3.31e-08
+    Outer Step:  1280      LossTrajs: 0.00001992     ContextsNorm: 0.01270797     ValIndCrit: 0.00003969
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.64e-08
+        -DiffCxt:  6.22e-07
+    Outer Step:  1290      LossTrajs: 0.00001809     ContextsNorm: 0.01271438     ValIndCrit: 0.00003829
+        -NbInnerStepsNode:    4
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.22e-10
+        -DiffCxt:  5.94e-08
+    Outer Step:  1300      LossTrajs: 0.00001808     ContextsNorm: 0.01269276     ValIndCrit: 0.00003796
+        Saving best model so far ...
+        -NbInnerStepsNode:   19
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.88e-10
+        -DiffCxt:  6.18e-08
+    Outer Step:  1310      LossTrajs: 0.00001799     ContextsNorm: 0.01267272     ValIndCrit: 0.00003757
+        Saving best model so far ...
+        -NbInnerStepsNode:   19
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.41e-10
+        -DiffCxt:  1.56e-08
+    Outer Step:  1320      LossTrajs: 0.00001786     ContextsNorm: 0.01266501     ValIndCrit: 0.00003769
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.78e-10
+        -DiffCxt:  2.48e-08
+    Outer Step:  1330      LossTrajs: 0.00001787     ContextsNorm: 0.01264906     ValIndCrit: 0.00003737
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.09e-10
+        -DiffCxt:  7.86e-08
+    Outer Step:  1340      LossTrajs: 0.00001868     ContextsNorm: 0.01262926     ValIndCrit: 0.00003795
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.12e-09
+        -DiffCxt:  2.88e-07
+    Outer Step:  1350      LossTrajs: 0.00001808     ContextsNorm: 0.01259012     ValIndCrit: 0.00003624
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 3.41e-09
+        -DiffCxt:  8.83e-08
+    Outer Step:  1360      LossTrajs: 0.00001764     ContextsNorm: 0.01256352     ValIndCrit: 0.00003629
+        -NbInnerStepsNode:   11
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 6.92e-10
+        -DiffCxt:  2.74e-08
+    Outer Step:  1370      LossTrajs: 0.00001760     ContextsNorm: 0.01253186     ValIndCrit: 0.00003626
+        -NbInnerStepsNode:   19
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.02e-10
+        -DiffCxt:  5.19e-08
+    Outer Step:  1380      LossTrajs: 0.00001804     ContextsNorm: 0.01253340     ValIndCrit: 0.00003651
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.14e-09
+        -DiffCxt:  3.99e-08
+    Outer Step:  1390      LossTrajs: 0.00001746     ContextsNorm: 0.01250248     ValIndCrit: 0.00003605
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.68e-10
+        -DiffCxt:  6.26e-08
+    Outer Step:  1400      LossTrajs: 0.00001743     ContextsNorm: 0.01252691     ValIndCrit: 0.00003608
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.07e-10
+        -DiffCxt:  5.43e-08
+    Outer Step:  1410      LossTrajs: 0.00001742     ContextsNorm: 0.01251146     ValIndCrit: 0.00003524
+        Saving best model so far ...
+        -NbInnerStepsNode:    2
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.97e-10
+        -DiffCxt:  3.45e-08
+    Outer Step:  1420      LossTrajs: 0.00001739     ContextsNorm: 0.01249243     ValIndCrit: 0.00003577
+        -NbInnerStepsNode:   20
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.49e-10
+        -DiffCxt:  5.71e-08
+    Outer Step:  1430      LossTrajs: 0.00001728     ContextsNorm: 0.01245107     ValIndCrit: 0.00003580
+        -NbInnerStepsNode:    5
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 5.01e-10
+        -DiffCxt:  7.72e-08
+    Outer Step:  1440      LossTrajs: 0.00001723     ContextsNorm: 0.01242825     ValIndCrit: 0.00003585
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 9.01e-10
+        -DiffCxt:  5.29e-08
+    Outer Step:  1450      LossTrajs: 0.00001722     ContextsNorm: 0.01236503     ValIndCrit: 0.00003522
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.59e-10
+        -DiffCxt:  8.31e-08
+    Outer Step:  1460      LossTrajs: 0.00001709     ContextsNorm: 0.01230328     ValIndCrit: 0.00003519
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.23e-09
+        -DiffCxt:  8.79e-08
+    Outer Step:  1470      LossTrajs: 0.00001810     ContextsNorm: 0.01228282     ValIndCrit: 0.00003443
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.45e-08
+        -DiffCxt:  3.96e-07
+    Outer Step:  1480      LossTrajs: 0.00001766     ContextsNorm: 0.01224198     ValIndCrit: 0.00003445
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.10e-08
+        -DiffCxt:  1.66e-07
+    Outer Step:  1490      LossTrajs: 0.00001689     ContextsNorm: 0.01221048     ValIndCrit: 0.00003421
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 1.13e-09
+        -DiffCxt:  6.30e-08
+    Outer Step:  1500      LossTrajs: 0.00001684     ContextsNorm: 0.01218959     ValIndCrit: 0.00003467
+        -NbInnerStepsNode:    2
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.62e-10
+        -DiffCxt:  1.51e-07
+    Outer Step:  1510      LossTrajs: 0.00001679     ContextsNorm: 0.01217921     ValIndCrit: 0.00003425
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.28e-10
+        -DiffCxt:  7.15e-08
+    Outer Step:  1520      LossTrajs: 0.00001681     ContextsNorm: 0.01215646     ValIndCrit: 0.00003391
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 2.19e-09
+        -DiffCxt:  3.95e-08
+    Outer Step:  1530      LossTrajs: 0.00001679     ContextsNorm: 0.01214948     ValIndCrit: 0.00003383
+        Saving best model so far ...
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 7.43e-09
+        -DiffCxt:  1.14e-07
+    Outer Step:  1540      LossTrajs: 0.00001773     ContextsNorm: 0.01211963     ValIndCrit: 0.00003484
+        -NbInnerStepsNode:   25
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 4.70e-09
+        -DiffCxt:  1.43e-07
+    Outer Step:  1550      LossTrajs: 0.00001655     ContextsNorm: 0.01210244     ValIndCrit: 0.00003412
+        -NbInnerStepsNode:   13
+        -NbInnerStepsCxt:   25
+        -InnerToleranceNode: 1.00e-09
+        -InnerToleranceCtx:  1.00e-08
+        -DiffNode: 8.83e-10
+        -DiffCxt:  4.25e-08
