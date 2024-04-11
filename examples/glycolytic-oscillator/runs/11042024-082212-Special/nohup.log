@@ -518,3 +518,25 @@ Shapes of elements in a batch: (9, 32, 20, 7) (20,)
         -InnerToleranceCtx:  2.00e-06
         -DiffNode: 6.28e-08
         -DiffCxt:  1.27e-06
+    Outer Step:   580      LossTrajs: 0.00034862     ContextsNorm: 0.01128600     ValIndCrit: 0.00244552
+        -NbInnerStepsNode:    3
+        -NbInnerStepsCxt:    5
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  2.00e-06
+        -DiffNode: 6.80e-08
+        -DiffCxt:  1.94e-06
+    Outer Step:   590      LossTrajs: 0.00033325     ContextsNorm: 0.01111610     ValIndCrit: 0.00237778
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    5
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  2.00e-06
+        -DiffNode: 6.79e-08
+        -DiffCxt:  1.93e-06
+    Outer Step:   600      LossTrajs: 0.00060926     ContextsNorm: 0.01116418     ValIndCrit: 0.00289208
+        -NbInnerStepsNode:   10
+        -NbInnerStepsCxt:   10
+        -InnerToleranceNode: 1.00e-07
+        -InnerToleranceCtx:  2.00e-06
+        -DiffNode: 1.80e-07
+        -DiffCxt:  5.62e-06
