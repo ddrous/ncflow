@@ -37,7 +37,7 @@ early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps t
 
 print_error_every = 10
 
-train = False
+train = True
 run_folder = "./"      ## Run folder to use when not training
 
 save_trainer = True
@@ -45,7 +45,7 @@ save_trainer = True
 finetune = False
 
 adapt_test = True
-adapt_restore = True
+adapt_restore = False
 
 integrator = diffrax.Dopri5
 # integrator = RK4
@@ -58,11 +58,11 @@ ivp_args = {"dt_init":1e-4, "rtol":1e-4, "atol":1e-7, "max_steps":40000, "subdiv
 if train == True:
 
     # check that 'tmp' folder exists. If not, create it
-    if not os.path.exists('./runs'):
-        os.mkdir('./runs')
+    if not os.path.exists('./'):
+        os.mkdir('./')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    run_folder = './'
     # run_folder = "./runs/23012024-163033/"
     os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
@@ -73,7 +73,7 @@ if train == True:
     os.system(f"cp dataset.py {run_folder}")
 
     # Save the nodax module files as well
-    os.system(f"cp -r ../../nodax {run_folder}")
+    os.system(f"cp -r ../../../nodax {run_folder}")
     print("Completed copied scripts ")
 
 
@@ -409,70 +409,6 @@ if adapt_test:
 # print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-#%%
-
-# #### Generate data for analysis
-
-
-# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the test_scores.csv file
-
-
-# print("\nFull evaluation of the model on many random seeds\n", flush=True)
-
-# # First, check if the file exists. If not, create it and write the header
-# if not os.path.exists(run_folder+'analysis'):
-#     os.mkdir(run_folder+'analysis')
-
-# csv_file = run_folder+'analysis/test_scores.csv'
-# if os.path.exists(csv_file):
-#     os.system(f"rm {csv_file}")
-# os.system(f"touch {csv_file}")
-
-# with open(csv_file, 'r') as f:
-#     lines = f.readlines()
-#     if len(lines) == 0:
-#         with open(csv_file, 'w') as f:
-#             f.write("seed,ind_crit,ood_crit\n")
-
-
-# ## Get results on test and adaptation datasets, then append them to the csv
-
-# np.random.seed(seed)
-# seeds = np.random.randint(0, 10000, 20)
-# for seed in seeds:
-# # for seed in range(8000, 6*10**3, 10):
-#     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}" --verbose=0')
-#     os.system(f'python dataset.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}" --verbose=0')
-
-#     test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False, batch_size=1, data_id="082026")
-#     adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, batch_size=1, key=seed, data_id="082026")
-
-#     ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0, verbose=False)
-#     ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0, verbose=False)
-
-#     with open(csv_file, 'a') as f:
-#         f.write(f"{seed},{ind_crit},{ood_crit}\n")
-
-
-# ## Print the mean and stds of the scores
-# import pandas as pd
-# pd.set_option('display.float_format', '{:.2e}'.format)
-# test_scores = pd.read_csv(csv_file).describe()
-
-# print("\n\nMean and std of the scores across various datasets\n", flush=True)
-# print(test_scores.iloc[:3])
 
 
 
