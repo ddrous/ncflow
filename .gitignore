@@ -119,3 +119,4 @@ venv/*
 !examples/gray-scott/runs/06042024-102728
 !examples/gray-scott/runs/05042024-183849
 !examples/gray-scott/runs/06042024-210906
+!examples/gray-scott/runs/PlotTrajectories

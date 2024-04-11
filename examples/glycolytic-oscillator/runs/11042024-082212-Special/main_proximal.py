@@ -27,7 +27,7 @@ nb_epochs_adapt = 1000
 init_lr = 1e-3
 sched_factor = 1.0            ## Multiply the lr by this factor at each third of the training
 
-nb_outer_steps_max = 1000
+nb_outer_steps_max = 1500
 # nb_outer_steps_max = 10
 nb_inner_steps_max = 10
 proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
@@ -64,7 +64,7 @@ if train == True:
     # Make a new folder inside 'tmp' whose name is the current time
     run_folder = './'
     # run_folder = "./runs/23012024-163033/"
-    os.mkdir(run_folder)
+    # os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
 
     # Save the run and dataset scripts in that folder
