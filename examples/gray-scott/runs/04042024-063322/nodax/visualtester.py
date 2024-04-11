@@ -391,6 +391,13 @@ class VisualTester:
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
+        print("""IM IN HERE 2D VISUALISATION""")
+
+        ## Write X and X_hat into a npz file
+        print("\n\nBefore saving the npz file")
+        np.savez(save_path+'.npz', X=X, X_hat=X_hat)
+        print("\nAfter saving the npz file\n\n")
+
         # if isinstance(res, int):
         #     res = (res, res)
         nb_mats = X_hat.shape[1] // (res*res)

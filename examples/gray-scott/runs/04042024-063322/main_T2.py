@@ -522,7 +522,9 @@ ood_crit = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)      ## It's
 
 
 ##### TODO #### Save this ground thruth and the predictions in numpy array
-visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+# visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+
+visualtester.visualize2D(adapt_dataloader, int_cutoff=1.0, res=32, save_path=run_folder+"results_2D_ood_train");
 
 
 
