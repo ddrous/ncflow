@@ -24,8 +24,8 @@ lr_factor = 0.5
 
 print_error_every = 10
 
-train = False
-run_folder = "./"      ## Run folder to use when not training
+train = True
+run_folder = "./runs/31032024-164433/"      ## Run folder to use when not training
 
 save_trainer = False
 
