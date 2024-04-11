@@ -1,0 +1,330 @@
+Number of parameters in the model:  312397
+saving best model at iter 0
+Iter 0    - time: 3     - [train] loss: 0.3465 - [valid] loss: 0.289  - [test] loss: 0.2293
+saving best model at iter 10
+Iter 10   - time: 14    - [train] loss: 0.2161 - [valid] loss: 0.2335 - [test] loss: 0.128 
+saving best model at iter 20
+Iter 20   - time: 13    - [train] loss: 0.2181 - [valid] loss: 0.2268 - [test] loss: 0.1166
+Iter 30   - time: 13    - [train] loss: 0.2165 - [valid] loss: 0.2425 - [test] loss: 0.1283
+Iter 40   - time: 13    - [train] loss: 0.2148 - [valid] loss: 0.2308 - [test] loss: 0.1187
+Iter 50   - time: 13    - [train] loss: 0.2145 - [valid] loss: 0.2323 - [test] loss: 0.1213
+Iter 60   - time: 13    - [train] loss: 0.2146 - [valid] loss: 0.2345 - [test] loss: 0.1211
+Iter 70   - time: 13    - [train] loss: 0.2145 - [valid] loss: 0.2318 - [test] loss: 0.1205
+Iter 80   - time: 13    - [train] loss: 0.2145 - [valid] loss: 0.2337 - [test] loss: 0.1211
+Iter 90   - time: 12    - [train] loss: 0.2145 - [valid] loss: 0.2326 - [test] loss: 0.1208
+Iter 100  - time: 12    - [train] loss: 0.2145 - [valid] loss: 0.2331 - [test] loss: 0.1209
+Iter 110  - time: 12    - [train] loss: 0.2145 - [valid] loss: 0.2329 - [test] loss: 0.1208
+Iter 120  - time: 12    - [train] loss: 0.2144 - [valid] loss: 0.2329 - [test] loss: 0.1209
+Iter 130  - time: 12    - [train] loss: 0.2144 - [valid] loss: 0.2329 - [test] loss: 0.1208
+Iter 140  - time: 12    - [train] loss: 0.2144 - [valid] loss: 0.2329 - [test] loss: 0.1208
+Iter 150  - time: 12    - [train] loss: 0.2143 - [valid] loss: 0.2327 - [test] loss: 0.1208
+Iter 160  - time: 12    - [train] loss: 0.2142 - [valid] loss: 0.2326 - [test] loss: 0.1207
+Iter 170  - time: 12    - [train] loss: 0.2139 - [valid] loss: 0.2323 - [test] loss: 0.1206
+Iter 180  - time: 13    - [train] loss: 0.213  - [valid] loss: 0.2314 - [test] loss: 0.1201
+Iter 190  - time: 13    - [train] loss: 0.2094 - [valid] loss: 0.2278 - [test] loss: 0.1184
+saving best model at iter 200
+Iter 200  - time: 13    - [train] loss: 0.1867 - [valid] loss: 0.2052 - [test] loss: 0.1092
+saving best model at iter 210
+Iter 210  - time: 26    - [train] loss: 0.1466 - [valid] loss: 0.1623 - [test] loss: 0.0919
+saving best model at iter 220
+Iter 220  - time: 56    - [train] loss: 0.1229 - [valid] loss: 0.1371 - [test] loss: 0.0832
+saving best model at iter 230
+Iter 230  - time: 69    - [train] loss: 0.0907 - [valid] loss: 0.0951 - [test] loss: 0.0688
+saving best model at iter 240
+Iter 240  - time: 65    - [train] loss: 0.065  - [valid] loss: 0.0706 - [test] loss: 0.0441
+saving best model at iter 250
+Iter 250  - time: 57    - [train] loss: 0.0478 - [valid] loss: 0.0551 - [test] loss: 0.0205
+saving best model at iter 260
+Iter 260  - time: 58    - [train] loss: 0.0407 - [valid] loss: 0.0446 - [test] loss: 0.0175
+saving best model at iter 270
+Iter 270  - time: 58    - [train] loss: 0.0373 - [valid] loss: 0.0422 - [test] loss: 0.0156
+saving best model at iter 280
+Iter 280  - time: 60    - [train] loss: 0.0352 - [valid] loss: 0.0394 - [test] loss: 0.013 
+saving best model at iter 290
+Iter 290  - time: 60    - [train] loss: 0.034  - [valid] loss: 0.0386 - [test] loss: 0.0129
+saving best model at iter 300
+Iter 300  - time: 62    - [train] loss: 0.0332 - [valid] loss: 0.0381 - [test] loss: 0.0126
+saving best model at iter 310
+Iter 310  - time: 63    - [train] loss: 0.0325 - [valid] loss: 0.0375 - [test] loss: 0.012 
+saving best model at iter 320
+Iter 320  - time: 64    - [train] loss: 0.032  - [valid] loss: 0.0371 - [test] loss: 0.0118
+saving best model at iter 330
+Iter 330  - time: 64    - [train] loss: 0.0314 - [valid] loss: 0.0367 - [test] loss: 0.0114
+saving best model at iter 340
+Iter 340  - time: 64    - [train] loss: 0.0309 - [valid] loss: 0.0363 - [test] loss: 0.011 
+saving best model at iter 350
+Iter 350  - time: 66    - [train] loss: 0.0304 - [valid] loss: 0.0359 - [test] loss: 0.0106
+saving best model at iter 360
+Iter 360  - time: 68    - [train] loss: 0.03   - [valid] loss: 0.0355 - [test] loss: 0.0101
+saving best model at iter 370
+Iter 370  - time: 69    - [train] loss: 0.0294 - [valid] loss: 0.035  - [test] loss: 0.0096
+saving best model at iter 380
+Iter 380  - time: 69    - [train] loss: 0.0289 - [valid] loss: 0.0344 - [test] loss: 0.0092
+saving best model at iter 390
+Iter 390  - time: 69    - [train] loss: 0.0283 - [valid] loss: 0.0338 - [test] loss: 0.0087
+saving best model at iter 400
+Iter 400  - time: 69    - [train] loss: 0.0276 - [valid] loss: 0.0331 - [test] loss: 0.0083
+Iter 410  - time: 68    - [train] loss: 0.0326 - [valid] loss: 0.0363 - [test] loss: 0.0112
+Iter 420  - time: 68    - [train] loss: 0.0276 - [valid] loss: 0.0338 - [test] loss: 0.009 
+saving best model at iter 430
+Iter 430  - time: 68    - [train] loss: 0.026  - [valid] loss: 0.0316 - [test] loss: 0.0075
+saving best model at iter 440
+Iter 440  - time: 68    - [train] loss: 0.0253 - [valid] loss: 0.0307 - [test] loss: 0.0067
+Iter 450  - time: 67    - [train] loss: 0.0256 - [valid] loss: 0.0312 - [test] loss: 0.0065
+Iter 460  - time: 67    - [train] loss: 0.0262 - [valid] loss: 0.0311 - [test] loss: 0.0112
+saving best model at iter 470
+Iter 470  - time: 68    - [train] loss: 0.0239 - [valid] loss: 0.0294 - [test] loss: 0.0069
+saving best model at iter 480
+Iter 480  - time: 68    - [train] loss: 0.0237 - [valid] loss: 0.0291 - [test] loss: 0.0068
+saving best model at iter 490
+Iter 490  - time: 67    - [train] loss: 0.023  - [valid] loss: 0.0284 - [test] loss: 0.0071
+saving best model at iter 500
+Iter 500  - time: 68    - [train] loss: 0.0224 - [valid] loss: 0.0277 - [test] loss: 0.007 
+saving best model at iter 510
+Iter 510  - time: 68    - [train] loss: 0.0219 - [valid] loss: 0.0272 - [test] loss: 0.0068
+Iter 520  - time: 68    - [train] loss: 0.026  - [valid] loss: 0.0313 - [test] loss: 0.0109
+Iter 530  - time: 68    - [train] loss: 0.0226 - [valid] loss: 0.0278 - [test] loss: 0.0081
+saving best model at iter 540
+Iter 540  - time: 67    - [train] loss: 0.0209 - [valid] loss: 0.0263 - [test] loss: 0.0068
+saving best model at iter 550
+Iter 550  - time: 67    - [train] loss: 0.0202 - [valid] loss: 0.0255 - [test] loss: 0.0066
+saving best model at iter 560
+Iter 560  - time: 68    - [train] loss: 0.0196 - [valid] loss: 0.0248 - [test] loss: 0.0068
+saving best model at iter 570
+Iter 570  - time: 69    - [train] loss: 0.0189 - [valid] loss: 0.0241 - [test] loss: 0.0072
+saving best model at iter 580
+Iter 580  - time: 68    - [train] loss: 0.0183 - [valid] loss: 0.0234 - [test] loss: 0.008 
+saving best model at iter 590
+Iter 590  - time: 70    - [train] loss: 0.0176 - [valid] loss: 0.0227 - [test] loss: 0.0083
+saving best model at iter 600
+Iter 600  - time: 72    - [train] loss: 0.0169 - [valid] loss: 0.0219 - [test] loss: 0.0088
+Iter 610  - time: 71    - [train] loss: 0.0186 - [valid] loss: 0.0236 - [test] loss: 0.0115
+saving best model at iter 620
+Iter 620  - time: 71    - [train] loss: 0.0156 - [valid] loss: 0.0205 - [test] loss: 0.0098
+saving best model at iter 630
+Iter 630  - time: 72    - [train] loss: 0.0148 - [valid] loss: 0.0197 - [test] loss: 0.0108
+saving best model at iter 640
+Iter 640  - time: 73    - [train] loss: 0.014  - [valid] loss: 0.0188 - [test] loss: 0.0125
+saving best model at iter 650
+Iter 650  - time: 74    - [train] loss: 0.0131 - [valid] loss: 0.0179 - [test] loss: 0.014 
+saving best model at iter 660
+Iter 660  - time: 75    - [train] loss: 0.0124 - [valid] loss: 0.017  - [test] loss: 0.0156
+saving best model at iter 670
+Iter 670  - time: 74    - [train] loss: 0.0118 - [valid] loss: 0.0163 - [test] loss: 0.0185
+Iter 680  - time: 76    - [train] loss: 0.0125 - [valid] loss: 0.0175 - [test] loss: 0.0157
+saving best model at iter 690
+Iter 690  - time: 76    - [train] loss: 0.0121 - [valid] loss: 0.0162 - [test] loss: 0.0193
+saving best model at iter 700
+Iter 700  - time: 76    - [train] loss: 0.0111 - [valid] loss: 0.0155 - [test] loss: 0.0189
+saving best model at iter 710
+Iter 710  - time: 77    - [train] loss: 0.0106 - [valid] loss: 0.0152 - [test] loss: 0.0175
+saving best model at iter 720
+Iter 720  - time: 77    - [train] loss: 0.01   - [valid] loss: 0.0145 - [test] loss: 0.0218
+saving best model at iter 730
+Iter 730  - time: 78    - [train] loss: 0.0097 - [valid] loss: 0.014  - [test] loss: 0.0246
+saving best model at iter 740
+Iter 740  - time: 80    - [train] loss: 0.0093 - [valid] loss: 0.0138 - [test] loss: 0.0249
+saving best model at iter 750
+Iter 750  - time: 81    - [train] loss: 0.009  - [valid] loss: 0.0135 - [test] loss: 0.0258
+saving best model at iter 760
+Iter 760  - time: 83    - [train] loss: 0.0087 - [valid] loss: 0.0131 - [test] loss: 0.0277
+Iter 770  - time: 84    - [train] loss: 0.0108 - [valid] loss: 0.015  - [test] loss: 0.0377
+Iter 780  - time: 80    - [train] loss: 0.0121 - [valid] loss: 0.0156 - [test] loss: 0.0166
+Iter 790  - time: 76    - [train] loss: 0.0095 - [valid] loss: 0.0142 - [test] loss: 0.0198
+Iter 800  - time: 80    - [train] loss: 0.0087 - [valid] loss: 0.0141 - [test] loss: 0.0234
+saving best model at iter 810
+Iter 810  - time: 79    - [train] loss: 0.0082 - [valid] loss: 0.0129 - [test] loss: 0.0282
+saving best model at iter 820
+Iter 820  - time: 79    - [train] loss: 0.0077 - [valid] loss: 0.0124 - [test] loss: 0.0287
+saving best model at iter 830
+Iter 830  - time: 83    - [train] loss: 0.0074 - [valid] loss: 0.0123 - [test] loss: 0.0302
+saving best model at iter 840
+Iter 840  - time: 84    - [train] loss: 0.0072 - [valid] loss: 0.0121 - [test] loss: 0.0309
+saving best model at iter 850
+Iter 850  - time: 86    - [train] loss: 0.007  - [valid] loss: 0.012  - [test] loss: 0.0322
+saving best model at iter 860
+Iter 860  - time: 90    - [train] loss: 0.0068 - [valid] loss: 0.0119 - [test] loss: 0.0327
+Iter 870  - time: 87    - [train] loss: 0.0066 - [valid] loss: 0.012  - [test] loss: 0.0332
+Iter 880  - time: 87    - [train] loss: 0.0064 - [valid] loss: 0.0123 - [test] loss: 0.0341
+Iter 890  - time: 88    - [train] loss: 0.0071 - [valid] loss: 0.0126 - [test] loss: 0.0389
+Iter 900  - time: 91    - [train] loss: 0.0152 - [valid] loss: 0.0241 - [test] loss: 0.0144
+Iter 910  - time: 78    - [train] loss: 0.0136 - [valid] loss: 0.0182 - [test] loss: 0.034 
+Iter 920  - time: 79    - [train] loss: 0.0076 - [valid] loss: 0.0125 - [test] loss: 0.019 
+Iter 930  - time: 83    - [train] loss: 0.0072 - [valid] loss: 0.0123 - [test] loss: 0.0205
+saving best model at iter 940
+Iter 940  - time: 84    - [train] loss: 0.0067 - [valid] loss: 0.0116 - [test] loss: 0.0282
+saving best model at iter 950
+Iter 950  - time: 84    - [train] loss: 0.0062 - [valid] loss: 0.0106 - [test] loss: 0.0296
+saving best model at iter 960
+Iter 960  - time: 86    - [train] loss: 0.0059 - [valid] loss: 0.0106 - [test] loss: 0.0316
+saving best model at iter 970
+Iter 970  - time: 86    - [train] loss: 0.0057 - [valid] loss: 0.01   - [test] loss: 0.0336
+saving best model at iter 980
+Iter 980  - time: 87    - [train] loss: 0.0055 - [valid] loss: 0.0097 - [test] loss: 0.0343
+saving best model at iter 990
+Iter 990  - time: 88    - [train] loss: 0.0054 - [valid] loss: 0.0095 - [test] loss: 0.0349
+saving best model at iter 1000
+Iter 1000 - time: 88    - [train] loss: 0.0053 - [valid] loss: 0.0095 - [test] loss: 0.036 
+saving best model at iter 1010
+Iter 1010 - time: 89    - [train] loss: 0.0052 - [valid] loss: 0.0094 - [test] loss: 0.0381
+Iter 1020 - time: 88    - [train] loss: 0.0053 - [valid] loss: 0.0131 - [test] loss: 0.038 
+Iter 1030 - time: 88    - [train] loss: 0.0053 - [valid] loss: 0.0134 - [test] loss: 0.0454
+Iter 1040 - time: 87    - [train] loss: 0.0052 - [valid] loss: 0.0159 - [test] loss: 0.0416
+Iter 1050 - time: 92    - [train] loss: 0.0055 - [valid] loss: 0.0132 - [test] loss: 0.0493
+saving best model at iter 1060
+Iter 1060 - time: 93    - [train] loss: 0.0051 - [valid] loss: 0.0087 - [test] loss: 0.0355
+Iter 1070 - time: 93    - [train] loss: 0.0051 - [valid] loss: 0.0089 - [test] loss: 0.0389
+Iter 1080 - time: 93    - [train] loss: 0.0047 - [valid] loss: 0.0087 - [test] loss: 0.0437
+Iter 1090 - time: 94    - [train] loss: 0.0048 - [valid] loss: 0.0091 - [test] loss: 0.0381
+Iter 1100 - time: 95    - [train] loss: 0.0049 - [valid] loss: 0.0087 - [test] loss: 0.0403
+Iter 1110 - time: 95    - [train] loss: 0.0048 - [valid] loss: 0.0092 - [test] loss: 0.034 
+Iter 1120 - time: 97    - [train] loss: 0.0066 - [valid] loss: 0.0105 - [test] loss: 0.0582
+saving best model at iter 1130
+Iter 1130 - time: 94    - [train] loss: 0.0049 - [valid] loss: 0.0079 - [test] loss: 0.04  
+Iter 1140 - time: 95    - [train] loss: 0.0047 - [valid] loss: 0.008  - [test] loss: 0.0376
+Iter 1150 - time: 97    - [train] loss: 0.0043 - [valid] loss: 0.0089 - [test] loss: 0.0434
+Iter 1160 - time: 98    - [train] loss: 0.0043 - [valid] loss: 0.0104 - [test] loss: 0.0496
+Iter 1170 - time: 99    - [train] loss: 0.0045 - [valid] loss: 0.0089 - [test] loss: 0.0353
+Iter 1180 - time: 99    - [train] loss: 0.005  - [valid] loss: 0.0091 - [test] loss: 0.0448
+Iter 1190 - time: 100   - [train] loss: 0.0047 - [valid] loss: 0.0155 - [test] loss: 0.0525
+Iter 1200 - time: 102   - [train] loss: 0.0044 - [valid] loss: 0.0092 - [test] loss: 0.0509
+Iter 1210 - time: 101   - [train] loss: 0.0055 - [valid] loss: 0.0087 - [test] loss: 0.0441
+Iter 1220 - time: 93    - [train] loss: 0.0072 - [valid] loss: 0.0097 - [test] loss: 0.0302
+Iter 1230 - time: 97    - [train] loss: 0.0079 - [valid] loss: 0.0109 - [test] loss: 0.034 
+Iter 1240 - time: 97    - [train] loss: 0.0055 - [valid] loss: 0.0098 - [test] loss: 0.0389
+Iter 1250 - time: 97    - [train] loss: 0.0045 - [valid] loss: 0.0083 - [test] loss: 0.0321
+saving best model at iter 1260
+Iter 1260 - time: 97    - [train] loss: 0.0041 - [valid] loss: 0.0069 - [test] loss: 0.0398
+Iter 1270 - time: 97    - [train] loss: 0.0039 - [valid] loss: 0.007  - [test] loss: 0.0365
+Iter 1280 - time: 98    - [train] loss: 0.0038 - [valid] loss: 0.0069 - [test] loss: 0.0371
+Iter 1290 - time: 100   - [train] loss: 0.0037 - [valid] loss: 0.0069 - [test] loss: 0.0371
+saving best model at iter 1300
+Iter 1300 - time: 100   - [train] loss: 0.0036 - [valid] loss: 0.0067 - [test] loss: 0.0375
+saving best model at iter 1310
+Iter 1310 - time: 102   - [train] loss: 0.0036 - [valid] loss: 0.0066 - [test] loss: 0.0377
+saving best model at iter 1320
+Iter 1320 - time: 103   - [train] loss: 0.0037 - [valid] loss: 0.0064 - [test] loss: 0.0381
+Iter 1330 - time: 104   - [train] loss: 0.0037 - [valid] loss: 0.0065 - [test] loss: 0.0409
+Iter 1340 - time: 105   - [train] loss: 0.0039 - [valid] loss: 0.0066 - [test] loss: 0.0322
+Iter 1350 - time: 106   - [train] loss: 0.0036 - [valid] loss: 0.0065 - [test] loss: 0.0425
+Iter 1360 - time: 106   - [train] loss: 0.0036 - [valid] loss: 0.0065 - [test] loss: 0.0421
+Iter 1370 - time: 107   - [train] loss: 0.004  - [valid] loss: 0.0072 - [test] loss: 0.0414
+Iter 1380 - time: 103   - [train] loss: 0.0052 - [valid] loss: 0.0099 - [test] loss: 0.0324
+Iter 1390 - time: 107   - [train] loss: 0.0045 - [valid] loss: 0.0072 - [test] loss: 0.0321
+Iter 1400 - time: 107   - [train] loss: 0.0037 - [valid] loss: 0.0069 - [test] loss: 0.0418
+Iter 1410 - time: 108   - [train] loss: 0.0035 - [valid] loss: 0.0065 - [test] loss: 0.0429
+Iter 1420 - time: 106   - [train] loss: 0.0033 - [valid] loss: 0.0064 - [test] loss: 0.0395
+Iter 1430 - time: 108   - [train] loss: 0.0033 - [valid] loss: 0.0065 - [test] loss: 0.0427
+Iter 1440 - time: 106   - [train] loss: 0.0032 - [valid] loss: 0.0065 - [test] loss: 0.0406
+Iter 1450 - time: 110   - [train] loss: 0.0038 - [valid] loss: 0.0073 - [test] loss: 0.0449
+Iter 1460 - time: 109   - [train] loss: 0.0045 - [valid] loss: 0.0096 - [test] loss: 0.0383
+Iter 1470 - time: 112   - [train] loss: 0.0035 - [valid] loss: 0.008  - [test] loss: 0.0379
+saving best model at iter 1480
+Iter 1480 - time: 113   - [train] loss: 0.0039 - [valid] loss: 0.0063 - [test] loss: 0.0511
+Iter 1490 - time: 114   - [train] loss: 0.0038 - [valid] loss: 0.0064 - [test] loss: 0.0408
+Iter 1500 - time: 113   - [train] loss: 0.0039 - [valid] loss: 0.0085 - [test] loss: 0.0377
+Iter 1510 - time: 113   - [train] loss: 0.004  - [valid] loss: 0.0096 - [test] loss: 0.039 
+saving best model at iter 1520
+Iter 1520 - time: 113   - [train] loss: 0.0037 - [valid] loss: 0.0062 - [test] loss: 0.0521
+Iter 1530 - time: 115   - [train] loss: 0.0038 - [valid] loss: 0.0071 - [test] loss: 0.0335
+saving best model at iter 1540
+Iter 1540 - time: 115   - [train] loss: 0.0035 - [valid] loss: 0.0062 - [test] loss: 0.0377
+Iter 1550 - time: 114   - [train] loss: 0.0041 - [valid] loss: 0.0093 - [test] loss: 0.035 
+Iter 1560 - time: 117   - [train] loss: 0.0043 - [valid] loss: 0.0072 - [test] loss: 0.0488
+Iter 1570 - time: 113   - [train] loss: 0.0073 - [valid] loss: 0.017  - [test] loss: 0.0408
+Iter 1580 - time: 107   - [train] loss: 0.0495 - [valid] loss: 0.0523 - [test] loss: 0.0312
+Iter 1590 - time: 78    - [train] loss: 0.0212 - [valid] loss: 0.026  - [test] loss: 0.014 
+Iter 1600 - time: 86    - [train] loss: 0.0121 - [valid] loss: 0.0151 - [test] loss: 0.0076
+Iter 1610 - time: 97    - [train] loss: 0.007  - [valid] loss: 0.0093 - [test] loss: 0.0221
+Iter 1620 - time: 101   - [train] loss: 0.005  - [valid] loss: 0.0087 - [test] loss: 0.0299
+Iter 1630 - time: 103   - [train] loss: 0.0042 - [valid] loss: 0.0083 - [test] loss: 0.0326
+Iter 1640 - time: 107   - [train] loss: 0.0038 - [valid] loss: 0.0087 - [test] loss: 0.0355
+Iter 1650 - time: 106   - [train] loss: 0.0036 - [valid] loss: 0.009  - [test] loss: 0.0338
+Iter 1660 - time: 106   - [train] loss: 0.0035 - [valid] loss: 0.009  - [test] loss: 0.0342
+Iter 1670 - time: 105   - [train] loss: 0.0034 - [valid] loss: 0.0095 - [test] loss: 0.0337
+Iter 1680 - time: 104   - [train] loss: 0.0033 - [valid] loss: 0.0097 - [test] loss: 0.0335
+Iter 1690 - time: 108   - [train] loss: 0.0032 - [valid] loss: 0.01   - [test] loss: 0.0338
+Iter 1700 - time: 110   - [train] loss: 0.0032 - [valid] loss: 0.01   - [test] loss: 0.0339
+Iter 1710 - time: 111   - [train] loss: 0.0031 - [valid] loss: 0.0099 - [test] loss: 0.0343
+Iter 1720 - time: 112   - [train] loss: 0.0031 - [valid] loss: 0.0095 - [test] loss: 0.0347
+Iter 1730 - time: 115   - [train] loss: 0.003  - [valid] loss: 0.0089 - [test] loss: 0.0352
+Iter 1740 - time: 115   - [train] loss: 0.003  - [valid] loss: 0.0084 - [test] loss: 0.0356
+Iter 1750 - time: 116   - [train] loss: 0.0029 - [valid] loss: 0.008  - [test] loss: 0.036 
+Iter 1760 - time: 116   - [train] loss: 0.0029 - [valid] loss: 0.0076 - [test] loss: 0.0364
+Iter 1770 - time: 118   - [train] loss: 0.0029 - [valid] loss: 0.0073 - [test] loss: 0.0368
+Iter 1780 - time: 119   - [train] loss: 0.0028 - [valid] loss: 0.0071 - [test] loss: 0.0372
+Iter 1790 - time: 120   - [train] loss: 0.0028 - [valid] loss: 0.0069 - [test] loss: 0.0375
+Iter 1800 - time: 120   - [train] loss: 0.0028 - [valid] loss: 0.0067 - [test] loss: 0.0379
+Iter 1810 - time: 121   - [train] loss: 0.0028 - [valid] loss: 0.0066 - [test] loss: 0.0382
+Iter 1820 - time: 121   - [train] loss: 0.0027 - [valid] loss: 0.0067 - [test] loss: 0.0387
+Iter 1830 - time: 122   - [train] loss: 0.0027 - [valid] loss: 0.0065 - [test] loss: 0.0389
+Iter 1840 - time: 123   - [train] loss: 0.0027 - [valid] loss: 0.0064 - [test] loss: 0.0388
+Iter 1850 - time: 123   - [train] loss: 0.0027 - [valid] loss: 0.0063 - [test] loss: 0.0386
+Iter 1860 - time: 123   - [train] loss: 0.0027 - [valid] loss: 0.0069 - [test] loss: 0.0395
+Iter 1870 - time: 124   - [train] loss: 0.0028 - [valid] loss: 0.0063 - [test] loss: 0.038 
+Iter 1880 - time: 119   - [train] loss: 0.0048 - [valid] loss: 0.0098 - [test] loss: 0.0345
+Iter 1890 - time: 121   - [train] loss: 0.0046 - [valid] loss: 0.0087 - [test] loss: 0.0365
+saving best model at iter 1900
+Iter 1900 - time: 121   - [train] loss: 0.0037 - [valid] loss: 0.0057 - [test] loss: 0.0458
+Iter 1910 - time: 122   - [train] loss: 0.0045 - [valid] loss: 0.0092 - [test] loss: 0.0419
+Iter 1920 - time: 121   - [train] loss: 0.003  - [valid] loss: 0.0067 - [test] loss: 0.0407
+saving best model at iter 1930
+Iter 1930 - time: 119   - [train] loss: 0.0046 - [valid] loss: 0.0055 - [test] loss: 0.031 
+Iter 1940 - time: 123   - [train] loss: 0.0034 - [valid] loss: 0.0083 - [test] loss: 0.0322
+Iter 1950 - time: 121   - [train] loss: 0.0028 - [valid] loss: 0.0074 - [test] loss: 0.0369
+Iter 1960 - time: 122   - [train] loss: 0.0032 - [valid] loss: 0.0073 - [test] loss: 0.0422
+Iter 1970 - time: 121   - [train] loss: 0.003  - [valid] loss: 0.0069 - [test] loss: 0.038 
+Iter 1980 - time: 119   - [train] loss: 0.0029 - [valid] loss: 0.0064 - [test] loss: 0.0375
+Iter 1990 - time: 122   - [train] loss: 0.0027 - [valid] loss: 0.0063 - [test] loss: 0.0382
+Iter 2000 - time: 120   - [train] loss: 0.0026 - [valid] loss: 0.0064 - [test] loss: 0.0405
+Iter 2010 - time: 123   - [train] loss: 0.0026 - [valid] loss: 0.0062 - [test] loss: 0.0411
+Iter 2020 - time: 124   - [train] loss: 0.0046 - [valid] loss: 0.0127 - [test] loss: 0.0429
+Iter 2030 - time: 125   - [train] loss: 0.0028 - [valid] loss: 0.0067 - [test] loss: 0.0442
+Iter 2040 - time: 125   - [train] loss: 0.003  - [valid] loss: 0.0064 - [test] loss: 0.0348
+Iter 2050 - time: 126   - [train] loss: 0.0036 - [valid] loss: 0.0099 - [test] loss: 0.0406
+Iter 2060 - time: 129   - [train] loss: 0.0027 - [valid] loss: 0.0069 - [test] loss: 0.0421
+Iter 2070 - time: 127   - [train] loss: 0.0026 - [valid] loss: 0.0068 - [test] loss: 0.0379
+Iter 2080 - time: 125   - [train] loss: 0.0026 - [valid] loss: 0.0068 - [test] loss: 0.0384
+Iter 2090 - time: 125   - [train] loss: 0.0025 - [valid] loss: 0.0062 - [test] loss: 0.0394
+Iter 2100 - time: 129   - [train] loss: 0.0024 - [valid] loss: 0.0063 - [test] loss: 0.0415
+Iter 2110 - time: 129   - [train] loss: 0.0024 - [valid] loss: 0.0062 - [test] loss: 0.0419
+Iter 2120 - time: 126   - [train] loss: 0.0024 - [valid] loss: 0.006  - [test] loss: 0.0416
+Iter 2130 - time: 127   - [train] loss: 0.0024 - [valid] loss: 0.006  - [test] loss: 0.0415
+Iter 2140 - time: 129   - [train] loss: 0.0024 - [valid] loss: 0.0066 - [test] loss: 0.0422
+Iter 2150 - time: 129   - [train] loss: 0.0024 - [valid] loss: 0.0066 - [test] loss: 0.0424
+Iter 2160 - time: 127   - [train] loss: 0.0024 - [valid] loss: 0.0066 - [test] loss: 0.0418
+Iter 2170 - time: 131   - [train] loss: 0.0028 - [valid] loss: 0.0068 - [test] loss: 0.0375
+Iter 2180 - time: 127   - [train] loss: 0.0036 - [valid] loss: 0.0056 - [test] loss: 0.0344
+Iter 2190 - time: 126   - [train] loss: 0.0044 - [valid] loss: 0.0072 - [test] loss: 0.0352
+Iter 2200 - time: 128   - [train] loss: 0.0032 - [valid] loss: 0.006  - [test] loss: 0.0347
+Iter 2210 - time: 128   - [train] loss: 0.0029 - [valid] loss: 0.0098 - [test] loss: 0.032 
+Iter 2220 - time: 125   - [train] loss: 0.003  - [valid] loss: 0.0066 - [test] loss: 0.0347
+Iter 2230 - time: 126   - [train] loss: 0.0024 - [valid] loss: 0.0067 - [test] loss: 0.0402
+Iter 2240 - time: 126   - [train] loss: 0.0024 - [valid] loss: 0.0067 - [test] loss: 0.0422
+Iter 2250 - time: 128   - [train] loss: 0.0023 - [valid] loss: 0.0064 - [test] loss: 0.0425
+Iter 2260 - time: 130   - [train] loss: 0.0023 - [valid] loss: 0.0064 - [test] loss: 0.0422
+Iter 2270 - time: 130   - [train] loss: 0.0022 - [valid] loss: 0.0063 - [test] loss: 0.0422
+Iter 2280 - time: 129   - [train] loss: 0.0022 - [valid] loss: 0.0067 - [test] loss: 0.0421
+Iter 2290 - time: 131   - [train] loss: 0.0023 - [valid] loss: 0.0062 - [test] loss: 0.0421
+Iter 2300 - time: 133   - [train] loss: 0.0022 - [valid] loss: 0.0066 - [test] loss: 0.0416
+Iter 2310 - time: 132   - [train] loss: 0.003  - [valid] loss: 0.0084 - [test] loss: 0.0471
+Iter 2320 - time: 132   - [train] loss: 0.0031 - [valid] loss: 0.0069 - [test] loss: 0.0406
+Iter 2330 - time: 129   - [train] loss: 0.0034 - [valid] loss: 0.0081 - [test] loss: 0.0428
+Iter 2340 - time: 129   - [train] loss: 0.0026 - [valid] loss: 0.0079 - [test] loss: 0.0414
+Iter 2350 - time: 132   - [train] loss: 0.0026 - [valid] loss: 0.0074 - [test] loss: 0.0373
+Iter 2360 - time: 131   - [train] loss: 0.0027 - [valid] loss: 0.0073 - [test] loss: 0.0425
+Iter 2370 - time: 131   - [train] loss: 0.0025 - [valid] loss: 0.0076 - [test] loss: 0.0405
+Iter 2380 - time: 134   - [train] loss: 0.0023 - [valid] loss: 0.0062 - [test] loss: 0.0452
+Iter 2390 - time: 135   - [train] loss: 0.0022 - [valid] loss: 0.0066 - [test] loss: 0.0458
+Iter 2400 - time: 136   - [train] loss: 0.0022 - [valid] loss: 0.0062 - [test] loss: 0.046 
+Iter 2410 - time: 137   - [train] loss: 0.0021 - [valid] loss: 0.006  - [test] loss: 0.0447
+Iter 2420 - time: 137   - [train] loss: 0.0028 - [valid] loss: 0.0077 - [test] loss: 0.0487
+Iter 2430 - time: 135   - [train] loss: 0.0025 - [valid] loss: 0.0074 - [test] loss: 0.0408
+Iter 2440 - time: 129   - [train] loss: 0.0038 - [valid] loss: 0.0113 - [test] loss: 0.0477
+Iter 2450 - time: 129   - [train] loss: 0.0029 - [valid] loss: 0.008  - [test] loss: 0.0504
+Iter 2460 - time: 131   - [train] loss: 0.0023 - [valid] loss: 0.0074 - [test] loss: 0.044 
+Iter 2470 - time: 129   - [train] loss: 0.0021 - [valid] loss: 0.0066 - [test] loss: 0.0433
+Iter 2480 - time: 130   - [train] loss: 0.0021 - [valid] loss: 0.0065 - [test] loss: 0.0443
+Iter 2490 - time: 130   - [train] loss: 0.0021 - [valid] loss: 0.0063 - [test] loss: 0.0449
+
+Total script time in hours minutes seconds:  06:29:26

@@ -225,8 +225,9 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
     # term2 = jnp.mean(ctx**2)             ## regularisation
     term2 = jnp.mean(jnp.abs(ctx))             ## regularisation
+    term3 = params_norm_squared(model)
 
-    loss_val = term1 + 1e-3*term2
+    loss_val = term1 + 1e-3*term2 + 1e-3*term3
     # loss_val = jnp.nan_to_num(term1, nan=0.0, posinf=0.0, neginf=0.0)
     # loss_val = term1
 

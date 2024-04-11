@@ -1,0 +1,790 @@
+CUDA available:  True
+Number of parameters in the model:  173908
+saving best model at iter 0
+Iter 0    - time: 12    - [train]: 75.1702 - [valid]: 68.7952 - [adapt]: 71.953 - [adapt_test]: 74.8777 - [adapt_test_per_env]: [78.25, 69.3048, 71.3871, 75.717, 81.3602, 73.2471]
+saving best model at iter 1
+Iter 1    - time: 7     - [train]: 21.547 - [valid]: 18.7237 - [adapt]: 20.6747 - [adapt_test]: 21.4983 - [adapt_test_per_env]: [25.8046, 20.9393, 19.7562, 21.2675, 22.8001, 18.4224]
+saving best model at iter 2
+Iter 2    - time: 7     - [train]: 4.3512 - [valid]: 6.0389 - [adapt]: 5.2255 - [adapt_test]: 4.5145 - [adapt_test_per_env]: [5.8933, 7.1807, 4.4278, 3.2931, 2.4932, 3.7989]
+Iter 3    - time: 7     - [train]: 23.3535 - [valid]: 27.1548 - [adapt]: 24.6938 - [adapt_test]: 23.588 - [adapt_test_per_env]: [22.4179, 26.8648, 24.1148, 22.0083, 20.9431, 25.1793]
+Iter 4    - time: 7     - [train]: 21.7085 - [valid]: 25.3611 - [adapt]: 22.9745 - [adapt_test]: 21.9348 - [adapt_test_per_env]: [20.8006, 25.0636, 22.4004, 20.3921, 19.4425, 23.5096]
+Iter 5    - time: 7     - [train]: 7.1493 - [valid]: 9.2931 - [adapt]: 7.9862 - [adapt_test]: 7.3171 - [adapt_test_per_env]: [7.6783, 9.7625, 7.3002, 6.0592, 5.5266, 7.5756]
+saving best model at iter 6
+Iter 6    - time: 8     - [train]: 1.955  - [valid]: 2.0074 - [adapt]: 2.0898 - [adapt_test]: 2.0329 - [adapt_test_per_env]: [4.1154, 3.2535, 1.2957, 1.2033, 1.5028, 0.8265]
+Iter 7    - time: 7     - [train]: 8.231  - [valid]: 6.669  - [adapt]: 7.5769 - [adapt_test]: 8.2196 - [adapt_test_per_env]: [10.8109, 7.8609, 6.8109, 7.7959, 9.3194, 6.7194]
+Iter 8    - time: 7     - [train]: 11.9962 - [valid]: 9.8795 - [adapt]: 10.9713 - [adapt_test]: 11.9461 - [adapt_test_per_env]: [14.3807, 10.7885, 10.26, 11.6922, 13.8715, 10.6834]
+Iter 9    - time: 7     - [train]: 8.5873 - [valid]: 6.8886 - [adapt]: 7.6767 - [adapt_test]: 8.5531 - [adapt_test_per_env]: [10.5562, 7.5732, 6.9989, 8.2215, 10.2961, 7.6724]
+Iter 10   - time: 7     - [train]: 3.0074 - [valid]: 2.4287 - [adapt]: 2.6076 - [adapt_test]: 3.0322 - [adapt_test_per_env]: [4.5591, 3.0544, 1.9271, 2.43, 3.7415, 2.481]
+Iter 11   - time: 7     - [train]: 2.0282 - [valid]: 2.8825 - [adapt]: 2.3235 - [adapt_test]: 2.1319 - [adapt_test_per_env]: [3.1866, 3.543, 1.6211, 1.1706, 1.4077, 1.8621]
+Iter 12   - time: 8     - [train]: 5.4262 - [valid]: 7.3085 - [adapt]: 6.2783 - [adapt_test]: 5.5912 - [adapt_test_per_env]: [6.5006, 8.1482, 5.5339, 4.3546, 3.6837, 5.3259]
+Iter 13   - time: 7     - [train]: 7.0289 - [valid]: 9.2037 - [adapt]: 8.0341 - [adapt_test]: 7.2109 - [adapt_test_per_env]: [8.0601, 10.0803, 7.2803, 5.8975, 4.9809, 6.966]
+Iter 14   - time: 7     - [train]: 5.0132 - [valid]: 6.7999 - [adapt]: 5.7884 - [adapt_test]: 5.1705 - [adapt_test_per_env]: [6.0082, 7.5568, 5.0597, 3.9669, 3.4395, 4.9916]
+Iter 15   - time: 8     - [train]: 2.1491 - [valid]: 3.0564 - [adapt]: 2.4465 - [adapt_test]: 2.2538 - [adapt_test_per_env]: [3.2103, 3.6557, 1.7543, 1.2862, 1.5394, 2.0768]
+saving best model at iter 16
+Iter 16   - time: 8     - [train]: 1.9266 - [valid]: 1.822  - [adapt]: 1.7528 - [adapt_test]: 1.9771 - [adapt_test_per_env]: [3.3322, 2.4468, 1.0665, 1.2576, 2.2247, 1.535]
+Iter 17   - time: 7     - [train]: 3.8229 - [valid]: 3.0186 - [adapt]: 3.3448 - [adapt_test]: 3.8378 - [adapt_test_per_env]: [5.5405, 3.7179, 2.6527, 3.2832, 4.6934, 3.1389]
+Iter 18   - time: 7     - [train]: 4.5491 - [valid]: 3.5867 - [adapt]: 4.0392 - [adapt_test]: 4.5588 - [adapt_test_per_env]: [6.4628, 4.3999, 3.3288, 4.0305, 5.4543, 3.6767]
+Iter 19   - time: 7     - [train]: 3.2767 - [valid]: 2.6565 - [adapt]: 2.9656 - [adapt_test]: 3.3079 - [adapt_test_per_env]: [5.2081, 3.5651, 2.2352, 2.6838, 3.7735, 2.3817]
+Iter 20   - time: 7     - [train]: 1.7667 - [valid]: 1.8249 - [adapt]: 1.7677 - [adapt_test]: 1.8339 - [adapt_test_per_env]: [3.4532, 2.7061, 1.0352, 1.0446, 1.6649, 1.0994]
+Iter 21   - time: 8     - [train]: 1.9133 - [valid]: 2.7001 - [adapt]: 2.1909 - [adapt_test]: 2.0145 - [adapt_test_per_env]: [3.1373, 3.3977, 1.483, 1.0655, 1.3189, 1.6846]
+Iter 22   - time: 8     - [train]: 3.0458 - [valid]: 4.3122 - [adapt]: 3.5229 - [adapt_test]: 3.1707 - [adapt_test_per_env]: [4.0246, 4.935, 2.8232, 2.1113, 2.0823, 3.048]
+Iter 23   - time: 9     - [train]: 3.2634 - [valid]: 4.6012 - [adapt]: 3.7839 - [adapt_test]: 3.3929 - [adapt_test_per_env]: [4.2522, 5.2491, 3.0792, 2.3129, 2.2096, 3.2547]
+Iter 24   - time: 8     - [train]: 2.3358 - [valid]: 3.3549 - [adapt]: 2.7364 - [adapt_test]: 2.4506 - [adapt_test_per_env]: [3.53, 4.0856, 2.0204, 1.4401, 1.4951, 2.1323]
+Iter 25   - time: 8     - [train]: 1.608  - [valid]: 2.0668 - [adapt]: 1.7868 - [adapt_test]: 1.696  - [adapt_test_per_env]: [3.1269, 2.9145, 1.0561, 0.8111, 1.1698, 1.0976]
+Iter 26   - time: 7     - [train]: 1.9625 - [valid]: 1.8702 - [adapt]: 1.8906 - [adapt_test]: 2.0215 - [adapt_test_per_env]: [3.6897, 2.7468, 1.1601, 1.2701, 2.004, 1.258]
+Iter 27   - time: 7     - [train]: 2.5783 - [valid]: 2.1662 - [adapt]: 2.3041 - [adapt_test]: 2.6159 - [adapt_test_per_env]: [4.2326, 2.9094, 1.5996, 1.9592, 3.0447, 1.9499]
+Iter 28   - time: 7     - [train]: 2.4656 - [valid]: 2.0831 - [adapt]: 2.1521 - [adapt_test]: 2.5005 - [adapt_test_per_env]: [3.9284, 2.6851, 1.4716, 1.8526, 3.0423, 2.0231]
+saving best model at iter 29
+Iter 29   - time: 7     - [train]: 1.8319 - [valid]: 1.7947 - [adapt]: 1.6666 - [adapt_test]: 1.8842 - [adapt_test_per_env]: [3.1339, 2.3552, 0.99, 1.1553, 2.1306, 1.5402]
+Iter 30   - time: 8     - [train]: 1.6129 - [valid]: 2.0605 - [adapt]: 1.7096 - [adapt_test]: 1.6941 - [adapt_test_per_env]: [2.8725, 2.7049, 1.0139, 0.8353, 1.3831, 1.3549]
+Iter 31   - time: 8     - [train]: 1.9912 - [valid]: 2.8437 - [adapt]: 2.3481 - [adapt_test]: 2.0998 - [adapt_test_per_env]: [3.357, 3.6678, 1.6176, 1.1199, 1.2129, 1.6233]
+Iter 32   - time: 8     - [train]: 2.2517 - [valid]: 3.2521 - [adapt]: 2.731  - [adapt_test]: 2.3724 - [adapt_test_per_env]: [3.7495, 4.2141, 1.9754, 1.34, 1.2026, 1.753]
+Iter 33   - time: 8     - [train]: 1.9607 - [valid]: 2.7998 - [adapt]: 2.3543 - [adapt_test]: 2.072  - [adapt_test_per_env]: [3.4771, 3.7373, 1.6043, 1.0825, 1.0843, 1.4466]
+Iter 34   - time: 8     - [train]: 1.6103 - [valid]: 2.0827 - [adapt]: 1.7724 - [adapt_test]: 1.6971 - [adapt_test_per_env]: [3.0449, 2.8685, 1.052, 0.816, 1.2198, 1.1817]
+saving best model at iter 35
+Iter 35   - time: 7     - [train]: 1.6995 - [valid]: 1.789  - [adapt]: 1.6198 - [adapt_test]: 1.7608 - [adapt_test_per_env]: [3.0478, 2.4157, 0.9302, 0.9929, 1.8171, 1.361]
+Iter 36   - time: 7     - [train]: 1.9757 - [valid]: 1.8361 - [adapt]: 1.761  - [adapt_test]: 2.0225 - [adapt_test_per_env]: [3.3057, 2.3932, 1.0855, 1.3195, 2.3723, 1.6587]
+Iter 37   - time: 7     - [train]: 1.9444 - [valid]: 1.8271 - [adapt]: 1.7634 - [adapt_test]: 1.9942 - [adapt_test_per_env]: [3.3463, 2.4452, 1.0771, 1.2787, 2.261, 1.5571]
+Iter 38   - time: 7     - [train]: 1.6803 - [valid]: 1.8004 - [adapt]: 1.6585 - [adapt_test]: 1.7467 - [adapt_test_per_env]: [3.1669, 2.5415, 0.9488, 0.9581, 1.6581, 1.2067]
+Iter 39   - time: 7     - [train]: 1.6    - [valid]: 2.0386 - [adapt]: 1.7599 - [adapt_test]: 1.6861 - [adapt_test_per_env]: [3.0915, 2.8603, 1.0334, 0.8093, 1.2057, 1.1167]
+Iter 40   - time: 8     - [train]: 1.7679 - [valid]: 2.4577 - [adapt]: 2.0509 - [adapt_test]: 1.8679 - [adapt_test_per_env]: [3.1947, 3.29, 1.3204, 0.9275, 1.1315, 1.3433]
+Iter 41   - time: 8     - [train]: 1.8594 - [valid]: 2.6216 - [adapt]: 2.1643 - [adapt_test]: 1.9623 - [adapt_test_per_env]: [3.2208, 3.4207, 1.4387, 1.0077, 1.1886, 1.4973]
+Iter 42   - time: 8     - [train]: 1.7205 - [valid]: 2.3583 - [adapt]: 1.953  - [adapt_test]: 1.8156 - [adapt_test_per_env]: [3.0751, 3.1219, 1.2346, 0.896, 1.199, 1.3671]
+Iter 43   - time: 8     - [train]: 1.5901 - [valid]: 1.9849 - [adapt]: 1.7025 - [adapt_test]: 1.6717 - [adapt_test_per_env]: [3.004, 2.7357, 0.9885, 0.8139, 1.3052, 1.183]
+Iter 44   - time: 8     - [train]: 1.6534 - [valid]: 1.8096 - [adapt]: 1.6479 - [adapt_test]: 1.7217 - [adapt_test_per_env]: [3.1256, 2.5479, 0.9381, 0.9245, 1.6006, 1.1933]
+Iter 45   - time: 7     - [train]: 1.7588 - [valid]: 1.7897 - [adapt]: 1.68   - [adapt_test]: 1.8192 - [adapt_test_per_env]: [3.2224, 2.491, 0.9776, 1.0574, 1.8577, 1.3093]
+saving best model at iter 46
+Iter 46   - time: 8     - [train]: 1.7156 - [valid]: 1.7871 - [adapt]: 1.6425 - [adapt_test]: 1.7771 - [adapt_test_per_env]: [3.1204, 2.4525, 0.9459, 1.0094, 1.812, 1.3226]
+Iter 47   - time: 7     - [train]: 1.6065 - [valid]: 1.8516 - [adapt]: 1.6182 - [adapt_test]: 1.6776 - [adapt_test_per_env]: [2.9654, 2.5234, 0.919, 0.8661, 1.5366, 1.2555]
+Iter 48   - time: 8     - [train]: 1.6048 - [valid]: 2.0604 - [adapt]: 1.7394 - [adapt_test]: 1.6892 - [adapt_test_per_env]: [2.9765, 2.7931, 1.0278, 0.8183, 1.2815, 1.2378]
+Iter 49   - time: 8     - [train]: 1.6832 - [valid]: 2.2831 - [adapt]: 1.9176 - [adapt_test]: 1.7779 - [adapt_test_per_env]: [3.1168, 3.0987, 1.1904, 0.8617, 1.1459, 1.2536]
+Iter 50   - time: 8     - [train]: 1.6905 - [valid]: 2.3005 - [adapt]: 1.9433 - [adapt_test]: 1.7868 - [adapt_test_per_env]: [3.1676, 3.1521, 1.2098, 0.864, 1.1088, 1.2185]
+Iter 51   - time: 8     - [train]: 1.6162 - [valid]: 2.1068 - [adapt]: 1.7957 - [adapt_test]: 1.7047 - [adapt_test_per_env]: [3.0738, 2.9143, 1.0709, 0.8166, 1.1875, 1.1651]
+Iter 52   - time: 8     - [train]: 1.5892 - [valid]: 1.9042 - [adapt]: 1.653  - [adapt_test]: 1.6656 - [adapt_test_per_env]: [2.9904, 2.6255, 0.9444, 0.831, 1.4066, 1.1959]
+Iter 53   - time: 8     - [train]: 1.6377 - [valid]: 1.8132 - [adapt]: 1.6118 - [adapt_test]: 1.7047 - [adapt_test_per_env]: [3.0021, 2.4721, 0.9151, 0.9119, 1.6445, 1.2824]
+Iter 54   - time: 8     - [train]: 1.6598 - [valid]: 1.8    - [adapt]: 1.6189 - [adapt_test]: 1.725  - [adapt_test_per_env]: [3.041, 2.4633, 0.9216, 0.9405, 1.6949, 1.2888]
+Iter 55   - time: 7     - [train]: 1.6167 - [valid]: 1.835  - [adapt]: 1.6338 - [adapt_test]: 1.6878 - [adapt_test_per_env]: [3.0451, 2.5538, 0.9263, 0.8775, 1.5255, 1.1984]
+Iter 56   - time: 7     - [train]: 1.5867 - [valid]: 1.9448 - [adapt]: 1.6899 - [adapt_test]: 1.667  - [adapt_test_per_env]: [3.0392, 2.7161, 0.9723, 0.816, 1.3157, 1.1429]
+Iter 57   - time: 7     - [train]: 1.6123 - [valid]: 2.095  - [adapt]: 1.7808 - [adapt_test]: 1.6998 - [adapt_test_per_env]: [3.0469, 2.8825, 1.0592, 0.816, 1.2103, 1.1838]
+Iter 58   - time: 8     - [train]: 1.6359 - [valid]: 2.1657 - [adapt]: 1.8218 - [adapt_test]: 1.7255 - [adapt_test_per_env]: [3.039, 2.9403, 1.1021, 0.8315, 1.2031, 1.2372]
+Iter 59   - time: 8     - [train]: 1.6125 - [valid]: 2.0943 - [adapt]: 1.7691 - [adapt_test]: 1.6991 - [adapt_test_per_env]: [3.0081, 2.8514, 1.0527, 0.819, 1.2411, 1.222]
+Iter 60   - time: 8     - [train]: 1.5864 - [valid]: 1.9592 - [adapt]: 1.6877 - [adapt_test]: 1.6668 - [adapt_test_per_env]: [3.0039, 2.7066, 0.9739, 0.8149, 1.325, 1.1765]
+Iter 61   - time: 8     - [train]: 1.5993 - [valid]: 1.8641 - [adapt]: 1.6452 - [adapt_test]: 1.6735 - [adapt_test_per_env]: [3.036, 2.6002, 0.9342, 0.8498, 1.4485, 1.1724]
+Iter 62   - time: 8     - [train]: 1.618  - [valid]: 1.8319 - [adapt]: 1.6322 - [adapt_test]: 1.6888 - [adapt_test_per_env]: [3.0443, 2.5476, 0.925, 0.88, 1.5339, 1.202]
+Iter 63   - time: 7     - [train]: 1.6055 - [valid]: 1.8487 - [adapt]: 1.6283 - [adapt_test]: 1.6775 - [adapt_test_per_env]: [3.0047, 2.5502, 0.9232, 0.8632, 1.5083, 1.2155]
+Iter 64   - time: 7     - [train]: 1.5866 - [valid]: 1.9166 - [adapt]: 1.6555 - [adapt_test]: 1.6637 - [adapt_test_per_env]: [2.9756, 2.6313, 0.9474, 0.8263, 1.3965, 1.2052]
+Iter 65   - time: 7     - [train]: 1.5929 - [valid]: 2.0157 - [adapt]: 1.7204 - [adapt_test]: 1.6761 - [adapt_test_per_env]: [3.0029, 2.7692, 1.0049, 0.8112, 1.2792, 1.1894]
+Iter 66   - time: 7     - [train]: 1.6066 - [valid]: 2.0773 - [adapt]: 1.7699 - [adapt_test]: 1.6935 - [adapt_test_per_env]: [3.0462, 2.8654, 1.048, 0.8127, 1.2151, 1.1735]
+Iter 67   - time: 7     - [train]: 1.5996 - [valid]: 2.0499 - [adapt]: 1.7526 - [adapt_test]: 1.6854 - [adapt_test_per_env]: [3.0433, 2.8361, 1.0312, 0.8099, 1.2287, 1.1629]
+Iter 68   - time: 7     - [train]: 1.5859 - [valid]: 1.9649 - [adapt]: 1.6914 - [adapt_test]: 1.6667 - [adapt_test_per_env]: [3.0049, 2.7145, 0.9768, 0.8132, 1.3165, 1.1746]
+Iter 69   - time: 8     - [train]: 1.5895 - [valid]: 1.8909 - [adapt]: 1.6439 - [adapt_test]: 1.665  - [adapt_test_per_env]: [2.9838, 2.6023, 0.9364, 0.8351, 1.4289, 1.2035]
+Iter 70   - time: 8     - [train]: 1.5987 - [valid]: 1.8603 - [adapt]: 1.6309 - [adapt_test]: 1.6718 - [adapt_test_per_env]: [2.9941, 2.5628, 0.9252, 0.8529, 1.4835, 1.2124]
+Iter 71   - time: 7     - [train]: 1.5941 - [valid]: 1.8728 - [adapt]: 1.6422 - [adapt_test]: 1.6687 - [adapt_test_per_env]: [3.0107, 2.596, 0.9328, 0.8432, 1.4429, 1.1867]
+Iter 72   - time: 7     - [train]: 1.5851 - [valid]: 1.9228 - [adapt]: 1.6708 - [adapt_test]: 1.6637 - [adapt_test_per_env]: [3.0162, 2.6713, 0.9565, 0.8206, 1.3548, 1.1629]
+Iter 73   - time: 7     - [train]: 1.5877 - [valid]: 1.9887 - [adapt]: 1.7072 - [adapt_test]: 1.67   - [adapt_test_per_env]: [3.0121, 2.7473, 0.9907, 0.8101, 1.2891, 1.1709]
+Iter 74   - time: 8     - [train]: 1.5939 - [valid]: 2.0262 - [adapt]: 1.727  - [adapt_test]: 1.6778 - [adapt_test_per_env]: [3.0042, 2.7815, 1.0108, 0.8104, 1.2696, 1.1902]
+Iter 75   - time: 8     - [train]: 1.5903 - [valid]: 2.0069 - [adapt]: 1.7141 - [adapt_test]: 1.6732 - [adapt_test_per_env]: [2.999, 2.7571, 0.9988, 0.8103, 1.2854, 1.1885]
+Iter 76   - time: 7     - [train]: 1.5842 - [valid]: 1.9516 - [adapt]: 1.6835 - [adapt_test]: 1.6644 - [adapt_test_per_env]: [3.0039, 2.6982, 0.9691, 0.8142, 1.3283, 1.1726]
+Iter 77   - time: 8     - [train]: 1.5865 - [valid]: 1.9024 - [adapt]: 1.6583 - [adapt_test]: 1.6636 - [adapt_test_per_env]: [3.0119, 2.6408, 0.9457, 0.8272, 1.3859, 1.1701]
+Iter 78   - time: 8     - [train]: 1.5901 - [valid]: 1.8827 - [adapt]: 1.646  - [adapt_test]: 1.6656 - [adapt_test_per_env]: [3.0061, 2.608, 0.9358, 0.8365, 1.4239, 1.1833]
+Iter 79   - time: 7     - [train]: 1.5871 - [valid]: 1.8958 - [adapt]: 1.6485 - [adapt_test]: 1.6633 - [adapt_test_per_env]: [2.9906, 2.6152, 0.9391, 0.8308, 1.4116, 1.1922]
+Iter 80   - time: 7     - [train]: 1.5835 - [valid]: 1.9351 - [adapt]: 1.6697 - [adapt_test]: 1.6623 - [adapt_test_per_env]: [2.9887, 2.6662, 0.9579, 0.8179, 1.357, 1.1863]
+Iter 81   - time: 7     - [train]: 1.5855 - [valid]: 1.9789 - [adapt]: 1.6997 - [adapt_test]: 1.6673 - [adapt_test_per_env]: [3.0056, 2.7316, 0.9838, 0.8101, 1.2995, 1.1732]
+Iter 82   - time: 7     - [train]: 1.5876 - [valid]: 1.9962 - [adapt]: 1.7132 - [adapt_test]: 1.6705 - [adapt_test_per_env]: [3.0176, 2.7602, 0.9953, 0.8082, 1.2764, 1.1653]
+Iter 83   - time: 7     - [train]: 1.5848 - [valid]: 1.9751 - [adapt]: 1.6982 - [adapt_test]: 1.6665 - [adapt_test_per_env]: [3.008, 2.7292, 0.982, 0.81, 1.3002, 1.1697]
+Iter 84   - time: 7     - [train]: 1.5828 - [valid]: 1.9356 - [adapt]: 1.6708 - [adapt_test]: 1.6619 - [adapt_test_per_env]: [2.9918, 2.6694, 0.9584, 0.817, 1.3525, 1.182]
+Iter 85   - time: 7     - [train]: 1.5845 - [valid]: 1.9056 - [adapt]: 1.6534 - [adapt_test]: 1.6616 - [adapt_test_per_env]: [2.9893, 2.6283, 0.9431, 0.8259, 1.3943, 1.1885]
+Iter 86   - time: 7     - [train]: 1.5852 - [valid]: 1.8995 - [adapt]: 1.6527 - [adapt_test]: 1.662  - [adapt_test_per_env]: [2.9984, 2.6269, 0.9416, 0.8275, 1.3966, 1.1811]
+Iter 87   - time: 7     - [train]: 1.5831 - [valid]: 1.9172 - [adapt]: 1.6642 - [adapt_test]: 1.6613 - [adapt_test_per_env]: [3.0044, 2.6557, 0.951, 0.8206, 1.3653, 1.1707]
+Iter 88   - time: 7     - [train]: 1.5822 - [valid]: 1.9481 - [adapt]: 1.6807 - [adapt_test]: 1.6623 - [adapt_test_per_env]: [3.0015, 2.6926, 0.9662, 0.8131, 1.3293, 1.1713]
+Iter 89   - time: 7     - [train]: 1.5836 - [valid]: 1.9721 - [adapt]: 1.693  - [adapt_test]: 1.665  - [adapt_test_per_env]: [2.9964, 2.717, 0.9782, 0.8101, 1.3093, 1.1787]
+Iter 90   - time: 7     - [train]: 1.5835 - [valid]: 1.9724 - [adapt]: 1.693  - [adapt_test]: 1.6648 - [adapt_test_per_env]: [2.9959, 2.717, 0.9782, 0.81, 1.309, 1.1789]
+Iter 91   - time: 7     - [train]: 1.5817 - [valid]: 1.9505 - [adapt]: 1.6817 - [adapt_test]: 1.662  - [adapt_test_per_env]: [3.0, 2.6945, 0.9671, 0.8123, 1.3265, 1.172]
+Iter 92   - time: 7     - [train]: 1.5816 - [valid]: 1.9243 - [adapt]: 1.6674 - [adapt_test]: 1.6604 - [adapt_test_per_env]: [3.0018, 2.6633, 0.9538, 0.8177, 1.3552, 1.1705]
+Iter 93   - time: 7     - [train]: 1.5824 - [valid]: 1.9103 - [adapt]: 1.6581 - [adapt_test]: 1.6601 - [adapt_test_per_env]: [2.9965, 2.6408, 0.946, 0.8222, 1.3778, 1.1774]
+Iter 94   - time: 7     - [train]: 1.5817 - [valid]: 1.9148 - [adapt]: 1.6587 - [adapt_test]: 1.6597 - [adapt_test_per_env]: [2.99, 2.6419, 0.9471, 0.8209, 1.3757, 1.1824]
+Iter 95   - time: 7     - [train]: 1.5807 - [valid]: 1.9339 - [adapt]: 1.6698 - [adapt_test]: 1.6599 - [adapt_test_per_env]: [2.9918, 2.6679, 0.9568, 0.8153, 1.3492, 1.1783]
+Iter 96   - time: 7     - [train]: 1.5809 - [valid]: 1.9547 - [adapt]: 1.684  - [adapt_test]: 1.6616 - [adapt_test_per_env]: [2.9999, 2.6998, 0.969, 0.8107, 1.3195, 1.1704]
+Iter 97   - time: 8     - [train]: 1.5812 - [valid]: 1.9624 - [adapt]: 1.6893 - [adapt_test]: 1.6624 - [adapt_test_per_env]: [3.0028, 2.7112, 0.9735, 0.8093, 1.3093, 1.1681]
+Iter 98   - time: 8     - [train]: 1.5803 - [valid]: 1.9521 - [adapt]: 1.6815 - [adapt_test]: 1.6608 - [adapt_test_per_env]: [2.9964, 2.694, 0.9669, 0.8109, 1.3238, 1.1728]
+Iter 99   - time: 7     - [train]: 1.5797 - [valid]: 1.9331 - [adapt]: 1.6688 - [adapt_test]: 1.659  - [adapt_test_per_env]: [2.9901, 2.6659, 0.9559, 0.8148, 1.349, 1.1782]
+Iter 100  - time: 7     - [train]: 1.5799 - [valid]: 1.9191 - [adapt]: 1.6614 - [adapt_test]: 1.6583 - [adapt_test_per_env]: [2.9914, 2.6491, 0.949, 0.8181, 1.3649, 1.1776]
+Iter 101  - time: 7     - [train]: 1.5797 - [valid]: 1.9181 - [adapt]: 1.6621 - [adapt_test]: 1.6582 - [adapt_test_per_env]: [2.9957, 2.6514, 0.9492, 0.8178, 1.3622, 1.173]
+Iter 102  - time: 8     - [train]: 1.5789 - [valid]: 1.9292 - [adapt]: 1.6683 - [adapt_test]: 1.6582 - [adapt_test_per_env]: [2.9959, 2.6658, 0.9547, 0.8146, 1.3471, 1.1712]
+Iter 103  - time: 7     - [train]: 1.5787 - [valid]: 1.9443 - [adapt]: 1.6759 - [adapt_test]: 1.6588 - [adapt_test_per_env]: [2.9925, 2.6821, 0.9619, 0.8114, 1.3315, 1.1737]
+Iter 104  - time: 8     - [train]: 1.5787 - [valid]: 1.9526 - [adapt]: 1.6802 - [adapt_test]: 1.6594 - [adapt_test_per_env]: [2.9914, 2.6911, 0.966, 0.8098, 1.323, 1.1748]
+Iter 105  - time: 7     - [train]: 1.5782 - [valid]: 1.9482 - [adapt]: 1.6784 - [adapt_test]: 1.6587 - [adapt_test_per_env]: [2.9936, 2.6878, 0.964, 0.8101, 1.3249, 1.1717]
+Iter 106  - time: 7     - [train]: 1.5776 - [valid]: 1.9355 - [adapt]: 1.6715 - [adapt_test]: 1.6574 - [adapt_test_per_env]: [2.9949, 2.6733, 0.9575, 0.8122, 1.3371, 1.1696]
+Iter 107  - time: 7     - [train]: 1.5774 - [valid]: 1.9241 - [adapt]: 1.6642 - [adapt_test]: 1.6565 - [adapt_test_per_env]: [2.9919, 2.6567, 0.9511, 0.8148, 1.3523, 1.1724]
+Iter 108  - time: 7     - [train]: 1.5771 - [valid]: 1.9212 - [adapt]: 1.6614 - [adapt_test]: 1.6561 - [adapt_test_per_env]: [2.9879, 2.65, 0.949, 0.8155, 1.358, 1.1758]
+Iter 109  - time: 8     - [train]: 1.5765 - [valid]: 1.9278 - [adapt]: 1.6651 - [adapt_test]: 1.6559 - [adapt_test_per_env]: [2.988, 2.6586, 0.9523, 0.8135, 1.3486, 1.1745]
+Iter 110  - time: 8     - [train]: 1.5761 - [valid]: 1.9385 - [adapt]: 1.6722 - [adapt_test]: 1.6563 - [adapt_test_per_env]: [2.9916, 2.6749, 0.9583, 0.8106, 1.3323, 1.17]
+Iter 111  - time: 8     - [train]: 1.5759 - [valid]: 1.9452 - [adapt]: 1.6763 - [adapt_test]: 1.6565 - [adapt_test_per_env]: [2.9929, 2.6841, 0.962, 0.809, 1.323, 1.1682]
+Iter 112  - time: 8     - [train]: 1.5754 - [valid]: 1.9428 - [adapt]: 1.674  - [adapt_test]: 1.6559 - [adapt_test_per_env]: [2.9896, 2.6789, 0.9602, 0.8093, 1.3269, 1.1705]
+Iter 113  - time: 7     - [train]: 1.5748 - [valid]: 1.9338 - [adapt]: 1.6679 - [adapt_test]: 1.6548 - [adapt_test_per_env]: [2.9863, 2.6654, 0.9549, 0.8109, 1.3382, 1.1727]
+Iter 114  - time: 8     - [train]: 1.5744 - [valid]: 1.9253 - [adapt]: 1.6632 - [adapt_test]: 1.6539 - [adapt_test_per_env]: [2.9865, 2.655, 0.9505, 0.8125, 1.3469, 1.1719]
+Iter 115  - time: 7     - [train]: 1.5739 - [valid]: 1.9228 - [adapt]: 1.6622 - [adapt_test]: 1.6534 - [adapt_test_per_env]: [2.9879, 2.6531, 0.9495, 0.8127, 1.3476, 1.1697]
+Iter 116  - time: 8     - [train]: 1.5733 - [valid]: 1.9271 - [adapt]: 1.6643 - [adapt_test]: 1.6531 - [adapt_test_per_env]: [2.9869, 2.658, 0.9515, 0.8113, 1.3415, 1.1694]
+Iter 117  - time: 7     - [train]: 1.5727 - [valid]: 1.9344 - [adapt]: 1.6676 - [adapt_test]: 1.653  - [adapt_test_per_env]: [2.9846, 2.6654, 0.9548, 0.8094, 1.3333, 1.1704]
+Iter 118  - time: 7     - [train]: 1.5722 - [valid]: 1.9387 - [adapt]: 1.6699 - [adapt_test]: 1.6528 - [adapt_test_per_env]: [2.9841, 2.6706, 0.957, 0.8082, 1.3272, 1.1698]
+Iter 119  - time: 7     - [train]: 1.5715 - [valid]: 1.9367 - [adapt]: 1.6691 - [adapt_test]: 1.6522 - [adapt_test_per_env]: [2.9851, 2.6691, 0.9561, 0.8081, 1.3269, 1.1676]
+Iter 120  - time: 8     - [train]: 1.5708 - [valid]: 1.9301 - [adapt]: 1.665  - [adapt_test]: 1.6511 - [adapt_test_per_env]: [2.9844, 2.6605, 0.9525, 0.8091, 1.3332, 1.167]
+Iter 121  - time: 8     - [train]: 1.5701 - [valid]: 1.9238 - [adapt]: 1.6606 - [adapt_test]: 1.6501 - [adapt_test_per_env]: [2.9814, 2.6505, 0.9488, 0.8102, 1.341, 1.1687]
+Iter 122  - time: 8     - [train]: 1.5694 - [valid]: 1.922  - [adapt]: 1.6588 - [adapt_test]: 1.6493 - [adapt_test_per_env]: [2.979, 2.6467, 0.9475, 0.8103, 1.3428, 1.1696]
+Iter 123  - time: 9     - [train]: 1.5685 - [valid]: 1.9251 - [adapt]: 1.6606 - [adapt_test]: 1.6488 - [adapt_test_per_env]: [2.9792, 2.6511, 0.9492, 0.809, 1.3366, 1.1676]
+Iter 124  - time: 18    - [train]: 1.5676 - [valid]: 1.9299 - [adapt]: 1.6635 - [adapt_test]: 1.6484 - [adapt_test_per_env]: [2.9799, 2.6579, 0.9518, 0.8073, 1.328, 1.1651]
+Iter 125  - time: 23    - [train]: 1.5668 - [valid]: 1.932  - [adapt]: 1.6642 - [adapt_test]: 1.6477 - [adapt_test_per_env]: [2.9784, 2.6597, 0.9527, 0.8064, 1.3241, 1.1648]
+Iter 126  - time: 23    - [train]: 1.5657 - [valid]: 1.9294 - [adapt]: 1.6618 - [adapt_test]: 1.6466 - [adapt_test_per_env]: [2.9755, 2.6545, 0.951, 0.8066, 1.3265, 1.1657]
+Iter 127  - time: 22    - [train]: 1.5646 - [valid]: 1.924  - [adapt]: 1.6581 - [adapt_test]: 1.6453 - [adapt_test_per_env]: [2.9736, 2.6467, 0.948, 0.8072, 1.3312, 1.1654]
+Iter 128  - time: 22    - [train]: 1.5635 - [valid]: 1.9194 - [adapt]: 1.6552 - [adapt_test]: 1.6441 - [adapt_test_per_env]: [2.9729, 2.6408, 0.9456, 0.8076, 1.3338, 1.1639]
+Iter 129  - time: 23    - [train]: 1.5622 - [valid]: 1.9183 - [adapt]: 1.6541 - [adapt_test]: 1.6429 - [adapt_test_per_env]: [2.9713, 2.6387, 0.9449, 0.8072, 1.3327, 1.1629]
+Iter 130  - time: 22    - [train]: 1.5608 - [valid]: 1.9203 - [adapt]: 1.6543 - [adapt_test]: 1.6418 - [adapt_test_per_env]: [2.9685, 2.6396, 0.9457, 0.8061, 1.3284, 1.1627]
+Iter 131  - time: 21    - [train]: 1.5594 - [valid]: 1.9228 - [adapt]: 1.6549 - [adapt_test]: 1.6407 - [adapt_test_per_env]: [2.9663, 2.6415, 0.9468, 0.8049, 1.323, 1.1618]
+Iter 132  - time: 21    - [train]: 1.5578 - [valid]: 1.9227 - [adapt]: 1.6544 - [adapt_test]: 1.6393 - [adapt_test_per_env]: [2.965, 2.641, 0.9468, 0.8041, 1.3194, 1.1597]
+Iter 133  - time: 22    - [train]: 1.556  - [valid]: 1.9192 - [adapt]: 1.6517 - [adapt_test]: 1.6376 - [adapt_test_per_env]: [2.9628, 2.6357, 0.9449, 0.804, 1.3198, 1.1581]
+Iter 134  - time: 21    - [train]: 1.554  - [valid]: 1.9141 - [adapt]: 1.6476 - [adapt_test]: 1.6356 - [adapt_test_per_env]: [2.959, 2.6272, 0.9421, 0.8043, 1.3229, 1.1579]
+Iter 135  - time: 21    - [train]: 1.5519 - [valid]: 1.9103 - [adapt]: 1.6441 - [adapt_test]: 1.6335 - [adapt_test_per_env]: [2.9549, 2.6201, 0.9399, 0.8043, 1.3243, 1.1575]
+Iter 136  - time: 22    - [train]: 1.5496 - [valid]: 1.909  - [adapt]: 1.6423 - [adapt_test]: 1.6314 - [adapt_test_per_env]: [2.9518, 2.6171, 0.9392, 0.8035, 1.321, 1.1555]
+Iter 137  - time: 22    - [train]: 1.5469 - [valid]: 1.9094 - [adapt]: 1.6415 - [adapt_test]: 1.6291 - [adapt_test_per_env]: [2.9488, 2.6165, 0.9395, 0.8022, 1.3148, 1.1526]
+Iter 138  - time: 22    - [train]: 1.544  - [valid]: 1.9091 - [adapt]: 1.6399 - [adapt_test]: 1.6265 - [adapt_test_per_env]: [2.9445, 2.614, 0.9393, 0.8011, 1.3097, 1.1505]
+Iter 139  - time: 22    - [train]: 1.5408 - [valid]: 1.9062 - [adapt]: 1.6364 - [adapt_test]: 1.6235 - [adapt_test_per_env]: [2.9388, 2.6074, 0.9378, 0.8005, 1.3075, 1.149]
+Iter 140  - time: 21    - [train]: 1.5371 - [valid]: 1.9008 - [adapt]: 1.6314 - [adapt_test]: 1.62   - [adapt_test_per_env]: [2.933, 2.5979, 0.935, 0.8002, 1.307, 1.1467]
+Iter 141  - time: 21    - [train]: 1.5329 - [valid]: 1.8949 - [adapt]: 1.626  - [adapt_test]: 1.616  - [adapt_test_per_env]: [2.9269, 2.5878, 0.9322, 0.8, 1.3058, 1.1435]
+Iter 142  - time: 21    - [train]: 1.5282 - [valid]: 1.8901 - [adapt]: 1.6208 - [adapt_test]: 1.6117 - [adapt_test_per_env]: [2.9196, 2.5784, 0.9299, 0.7993, 1.3025, 1.1402]
+Iter 143  - time: 21    - [train]: 1.5229 - [valid]: 1.8866 - [adapt]: 1.6159 - [adapt_test]: 1.6067 - [adapt_test_per_env]: [2.9107, 2.5698, 0.9284, 0.7982, 1.2967, 1.1368]
+Iter 144  - time: 21    - [train]: 1.5167 - [valid]: 1.883  - [adapt]: 1.6107 - [adapt_test]: 1.6011 - [adapt_test_per_env]: [2.901, 2.5609, 0.9269, 0.7968, 1.289, 1.1322]
+Iter 145  - time: 21    - [train]: 1.5097 - [valid]: 1.8774 - [adapt]: 1.6039 - [adapt_test]: 1.5946 - [adapt_test_per_env]: [2.8903, 2.5493, 0.9247, 0.7955, 1.2814, 1.1264]
+Iter 146  - time: 21    - [train]: 1.5014 - [valid]: 1.8689 - [adapt]: 1.5949 - [adapt_test]: 1.5869 - [adapt_test_per_env]: [2.8774, 2.5331, 0.9211, 0.7946, 1.2751, 1.1201]
+Iter 147  - time: 22    - [train]: 1.4919 - [valid]: 1.8583 - [adapt]: 1.5836 - [adapt_test]: 1.5779 - [adapt_test_per_env]: [2.8613, 2.5128, 0.9167, 0.794, 1.2693, 1.1136]
+Iter 148  - time: 22    - [train]: 1.4806 - [valid]: 1.8469 - [adapt]: 1.5709 - [adapt_test]: 1.5674 - [adapt_test_per_env]: [2.8424, 2.4903, 0.9121, 0.7931, 1.2611, 1.1057]
+Iter 149  - time: 21    - [train]: 1.4673 - [valid]: 1.835  - [adapt]: 1.557  - [adapt_test]: 1.5551 - [adapt_test_per_env]: [2.8208, 2.4665, 0.9078, 0.7916, 1.2486, 1.0952]
+Iter 150  - time: 21    - [train]: 1.4515 - [valid]: 1.8216 - [adapt]: 1.541  - [adapt_test]: 1.5405 - [adapt_test_per_env]: [2.7954, 2.4394, 0.9033, 0.7899, 1.2325, 1.0822]
+Iter 151  - time: 21    - [train]: 1.4326 - [valid]: 1.8047 - [adapt]: 1.5212 - [adapt_test]: 1.523  - [adapt_test_per_env]: [2.7645, 2.4061, 0.8978, 0.7882, 1.2144, 1.0669]
+saving best model at iter 152
+Iter 152  - time: 22    - [train]: 1.4099 - [valid]: 1.7829 - [adapt]: 1.4963 - [adapt_test]: 1.502  - [adapt_test_per_env]: [2.7271, 2.3642, 0.8907, 0.7869, 1.1945, 1.0487]
+saving best model at iter 153
+Iter 153  - time: 22    - [train]: 1.3825 - [valid]: 1.7556 - [adapt]: 1.4659 - [adapt_test]: 1.4769 - [adapt_test_per_env]: [2.6823, 2.3134, 0.8824, 0.7859, 1.1711, 1.0262]
+saving best model at iter 154
+Iter 154  - time: 22    - [train]: 1.3494 - [valid]: 1.7232 - [adapt]: 1.4294 - [adapt_test]: 1.4468 - [adapt_test_per_env]: [2.6287, 2.2539, 0.8733, 0.785, 1.1415, 0.9983]
+saving best model at iter 155
+Iter 155  - time: 22    - [train]: 1.3096 - [valid]: 1.6854 - [adapt]: 1.3862 - [adapt_test]: 1.4109 - [adapt_test_per_env]: [2.5652, 2.1855, 0.8641, 0.7841, 1.1032, 0.9634]
+saving best model at iter 156
+Iter 156  - time: 22    - [train]: 1.2621 - [valid]: 1.6408 - [adapt]: 1.335  - [adapt_test]: 1.3688 - [adapt_test_per_env]: [2.4918, 2.1076, 0.8549, 0.7836, 1.0552, 0.9195]
+saving best model at iter 157
+Iter 157  - time: 22    - [train]: 1.2066 - [valid]: 1.5876 - [adapt]: 1.275  - [adapt_test]: 1.3207 - [adapt_test_per_env]: [2.4113, 2.0211, 0.8466, 0.7845, 0.9966, 0.8643]
+saving best model at iter 158
+Iter 158  - time: 22    - [train]: 1.1445 - [valid]: 1.5271 - [adapt]: 1.2076 - [adapt_test]: 1.2689 - [adapt_test_per_env]: [2.3301, 1.9328, 0.8417, 0.7874, 0.9259, 0.7955]
+saving best model at iter 159
+Iter 159  - time: 22    - [train]: 1.0806 - [valid]: 1.466  - [adapt]: 1.139  - [adapt_test]: 1.2184 - [adapt_test_per_env]: [2.2621, 1.859, 0.8448, 0.7924, 0.8403, 0.7119]
+saving best model at iter 160
+Iter 160  - time: 22    - [train]: 1.0268 - [valid]: 1.4193 - [adapt]: 1.0815 - [adapt_test]: 1.1782 - [adapt_test_per_env]: [2.2309, 1.8262, 0.8608, 0.7969, 0.7399, 0.6146]
+saving best model at iter 161
+Iter 161  - time: 22    - [train]: 1.0051 - [valid]: 1.4111 - [adapt]: 1.0534 - [adapt_test]: 1.1601 - [adapt_test_per_env]: [2.2616, 1.8604, 0.8877, 0.7939, 0.64, 0.5171]
+Iter 162  - time: 22    - [train]: 1.0397 - [valid]: 1.4636 - [adapt]: 1.07   - [adapt_test]: 1.1747 - [adapt_test_per_env]: [2.3532, 1.9573, 0.9132, 0.7788, 0.5855, 0.4604]
+Iter 163  - time: 22    - [train]: 1.0926 - [valid]: 1.5209 - [adapt]: 1.1048 - [adapt_test]: 1.2158 - [adapt_test_per_env]: [2.464, 2.0658, 0.9436, 0.7766, 0.5881, 0.457]
+Iter 164  - time: 22    - [train]: 1.0817 - [valid]: 1.4836 - [adapt]: 1.1062 - [adapt_test]: 1.2585 - [adapt_test_per_env]: [2.5518, 2.1338, 1.0112, 0.8282, 0.5799, 0.4464]
+Iter 165  - time: 22    - [train]: 1.0447 - [valid]: 1.4184 - [adapt]: 1.0907 - [adapt_test]: 1.2825 - [adapt_test_per_env]: [2.5403, 2.1043, 1.0687, 0.9046, 0.5989, 0.4781]
+saving best model at iter 166
+Iter 166  - time: 23    - [train]: 1.0153 - [valid]: 1.3874 - [adapt]: 1.0727 - [adapt_test]: 1.2611 - [adapt_test_per_env]: [2.4235, 1.9871, 1.0396, 0.9197, 0.646, 0.5504]
+saving best model at iter 167
+Iter 167  - time: 23    - [train]: 0.9976 - [valid]: 1.3849 - [adapt]: 1.0633 - [adapt_test]: 1.2084 - [adapt_test_per_env]: [2.3068, 1.87, 0.9474, 0.8649, 0.6709, 0.5902]
+Iter 168  - time: 23    - [train]: 1.0023 - [valid]: 1.4063 - [adapt]: 1.0819 - [adapt_test]: 1.1658 - [adapt_test_per_env]: [2.272, 1.8225, 0.8635, 0.796, 0.6628, 0.5781]
+Iter 169  - time: 22    - [train]: 1.0226 - [valid]: 1.4446 - [adapt]: 1.1198 - [adapt_test]: 1.1522 - [adapt_test_per_env]: [2.2956, 1.8378, 0.8272, 0.7554, 0.6418, 0.5552]
+Iter 170  - time: 22    - [train]: 1.0258 - [valid]: 1.464  - [adapt]: 1.1316 - [adapt_test]: 1.1478 - [adapt_test_per_env]: [2.2933, 1.8441, 0.8217, 0.7425, 0.6273, 0.558]
+Iter 171  - time: 22    - [train]: 1.0037 - [valid]: 1.4419 - [adapt]: 1.1037 - [adapt_test]: 1.1426 - [adapt_test_per_env]: [2.2598, 1.8163, 0.8281, 0.7491, 0.6262, 0.5762]
+Iter 172  - time: 23    - [train]: 0.9783 - [valid]: 1.3943 - [adapt]: 1.0662 - [adapt_test]: 1.1471 - [adapt_test_per_env]: [2.2575, 1.7958, 0.8475, 0.7722, 0.6306, 0.5787]
+saving best model at iter 173
+Iter 173  - time: 23    - [train]: 0.9645 - [valid]: 1.3546 - [adapt]: 1.0442 - [adapt_test]: 1.1621 - [adapt_test_per_env]: [2.2992, 1.811, 0.8762, 0.7974, 0.6268, 0.5619]
+saving best model at iter 174
+Iter 174  - time: 23    - [train]: 0.9594 - [valid]: 1.3446 - [adapt]: 1.039  - [adapt_test]: 1.175  - [adapt_test_per_env]: [2.3409, 1.8488, 0.9001, 0.8064, 0.6077, 0.5459]
+Iter 175  - time: 23    - [train]: 0.9573 - [valid]: 1.3574 - [adapt]: 1.0409 - [adapt_test]: 1.176  - [adapt_test_per_env]: [2.3546, 1.8794, 0.907, 0.7954, 0.5812, 0.5387]
+Iter 176  - time: 23    - [train]: 0.9551 - [valid]: 1.3671 - [adapt]: 1.0404 - [adapt_test]: 1.1657 - [adapt_test_per_env]: [2.352, 1.8828, 0.8939, 0.775, 0.5619, 0.5285]
+Iter 177  - time: 22    - [train]: 0.9509 - [valid]: 1.361  - [adapt]: 1.0348 - [adapt_test]: 1.1494 - [adapt_test_per_env]: [2.3461, 1.8603, 0.8687, 0.7561, 0.554, 0.5111]
+Iter 178  - time: 21    - [train]: 0.9447 - [valid]: 1.3522 - [adapt]: 1.0289 - [adapt_test]: 1.134  - [adapt_test_per_env]: [2.3302, 1.8279, 0.8456, 0.7429, 0.5529, 0.5043]
+Iter 179  - time: 22    - [train]: 0.9367 - [valid]: 1.351  - [adapt]: 1.0255 - [adapt_test]: 1.1227 - [adapt_test_per_env]: [2.2984, 1.7972, 0.8313, 0.7344, 0.555, 0.5201]
+Iter 180  - time: 22    - [train]: 0.9295 - [valid]: 1.3495 - [adapt]: 1.0238 - [adapt_test]: 1.1173 - [adapt_test_per_env]: [2.2686, 1.771, 0.8231, 0.7316, 0.5636, 0.5459]
+saving best model at iter 181
+Iter 181  - time: 23    - [train]: 0.9244 - [valid]: 1.3364 - [adapt]: 1.0213 - [adapt_test]: 1.1165 - [adapt_test_per_env]: [2.259, 1.7479, 0.8154, 0.7337, 0.58, 0.5628]
+saving best model at iter 182
+Iter 182  - time: 23    - [train]: 0.9218 - [valid]: 1.3197 - [adapt]: 1.0196 - [adapt_test]: 1.1187 - [adapt_test_per_env]: [2.262, 1.7297, 0.8087, 0.7381, 0.5996, 0.5743]
+saving best model at iter 183
+Iter 183  - time: 23    - [train]: 0.9206 - [valid]: 1.3133 - [adapt]: 1.0202 - [adapt_test]: 1.1222 - [adapt_test_per_env]: [2.2577, 1.718, 0.8059, 0.7412, 0.6161, 0.594]
+Iter 184  - time: 23    - [train]: 0.919  - [valid]: 1.3154 - [adapt]: 1.0215 - [adapt_test]: 1.1242 - [adapt_test_per_env]: [2.2459, 1.7108, 0.8052, 0.7415, 0.6252, 0.6163]
+saving best model at iter 185
+Iter 185  - time: 23    - [train]: 0.9157 - [valid]: 1.3126 - [adapt]: 1.0205 - [adapt_test]: 1.1224 - [adapt_test_per_env]: [2.2428, 1.7045, 0.8018, 0.7389, 0.6251, 0.6212]
+saving best model at iter 186
+Iter 186  - time: 23    - [train]: 0.9104 - [valid]: 1.3033 - [adapt]: 1.0169 - [adapt_test]: 1.1164 - [adapt_test_per_env]: [2.2502, 1.6988, 0.7947, 0.7333, 0.6153, 0.6059]
+saving best model at iter 187
+Iter 187  - time: 23    - [train]: 0.904  - [valid]: 1.2989 - [adapt]: 1.0131 - [adapt_test]: 1.1078 - [adapt_test_per_env]: [2.2527, 1.6954, 0.7879, 0.7245, 0.5979, 0.5887]
+Iter 188  - time: 23    - [train]: 0.8975 - [valid]: 1.3034 - [adapt]: 1.0104 - [adapt_test]: 1.0985 - [adapt_test_per_env]: [2.2446, 1.6945, 0.7829, 0.7133, 0.5768, 0.5791]
+Iter 189  - time: 24    - [train]: 0.8921 - [valid]: 1.3074 - [adapt]: 1.008  - [adapt_test]: 1.0898 - [adapt_test_per_env]: [2.2399, 1.6951, 0.7778, 0.7023, 0.5566, 0.5674]
+Iter 190  - time: 23    - [train]: 0.8877 - [valid]: 1.304  - [adapt]: 1.005  - [adapt_test]: 1.0824 - [adapt_test_per_env]: [2.2467, 1.6958, 0.771, 0.6931, 0.5402, 0.5477]
+Iter 191  - time: 23    - [train]: 0.8841 - [valid]: 1.2998 - [adapt]: 1.0026 - [adapt_test]: 1.0769 - [adapt_test_per_env]: [2.2539, 1.6966, 0.7652, 0.6857, 0.5282, 0.5318]
+Iter 192  - time: 23    - [train]: 0.8802 - [valid]: 1.3004 - [adapt]: 1.0011 - [adapt_test]: 1.0729 - [adapt_test_per_env]: [2.2503, 1.6964, 0.762, 0.6795, 0.52, 0.5294]
+Iter 193  - time: 23    - [train]: 0.8757 - [valid]: 1.3002 - [adapt]: 0.9995 - [adapt_test]: 1.0698 - [adapt_test_per_env]: [2.2428, 1.6937, 0.7595, 0.6749, 0.5153, 0.5326]
+saving best model at iter 194
+Iter 194  - time: 23    - [train]: 0.8704 - [valid]: 1.2921 - [adapt]: 0.9964 - [adapt_test]: 1.0667 - [adapt_test_per_env]: [2.2416, 1.6872, 0.7555, 0.6723, 0.5136, 0.5303]
+saving best model at iter 195
+Iter 195  - time: 24    - [train]: 0.8647 - [valid]: 1.2807 - [adapt]: 0.9928 - [adapt_test]: 1.0633 - [adapt_test_per_env]: [2.2412, 1.6773, 0.7502, 0.6707, 0.5139, 0.5267]
+saving best model at iter 196
+Iter 196  - time: 24    - [train]: 0.8589 - [valid]: 1.2742 - [adapt]: 0.9897 - [adapt_test]: 1.0594 - [adapt_test_per_env]: [2.2312, 1.665, 0.7453, 0.6682, 0.5154, 0.5312]
+saving best model at iter 197
+Iter 197  - time: 23    - [train]: 0.8534 - [valid]: 1.2712 - [adapt]: 0.987  - [adapt_test]: 1.0548 - [adapt_test_per_env]: [2.2151, 1.6512, 0.74, 0.6649, 0.5174, 0.5403]
+saving best model at iter 198
+Iter 198  - time: 24    - [train]: 0.8481 - [valid]: 1.265  - [adapt]: 0.9839 - [adapt_test]: 1.0496 - [adapt_test_per_env]: [2.2043, 1.6368, 0.7329, 0.6612, 0.5191, 0.543]
+saving best model at iter 199
+Iter 199  - time: 25    - [train]: 0.843  - [valid]: 1.2562 - [adapt]: 0.9805 - [adapt_test]: 1.0437 - [adapt_test_per_env]: [2.1985, 1.6227, 0.7246, 0.6571, 0.5198, 0.5396]
+saving best model at iter 200
+Iter 200  - time: 26    - [train]: 0.8379 - [valid]: 1.2508 - [adapt]: 0.9773 - [adapt_test]: 1.0376 - [adapt_test_per_env]: [2.1885, 1.6098, 0.717, 0.6521, 0.5193, 0.5393]
+saving best model at iter 201
+Iter 201  - time: 25    - [train]: 0.8326 - [valid]: 1.249  - [adapt]: 0.9743 - [adapt_test]: 1.0315 - [adapt_test_per_env]: [2.1739, 1.5981, 0.7105, 0.6463, 0.5174, 0.5426]
+saving best model at iter 202
+Iter 202  - time: 25    - [train]: 0.8271 - [valid]: 1.2447 - [adapt]: 0.9707 - [adapt_test]: 1.0252 - [adapt_test_per_env]: [2.1636, 1.5878, 0.704, 0.6406, 0.5142, 0.5412]
+saving best model at iter 203
+Iter 203  - time: 25    - [train]: 0.8212 - [valid]: 1.2366 - [adapt]: 0.9663 - [adapt_test]: 1.0191 - [adapt_test_per_env]: [2.1595, 1.5788, 0.6972, 0.6354, 0.5099, 0.5335]
+saving best model at iter 204
+Iter 204  - time: 26    - [train]: 0.8151 - [valid]: 1.2295 - [adapt]: 0.9619 - [adapt_test]: 1.0131 - [adapt_test_per_env]: [2.1538, 1.5711, 0.6914, 0.6302, 0.5049, 0.5274]
+saving best model at iter 205
+Iter 205  - time: 25    - [train]: 0.8087 - [valid]: 1.2254 - [adapt]: 0.9575 - [adapt_test]: 1.0075 - [adapt_test_per_env]: [2.1435, 1.5643, 0.6869, 0.6247, 0.4995, 0.5257]
+saving best model at iter 206
+Iter 206  - time: 25    - [train]: 0.8022 - [valid]: 1.2199 - [adapt]: 0.9529 - [adapt_test]: 1.0019 - [adapt_test_per_env]: [2.135, 1.5581, 0.6825, 0.6195, 0.494, 0.5223]
+saving best model at iter 207
+Iter 207  - time: 26    - [train]: 0.7956 - [valid]: 1.2111 - [adapt]: 0.9477 - [adapt_test]: 0.9962 - [adapt_test_per_env]: [2.1312, 1.5516, 0.6772, 0.6146, 0.4885, 0.5142]
+saving best model at iter 208
+Iter 208  - time: 26    - [train]: 0.7888 - [valid]: 1.2028 - [adapt]: 0.9424 - [adapt_test]: 0.9901 - [adapt_test_per_env]: [2.1255, 1.5442, 0.6716, 0.6093, 0.4832, 0.507]
+saving best model at iter 209
+Iter 209  - time: 26    - [train]: 0.7819 - [valid]: 1.1973 - [adapt]: 0.9372 - [adapt_test]: 0.9833 - [adapt_test_per_env]: [2.1136, 1.5349, 0.6657, 0.6032, 0.4783, 0.5043]
+saving best model at iter 210
+Iter 210  - time: 27    - [train]: 0.7747 - [valid]: 1.1916 - [adapt]: 0.9316 - [adapt_test]: 0.9755 - [adapt_test_per_env]: [2.0997, 1.523, 0.6584, 0.5964, 0.4738, 0.5016]
+saving best model at iter 211
+Iter 211  - time: 27    - [train]: 0.7672 - [valid]: 1.1833 - [adapt]: 0.9252 - [adapt_test]: 0.9664 - [adapt_test_per_env]: [2.0874, 1.5081, 0.6491, 0.5892, 0.4696, 0.4951]
+saving best model at iter 212
+Iter 212  - time: 26    - [train]: 0.7594 - [valid]: 1.1748 - [adapt]: 0.9184 - [adapt_test]: 0.9563 - [adapt_test_per_env]: [2.0731, 1.4907, 0.6383, 0.5812, 0.4656, 0.4886]
+saving best model at iter 213
+Iter 213  - time: 27    - [train]: 0.7513 - [valid]: 1.1686 - [adapt]: 0.9114 - [adapt_test]: 0.9453 - [adapt_test_per_env]: [2.0532, 1.4712, 0.6272, 0.5724, 0.4619, 0.4857]
+saving best model at iter 214
+Iter 214  - time: 27    - [train]: 0.743  - [valid]: 1.1626 - [adapt]: 0.9042 - [adapt_test]: 0.9337 - [adapt_test_per_env]: [2.0318, 1.4506, 0.6155, 0.5631, 0.4582, 0.4832]
+saving best model at iter 215
+Iter 215  - time: 28    - [train]: 0.7345 - [valid]: 1.1543 - [adapt]: 0.8965 - [adapt_test]: 0.9219 - [adapt_test_per_env]: [2.0132, 1.4295, 0.603, 0.5539, 0.4544, 0.4774]
+saving best model at iter 216
+Iter 216  - time: 27    - [train]: 0.7258 - [valid]: 1.1452 - [adapt]: 0.8884 - [adapt_test]: 0.91   - [adapt_test_per_env]: [1.9953, 1.4085, 0.5906, 0.5447, 0.4503, 0.4706]
+saving best model at iter 217
+Iter 217  - time: 27    - [train]: 0.7168 - [valid]: 1.1376 - [adapt]: 0.8802 - [adapt_test]: 0.8981 - [adapt_test_per_env]: [1.9745, 1.3879, 0.5788, 0.5353, 0.4459, 0.4664]
+saving best model at iter 218
+Iter 218  - time: 27    - [train]: 0.7075 - [valid]: 1.13   - [adapt]: 0.8716 - [adapt_test]: 0.8864 - [adapt_test_per_env]: [1.9532, 1.3678, 0.5676, 0.5259, 0.4412, 0.4626]
+saving best model at iter 219
+Iter 219  - time: 28    - [train]: 0.6978 - [valid]: 1.1201 - [adapt]: 0.8624 - [adapt_test]: 0.8746 - [adapt_test_per_env]: [1.9347, 1.3482, 0.5562, 0.5169, 0.4361, 0.4558]
+saving best model at iter 220
+Iter 220  - time: 29    - [train]: 0.6877 - [valid]: 1.1089 - [adapt]: 0.8526 - [adapt_test]: 0.8629 - [adapt_test_per_env]: [1.9171, 1.3288, 0.545, 0.5079, 0.4307, 0.4479]
+saving best model at iter 221
+Iter 221  - time: 30    - [train]: 0.6773 - [valid]: 1.0987 - [adapt]: 0.8426 - [adapt_test]: 0.8511 - [adapt_test_per_env]: [1.897, 1.3094, 0.5343, 0.4988, 0.4251, 0.4421]
+saving best model at iter 222
+Iter 222  - time: 30    - [train]: 0.6665 - [valid]: 1.0887 - [adapt]: 0.8321 - [adapt_test]: 0.8392 - [adapt_test_per_env]: [1.8755, 1.2897, 0.5237, 0.4895, 0.4194, 0.4371]
+saving best model at iter 223
+Iter 223  - time: 32    - [train]: 0.6554 - [valid]: 1.0768 - [adapt]: 0.821  - [adapt_test]: 0.8268 - [adapt_test_per_env]: [1.8554, 1.2691, 0.5124, 0.4802, 0.4138, 0.4301]
+saving best model at iter 224
+Iter 224  - time: 31    - [train]: 0.6439 - [valid]: 1.0641 - [adapt]: 0.8093 - [adapt_test]: 0.814  - [adapt_test_per_env]: [1.8349, 1.2473, 0.5005, 0.4706, 0.4082, 0.4222]
+saving best model at iter 225
+Iter 225  - time: 30    - [train]: 0.6322 - [valid]: 1.0523 - [adapt]: 0.7972 - [adapt_test]: 0.8004 - [adapt_test_per_env]: [1.8111, 1.2239, 0.4881, 0.4604, 0.4028, 0.4163]
+saving best model at iter 226
+Iter 226  - time: 31    - [train]: 0.6201 - [valid]: 1.0409 - [adapt]: 0.7846 - [adapt_test]: 0.7861 - [adapt_test_per_env]: [1.7847, 1.1986, 0.475, 0.4496, 0.3975, 0.4112]
+saving best model at iter 227
+Iter 227  - time: 31    - [train]: 0.6078 - [valid]: 1.0282 - [adapt]: 0.7713 - [adapt_test]: 0.771  - [adapt_test_per_env]: [1.7585, 1.1717, 0.4608, 0.4384, 0.3923, 0.4046]
+saving best model at iter 228
+Iter 228  - time: 31    - [train]: 0.5951 - [valid]: 1.0147 - [adapt]: 0.7574 - [adapt_test]: 0.7554 - [adapt_test_per_env]: [1.7319, 1.1435, 0.4458, 0.4268, 0.3871, 0.3972]
+saving best model at iter 229
+Iter 229  - time: 31    - [train]: 0.5823 - [valid]: 1.0019 - [adapt]: 0.7432 - [adapt_test]: 0.7395 - [adapt_test_per_env]: [1.7031, 1.1146, 0.4309, 0.4149, 0.3819, 0.3912]
+saving best model at iter 230
+Iter 230  - time: 32    - [train]: 0.5692 - [valid]: 0.9892 - [adapt]: 0.7286 - [adapt_test]: 0.7235 - [adapt_test_per_env]: [1.6733, 1.0858, 0.4162, 0.403, 0.3767, 0.386]
+saving best model at iter 231
+Iter 231  - time: 33    - [train]: 0.5559 - [valid]: 0.9751 - [adapt]: 0.7134 - [adapt_test]: 0.7078 - [adapt_test_per_env]: [1.645, 1.0572, 0.4018, 0.3915, 0.3716, 0.3796]
+saving best model at iter 232
+Iter 232  - time: 34    - [train]: 0.5424 - [valid]: 0.9599 - [adapt]: 0.6977 - [adapt_test]: 0.6923 - [adapt_test_per_env]: [1.6176, 1.0289, 0.3878, 0.3804, 0.3666, 0.3728]
+saving best model at iter 233
+Iter 233  - time: 35    - [train]: 0.5287 - [valid]: 0.9451 - [adapt]: 0.6817 - [adapt_test]: 0.6772 - [adapt_test_per_env]: [1.5889, 1.001, 0.3746, 0.3696, 0.3618, 0.3674]
+saving best model at iter 234
+Iter 234  - time: 35    - [train]: 0.5148 - [valid]: 0.9303 - [adapt]: 0.6654 - [adapt_test]: 0.6623 - [adapt_test_per_env]: [1.5596, 0.9731, 0.3619, 0.3591, 0.3572, 0.3629]
+saving best model at iter 235
+Iter 235  - time: 37    - [train]: 0.5009 - [valid]: 0.9148 - [adapt]: 0.6488 - [adapt_test]: 0.6472 - [adapt_test_per_env]: [1.5309, 0.9448, 0.3489, 0.3486, 0.3528, 0.3575]
+saving best model at iter 236
+Iter 236  - time: 37    - [train]: 0.4871 - [valid]: 0.8991 - [adapt]: 0.6318 - [adapt_test]: 0.6318 - [adapt_test_per_env]: [1.5017, 0.9155, 0.3354, 0.3378, 0.3486, 0.3518]
+saving best model at iter 237
+Iter 237  - time: 38    - [train]: 0.4733 - [valid]: 0.8843 - [adapt]: 0.6147 - [adapt_test]: 0.6159 - [adapt_test_per_env]: [1.4705, 0.8852, 0.3215, 0.3265, 0.3444, 0.3471]
+saving best model at iter 238
+Iter 238  - time: 38    - [train]: 0.4596 - [valid]: 0.8699 - [adapt]: 0.5975 - [adapt_test]: 0.5997 - [adapt_test_per_env]: [1.4383, 0.8544, 0.3073, 0.3149, 0.3403, 0.3429]
+saving best model at iter 239
+Iter 239  - time: 39    - [train]: 0.4461 - [valid]: 0.855  - [adapt]: 0.5802 - [adapt_test]: 0.5838 - [adapt_test_per_env]: [1.4074, 0.824, 0.2932, 0.3035, 0.3364, 0.338]
+saving best model at iter 240
+Iter 240  - time: 39    - [train]: 0.4328 - [valid]: 0.8399 - [adapt]: 0.5629 - [adapt_test]: 0.5684 - [adapt_test_per_env]: [1.3774, 0.7946, 0.28, 0.2927, 0.3327, 0.3332]
+saving best model at iter 241
+Iter 241  - time: 41    - [train]: 0.4197 - [valid]: 0.8256 - [adapt]: 0.546  - [adapt_test]: 0.5539 - [adapt_test_per_env]: [1.3473, 0.7663, 0.268, 0.2828, 0.3294, 0.3298]
+saving best model at iter 242
+Iter 242  - time: 42    - [train]: 0.4069 - [valid]: 0.8116 - [adapt]: 0.5295 - [adapt_test]: 0.5401 - [adapt_test_per_env]: [1.3176, 0.7389, 0.257, 0.2735, 0.3265, 0.327]
+saving best model at iter 243
+Iter 243  - time: 43    - [train]: 0.3945 - [valid]: 0.7976 - [adapt]: 0.5131 - [adapt_test]: 0.5265 - [adapt_test_per_env]: [1.2891, 0.712, 0.2461, 0.2644, 0.3237, 0.3237]
+saving best model at iter 244
+Iter 244  - time: 44    - [train]: 0.3825 - [valid]: 0.7841 - [adapt]: 0.497  - [adapt_test]: 0.5129 - [adapt_test_per_env]: [1.2608, 0.6853, 0.235, 0.2551, 0.3209, 0.3202]
+saving best model at iter 245
+Iter 245  - time: 45    - [train]: 0.3709 - [valid]: 0.7716 - [adapt]: 0.4813 - [adapt_test]: 0.4993 - [adapt_test_per_env]: [1.2319, 0.659, 0.2238, 0.2455, 0.3181, 0.3174]
+saving best model at iter 246
+Iter 246  - time: 46    - [train]: 0.3599 - [valid]: 0.7597 - [adapt]: 0.4662 - [adapt_test]: 0.4862 - [adapt_test_per_env]: [1.2039, 0.6338, 0.2131, 0.2362, 0.3153, 0.3148]
+saving best model at iter 247
+Iter 247  - time: 46    - [train]: 0.3493 - [valid]: 0.7479 - [adapt]: 0.4515 - [adapt_test]: 0.4739 - [adapt_test_per_env]: [1.1778, 0.61, 0.2034, 0.2277, 0.3129, 0.3119]
+saving best model at iter 248
+Iter 248  - time: 48    - [train]: 0.3392 - [valid]: 0.7366 - [adapt]: 0.4376 - [adapt_test]: 0.4626 - [adapt_test_per_env]: [1.1525, 0.5875, 0.1949, 0.2203, 0.3109, 0.3097]
+saving best model at iter 249
+Iter 249  - time: 49    - [train]: 0.3296 - [valid]: 0.7265 - [adapt]: 0.4244 - [adapt_test]: 0.452  - [adapt_test_per_env]: [1.1276, 0.5663, 0.1872, 0.2133, 0.3092, 0.3085]
+saving best model at iter 250
+Iter 250  - time: 50    - [train]: 0.3206 - [valid]: 0.7168 - [adapt]: 0.4118 - [adapt_test]: 0.4416 - [adapt_test_per_env]: [1.1037, 0.5459, 0.1796, 0.2063, 0.3073, 0.307]
+saving best model at iter 251
+Iter 251  - time: 51    - [train]: 0.3121 - [valid]: 0.7074 - [adapt]: 0.3996 - [adapt_test]: 0.4314 - [adapt_test_per_env]: [1.0811, 0.5264, 0.1717, 0.1992, 0.3054, 0.3047]
+saving best model at iter 252
+Iter 252  - time: 52    - [train]: 0.3041 - [valid]: 0.6987 - [adapt]: 0.3881 - [adapt_test]: 0.4217 - [adapt_test_per_env]: [1.0593, 0.5081, 0.1643, 0.1923, 0.3035, 0.3027]
+saving best model at iter 253
+Iter 253  - time: 54    - [train]: 0.2966 - [valid]: 0.6909 - [adapt]: 0.3773 - [adapt_test]: 0.4129 - [adapt_test_per_env]: [1.0382, 0.4911, 0.158, 0.1862, 0.3019, 0.3017]
+saving best model at iter 254
+Iter 254  - time: 54    - [train]: 0.2896 - [valid]: 0.6835 - [adapt]: 0.3673 - [adapt_test]: 0.4048 - [adapt_test_per_env]: [1.0183, 0.4753, 0.1527, 0.1811, 0.3007, 0.3008]
+saving best model at iter 255
+Iter 255  - time: 55    - [train]: 0.2831 - [valid]: 0.6765 - [adapt]: 0.3578 - [adapt_test]: 0.3972 - [adapt_test_per_env]: [0.9997, 0.4604, 0.1477, 0.1762, 0.2995, 0.2998]
+saving best model at iter 256
+Iter 256  - time: 56    - [train]: 0.277  - [valid]: 0.6702 - [adapt]: 0.3489 - [adapt_test]: 0.3899 - [adapt_test_per_env]: [0.9817, 0.4465, 0.1427, 0.1712, 0.2983, 0.2989]
+saving best model at iter 257
+Iter 257  - time: 57    - [train]: 0.2713 - [valid]: 0.6644 - [adapt]: 0.3405 - [adapt_test]: 0.3828 - [adapt_test_per_env]: [0.9646, 0.4337, 0.1377, 0.1662, 0.2968, 0.2979]
+saving best model at iter 258
+Iter 258  - time: 58    - [train]: 0.2661 - [valid]: 0.6589 - [adapt]: 0.3326 - [adapt_test]: 0.3763 - [adapt_test_per_env]: [0.9488, 0.4217, 0.1333, 0.1617, 0.2956, 0.2968]
+saving best model at iter 259
+Iter 259  - time: 58    - [train]: 0.2612 - [valid]: 0.6538 - [adapt]: 0.3254 - [adapt_test]: 0.3705 - [adapt_test_per_env]: [0.9337, 0.4106, 0.1297, 0.1579, 0.2947, 0.2961]
+saving best model at iter 260
+Iter 260  - time: 59    - [train]: 0.2567 - [valid]: 0.6494 - [adapt]: 0.3187 - [adapt_test]: 0.3651 - [adapt_test_per_env]: [0.919, 0.4003, 0.1267, 0.1545, 0.2939, 0.2961]
+saving best model at iter 261
+Iter 261  - time: 59    - [train]: 0.2525 - [valid]: 0.6453 - [adapt]: 0.3124 - [adapt_test]: 0.3599 - [adapt_test_per_env]: [0.9052, 0.3908, 0.1236, 0.1511, 0.2931, 0.2957]
+saving best model at iter 262
+Iter 262  - time: 60    - [train]: 0.2486 - [valid]: 0.6412 - [adapt]: 0.3065 - [adapt_test]: 0.3549 - [adapt_test_per_env]: [0.8928, 0.3821, 0.1203, 0.1476, 0.292, 0.2947]
+saving best model at iter 263
+Iter 263  - time: 61    - [train]: 0.245  - [valid]: 0.6376 - [adapt]: 0.3009 - [adapt_test]: 0.3503 - [adapt_test_per_env]: [0.8809, 0.374, 0.1174, 0.1444, 0.2911, 0.2939]
+saving best model at iter 264
+Iter 264  - time: 62    - [train]: 0.2417 - [valid]: 0.6345 - [adapt]: 0.2959 - [adapt_test]: 0.3461 - [adapt_test_per_env]: [0.8692, 0.3665, 0.1152, 0.1417, 0.2904, 0.2938]
+saving best model at iter 265
+Iter 265  - time: 62    - [train]: 0.2386 - [valid]: 0.6316 - [adapt]: 0.2912 - [adapt_test]: 0.3423 - [adapt_test_per_env]: [0.8583, 0.3595, 0.1133, 0.1394, 0.2898, 0.2937]
+saving best model at iter 266
+Iter 266  - time: 62    - [train]: 0.2358 - [valid]: 0.6288 - [adapt]: 0.2868 - [adapt_test]: 0.3387 - [adapt_test_per_env]: [0.8482, 0.3531, 0.1113, 0.1371, 0.2892, 0.2933]
+saving best model at iter 267
+Iter 267  - time: 63    - [train]: 0.2332 - [valid]: 0.6263 - [adapt]: 0.2827 - [adapt_test]: 0.3352 - [adapt_test_per_env]: [0.8387, 0.3473, 0.1093, 0.1347, 0.2884, 0.2927]
+saving best model at iter 268
+Iter 268  - time: 63    - [train]: 0.2307 - [valid]: 0.6241 - [adapt]: 0.2788 - [adapt_test]: 0.3319 - [adapt_test_per_env]: [0.8296, 0.3419, 0.1075, 0.1324, 0.2876, 0.2923]
+saving best model at iter 269
+Iter 269  - time: 64    - [train]: 0.2285 - [valid]: 0.6219 - [adapt]: 0.2752 - [adapt_test]: 0.3289 - [adapt_test_per_env]: [0.8212, 0.3368, 0.106, 0.1305, 0.287, 0.2919]
+saving best model at iter 270
+Iter 270  - time: 64    - [train]: 0.2264 - [valid]: 0.62   - [adapt]: 0.2719 - [adapt_test]: 0.3262 - [adapt_test_per_env]: [0.8129, 0.3321, 0.1049, 0.129, 0.2866, 0.2917]
+saving best model at iter 271
+Iter 271  - time: 65    - [train]: 0.2244 - [valid]: 0.6184 - [adapt]: 0.2689 - [adapt_test]: 0.3236 - [adapt_test_per_env]: [0.805, 0.3278, 0.1037, 0.1273, 0.2861, 0.2915]
+saving best model at iter 272
+Iter 272  - time: 65    - [train]: 0.2226 - [valid]: 0.6167 - [adapt]: 0.2659 - [adapt_test]: 0.321  - [adapt_test_per_env]: [0.7979, 0.3239, 0.1024, 0.1256, 0.2854, 0.2909]
+saving best model at iter 273
+Iter 273  - time: 66    - [train]: 0.2209 - [valid]: 0.615  - [adapt]: 0.2631 - [adapt_test]: 0.3186 - [adapt_test_per_env]: [0.7913, 0.3203, 0.1012, 0.124, 0.2848, 0.2902]
+saving best model at iter 274
+Iter 274  - time: 65    - [train]: 0.2193 - [valid]: 0.6137 - [adapt]: 0.2606 - [adapt_test]: 0.3165 - [adapt_test_per_env]: [0.7846, 0.3169, 0.1003, 0.1227, 0.2843, 0.2899]
+saving best model at iter 275
+Iter 275  - time: 66    - [train]: 0.2179 - [valid]: 0.6126 - [adapt]: 0.2583 - [adapt_test]: 0.3145 - [adapt_test_per_env]: [0.7782, 0.3136, 0.0996, 0.1216, 0.284, 0.2898]
+saving best model at iter 276
+Iter 276  - time: 66    - [train]: 0.2165 - [valid]: 0.6114 - [adapt]: 0.256  - [adapt_test]: 0.3125 - [adapt_test_per_env]: [0.7724, 0.3107, 0.0989, 0.1204, 0.2835, 0.2893]
+saving best model at iter 277
+Iter 277  - time: 67    - [train]: 0.2152 - [valid]: 0.6102 - [adapt]: 0.2539 - [adapt_test]: 0.3106 - [adapt_test_per_env]: [0.7669, 0.3081, 0.098, 0.1192, 0.2829, 0.2886]
+saving best model at iter 278
+Iter 278  - time: 67    - [train]: 0.214  - [valid]: 0.6093 - [adapt]: 0.2519 - [adapt_test]: 0.3088 - [adapt_test_per_env]: [0.7615, 0.3056, 0.0973, 0.118, 0.2824, 0.2881]
+saving best model at iter 279
+Iter 279  - time: 67    - [train]: 0.2129 - [valid]: 0.6083 - [adapt]: 0.25   - [adapt_test]: 0.3072 - [adapt_test_per_env]: [0.7565, 0.3032, 0.0967, 0.1171, 0.282, 0.2876]
+saving best model at iter 280
+Iter 280  - time: 68    - [train]: 0.2118 - [valid]: 0.6075 - [adapt]: 0.2482 - [adapt_test]: 0.3057 - [adapt_test_per_env]: [0.7515, 0.301, 0.0963, 0.1163, 0.2817, 0.2872]
+saving best model at iter 281
+Iter 281  - time: 67    - [train]: 0.2109 - [valid]: 0.6067 - [adapt]: 0.2466 - [adapt_test]: 0.3042 - [adapt_test_per_env]: [0.7468, 0.2989, 0.0958, 0.1155, 0.2813, 0.2867]
+saving best model at iter 282
+Iter 282  - time: 68    - [train]: 0.2099 - [valid]: 0.606  - [adapt]: 0.245  - [adapt_test]: 0.3027 - [adapt_test_per_env]: [0.7424, 0.2971, 0.0952, 0.1146, 0.2808, 0.2861]
+saving best model at iter 283
+Iter 283  - time: 68    - [train]: 0.2091 - [valid]: 0.6052 - [adapt]: 0.2434 - [adapt_test]: 0.3013 - [adapt_test_per_env]: [0.7384, 0.2954, 0.0947, 0.1137, 0.2803, 0.2853]
+saving best model at iter 284
+Iter 284  - time: 67    - [train]: 0.2082 - [valid]: 0.6046 - [adapt]: 0.242  - [adapt_test]: 0.3    - [adapt_test_per_env]: [0.7343, 0.2937, 0.0944, 0.113, 0.28, 0.2849]
+saving best model at iter 285
+Iter 285  - time: 67    - [train]: 0.2075 - [valid]: 0.6041 - [adapt]: 0.2407 - [adapt_test]: 0.2988 - [adapt_test_per_env]: [0.7302, 0.2921, 0.0941, 0.1124, 0.2797, 0.2845]
+saving best model at iter 286
+Iter 286  - time: 67    - [train]: 0.2067 - [valid]: 0.6035 - [adapt]: 0.2394 - [adapt_test]: 0.2977 - [adapt_test_per_env]: [0.7266, 0.2907, 0.0938, 0.1118, 0.2793, 0.2839]
+saving best model at iter 287
+Iter 287  - time: 67    - [train]: 0.206  - [valid]: 0.6029 - [adapt]: 0.2382 - [adapt_test]: 0.2965 - [adapt_test_per_env]: [0.7232, 0.2894, 0.0934, 0.1111, 0.2789, 0.2832]
+saving best model at iter 288
+Iter 288  - time: 67    - [train]: 0.2054 - [valid]: 0.6024 - [adapt]: 0.2371 - [adapt_test]: 0.2954 - [adapt_test_per_env]: [0.7198, 0.2882, 0.0931, 0.1105, 0.2785, 0.2827]
+saving best model at iter 289
+Iter 289  - time: 68    - [train]: 0.2048 - [valid]: 0.602  - [adapt]: 0.236  - [adapt_test]: 0.2944 - [adapt_test_per_env]: [0.7166, 0.287, 0.0928, 0.1099, 0.2782, 0.2821]
+saving best model at iter 290
+Iter 290  - time: 67    - [train]: 0.2042 - [valid]: 0.6015 - [adapt]: 0.235  - [adapt_test]: 0.2935 - [adapt_test_per_env]: [0.7135, 0.2858, 0.0927, 0.1095, 0.2779, 0.2816]
+saving best model at iter 291
+Iter 291  - time: 68    - [train]: 0.2036 - [valid]: 0.6012 - [adapt]: 0.234  - [adapt_test]: 0.2926 - [adapt_test_per_env]: [0.7105, 0.2848, 0.0925, 0.109, 0.2776, 0.2812]
+saving best model at iter 292
+Iter 292  - time: 68    - [train]: 0.2031 - [valid]: 0.6008 - [adapt]: 0.2331 - [adapt_test]: 0.2917 - [adapt_test_per_env]: [0.7078, 0.2838, 0.0922, 0.1085, 0.2772, 0.2806]
+saving best model at iter 293
+Iter 293  - time: 68    - [train]: 0.2026 - [valid]: 0.6004 - [adapt]: 0.2322 - [adapt_test]: 0.2908 - [adapt_test_per_env]: [0.7052, 0.2829, 0.092, 0.108, 0.2769, 0.28]
+saving best model at iter 294
+Iter 294  - time: 69    - [train]: 0.2021 - [valid]: 0.6001 - [adapt]: 0.2313 - [adapt_test]: 0.29   - [adapt_test_per_env]: [0.7026, 0.282, 0.0918, 0.1076, 0.2766, 0.2796]
+saving best model at iter 295
+Iter 295  - time: 69    - [train]: 0.2016 - [valid]: 0.5998 - [adapt]: 0.2306 - [adapt_test]: 0.2893 - [adapt_test_per_env]: [0.7001, 0.2812, 0.0917, 0.1072, 0.2763, 0.2792]
+saving best model at iter 296
+Iter 296  - time: 69    - [train]: 0.2012 - [valid]: 0.5994 - [adapt]: 0.2298 - [adapt_test]: 0.2886 - [adapt_test_per_env]: [0.6978, 0.2804, 0.0915, 0.1068, 0.276, 0.2788]
+saving best model at iter 297
+Iter 297  - time: 69    - [train]: 0.2008 - [valid]: 0.5992 - [adapt]: 0.2291 - [adapt_test]: 0.2879 - [adapt_test_per_env]: [0.6956, 0.2796, 0.0913, 0.1064, 0.2757, 0.2784]
+saving best model at iter 298
+Iter 298  - time: 69    - [train]: 0.2004 - [valid]: 0.5989 - [adapt]: 0.2284 - [adapt_test]: 0.2872 - [adapt_test_per_env]: [0.6935, 0.279, 0.0912, 0.106, 0.2755, 0.278]
+saving best model at iter 299
+Iter 299  - time: 69    - [train]: 0.2    - [valid]: 0.5986 - [adapt]: 0.2278 - [adapt_test]: 0.2866 - [adapt_test_per_env]: [0.6916, 0.2783, 0.091, 0.1057, 0.2752, 0.2776]
+saving best model at iter 300
+Iter 300  - time: 69    - [train]: 0.1996 - [valid]: 0.5984 - [adapt]: 0.2272 - [adapt_test]: 0.286  - [adapt_test_per_env]: [0.6896, 0.2776, 0.091, 0.1054, 0.2749, 0.2774]
+saving best model at iter 301
+Iter 301  - time: 70    - [train]: 0.1993 - [valid]: 0.5982 - [adapt]: 0.2267 - [adapt_test]: 0.2854 - [adapt_test_per_env]: [0.6877, 0.277, 0.0909, 0.105, 0.2747, 0.2771]
+saving best model at iter 302
+Iter 302  - time: 70    - [train]: 0.1989 - [valid]: 0.5979 - [adapt]: 0.2261 - [adapt_test]: 0.2849 - [adapt_test_per_env]: [0.686, 0.2765, 0.0907, 0.1047, 0.2744, 0.2767]
+saving best model at iter 303
+Iter 303  - time: 69    - [train]: 0.1986 - [valid]: 0.5977 - [adapt]: 0.2256 - [adapt_test]: 0.2843 - [adapt_test_per_env]: [0.6844, 0.2759, 0.0906, 0.1044, 0.2742, 0.2764]
+saving best model at iter 304
+Iter 304  - time: 70    - [train]: 0.1983 - [valid]: 0.5975 - [adapt]: 0.2251 - [adapt_test]: 0.2838 - [adapt_test_per_env]: [0.6828, 0.2754, 0.0905, 0.1041, 0.274, 0.2762]
+saving best model at iter 305
+Iter 305  - time: 70    - [train]: 0.198  - [valid]: 0.5973 - [adapt]: 0.2246 - [adapt_test]: 0.2834 - [adapt_test_per_env]: [0.6813, 0.2749, 0.0904, 0.1038, 0.2737, 0.276]
+saving best model at iter 306
+Iter 306  - time: 71    - [train]: 0.1977 - [valid]: 0.5971 - [adapt]: 0.2242 - [adapt_test]: 0.2829 - [adapt_test_per_env]: [0.6798, 0.2744, 0.0903, 0.1036, 0.2735, 0.2758]
+saving best model at iter 307
+Iter 307  - time: 70    - [train]: 0.1974 - [valid]: 0.5969 - [adapt]: 0.2238 - [adapt_test]: 0.2825 - [adapt_test_per_env]: [0.6784, 0.274, 0.0903, 0.1033, 0.2733, 0.2756]
+saving best model at iter 308
+Iter 308  - time: 71    - [train]: 0.1972 - [valid]: 0.5967 - [adapt]: 0.2234 - [adapt_test]: 0.282  - [adapt_test_per_env]: [0.6771, 0.2736, 0.0901, 0.103, 0.2731, 0.2753]
+saving best model at iter 309
+Iter 309  - time: 70    - [train]: 0.1969 - [valid]: 0.5966 - [adapt]: 0.223  - [adapt_test]: 0.2816 - [adapt_test_per_env]: [0.6758, 0.2732, 0.0901, 0.1028, 0.2729, 0.2751]
+saving best model at iter 310
+Iter 310  - time: 71    - [train]: 0.1967 - [valid]: 0.5964 - [adapt]: 0.2226 - [adapt_test]: 0.2812 - [adapt_test_per_env]: [0.6745, 0.2728, 0.09, 0.1026, 0.2727, 0.275]
+saving best model at iter 311
+Iter 311  - time: 71    - [train]: 0.1964 - [valid]: 0.5963 - [adapt]: 0.2223 - [adapt_test]: 0.2809 - [adapt_test_per_env]: [0.6733, 0.2724, 0.09, 0.1024, 0.2725, 0.2748]
+saving best model at iter 312
+Iter 312  - time: 72    - [train]: 0.1962 - [valid]: 0.5961 - [adapt]: 0.2219 - [adapt_test]: 0.2805 - [adapt_test_per_env]: [0.6721, 0.272, 0.0899, 0.1021, 0.2723, 0.2746]
+saving best model at iter 313
+Iter 313  - time: 72    - [train]: 0.196  - [valid]: 0.596  - [adapt]: 0.2216 - [adapt_test]: 0.2801 - [adapt_test_per_env]: [0.671, 0.2717, 0.0898, 0.1019, 0.2721, 0.2744]
+saving best model at iter 314
+Iter 314  - time: 71    - [train]: 0.1957 - [valid]: 0.5958 - [adapt]: 0.2213 - [adapt_test]: 0.2798 - [adapt_test_per_env]: [0.6699, 0.2713, 0.0897, 0.1017, 0.2719, 0.2742]
+saving best model at iter 315
+Iter 315  - time: 71    - [train]: 0.1955 - [valid]: 0.5957 - [adapt]: 0.221  - [adapt_test]: 0.2795 - [adapt_test_per_env]: [0.6688, 0.271, 0.0897, 0.1015, 0.2717, 0.2741]
+saving best model at iter 316
+Iter 316  - time: 71    - [train]: 0.1953 - [valid]: 0.5955 - [adapt]: 0.2207 - [adapt_test]: 0.2791 - [adapt_test_per_env]: [0.6677, 0.2707, 0.0897, 0.1013, 0.2715, 0.274]
+saving best model at iter 317
+Iter 317  - time: 71    - [train]: 0.1951 - [valid]: 0.5954 - [adapt]: 0.2204 - [adapt_test]: 0.2788 - [adapt_test_per_env]: [0.6667, 0.2704, 0.0896, 0.1011, 0.2714, 0.2738]
+saving best model at iter 318
+Iter 318  - time: 71    - [train]: 0.1949 - [valid]: 0.5953 - [adapt]: 0.2201 - [adapt_test]: 0.2785 - [adapt_test_per_env]: [0.6657, 0.2701, 0.0895, 0.1009, 0.2712, 0.2736]
+saving best model at iter 319
+Iter 319  - time: 71    - [train]: 0.1947 - [valid]: 0.5951 - [adapt]: 0.2198 - [adapt_test]: 0.2782 - [adapt_test_per_env]: [0.6647, 0.2698, 0.0895, 0.1007, 0.271, 0.2734]
+saving best model at iter 320
+Iter 320  - time: 72    - [train]: 0.1946 - [valid]: 0.595  - [adapt]: 0.2196 - [adapt_test]: 0.2779 - [adapt_test_per_env]: [0.6637, 0.2696, 0.0894, 0.1005, 0.2709, 0.2732]
+saving best model at iter 321
+Iter 321  - time: 71    - [train]: 0.1944 - [valid]: 0.5949 - [adapt]: 0.2193 - [adapt_test]: 0.2776 - [adapt_test_per_env]: [0.6627, 0.2693, 0.0894, 0.1004, 0.2707, 0.2731]
+saving best model at iter 322
+Iter 322  - time: 72    - [train]: 0.1942 - [valid]: 0.5948 - [adapt]: 0.219  - [adapt_test]: 0.2773 - [adapt_test_per_env]: [0.6618, 0.269, 0.0894, 0.1002, 0.2706, 0.2729]
+saving best model at iter 323
+Iter 323  - time: 72    - [train]: 0.194  - [valid]: 0.5946 - [adapt]: 0.2188 - [adapt_test]: 0.277  - [adapt_test_per_env]: [0.6609, 0.2688, 0.0893, 0.1001, 0.2704, 0.2727]
+saving best model at iter 324
+Iter 324  - time: 72    - [train]: 0.1939 - [valid]: 0.5945 - [adapt]: 0.2185 - [adapt_test]: 0.2768 - [adapt_test_per_env]: [0.66, 0.2686, 0.0893, 0.0999, 0.2703, 0.2725]
+saving best model at iter 325
+Iter 325  - time: 72    - [train]: 0.1937 - [valid]: 0.5944 - [adapt]: 0.2183 - [adapt_test]: 0.2765 - [adapt_test_per_env]: [0.6591, 0.2683, 0.0893, 0.0997, 0.2701, 0.2723]
+saving best model at iter 326
+Iter 326  - time: 73    - [train]: 0.1936 - [valid]: 0.5943 - [adapt]: 0.218  - [adapt_test]: 0.2762 - [adapt_test_per_env]: [0.6582, 0.2681, 0.0892, 0.0996, 0.27, 0.2722]
+saving best model at iter 327
+Iter 327  - time: 72    - [train]: 0.1934 - [valid]: 0.5942 - [adapt]: 0.2178 - [adapt_test]: 0.276  - [adapt_test_per_env]: [0.6573, 0.2679, 0.0892, 0.0994, 0.2698, 0.272]
+saving best model at iter 328
+Iter 328  - time: 72    - [train]: 0.1933 - [valid]: 0.594  - [adapt]: 0.2176 - [adapt_test]: 0.2757 - [adapt_test_per_env]: [0.6565, 0.2677, 0.0892, 0.0993, 0.2697, 0.2718]
+saving best model at iter 329
+Iter 329  - time: 72    - [train]: 0.1931 - [valid]: 0.5939 - [adapt]: 0.2174 - [adapt_test]: 0.2754 - [adapt_test_per_env]: [0.6557, 0.2675, 0.0891, 0.0991, 0.2696, 0.2716]
+saving best model at iter 330
+Iter 330  - time: 72    - [train]: 0.193  - [valid]: 0.5938 - [adapt]: 0.2171 - [adapt_test]: 0.2752 - [adapt_test_per_env]: [0.6549, 0.2673, 0.0891, 0.099, 0.2694, 0.2714]
+saving best model at iter 331
+Iter 331  - time: 72    - [train]: 0.1929 - [valid]: 0.5937 - [adapt]: 0.2169 - [adapt_test]: 0.275  - [adapt_test_per_env]: [0.6541, 0.2671, 0.0891, 0.0989, 0.2693, 0.2713]
+saving best model at iter 332
+Iter 332  - time: 72    - [train]: 0.1927 - [valid]: 0.5936 - [adapt]: 0.2167 - [adapt_test]: 0.2747 - [adapt_test_per_env]: [0.6533, 0.2669, 0.0891, 0.0987, 0.2692, 0.2711]
+saving best model at iter 333
+Iter 333  - time: 73    - [train]: 0.1926 - [valid]: 0.5935 - [adapt]: 0.2165 - [adapt_test]: 0.2745 - [adapt_test_per_env]: [0.6525, 0.2667, 0.089, 0.0986, 0.2691, 0.2709]
+saving best model at iter 334
+Iter 334  - time: 73    - [train]: 0.1925 - [valid]: 0.5933 - [adapt]: 0.2163 - [adapt_test]: 0.2743 - [adapt_test_per_env]: [0.6518, 0.2666, 0.089, 0.0985, 0.2689, 0.2708]
+saving best model at iter 335
+Iter 335  - time: 73    - [train]: 0.1923 - [valid]: 0.5932 - [adapt]: 0.2161 - [adapt_test]: 0.274  - [adapt_test_per_env]: [0.651, 0.2664, 0.089, 0.0984, 0.2688, 0.2706]
+saving best model at iter 336
+Iter 336  - time: 73    - [train]: 0.1922 - [valid]: 0.5931 - [adapt]: 0.2159 - [adapt_test]: 0.2738 - [adapt_test_per_env]: [0.6503, 0.2662, 0.089, 0.0982, 0.2687, 0.2704]
+saving best model at iter 337
+Iter 337  - time: 72    - [train]: 0.1921 - [valid]: 0.593  - [adapt]: 0.2157 - [adapt_test]: 0.2736 - [adapt_test_per_env]: [0.6496, 0.2661, 0.0889, 0.0981, 0.2686, 0.2703]
+saving best model at iter 338
+Iter 338  - time: 73    - [train]: 0.192  - [valid]: 0.5929 - [adapt]: 0.2156 - [adapt_test]: 0.2734 - [adapt_test_per_env]: [0.6489, 0.2659, 0.0889, 0.098, 0.2685, 0.2702]
+saving best model at iter 339
+Iter 339  - time: 72    - [train]: 0.1919 - [valid]: 0.5928 - [adapt]: 0.2154 - [adapt_test]: 0.2732 - [adapt_test_per_env]: [0.6482, 0.2658, 0.0889, 0.0979, 0.2684, 0.27]
+saving best model at iter 340
+Iter 340  - time: 73    - [train]: 0.1918 - [valid]: 0.5927 - [adapt]: 0.2152 - [adapt_test]: 0.273  - [adapt_test_per_env]: [0.6476, 0.2656, 0.0889, 0.0978, 0.2683, 0.2699]
+saving best model at iter 341
+Iter 341  - time: 73    - [train]: 0.1917 - [valid]: 0.5926 - [adapt]: 0.2151 - [adapt_test]: 0.2728 - [adapt_test_per_env]: [0.6469, 0.2655, 0.0889, 0.0977, 0.2682, 0.2697]
+saving best model at iter 342
+Iter 342  - time: 73    - [train]: 0.1915 - [valid]: 0.5924 - [adapt]: 0.2149 - [adapt_test]: 0.2726 - [adapt_test_per_env]: [0.6463, 0.2653, 0.0888, 0.0975, 0.268, 0.2696]
+saving best model at iter 343
+Iter 343  - time: 73    - [train]: 0.1914 - [valid]: 0.5923 - [adapt]: 0.2147 - [adapt_test]: 0.2724 - [adapt_test_per_env]: [0.6457, 0.2652, 0.0888, 0.0974, 0.2679, 0.2695]
+saving best model at iter 344
+Iter 344  - time: 73    - [train]: 0.1913 - [valid]: 0.5922 - [adapt]: 0.2146 - [adapt_test]: 0.2722 - [adapt_test_per_env]: [0.6451, 0.265, 0.0888, 0.0973, 0.2678, 0.2694]
+saving best model at iter 345
+Iter 345  - time: 73    - [train]: 0.1912 - [valid]: 0.5921 - [adapt]: 0.2144 - [adapt_test]: 0.2721 - [adapt_test_per_env]: [0.6445, 0.2649, 0.0888, 0.0972, 0.2677, 0.2693]
+saving best model at iter 346
+Iter 346  - time: 74    - [train]: 0.1911 - [valid]: 0.592  - [adapt]: 0.2143 - [adapt_test]: 0.2719 - [adapt_test_per_env]: [0.6439, 0.2648, 0.0888, 0.0971, 0.2676, 0.2691]
+saving best model at iter 347
+Iter 347  - time: 74    - [train]: 0.191  - [valid]: 0.5919 - [adapt]: 0.2141 - [adapt_test]: 0.2717 - [adapt_test_per_env]: [0.6433, 0.2646, 0.0887, 0.097, 0.2676, 0.269]
+saving best model at iter 348
+Iter 348  - time: 74    - [train]: 0.1909 - [valid]: 0.5918 - [adapt]: 0.214  - [adapt_test]: 0.2715 - [adapt_test_per_env]: [0.6427, 0.2645, 0.0887, 0.0969, 0.2675, 0.2689]
+saving best model at iter 349
+Iter 349  - time: 74    - [train]: 0.1909 - [valid]: 0.5916 - [adapt]: 0.2139 - [adapt_test]: 0.2714 - [adapt_test_per_env]: [0.6422, 0.2644, 0.0887, 0.0968, 0.2674, 0.2688]
+saving best model at iter 350
+Iter 350  - time: 74    - [train]: 0.1908 - [valid]: 0.5915 - [adapt]: 0.2137 - [adapt_test]: 0.2712 - [adapt_test_per_env]: [0.6416, 0.2642, 0.0887, 0.0967, 0.2673, 0.2687]
+saving best model at iter 351
+Iter 351  - time: 74    - [train]: 0.1907 - [valid]: 0.5914 - [adapt]: 0.2136 - [adapt_test]: 0.2711 - [adapt_test_per_env]: [0.6411, 0.2641, 0.0887, 0.0966, 0.2672, 0.2686]
+saving best model at iter 352
+Iter 352  - time: 73    - [train]: 0.1906 - [valid]: 0.5913 - [adapt]: 0.2135 - [adapt_test]: 0.2709 - [adapt_test_per_env]: [0.6406, 0.264, 0.0887, 0.0965, 0.2671, 0.2685]
+saving best model at iter 353
+Iter 353  - time: 74    - [train]: 0.1905 - [valid]: 0.5912 - [adapt]: 0.2133 - [adapt_test]: 0.2707 - [adapt_test_per_env]: [0.6401, 0.2639, 0.0886, 0.0964, 0.267, 0.2685]
+saving best model at iter 354
+Iter 354  - time: 74    - [train]: 0.1904 - [valid]: 0.5911 - [adapt]: 0.2132 - [adapt_test]: 0.2706 - [adapt_test_per_env]: [0.6396, 0.2638, 0.0886, 0.0964, 0.2669, 0.2684]
+saving best model at iter 355
+Iter 355  - time: 74    - [train]: 0.1903 - [valid]: 0.5909 - [adapt]: 0.2131 - [adapt_test]: 0.2704 - [adapt_test_per_env]: [0.639, 0.2637, 0.0886, 0.0963, 0.2668, 0.2683]
+saving best model at iter 356
+Iter 356  - time: 74    - [train]: 0.1902 - [valid]: 0.5908 - [adapt]: 0.2129 - [adapt_test]: 0.2703 - [adapt_test_per_env]: [0.6385, 0.2635, 0.0886, 0.0962, 0.2668, 0.2682]
+saving best model at iter 357
+Iter 357  - time: 74    - [train]: 0.1901 - [valid]: 0.5907 - [adapt]: 0.2128 - [adapt_test]: 0.2702 - [adapt_test_per_env]: [0.6381, 0.2634, 0.0886, 0.0961, 0.2667, 0.2681]
+saving best model at iter 358
+Iter 358  - time: 73    - [train]: 0.1901 - [valid]: 0.5906 - [adapt]: 0.2127 - [adapt_test]: 0.27   - [adapt_test_per_env]: [0.6376, 0.2633, 0.0886, 0.096, 0.2666, 0.268]
+saving best model at iter 359
+Iter 359  - time: 74    - [train]: 0.19   - [valid]: 0.5904 - [adapt]: 0.2126 - [adapt_test]: 0.2699 - [adapt_test_per_env]: [0.6371, 0.2632, 0.0886, 0.0959, 0.2665, 0.2679]
+saving best model at iter 360
+Iter 360  - time: 75    - [train]: 0.1899 - [valid]: 0.5903 - [adapt]: 0.2125 - [adapt_test]: 0.2697 - [adapt_test_per_env]: [0.6366, 0.2631, 0.0885, 0.0958, 0.2664, 0.2678]
+saving best model at iter 361
+Iter 361  - time: 74    - [train]: 0.1898 - [valid]: 0.5902 - [adapt]: 0.2124 - [adapt_test]: 0.2696 - [adapt_test_per_env]: [0.6361, 0.263, 0.0885, 0.0957, 0.2663, 0.2677]
+saving best model at iter 362
+Iter 362  - time: 74    - [train]: 0.1897 - [valid]: 0.5901 - [adapt]: 0.2122 - [adapt_test]: 0.2694 - [adapt_test_per_env]: [0.6357, 0.2629, 0.0885, 0.0957, 0.2663, 0.2676]
+saving best model at iter 363
+Iter 363  - time: 74    - [train]: 0.1897 - [valid]: 0.5899 - [adapt]: 0.2121 - [adapt_test]: 0.2693 - [adapt_test_per_env]: [0.6352, 0.2628, 0.0885, 0.0956, 0.2662, 0.2675]
+saving best model at iter 364
+Iter 364  - time: 74    - [train]: 0.1896 - [valid]: 0.5898 - [adapt]: 0.212  - [adapt_test]: 0.2692 - [adapt_test_per_env]: [0.6347, 0.2627, 0.0885, 0.0955, 0.2661, 0.2675]
+saving best model at iter 365
+Iter 365  - time: 75    - [train]: 0.1895 - [valid]: 0.5897 - [adapt]: 0.2119 - [adapt_test]: 0.269  - [adapt_test_per_env]: [0.6343, 0.2626, 0.0885, 0.0954, 0.266, 0.2674]
+saving best model at iter 366
+Iter 366  - time: 74    - [train]: 0.1894 - [valid]: 0.5896 - [adapt]: 0.2118 - [adapt_test]: 0.2689 - [adapt_test_per_env]: [0.6338, 0.2625, 0.0885, 0.0953, 0.266, 0.2673]
+saving best model at iter 367
+Iter 367  - time: 75    - [train]: 0.1894 - [valid]: 0.5894 - [adapt]: 0.2117 - [adapt_test]: 0.2688 - [adapt_test_per_env]: [0.6334, 0.2624, 0.0884, 0.0953, 0.2659, 0.2672]
+saving best model at iter 368
+Iter 368  - time: 75    - [train]: 0.1893 - [valid]: 0.5893 - [adapt]: 0.2116 - [adapt_test]: 0.2686 - [adapt_test_per_env]: [0.633, 0.2623, 0.0884, 0.0952, 0.2658, 0.2671]
+saving best model at iter 369
+Iter 369  - time: 74    - [train]: 0.1892 - [valid]: 0.5892 - [adapt]: 0.2115 - [adapt_test]: 0.2685 - [adapt_test_per_env]: [0.6325, 0.2622, 0.0884, 0.0951, 0.2658, 0.267]
+saving best model at iter 370
+Iter 370  - time: 75    - [train]: 0.1892 - [valid]: 0.589  - [adapt]: 0.2114 - [adapt_test]: 0.2684 - [adapt_test_per_env]: [0.6321, 0.2621, 0.0884, 0.095, 0.2657, 0.267]
+saving best model at iter 371
+Iter 371  - time: 75    - [train]: 0.1891 - [valid]: 0.5889 - [adapt]: 0.2113 - [adapt_test]: 0.2683 - [adapt_test_per_env]: [0.6317, 0.2621, 0.0884, 0.095, 0.2656, 0.2669]
+saving best model at iter 372
+Iter 372  - time: 75    - [train]: 0.189  - [valid]: 0.5888 - [adapt]: 0.2112 - [adapt_test]: 0.2681 - [adapt_test_per_env]: [0.6313, 0.262, 0.0884, 0.0949, 0.2655, 0.2668]
+saving best model at iter 373
+Iter 373  - time: 75    - [train]: 0.189  - [valid]: 0.5886 - [adapt]: 0.2111 - [adapt_test]: 0.268  - [adapt_test_per_env]: [0.6309, 0.2619, 0.0884, 0.0948, 0.2655, 0.2667]
+saving best model at iter 374
+Iter 374  - time: 75    - [train]: 0.1889 - [valid]: 0.5885 - [adapt]: 0.211  - [adapt_test]: 0.2679 - [adapt_test_per_env]: [0.6304, 0.2618, 0.0883, 0.0947, 0.2654, 0.2666]
+saving best model at iter 375
+Iter 375  - time: 75    - [train]: 0.1888 - [valid]: 0.5883 - [adapt]: 0.2109 - [adapt_test]: 0.2678 - [adapt_test_per_env]: [0.63, 0.2617, 0.0883, 0.0947, 0.2653, 0.2666]
+saving best model at iter 376
+Iter 376  - time: 75    - [train]: 0.1888 - [valid]: 0.5882 - [adapt]: 0.2108 - [adapt_test]: 0.2677 - [adapt_test_per_env]: [0.6296, 0.2616, 0.0883, 0.0946, 0.2653, 0.2665]
+saving best model at iter 377
+Iter 377  - time: 76    - [train]: 0.1887 - [valid]: 0.5881 - [adapt]: 0.2107 - [adapt_test]: 0.2675 - [adapt_test_per_env]: [0.6293, 0.2615, 0.0883, 0.0945, 0.2652, 0.2664]
+saving best model at iter 378
+Iter 378  - time: 75    - [train]: 0.1886 - [valid]: 0.5879 - [adapt]: 0.2106 - [adapt_test]: 0.2674 - [adapt_test_per_env]: [0.6289, 0.2614, 0.0883, 0.0945, 0.2651, 0.2663]
+saving best model at iter 379
+Iter 379  - time: 75    - [train]: 0.1886 - [valid]: 0.5878 - [adapt]: 0.2105 - [adapt_test]: 0.2673 - [adapt_test_per_env]: [0.6285, 0.2614, 0.0883, 0.0944, 0.2651, 0.2663]
+saving best model at iter 380
+Iter 380  - time: 75    - [train]: 0.1885 - [valid]: 0.5876 - [adapt]: 0.2104 - [adapt_test]: 0.2672 - [adapt_test_per_env]: [0.6281, 0.2613, 0.0883, 0.0943, 0.265, 0.2662]
+saving best model at iter 381
+Iter 381  - time: 75    - [train]: 0.1884 - [valid]: 0.5875 - [adapt]: 0.2103 - [adapt_test]: 0.2671 - [adapt_test_per_env]: [0.6277, 0.2612, 0.0882, 0.0942, 0.265, 0.2661]
+saving best model at iter 382
+Iter 382  - time: 75    - [train]: 0.1884 - [valid]: 0.5873 - [adapt]: 0.2102 - [adapt_test]: 0.267  - [adapt_test_per_env]: [0.6274, 0.2611, 0.0882, 0.0942, 0.2649, 0.2661]
+saving best model at iter 383
+Iter 383  - time: 75    - [train]: 0.1883 - [valid]: 0.5872 - [adapt]: 0.2101 - [adapt_test]: 0.2669 - [adapt_test_per_env]: [0.627, 0.261, 0.0882, 0.0941, 0.2648, 0.266]
+saving best model at iter 384
+Iter 384  - time: 75    - [train]: 0.1882 - [valid]: 0.587  - [adapt]: 0.21   - [adapt_test]: 0.2668 - [adapt_test_per_env]: [0.6266, 0.261, 0.0882, 0.094, 0.2648, 0.2659]
+saving best model at iter 385
+Iter 385  - time: 75    - [train]: 0.1882 - [valid]: 0.5869 - [adapt]: 0.21   - [adapt_test]: 0.2666 - [adapt_test_per_env]: [0.6263, 0.2609, 0.0882, 0.094, 0.2647, 0.2659]
+saving best model at iter 386
+Iter 386  - time: 76    - [train]: 0.1881 - [valid]: 0.5867 - [adapt]: 0.2099 - [adapt_test]: 0.2665 - [adapt_test_per_env]: [0.6259, 0.2608, 0.0882, 0.0939, 0.2646, 0.2658]
+saving best model at iter 387
+Iter 387  - time: 76    - [train]: 0.1881 - [valid]: 0.5865 - [adapt]: 0.2098 - [adapt_test]: 0.2664 - [adapt_test_per_env]: [0.6256, 0.2607, 0.0882, 0.0938, 0.2646, 0.2657]
+saving best model at iter 388
+Iter 388  - time: 76    - [train]: 0.188  - [valid]: 0.5864 - [adapt]: 0.2097 - [adapt_test]: 0.2663 - [adapt_test_per_env]: [0.6252, 0.2606, 0.0881, 0.0938, 0.2645, 0.2657]
+saving best model at iter 389
+Iter 389  - time: 76    - [train]: 0.1879 - [valid]: 0.5862 - [adapt]: 0.2096 - [adapt_test]: 0.2662 - [adapt_test_per_env]: [0.6249, 0.2606, 0.0881, 0.0937, 0.2645, 0.2656]
+saving best model at iter 390
+Iter 390  - time: 77    - [train]: 0.1879 - [valid]: 0.5861 - [adapt]: 0.2095 - [adapt_test]: 0.2661 - [adapt_test_per_env]: [0.6245, 0.2605, 0.0881, 0.0936, 0.2644, 0.2656]
+saving best model at iter 391
+Iter 391  - time: 77    - [train]: 0.1878 - [valid]: 0.5859 - [adapt]: 0.2095 - [adapt_test]: 0.266  - [adapt_test_per_env]: [0.6242, 0.2604, 0.0881, 0.0936, 0.2644, 0.2655]
+saving best model at iter 392
+Iter 392  - time: 76    - [train]: 0.1878 - [valid]: 0.5857 - [adapt]: 0.2094 - [adapt_test]: 0.2659 - [adapt_test_per_env]: [0.6238, 0.2603, 0.0881, 0.0935, 0.2643, 0.2654]
+saving best model at iter 393
+Iter 393  - time: 76    - [train]: 0.1877 - [valid]: 0.5856 - [adapt]: 0.2093 - [adapt_test]: 0.2658 - [adapt_test_per_env]: [0.6235, 0.2603, 0.0881, 0.0935, 0.2642, 0.2654]
+saving best model at iter 394
+Iter 394  - time: 76    - [train]: 0.1877 - [valid]: 0.5854 - [adapt]: 0.2092 - [adapt_test]: 0.2657 - [adapt_test_per_env]: [0.6232, 0.2602, 0.088, 0.0934, 0.2642, 0.2653]
+saving best model at iter 395
+Iter 395  - time: 76    - [train]: 0.1876 - [valid]: 0.5852 - [adapt]: 0.2091 - [adapt_test]: 0.2656 - [adapt_test_per_env]: [0.6228, 0.2601, 0.088, 0.0933, 0.2641, 0.2653]
+saving best model at iter 396
+Iter 396  - time: 75    - [train]: 0.1875 - [valid]: 0.5851 - [adapt]: 0.2091 - [adapt_test]: 0.2655 - [adapt_test_per_env]: [0.6225, 0.26, 0.088, 0.0933, 0.2641, 0.2652]
+saving best model at iter 397
+Iter 397  - time: 75    - [train]: 0.1875 - [valid]: 0.5849 - [adapt]: 0.209  - [adapt_test]: 0.2654 - [adapt_test_per_env]: [0.6222, 0.26, 0.088, 0.0932, 0.264, 0.2651]
+saving best model at iter 398
+Iter 398  - time: 76    - [train]: 0.1874 - [valid]: 0.5847 - [adapt]: 0.2089 - [adapt_test]: 0.2653 - [adapt_test_per_env]: [0.6219, 0.2599, 0.088, 0.0931, 0.264, 0.2651]
+saving best model at iter 399
+Iter 399  - time: 76    - [train]: 0.1874 - [valid]: 0.5845 - [adapt]: 0.2088 - [adapt_test]: 0.2652 - [adapt_test_per_env]: [0.6215, 0.2598, 0.088, 0.0931, 0.2639, 0.265]
+saving best model at iter 400
+Iter 400  - time: 76    - [train]: 0.1873 - [valid]: 0.5844 - [adapt]: 0.2088 - [adapt_test]: 0.2651 - [adapt_test_per_env]: [0.6212, 0.2598, 0.0879, 0.093, 0.2638, 0.265]
+saving best model at iter 401
+Iter 401  - time: 76    - [train]: 0.1873 - [valid]: 0.5842 - [adapt]: 0.2087 - [adapt_test]: 0.265  - [adapt_test_per_env]: [0.6209, 0.2597, 0.0879, 0.093, 0.2638, 0.2649]
+saving best model at iter 402
+Iter 402  - time: 76    - [train]: 0.1872 - [valid]: 0.584  - [adapt]: 0.2086 - [adapt_test]: 0.2649 - [adapt_test_per_env]: [0.6206, 0.2596, 0.0879, 0.0929, 0.2637, 0.2649]
+saving best model at iter 403
+Iter 403  - time: 76    - [train]: 0.1871 - [valid]: 0.5838 - [adapt]: 0.2085 - [adapt_test]: 0.2648 - [adapt_test_per_env]: [0.6203, 0.2595, 0.0879, 0.0928, 0.2637, 0.2648]
+saving best model at iter 404
+Iter 404  - time: 77    - [train]: 0.1871 - [valid]: 0.5836 - [adapt]: 0.2085 - [adapt_test]: 0.2647 - [adapt_test_per_env]: [0.62, 0.2595, 0.0879, 0.0928, 0.2636, 0.2647]
+saving best model at iter 405
+Iter 405  - time: 77    - [train]: 0.187  - [valid]: 0.5835 - [adapt]: 0.2084 - [adapt_test]: 0.2646 - [adapt_test_per_env]: [0.6197, 0.2594, 0.0879, 0.0927, 0.2636, 0.2647]
+saving best model at iter 406
+Iter 406  - time: 77    - [train]: 0.187  - [valid]: 0.5833 - [adapt]: 0.2083 - [adapt_test]: 0.2646 - [adapt_test_per_env]: [0.6194, 0.2593, 0.0878, 0.0927, 0.2635, 0.2646]
+saving best model at iter 407
+Iter 407  - time: 77    - [train]: 0.1869 - [valid]: 0.5831 - [adapt]: 0.2082 - [adapt_test]: 0.2645 - [adapt_test_per_env]: [0.6191, 0.2593, 0.0878, 0.0926, 0.2635, 0.2646]
+saving best model at iter 408
+Iter 408  - time: 78    - [train]: 0.1869 - [valid]: 0.5829 - [adapt]: 0.2082 - [adapt_test]: 0.2644 - [adapt_test_per_env]: [0.6188, 0.2592, 0.0878, 0.0925, 0.2634, 0.2645]
+saving best model at iter 409
+Iter 409  - time: 78    - [train]: 0.1868 - [valid]: 0.5827 - [adapt]: 0.2081 - [adapt_test]: 0.2643 - [adapt_test_per_env]: [0.6185, 0.2591, 0.0878, 0.0925, 0.2634, 0.2645]
+saving best model at iter 410
+Iter 410  - time: 77    - [train]: 0.1868 - [valid]: 0.5825 - [adapt]: 0.208  - [adapt_test]: 0.2642 - [adapt_test_per_env]: [0.6182, 0.2591, 0.0878, 0.0924, 0.2633, 0.2644]
+saving best model at iter 411
+Iter 411  - time: 77    - [train]: 0.1867 - [valid]: 0.5823 - [adapt]: 0.208  - [adapt_test]: 0.2641 - [adapt_test_per_env]: [0.6179, 0.259, 0.0877, 0.0924, 0.2633, 0.2644]
+saving best model at iter 412
+Iter 412  - time: 77    - [train]: 0.1866 - [valid]: 0.5821 - [adapt]: 0.2079 - [adapt_test]: 0.264  - [adapt_test_per_env]: [0.6176, 0.2589, 0.0877, 0.0923, 0.2632, 0.2643]
+saving best model at iter 413
+Iter 413  - time: 77    - [train]: 0.1866 - [valid]: 0.5819 - [adapt]: 0.2078 - [adapt_test]: 0.2639 - [adapt_test_per_env]: [0.6173, 0.2588, 0.0877, 0.0922, 0.2631, 0.2642]
+saving best model at iter 414
+Iter 414  - time: 77    - [train]: 0.1865 - [valid]: 0.5817 - [adapt]: 0.2078 - [adapt_test]: 0.2638 - [adapt_test_per_env]: [0.617, 0.2588, 0.0877, 0.0922, 0.2631, 0.2642]
+saving best model at iter 415
+Iter 415  - time: 77    - [train]: 0.1865 - [valid]: 0.5815 - [adapt]: 0.2077 - [adapt_test]: 0.2637 - [adapt_test_per_env]: [0.6167, 0.2587, 0.0877, 0.0921, 0.263, 0.2641]
+saving best model at iter 416
+Iter 416  - time: 76    - [train]: 0.1864 - [valid]: 0.5813 - [adapt]: 0.2076 - [adapt_test]: 0.2636 - [adapt_test_per_env]: [0.6164, 0.2586, 0.0876, 0.0921, 0.263, 0.2641]
+saving best model at iter 417
+Iter 417  - time: 77    - [train]: 0.1864 - [valid]: 0.5811 - [adapt]: 0.2076 - [adapt_test]: 0.2636 - [adapt_test_per_env]: [0.6162, 0.2586, 0.0876, 0.092, 0.2629, 0.264]
+saving best model at iter 418
+Iter 418  - time: 76    - [train]: 0.1863 - [valid]: 0.5808 - [adapt]: 0.2075 - [adapt_test]: 0.2635 - [adapt_test_per_env]: [0.6159, 0.2585, 0.0876, 0.0919, 0.2629, 0.264]
+saving best model at iter 419
+Iter 419  - time: 76    - [train]: 0.1863 - [valid]: 0.5806 - [adapt]: 0.2074 - [adapt_test]: 0.2634 - [adapt_test_per_env]: [0.6156, 0.2584, 0.0876, 0.0919, 0.2628, 0.2639]
+saving best model at iter 420
+Iter 420  - time: 78    - [train]: 0.1862 - [valid]: 0.5804 - [adapt]: 0.2074 - [adapt_test]: 0.2633 - [adapt_test_per_env]: [0.6153, 0.2584, 0.0875, 0.0918, 0.2628, 0.2639]
+saving best model at iter 421
+Iter 421  - time: 77    - [train]: 0.1862 - [valid]: 0.5802 - [adapt]: 0.2073 - [adapt_test]: 0.2632 - [adapt_test_per_env]: [0.615, 0.2583, 0.0875, 0.0918, 0.2627, 0.2638]
+saving best model at iter 422
+Iter 422  - time: 77    - [train]: 0.1861 - [valid]: 0.58   - [adapt]: 0.2073 - [adapt_test]: 0.2631 - [adapt_test_per_env]: [0.6148, 0.2582, 0.0875, 0.0917, 0.2627, 0.2638]
+saving best model at iter 423
+Iter 423  - time: 78    - [train]: 0.1861 - [valid]: 0.5797 - [adapt]: 0.2072 - [adapt_test]: 0.263  - [adapt_test_per_env]: [0.6145, 0.2582, 0.0875, 0.0917, 0.2626, 0.2637]
+saving best model at iter 424
+Iter 424  - time: 77    - [train]: 0.186  - [valid]: 0.5795 - [adapt]: 0.2071 - [adapt_test]: 0.2629 - [adapt_test_per_env]: [0.6142, 0.2581, 0.0875, 0.0916, 0.2626, 0.2637]
+saving best model at iter 425
+Iter 425  - time: 77    - [train]: 0.1859 - [valid]: 0.5793 - [adapt]: 0.2071 - [adapt_test]: 0.2628 - [adapt_test_per_env]: [0.6139, 0.258, 0.0874, 0.0915, 0.2625, 0.2636]
+saving best model at iter 426
+Iter 426  - time: 77    - [train]: 0.1859 - [valid]: 0.5791 - [adapt]: 0.207  - [adapt_test]: 0.2628 - [adapt_test_per_env]: [0.6137, 0.258, 0.0874, 0.0915, 0.2625, 0.2636]
+saving best model at iter 427
+Iter 427  - time: 78    - [train]: 0.1858 - [valid]: 0.5788 - [adapt]: 0.2069 - [adapt_test]: 0.2627 - [adapt_test_per_env]: [0.6134, 0.2579, 0.0874, 0.0914, 0.2624, 0.2635]
+saving best model at iter 428
+Iter 428  - time: 78    - [train]: 0.1858 - [valid]: 0.5786 - [adapt]: 0.2069 - [adapt_test]: 0.2626 - [adapt_test_per_env]: [0.6131, 0.2578, 0.0874, 0.0914, 0.2624, 0.2635]
+saving best model at iter 429
+Iter 429  - time: 78    - [train]: 0.1857 - [valid]: 0.5783 - [adapt]: 0.2068 - [adapt_test]: 0.2625 - [adapt_test_per_env]: [0.6129, 0.2578, 0.0873, 0.0913, 0.2623, 0.2634]
+saving best model at iter 430
+Iter 430  - time: 78    - [train]: 0.1857 - [valid]: 0.5781 - [adapt]: 0.2068 - [adapt_test]: 0.2624 - [adapt_test_per_env]: [0.6126, 0.2577, 0.0873, 0.0912, 0.2623, 0.2634]
+saving best model at iter 431
+Iter 431  - time: 78    - [train]: 0.1856 - [valid]: 0.5779 - [adapt]: 0.2067 - [adapt_test]: 0.2623 - [adapt_test_per_env]: [0.6123, 0.2576, 0.0873, 0.0912, 0.2622, 0.2633]
+saving best model at iter 432
+Iter 432  - time: 77    - [train]: 0.1856 - [valid]: 0.5776 - [adapt]: 0.2066 - [adapt_test]: 0.2622 - [adapt_test_per_env]: [0.6121, 0.2576, 0.0873, 0.0911, 0.2622, 0.2633]
+saving best model at iter 433
+Iter 433  - time: 78    - [train]: 0.1855 - [valid]: 0.5774 - [adapt]: 0.2066 - [adapt_test]: 0.2622 - [adapt_test_per_env]: [0.6118, 0.2575, 0.0872, 0.0911, 0.2621, 0.2632]
+saving best model at iter 434
+Iter 434  - time: 78    - [train]: 0.1855 - [valid]: 0.5771 - [adapt]: 0.2065 - [adapt_test]: 0.2621 - [adapt_test_per_env]: [0.6116, 0.2574, 0.0872, 0.091, 0.2621, 0.2632]
+saving best model at iter 435
+Iter 435  - time: 79    - [train]: 0.1854 - [valid]: 0.5769 - [adapt]: 0.2065 - [adapt_test]: 0.262  - [adapt_test_per_env]: [0.6112, 0.2574, 0.0872, 0.0909, 0.262, 0.2632]
+saving best model at iter 436
+Iter 436  - time: 79    - [train]: 0.1853 - [valid]: 0.5765 - [adapt]: 0.2064 - [adapt_test]: 0.2619 - [adapt_test_per_env]: [0.6111, 0.2573, 0.0871, 0.0909, 0.262, 0.263]
+saving best model at iter 437
+Iter 437  - time: 78    - [train]: 0.1853 - [valid]: 0.5764 - [adapt]: 0.2063 - [adapt_test]: 0.2618 - [adapt_test_per_env]: [0.6107, 0.2572, 0.0871, 0.0908, 0.2619, 0.2631]
+saving best model at iter 438
+Iter 438  - time: 78    - [train]: 0.1852 - [valid]: 0.576  - [adapt]: 0.2063 - [adapt_test]: 0.2617 - [adapt_test_per_env]: [0.6106, 0.2571, 0.0871, 0.0908, 0.2619, 0.2629]
+saving best model at iter 439
+Iter 439  - time: 79    - [train]: 0.1852 - [valid]: 0.5759 - [adapt]: 0.2062 - [adapt_test]: 0.2616 - [adapt_test_per_env]: [0.6101, 0.2571, 0.0871, 0.0907, 0.2618, 0.263]
+saving best model at iter 440
+Iter 440  - time: 79    - [train]: 0.1851 - [valid]: 0.5754 - [adapt]: 0.2062 - [adapt_test]: 0.2616 - [adapt_test_per_env]: [0.6102, 0.257, 0.087, 0.0907, 0.2618, 0.2627]
+saving best model at iter 441
+Iter 441  - time: 78    - [train]: 0.1851 - [valid]: 0.5754 - [adapt]: 0.2061 - [adapt_test]: 0.2615 - [adapt_test_per_env]: [0.6095, 0.2569, 0.087, 0.0906, 0.2617, 0.263]
+saving best model at iter 442
+Iter 442  - time: 79    - [train]: 0.185  - [valid]: 0.5747 - [adapt]: 0.206  - [adapt_test]: 0.2614 - [adapt_test_per_env]: [0.6098, 0.2569, 0.0869, 0.0906, 0.2616, 0.2625]
+Iter 443  - time: 78    - [train]: 0.185  - [valid]: 0.575  - [adapt]: 0.206  - [adapt_test]: 0.2613 - [adapt_test_per_env]: [0.6087, 0.2568, 0.087, 0.0904, 0.2616, 0.2631]
+saving best model at iter 444
+Iter 444  - time: 79    - [train]: 0.1849 - [valid]: 0.5739 - [adapt]: 0.2059 - [adapt_test]: 0.2612 - [adapt_test_per_env]: [0.6097, 0.2567, 0.0868, 0.0905, 0.2615, 0.2621]
+Iter 445  - time: 78    - [train]: 0.1848 - [valid]: 0.5747 - [adapt]: 0.2059 - [adapt_test]: 0.2611 - [adapt_test_per_env]: [0.6076, 0.2567, 0.0871, 0.0903, 0.2615, 0.2635]
+saving best model at iter 446
+Iter 446  - time: 78    - [train]: 0.1848 - [valid]: 0.5729 - [adapt]: 0.2057 - [adapt_test]: 0.261  - [adapt_test_per_env]: [0.6101, 0.2565, 0.0866, 0.0904, 0.2614, 0.2612]
+Iter 447  - time: 78    - [train]: 0.1847 - [valid]: 0.5749 - [adapt]: 0.2059 - [adapt_test]: 0.2609 - [adapt_test_per_env]: [0.6058, 0.2566, 0.0872, 0.0901, 0.2614, 0.2645]
+saving best model at iter 448
+Iter 448  - time: 78    - [train]: 0.1847 - [valid]: 0.5711 - [adapt]: 0.2055 - [adapt_test]: 0.2609 - [adapt_test_per_env]: [0.6116, 0.2564, 0.0862, 0.0904, 0.2613, 0.2595]
+Iter 449  - time: 78    - [train]: 0.1846 - [valid]: 0.5761 - [adapt]: 0.206  - [adapt_test]: 0.2608 - [adapt_test_per_env]: [0.6022, 0.2565, 0.0877, 0.0898, 0.2613, 0.2669]
+saving best model at iter 450
+Iter 450  - time: 79    - [train]: 0.1846 - [valid]: 0.5677 - [adapt]: 0.2052 - [adapt_test]: 0.2608 - [adapt_test_per_env]: [0.6159, 0.2562, 0.0853, 0.0906, 0.2613, 0.2555]
+Iter 451  - time: 79    - [train]: 0.1847 - [valid]: 0.58   - [adapt]: 0.2064 - [adapt_test]: 0.2606 - [adapt_test_per_env]: [0.5943, 0.2568, 0.0891, 0.0893, 0.2613, 0.2731]
+saving best model at iter 452
+Iter 452  - time: 78    - [train]: 0.1848 - [valid]: 0.5605 - [adapt]: 0.2047 - [adapt_test]: 0.2611 - [adapt_test_per_env]: [0.6278, 0.2561, 0.0835, 0.0916, 0.2615, 0.2459]
+Iter 453  - time: 79    - [train]: 0.1853 - [valid]: 0.5912 - [adapt]: 0.2082 - [adapt_test]: 0.2611 - [adapt_test_per_env]: [0.5756, 0.258, 0.0931, 0.0887, 0.2619, 0.2893]
+saving best model at iter 454
+Iter 454  - time: 78    - [train]: 0.1867 - [valid]: 0.5441 - [adapt]: 0.2049 - [adapt_test]: 0.2632 - [adapt_test_per_env]: [0.6603, 0.2575, 0.0803, 0.0954, 0.2631, 0.2226]
+Iter 455  - time: 79    - [train]: 0.1904 - [valid]: 0.6242 - [adapt]: 0.2161 - [adapt_test]: 0.2657 - [adapt_test_per_env]: [0.532, 0.2653, 0.1067, 0.0905, 0.2661, 0.3337]
+saving best model at iter 456
+Iter 456  - time: 79    - [train]: 0.1998 - [valid]: 0.5111 - [adapt]: 0.2136 - [adapt_test]: 0.277  - [adapt_test_per_env]: [0.7539, 0.271, 0.0803, 0.113, 0.2742, 0.1695]
+Iter 457  - time: 79    - [train]: 0.2228 - [valid]: 0.7272 - [adapt]: 0.2558 - [adapt_test]: 0.2973 - [adapt_test_per_env]: [0.4464, 0.3067, 0.1611, 0.114, 0.2935, 0.4624]
+saving best model at iter 458
+Iter 458  - time: 79    - [train]: 0.2743 - [valid]: 0.4795 - [adapt]: 0.278  - [adapt_test]: 0.3532 - [adapt_test_per_env]: [1.0213, 0.3539, 0.1253, 0.1964, 0.3377, 0.0847]
+Iter 459  - time: 82    - [train]: 0.3571 - [valid]: 0.993  - [adapt]: 0.4046 - [adapt_test]: 0.4312 - [adapt_test_per_env]: [0.3742, 0.4697, 0.3377, 0.2295, 0.4086, 0.7672]
+Iter 460  - time: 82    - [train]: 0.4216 - [valid]: 0.5137 - [adapt]: 0.4142 - [adapt_test]: 0.5024 - [adapt_test_per_env]: [1.3822, 0.5206, 0.2424, 0.351, 0.4647, 0.0532]
+Iter 461  - time: 81    - [train]: 0.3647 - [valid]: 1.0057 - [adapt]: 0.4141 - [adapt_test]: 0.4399 - [adapt_test_per_env]: [0.3738, 0.474, 0.3466, 0.2373, 0.4188, 0.7888]
+Iter 462  - time: 80    - [train]: 0.2474 - [valid]: 0.4806 - [adapt]: 0.2528 - [adapt_test]: 0.3251 - [adapt_test_per_env]: [0.9376, 0.3223, 0.1059, 0.1672, 0.3158, 0.1017]
+Iter 463  - time: 78    - [train]: 0.1852 - [valid]: 0.5908 - [adapt]: 0.2092 - [adapt_test]: 0.2619 - [adapt_test_per_env]: [0.5743, 0.2574, 0.0935, 0.0882, 0.2619, 0.2959]
+Iter 464  - time: 79    - [train]: 0.2117 - [valid]: 0.6961 - [adapt]: 0.2447 - [adapt_test]: 0.2883 - [adapt_test_per_env]: [0.4699, 0.2896, 0.1436, 0.1056, 0.2862, 0.4349]
+saving best model at iter 465
+Iter 465  - time: 78    - [train]: 0.2726 - [valid]: 0.4771 - [adapt]: 0.2747 - [adapt_test]: 0.3507 - [adapt_test_per_env]: [1.0145, 0.3502, 0.1229, 0.1943, 0.3378, 0.0845]
+Iter 466  - time: 80    - [train]: 0.27   - [valid]: 0.8305 - [adapt]: 0.3125 - [adapt_test]: 0.3472 - [adapt_test_per_env]: [0.4057, 0.3564, 0.2255, 0.1548, 0.34, 0.6008]
+Iter 467  - time: 80    - [train]: 0.2102 - [valid]: 0.496  - [adapt]: 0.2211 - [adapt_test]: 0.2878 - [adapt_test_per_env]: [0.806, 0.282, 0.0836, 0.125, 0.2831, 0.1469]
+Iter 468  - time: 78    - [train]: 0.1846 - [valid]: 0.5525 - [adapt]: 0.205  - [adapt_test]: 0.2621 - [adapt_test_per_env]: [0.6387, 0.2554, 0.0818, 0.0914, 0.2611, 0.2442]
+Iter 469  - time: 78    - [train]: 0.217  - [valid]: 0.7094 - [adapt]: 0.2521 - [adapt_test]: 0.2947 - [adapt_test_per_env]: [0.4632, 0.2941, 0.1514, 0.1101, 0.2922, 0.4568]
+Iter 470  - time: 77    - [train]: 0.239  - [valid]: 0.4799 - [adapt]: 0.2445 - [adapt_test]: 0.3166 - [adapt_test_per_env]: [0.9123, 0.3126, 0.0993, 0.1574, 0.3088, 0.1089]
+Iter 471  - time: 77    - [train]: 0.2081 - [valid]: 0.6838 - [adapt]: 0.2415 - [adapt_test]: 0.2859 - [adapt_test_per_env]: [0.4812, 0.2835, 0.1374, 0.1031, 0.2841, 0.4258]
+Iter 472  - time: 78    - [train]: 0.1839 - [valid]: 0.5641 - [adapt]: 0.2058 - [adapt_test]: 0.2615 - [adapt_test_per_env]: [0.616, 0.2548, 0.0849, 0.0893, 0.2607, 0.2633]
+Iter 473  - time: 77    - [train]: 0.2022 - [valid]: 0.5023 - [adapt]: 0.2144 - [adapt_test]: 0.2795 - [adapt_test_per_env]: [0.7701, 0.273, 0.0797, 0.1153, 0.2764, 0.1627]
+Iter 474  - time: 78    - [train]: 0.2173 - [valid]: 0.7087 - [adapt]: 0.2528 - [adapt_test]: 0.2952 - [adapt_test_per_env]: [0.4637, 0.294, 0.1517, 0.1105, 0.2927, 0.4585]
+Iter 475  - time: 79    - [train]: 0.1982 - [valid]: 0.5071 - [adapt]: 0.2112 - [adapt_test]: 0.2753 - [adapt_test_per_env]: [0.7492, 0.2685, 0.0783, 0.1104, 0.273, 0.1723]
+Iter 476  - time: 78    - [train]: 0.1839 - [valid]: 0.56   - [adapt]: 0.2051 - [adapt_test]: 0.2612 - [adapt_test_per_env]: [0.6204, 0.2546, 0.0838, 0.0895, 0.2607, 0.2581]
+Iter 477  - time: 78    - [train]: 0.1976 - [valid]: 0.6487 - [adapt]: 0.2281 - [adapt_test]: 0.2751 - [adapt_test_per_env]: [0.5086, 0.2716, 0.12, 0.0951, 0.274, 0.3816]
+Iter 478  - time: 77    - [train]: 0.205  - [valid]: 0.4975 - [adapt]: 0.2158 - [adapt_test]: 0.2817 - [adapt_test_per_env]: [0.7817, 0.2752, 0.0804, 0.1187, 0.2795, 0.1549]
+Iter 479  - time: 77    - [train]: 0.1902 - [valid]: 0.6183 - [adapt]: 0.2178 - [adapt_test]: 0.2675 - [adapt_test_per_env]: [0.5378, 0.263, 0.1059, 0.0902, 0.2669, 0.3412]
+Iter 480  - time: 78    - [train]: 0.1845 - [valid]: 0.5809 - [adapt]: 0.2081 - [adapt_test]: 0.2616 - [adapt_test_per_env]: [0.5841, 0.2559, 0.0908, 0.0879, 0.2614, 0.2892]
+Iter 481  - time: 77    - [train]: 0.1953 - [valid]: 0.5098 - [adapt]: 0.2086 - [adapt_test]: 0.2718 - [adapt_test_per_env]: [0.7318, 0.265, 0.0774, 0.1069, 0.2709, 0.1788]
+Iter 482  - time: 77    - [train]: 0.1961 - [valid]: 0.6421 - [adapt]: 0.2259 - [adapt_test]: 0.2732 - [adapt_test_per_env]: [0.512, 0.2701, 0.1175, 0.0939, 0.2723, 0.3736]
+Iter 483  - time: 77    - [train]: 0.1856 - [valid]: 0.5374 - [adapt]: 0.2035 - [adapt_test]: 0.2621 - [adapt_test_per_env]: [0.6573, 0.2556, 0.0788, 0.0935, 0.2622, 0.2251]
+Iter 484  - time: 77    - [train]: 0.1855 - [valid]: 0.5377 - [adapt]: 0.2034 - [adapt_test]: 0.2619 - [adapt_test_per_env]: [0.6557, 0.2555, 0.0789, 0.0932, 0.2621, 0.2258]
+Iter 485  - time: 77    - [train]: 0.1926 - [valid]: 0.6281 - [adapt]: 0.221  - [adapt_test]: 0.2695 - [adapt_test_per_env]: [0.5236, 0.2662, 0.1112, 0.0916, 0.2689, 0.3555]
+Iter 486  - time: 77    - [train]: 0.1901 - [valid]: 0.519  - [adapt]: 0.2051 - [adapt_test]: 0.2663 - [adapt_test_per_env]: [0.6981, 0.2597, 0.0768, 0.1003, 0.2665, 0.1962]
+Iter 487  - time: 77    - [train]: 0.1837 - [valid]: 0.5715 - [adapt]: 0.2061 - [adapt_test]: 0.2601 - [adapt_test_per_env]: [0.5922, 0.2549, 0.0881, 0.0878, 0.2605, 0.2773]
+Iter 488  - time: 77    - [train]: 0.186  - [valid]: 0.5946 - [adapt]: 0.2111 - [adapt_test]: 0.2625 - [adapt_test_per_env]: [0.5594, 0.2582, 0.0968, 0.0878, 0.2627, 0.3103]
+Iter 489  - time: 77    - [train]: 0.1899 - [valid]: 0.5183 - [adapt]: 0.2049 - [adapt_test]: 0.2658 - [adapt_test_per_env]: [0.6965, 0.2593, 0.0767, 0.1, 0.2663, 0.1959]
+Iter 490  - time: 77    - [train]: 0.1863 - [valid]: 0.5964 - [adapt]: 0.2116 - [adapt_test]: 0.2627 - [adapt_test_per_env]: [0.5556, 0.2587, 0.0978, 0.0878, 0.2629, 0.3135]
+Iter 491  - time: 77    - [train]: 0.1832 - [valid]: 0.5612 - [adapt]: 0.2045 - [adapt_test]: 0.2593 - [adapt_test_per_env]: [0.6052, 0.254, 0.085, 0.0881, 0.26, 0.2635]
+Iter 492  - time: 77    - [train]: 0.1859 - [valid]: 0.5303 - [adapt]: 0.2031 - [adapt_test]: 0.2618 - [adapt_test_per_env]: [0.6636, 0.2557, 0.0779, 0.0944, 0.2627, 0.2168]
+Iter 493  - time: 78    - [train]: 0.1873 - [valid]: 0.6024 - [adapt]: 0.2134 - [adapt_test]: 0.2637 - [adapt_test_per_env]: [0.5462, 0.26, 0.1007, 0.0882, 0.2638, 0.3229]
+Iter 494  - time: 80    - [train]: 0.1842 - [valid]: 0.5387 - [adapt]: 0.2027 - [adapt_test]: 0.2601 - [adapt_test_per_env]: [0.6436, 0.2543, 0.0794, 0.0916, 0.2611, 0.2308]
+Iter 495  - time: 78    - [train]: 0.1831 - [valid]: 0.5504 - [adapt]: 0.2033 - [adapt_test]: 0.259  - [adapt_test_per_env]: [0.6203, 0.2536, 0.0822, 0.0891, 0.26, 0.2491]
+Iter 496  - time: 78    - [train]: 0.1853 - [valid]: 0.5899 - [adapt]: 0.2102 - [adapt_test]: 0.2615 - [adapt_test_per_env]: [0.5595, 0.2575, 0.0958, 0.0872, 0.2619, 0.3068]
+Iter 497  - time: 79    - [train]: 0.1854 - [valid]: 0.5296 - [adapt]: 0.2028 - [adapt_test]: 0.2612 - [adapt_test_per_env]: [0.6602, 0.2552, 0.0778, 0.0937, 0.2622, 0.2179]
+Iter 498  - time: 78    - [train]: 0.1832 - [valid]: 0.5704 - [adapt]: 0.2061 - [adapt_test]: 0.2592 - [adapt_test_per_env]: [0.585, 0.2545, 0.0887, 0.0869, 0.26, 0.2801]
+Iter 499  - time: 78    - [train]: 0.183  - [valid]: 0.5683 - [adapt]: 0.2057 - [adapt_test]: 0.259  - [adapt_test_per_env]: [0.5874, 0.2543, 0.088, 0.087, 0.2598, 0.2774]
+
+Total script time in hours minutes seconds:  06:19:57

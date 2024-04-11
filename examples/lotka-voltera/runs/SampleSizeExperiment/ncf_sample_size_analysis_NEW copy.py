@@ -97,22 +97,37 @@ sns.pointplot(df, x="ncf_sample_size", y="ind_crit", errorbar="se", ax=ax, legen
 
 # sns.pointplot(df, x="ncf_sample_size", y="ood_crit", errorbar="se", label="OOD")
 
-ax.set(xlabel='Context Pool Size', ylabel='Log MSE')
+ax.set(xlabel='Context Pool Size', ylabel='MSE')
 # ax.grid(True)
 ax.set_xticklabels([str(0)+"*", 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
 ## Save figure as a pdf
-plt.savefig('ncf_sample_size_analysis_ind.pdf', format='pdf', dpi=1200, bbox_inches='tight')
+plt.savefig('context_pool_size_ind_T1.pdf', format='pdf', dpi=1200, bbox_inches='tight')
 
 #%%
 
 f, ax = plt.subplots(figsize=(10, 6))
 ax.set(yscale="log")
 sns.pointplot(df, x="ncf_sample_size", y="ood_crit", markers="", ci=None, color="k", alpha=0.2)
-sns.pointplot(df, x="ncf_sample_size", y="ood_crit", errorbar="se", ax=ax, legend=False, log_scale=True, hue="color")
-ax.set(xlabel='Context Pool Size', ylabel='Log MSE')
+sns.pointplot(df, x="ncf_sample_size", y="ood_crit", errorbar="se", ax=ax, legend=False, log_scale=True, hue="color", markers="s")
+ax.set(xlabel='Context Pool Size', ylabel='MSE')
+
+## Put the y label on the right side
+ax.yaxis.tick_right()
+ax.yaxis.set_label_position("right")
+
 ax.set_xticklabels([str(0)+"*", 1, 2, 3, 4, 5, 6, 7, 8, 9])
-plt.savefig('ncf_sample_size_analysis_ood.pdf', format='pdf', dpi=1200, bbox_inches='tight')
+plt.savefig('context_pool_size_ood_T1.pdf', format='pdf', dpi=1200, bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
 
 #%%
 
