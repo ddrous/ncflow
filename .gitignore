@@ -113,7 +113,7 @@ venv/*
 !examples/gray-scott/runs/31032024-164433
 !examples/gray-scott/runs/31032024-222842
 !examples/gray-scott/runs/01042024-065008
-!examples/gray-scott/runs/01042024-114137
+# !examples/gray-scott/runs/01042024-114137
 !examples/gray-scott/runs/03042024-111859
 !examples/gray-scott/runs/04042024-063322
 !examples/gray-scott/runs/06042024-102728
