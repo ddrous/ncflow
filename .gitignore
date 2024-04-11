@@ -89,6 +89,7 @@ venv/*
 
 !examples/glycolytic-oscillator/runs/16022024-205415
 !examples/glycolytic-oscillator/runs/10032024-124158
+!examples/glycolytic-oscillator/runs/28032024-181249
 !examples/glycolytic-oscillator/runs/11042024-082212-Special
 
 !examples/gray-scott/runs/25022024-033325
