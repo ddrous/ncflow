@@ -37,8 +37,8 @@ early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps t
 
 print_error_every = 10
 
-train = True
-run_folder = "./runs/10032024-124158/"      ## Run folder to use when not training
+train = False
+run_folder = "./"      ## Run folder to use when not training
 
 save_trainer = True
 
@@ -373,9 +373,11 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 if adapt_test and not adapt_restore:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+    os.system(f'python dataset.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}"');
 
 if adapt_test:
     adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
+    adapt_dataloader_test = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, data_id="170846", key=seed)
 
     # sched_ctx_new = optax.piecewise_constant_schedule(init_value=1e-5,
     #                         boundaries_and_scales={int(nb_epochs_adapt*0.25):1.,
@@ -395,9 +397,9 @@ if adapt_test:
 
 #%%
 if adapt_test:
-    ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+    ood_crit = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
 
-    visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+    visualtester.visualize(adapt_dataloader_test, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
 #%%

@@ -112,7 +112,7 @@ elif split == "adapt":
 
 if split == "train":
   n_traj_per_env = 32     ## training
-elif split == "test":
+elif split == "test" or split == "adapt_test":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
@@ -132,7 +132,7 @@ max_seed = np.iinfo(np.int32).max
 
 for j in range(n_traj_per_env):
 
-    np.random.seed(j if not split =="test" else max_seed - j)
+    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
     initial_state = np.random.random(7) * np.array([b-a for a, b in ic_range]) + np.array([a for a, _ in ic_range])
 
     for i, selected_params in enumerate(environments):
