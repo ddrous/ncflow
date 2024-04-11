@@ -84,7 +84,8 @@ venv/*
 !examples/lotka-voltera/runs/SampleSizeExperiment
 !examples/lotka-voltera/runs/MapeExperiment
 !examples/lotka-voltera/runs/ContextPoolSizeExperiment
-!examples/lotka-voltera/runs/10042024-112853-Special
+!examples/lotka-voltera/runs/10042024-171620
+!examples/lotka-voltera/runs/11042024-060422-Special
 
 !examples/glycolytic-oscillator/runs/16022024-205415
 !examples/glycolytic-oscillator/runs/10032024-124158
