@@ -353,8 +353,8 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 #%%
 
 ## Visualise with Uncertainty
-savefigdir_uq = run_folder+"results_in_domain_uq.png"
-visualtester.visualizeUQ(test_dataloader, std_scale=1e2, int_cutoff=1.0, save_path=savefigdir_uq);
+savefigdir_uq = run_folder+"results_in_domain_uq.pdf"
+visualtester.visualizeUQ(test_dataloader, std_scale=1e1, int_cutoff=1.0, forecast=True, verbose=False, title=False, save_path=savefigdir_uq);
 
 
 
@@ -408,7 +408,7 @@ if adapt_test:
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
     ## Visualise with Uncertainty
-    visualtester.visualizeUQ(test_dataloader, std_scale=1e2, int_cutoff=1.0, verbose=False, save_path=adapt_folder+"results_ood_uq.png");
+    visualtester.visualizeUQ(test_dataloader, std_scale=1e1, int_cutoff=1.0, forecast=True,verbose=False, save_path=adapt_folder+"results_ood_uq.pdf");
 
 
 

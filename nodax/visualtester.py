@@ -344,7 +344,7 @@ class VisualTester:
 
 
 
-    def visualizeUQ(self, data_loader, e=None, traj=None, dims=(0,1), std_scale=1e2, int_cutoff=1.0, save_path=False, verbose=True, key=None):
+    def visualizeUQ(self, data_loader, e=None, traj=None, dims=(0,1), std_scale=1e2, int_cutoff=1.0, save_path=False, forecast=True, verbose=True, title=True, key=None):
         """ Visualise the results of the neural ODE model with epistemic uncertainty quantification """
 
         # assert data_loader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
@@ -357,6 +357,12 @@ class VisualTester:
         test_length = int(data_loader.nb_steps_per_traj*int_cutoff)
         X = data_loader.dataset[e, traj:traj+1, :test_length, :]
         t_test = t_eval[:test_length]
+
+        if forecast == True:
+            t_span_ext = (t_eval[0], t_eval[-1] + (t_eval[-1]-t_eval[0])/2)
+            t_test_ext = jnp.linspace(*t_span_ext, 2*test_length)
+        else:
+            t_test_ext = t_test
 
         if verbose == True:
             if data_loader.adaptation == False:
@@ -377,76 +383,57 @@ class VisualTester:
         batched_neuralode = jax.vmap(self.trainer.learner.neuralode, in_axes=(None, None, None, 0))
 
         X_hat, _ = batched_neuralode(X[:, 0, :], 
-                                     t_test, 
+                                     t_test_ext, 
                                      contexts[e], 
                                      contexts)
 
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
-        # fig, ax = plt.subplot_mosaic('AB;CD', figsize=(6*2, 3.5*2))
-        fig, ax = plt.subplot_mosaic('CD', figsize=(6*2, 3.5*1))
+        fig, ax = plt.subplot_mosaic('AB', figsize=(6*2, 4*1))
 
         mks = 2
         dim0, dim1 = dims
-
-        # ax['A'].plot(t_test, X[:, dim0], "o", c="royalblue", label=f"$x_{{{dim0}}}$ (GT)")
-        # ax['A'].plot(t_test, X_hat[e, :, dim0], c="deepskyblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
-
-        # ax['A'].plot(t_test, X[:, dim1], "x", c="purple", label=f"$x_{{{dim1}}}$ (GT)")
-        # ax['A'].plot(t_test, X_hat[e, :, dim1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
-
-        # ax['A'].set_xlabel("Time")
-        # ax['A'].set_ylabel("State")
-        # ax['A'].set_title("Trajectories")
-        # ax['A'].legend()
-
-        # ax['B'].plot(X[:, dim0], X[:, dim1], ".", c="teal", label="GT")
-        # ax['B'].plot(X_hat[e, :, dim0], X_hat[e, :, dim1], c="turquoise", label="NCF")
-        # ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
-        # ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
-        # ax['B'].set_title("Phase space")
-        # ax['B'].legend()
 
         ## Plot in axis C and D. Same as above, but the mean and std across X_hat's first dimension
         X_hat_mean = X_hat.mean(axis=0)
         X_hat_std = std_scale*X_hat.std(axis=0)
 
-        ax['C'].plot(t_test, X[:, dim0], "o", c="royalblue", label=f"$x_{{{dim0}}}$ (GT)")
-        ax['C'].plot(t_test, X_hat_mean[:, dim0], c="deepskyblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
-        ax['C'].fill_between(t_test, X_hat_mean[:, dim0]-X_hat_std[:, dim0], X_hat_mean[:, dim0]+X_hat_std[:, dim0], color="deepskyblue", alpha=0.2)
+        ax['A'].plot(t_test, X[:, dim0], "o", c="royalblue", label=f"$x_{{{dim0}}}$ (GT)")
+        ax['A'].plot(t_test_ext, X_hat_mean[:, dim0], c="deepskyblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
+        ax['A'].fill_between(t_test_ext, X_hat_mean[:, dim0]-X_hat_std[:, dim0], X_hat_mean[:, dim0]+X_hat_std[:, dim0], color="deepskyblue", alpha=0.2)
 
-        ## Print all trajectories in X_hat for dim0 with alpha=0.2
-        # for e_ in range(X_hat.shape[0]):
-        #     ax['C'].plot(t_test, X_hat[e_, :, dim0], c="deepskyblue", alpha=0.2)
+        ax['A'].plot(t_test, X[:, dim1], "x", c="purple", label=f"$x_{{{dim1}}}$ (GT)")
+        ax['A'].plot(t_test_ext, X_hat_mean[:, dim1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
+        ax['A'].fill_between(t_test_ext, X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="violet", alpha=0.2)
 
+        ## If forecasting, the put a vertical line to show when the forecast starts
+        if forecast == True:
+            ax['A'].axvline(x=t_eval[-1], color='crimson', linestyle='--', label="Forecast Start")
 
-        ax['C'].plot(t_test, X[:, dim1], "x", c="purple", label=f"$x_{{{dim1}}}$ (GT)")
-        ax['C'].plot(t_test, X_hat_mean[:, dim1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
-        ax['C'].fill_between(t_test, X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="violet", alpha=0.2)
+        ax['A'].set_xlabel("Time")
+        ax['A'].set_ylabel("State")
+        ax['A'].set_title("Trajectories with UQ")
+        ax['A'].legend()
 
-        ax['C'].set_xlabel("Time")
-        ax['C'].set_ylabel("State")
-        ax['C'].set_title("Trajectories with UQ")
-        ax['C'].legend()
+        ax['B'].plot(X[:, dim0], X[:, dim1], ".", c="teal", label="GT")
+        ax['B'].plot(X_hat_mean[:, dim0], X_hat_mean[:, dim1], c="turquoise", label="NCF")
+        ax['B'].fill_between(X_hat_mean[:, dim0], X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="turquoise", alpha=0.2)
 
-        ax['D'].plot(X[:, dim0], X[:, dim1], ".", c="teal", label="GT")
-        ax['D'].plot(X_hat_mean[:, dim0], X_hat_mean[:, dim1], c="turquoise", label="NCF")
-        ax['D'].fill_between(X_hat_mean[:, dim0], X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="turquoise", alpha=0.2)
+        ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
+        ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
+        ax['B'].set_title("Phase space with UQ")
+        ax['B'].legend()
 
-        ax['D'].set_xlabel(f"$x_{{{dim0}}}$")
-        ax['D'].set_ylabel(f"$x_{{{dim1}}}$")
-        ax['D'].set_title("Phase space with UQ")
-        ax['D'].legend()
-
-        plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
+        if title:
+            plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
 
         plt.tight_layout()
         # plt.show();
         plt.draw();
 
         if save_path:
-            plt.savefig(save_path, dpi=100, bbox_inches='tight')
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
             print("Testing finished. Figure saved in:", save_path);
 
 
