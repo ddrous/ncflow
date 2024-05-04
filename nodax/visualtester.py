@@ -344,7 +344,7 @@ class VisualTester:
 
 
 
-    def visualizeUQ(self, data_loader, e=None, traj=None, dims=(0,1), context_dims=(0,1), int_cutoff=1.0, save_path=False, key=None):
+    def visualizeUQ(self, data_loader, e=None, traj=None, dims=(0,1), std_scale=1e2, int_cutoff=1.0, save_path=False, verbose=True, key=None):
         """ Visualise the results of the neural ODE model with epistemic uncertainty quantification """
 
         # assert data_loader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
@@ -358,15 +358,16 @@ class VisualTester:
         X = data_loader.dataset[e, traj:traj+1, :test_length, :]
         t_test = t_eval[:test_length]
 
-        if data_loader.adaptation == False:
-            print("==  Begining in-domain visualisation with UQ... ==")
-        else:
-            print("==  Begining out-of-distribution visualisation with UQ ... ==")
-        print("    Environment id:", e)
-        print("    Trajectory id:", traj)
-        print("    Visualized dimensions:", dims)
-        print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
-        print("    Length of the testing trajectories:", test_length)
+        if verbose == True:
+            if data_loader.adaptation == False:
+                print("==  Begining in-domain visualisation with UQ... ==")
+            else:
+                print("==  Begining out-of-distribution visualisation with UQ ... ==")
+            print("    Environment id:", e)
+            print("    Trajectory id:", traj)
+            print("    Visualized dimensions:", dims)
+            print("    Final length of the training trajectories:", self.trainer.dataloader.int_cutoff)
+            print("    Length of the testing trajectories:", test_length)
 
         contexts = self.trainer.learner.contexts.params
         if data_loader.adaptation == True:
@@ -383,41 +384,60 @@ class VisualTester:
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
-        fig, ax = plt.subplot_mosaic('AB;CD', figsize=(6*2, 3.5*2))
+        # fig, ax = plt.subplot_mosaic('AB;CD', figsize=(6*2, 3.5*2))
+        fig, ax = plt.subplot_mosaic('CD', figsize=(6*2, 3.5*1))
 
         mks = 2
         dim0, dim1 = dims
 
-        ax['A'].plot(t_test, X[:, 0], "o", c="royalblue", label=f"$x_{{{dim0}}}$ (GT)")
-        ax['A'].plot(t_test, X_hat[:, 0], c="deepskyblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
+        # ax['A'].plot(t_test, X[:, dim0], "o", c="royalblue", label=f"$x_{{{dim0}}}$ (GT)")
+        # ax['A'].plot(t_test, X_hat[e, :, dim0], c="deepskyblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
 
-        ax['A'].plot(t_test, X[:, 1], "x", c="purple", label=f"$x_{{{dim1}}}$ (GT)")
-        ax['A'].plot(t_test, X_hat[:, 1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
+        # ax['A'].plot(t_test, X[:, dim1], "x", c="purple", label=f"$x_{{{dim1}}}$ (GT)")
+        # ax['A'].plot(t_test, X_hat[e, :, dim1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
 
-        ax['A'].set_xlabel("Time")
-        ax['A'].set_ylabel("State")
-        ax['A'].set_title("Trajectories")
-        ax['A'].legend()
+        # ax['A'].set_xlabel("Time")
+        # ax['A'].set_ylabel("State")
+        # ax['A'].set_title("Trajectories")
+        # ax['A'].legend()
 
-        ax['B'].plot(X[:, 0], X[:, 1], ".", c="teal", label="GT")
-        ax['B'].plot(X_hat[:, 0], X_hat[:, 1], c="turquoise", label="NCF")
-        ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
-        ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
-        ax['B'].set_title("Phase space")
-        ax['B'].legend()
+        # ax['B'].plot(X[:, dim0], X[:, dim1], ".", c="teal", label="GT")
+        # ax['B'].plot(X_hat[e, :, dim0], X_hat[e, :, dim1], c="turquoise", label="NCF")
+        # ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
+        # ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
+        # ax['B'].set_title("Phase space")
+        # ax['B'].legend()
+
+        ## Plot in axis C and D. Same as above, but the mean and std across X_hat's first dimension
+        X_hat_mean = X_hat.mean(axis=0)
+        X_hat_std = std_scale*X_hat.std(axis=0)
+
+        ax['C'].plot(t_test, X[:, dim0], "o", c="royalblue", label=f"$x_{{{dim0}}}$ (GT)")
+        ax['C'].plot(t_test, X_hat_mean[:, dim0], c="deepskyblue", label=f"$\\hat{{x}}_{{{dim0}}}$ (NCF)", markersize=mks)
+        ax['C'].fill_between(t_test, X_hat_mean[:, dim0]-X_hat_std[:, dim0], X_hat_mean[:, dim0]+X_hat_std[:, dim0], color="deepskyblue", alpha=0.2)
+
+        ## Print all trajectories in X_hat for dim0 with alpha=0.2
+        # for e_ in range(X_hat.shape[0]):
+        #     ax['C'].plot(t_test, X_hat[e_, :, dim0], c="deepskyblue", alpha=0.2)
 
 
+        ax['C'].plot(t_test, X[:, dim1], "x", c="purple", label=f"$x_{{{dim1}}}$ (GT)")
+        ax['C'].plot(t_test, X_hat_mean[:, dim1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
+        ax['C'].fill_between(t_test, X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="violet", alpha=0.2)
 
+        ax['C'].set_xlabel("Time")
+        ax['C'].set_ylabel("State")
+        ax['C'].set_title("Trajectories with UQ")
+        ax['C'].legend()
 
+        ax['D'].plot(X[:, dim0], X[:, dim1], ".", c="teal", label="GT")
+        ax['D'].plot(X_hat_mean[:, dim0], X_hat_mean[:, dim1], c="turquoise", label="NCF")
+        ax['D'].fill_between(X_hat_mean[:, dim0], X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="turquoise", alpha=0.2)
 
-
-
-
-
-
-
-
-
+        ax['D'].set_xlabel(f"$x_{{{dim0}}}$")
+        ax['D'].set_ylabel(f"$x_{{{dim1}}}$")
+        ax['D'].set_title("Phase space with UQ")
+        ax['D'].legend()
 
         plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
 

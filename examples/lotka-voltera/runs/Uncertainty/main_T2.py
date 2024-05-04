@@ -353,7 +353,8 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 #%%
 
 ## Visualise with Uncertainty
-visualtester.visualizeUQ(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
+savefigdir_uq = run_folder+"results_in_domain_uq.png"
+visualtester.visualizeUQ(test_dataloader, std_scale=1e2, int_cutoff=1.0, save_path=savefigdir_uq);
 
 
 
@@ -405,6 +406,9 @@ if adapt_test:
     # contexts = np.append(contexts, trainer.learner.contexts.params)
 
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+
+    ## Visualise with Uncertainty
+    visualtester.visualizeUQ(test_dataloader, std_scale=1e2, int_cutoff=1.0, verbose=False, save_path=adapt_folder+"results_ood_uq.png");
 
 
 
