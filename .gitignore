@@ -78,6 +78,7 @@ venv/*
 !examples/lotka-voltera/runs/09032024-155347
 
 !examples/lotka-voltera/runs/Uncertainty
+!examples/lotka-voltera/runs/ContextSizeExp
 
 !examples/lotka-voltera/runs/MseSequentialExp
 
