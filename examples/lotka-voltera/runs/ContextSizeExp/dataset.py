@@ -30,7 +30,7 @@ else:
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
 	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
 	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=2026, required=False)
-	parser.add_argument('--verbose',type=int, help='Whether to print details or not ?', default=1, required=False)
+	parser.add_argument('--verbose',type=int, help='Whether to print details or not ?', default=0, required=False)
 
 	args = parser.parse_args()
 

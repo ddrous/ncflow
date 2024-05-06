@@ -4,6 +4,8 @@
 from nodax import *
 
 
+print()
+print("========= STARTING =========")
 print("Working with a context size of 2^{} = {}".format(log_ctx_size, 2**log_ctx_size))
 
 #%%
@@ -66,7 +68,7 @@ if train == True:
     os.system(f"cp dataset.py {run_folder}")
 
     # Save the nodax module files as well
-    os.system(f"cp -r ../../nodax {run_folder}")
+    os.system(f"cp -r ../../../../nodax {run_folder}")
     print("Completed copied scripts ")
 
 
