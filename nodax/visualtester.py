@@ -390,7 +390,8 @@ class VisualTester:
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
-        fig, ax = plt.subplot_mosaic('AB', figsize=(6*2, 4*1))
+        # fig, ax = plt.subplot_mosaic('AB', figsize=(6*2, 4*1))
+        fig, ax = plt.subplot_mosaic('A;B', figsize=(6*1, 4*2))
 
         mks = 2
         dim0, dim1 = dims
@@ -413,7 +414,8 @@ class VisualTester:
 
         ax['A'].set_xlabel("Time")
         ax['A'].set_ylabel("State")
-        ax['A'].set_title("Trajectories with UQ")
+        # ax['A'].set_title("Trajectories with UQ")
+        ax['A'].set_title("Trajectories")
         ax['A'].legend()
 
         ax['B'].plot(X[:, dim0], X[:, dim1], ".", c="teal", label="GT")
@@ -422,7 +424,8 @@ class VisualTester:
 
         ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
         ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
-        ax['B'].set_title("Phase space with UQ")
+        # ax['B'].set_title("Phase space with UQ")
+        ax['B'].set_title("Phase space")
         ax['B'].legend()
 
         if title:
