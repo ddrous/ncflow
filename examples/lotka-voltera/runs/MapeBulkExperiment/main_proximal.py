@@ -50,7 +50,7 @@ early_stopping_patience = nb_outer_steps_max//10       ## Number of outer steps 
 
 ## Adaptation hyperparameters ##
 adapt_test = True
-adapt_restore = False
+adapt_restore = True
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
@@ -324,8 +324,10 @@ savefigdir = run_folder+"results_in_domain.png"
 
 #%%
 
+# if adapt_test and not adapt_restore:
+#     os.system(f'python dataset.py --split=adapt_huge_test --savepath="{adapt_folder}" --seed="{seed*3}"');
 
-
+#%%
 
 
 
@@ -409,7 +411,9 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 
 
-# #%%
+#%%
+
+adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data_test.npz", adaptation=True, data_id="170846", key=seed)
 
 # def mape(y, y_hat):
 #     norm_traget = jnp.abs(y)
@@ -417,12 +421,17 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 #     return jnp.mean(norm_diff/norm_traget)*100
 
 # ood_crit_mape, odd_crit_all_mape = visualtester.test(adapt_dataloader, criterion=mape)
-# ## Save ood_crit all to a file
-# np.save("./ood_crit_all_mse.npy", ood_crit_all)
+ood_crit, ood_crit_all = visualtester.test(adapt_dataloader, int_cutoff=1.0, criterion=None)
+## Save ood_crit all to a file
+np.save("./ood_crit_all_mse.npy", ood_crit_all)
 # np.save("./ood_crit_all_mape.npy", odd_crit_all_mape)
 
-# print("Min and Max of the MAPES are:", np.min(odd_crit_all_mape), np.max(odd_crit_all_mape))
+print("Min and Max of the MSEs are:", np.min(ood_crit_all), np.max(ood_crit_all))
+
+os.system(f'pwd')
 
 
 #%%
 
+dat = np.load("./ood_crit_all_mse.npy")
+print("reprint min and max of the MSEs are:", np.min(dat), np.max(dat))

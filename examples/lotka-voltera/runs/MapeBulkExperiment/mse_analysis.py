@@ -7,7 +7,7 @@ from scipy.interpolate import griddata
 
 
 ## Load data from mape_scores.csv
-mses = np.load('ood_crit_all_mse.npy')
+mses = np.load("./ood_crit_all_mse.npy")
 mses
 
 mapes = np.load('ood_crit_all_mape.npy')
@@ -16,6 +16,8 @@ mapes
 coords = [np.array([b, d]) for b in np.linspace(0.25, 1.25, 51) for d in np.linspace(0.25, 1.25, 51)]
 coords = np.stack(coords, axis=0)
 
+
+print("Min and Max MSE: ", mses.min(), mses.max())
 
 #%%
 
@@ -51,7 +53,7 @@ fig, ax = plt.subplots(figsize=(14, 12))
 # ax.contour(xx, yy, zz, levels=[0.1,2], cmap='grey')
 # c = ax.contourf(xx, yy, zz, levels=500, cmap='coolwarm')
 # c = ax.contourf(xx, yy, zz, levels=50, cmap='coolwarm', norm="linear", extend='both', vmin=0, vmax=5)
-c = ax.contourf(xx, yy, zz, levels=500, cmap='coolwarm', norm="linear", extend='both')
+c = ax.contourf(xx, yy, zz, levels=500, cmap='nipy_spectral', norm="linear", extend='both')
 # c = ax.contourf(xx, yy, zz, levels=500, cmap='coolwarm', vmin=0, vmax=1)
 
 # ## Set colobar ticks labels
@@ -75,7 +77,7 @@ print(cbar.ax.get_yticks())
 # cbar.set_ticklabels([str(t) for t in mylist])
 
 ## Set colorbar ticks with powers of 10
-mylist = [-6.5, -6, -5.5, -5, -4, -3]
+mylist = [-6, -5, -4, -3]
 cbar.set_ticks(mylist)
 # cbar.set_ticklabels([str(t) for t in cbar.ax.get_yticks()])
 cbar.set_ticklabels([f"{10**t:.0e}" for t in mylist])
@@ -158,26 +160,26 @@ fig.savefig('mse_contourf.pdf', dpi=300, bbox_inches='tight')
 
 
 #%%
-## Do the same thing as above without interpolating
-fig, ax = plt.subplots()
-c = ax.scatter(x, y, c=z, cmap='coolwarm', s=50)
-plt.colorbar(c)
+# ## Do the same thing as above without interpolating
+# fig, ax = plt.subplots()
+# c = ax.scatter(x, y, c=z, cmap='coolwarm', s=50)
+# plt.colorbar(c)
 
-# cbar = fig.colorbar(mappable=c, ax=ax)
-# cbar.set_ticks([t for t in cbar.ax.get_yticks()])
-# cbar.set_ticklabels([str(np.exp(t))[:2] for t in cbar.ax.get_yticks()])
+# # cbar = fig.colorbar(mappable=c, ax=ax)
+# # cbar.set_ticks([t for t in cbar.ax.get_yticks()])
+# # cbar.set_ticklabels([str(np.exp(t))[:2] for t in cbar.ax.get_yticks()])
 
-plt.show()
+# plt.show()
 
 
 
-#%%
-## Plot using heatmap
-fig, ax = plt.subplots()
-ax.contour(xx, yy, zz, levels=[0.1, 0.3, 2.15], cmap='grey', alpha=0.25)
-c = ax.imshow(zz, cmap='coolwarm', extent=[x.min(), x.max(), y.min(), y.max()], origin='lower')
-plt.colorbar(c)
-plt.show()
+# #%%
+# ## Plot using heatmap
+# fig, ax = plt.subplots()
+# ax.contour(xx, yy, zz, levels=[0.1, 0.3, 2.15], cmap='grey', alpha=0.25)
+# c = ax.imshow(zz, cmap='coolwarm', extent=[x.min(), x.max(), y.min(), y.max()], origin='lower')
+# plt.colorbar(c)
+# plt.show()
 
 # %%
 

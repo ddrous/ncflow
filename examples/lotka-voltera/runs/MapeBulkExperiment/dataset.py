@@ -36,7 +36,7 @@ else:
 
 
 split = args.split
-assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge'"
+assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge", "adapt_huge_test"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge', 'adapt_huge_test'"
 
 savepath = args.savepath
 seed = args.seed
@@ -127,7 +127,7 @@ elif split == "adapt" or split == "adapt_test":
       {"alpha": 0.5, "beta": 0.625, "gamma": 0.5, "delta": 0.625},
       {"alpha": 0.5, "beta": 1.125, "gamma": 0.5, "delta": 1.125},
   ]
-elif split == "adapt_huge":
+elif split == "adapt_huge" or split == "adapt_huge_test":
   environments = [
       {"alpha": 0.5, "beta": b, "gamma": 0.5, "delta": d} for b in np.linspace(0.25, 1.25, 25) for d in np.linspace(0.25, 1.25, 25)]
 
@@ -141,8 +141,8 @@ elif split == "adapt_huge":
 
 if split == "train":
   n_traj_per_env = 4     ## training
-elif split == "test":
-  n_traj_per_env = 32  or split == "adapt_test"     ## testing
+elif split == "test" or split == "adapt_test" or split == "adapt_huge_test":
+  n_traj_per_env = 32      ## testing
 elif split == "adapt" or split == "adapt_huge":
   n_traj_per_env = 1     ## adaptation
 
@@ -161,7 +161,7 @@ max_seed = np.iinfo(np.int32).max
 for j in range(n_traj_per_env):
 
     # Initial conditions (prey and predator concentrations)
-    np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
+    np.random.seed(j if not split in ["test", "adapt_huge_test"] else max_seed - j)
     initial_state = np.random.uniform(size=(2,)) + 1.
 
     for i, selected_params in enumerate(environments):
@@ -196,6 +196,8 @@ elif split == "adapt_test":
   filename = savepath+'adapt_test_data.npz'
 elif split == "adapt_huge":
   filename = savepath+'adapt_huge_data.npz'
+elif split == "adapt_huge_test":
+  filename = savepath+'adapt_huge_data_test.npz'
 
 np.savez(filename, t=t_eval, X=data)
 
