@@ -519,7 +519,7 @@ class Trainer:
         wall_time = time.time() - start_time
         time_in_hmsecs = seconds_to_hours(wall_time)
         print("\nTotal gradient descent adaptation time: %d hours %d mins %d secs" %time_in_hmsecs)
-        print("Environment weights at the end of the adaptation:", weights)
+        # print("Environment weights at the end of the adaptation:", weights)
 
         self.losses_adapt.append(jnp.vstack(losses))
         self.nb_steps_adapt.append(jnp.array(nb_steps))

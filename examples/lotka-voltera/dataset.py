@@ -141,9 +141,9 @@ elif split == "adapt_huge":
 
 if split == "train":
   n_traj_per_env = 4     ## training
-elif split == "test" or split == "adapt_test" or split == "adapt_huge":
+elif split == "test" or split == "adapt_test":
   n_traj_per_env = 32     ## testing
-elif split == "adapt":
+elif split == "adapt" or split == "adapt_huge":
   n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.5)
