@@ -1,0 +1,361 @@
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/05032024-174904/
+ Seed: 2026
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/05032024-174904/
+ Seed: 4052
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Run folder created successfuly: ./runs/05032024-174904/
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 174918
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: You did not provide a dataloader id. A new one has been generated: 174919
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+Total number of parameters in the model: 399300 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+
+=== Beginning training ... ===
+    Number of examples in a batch: 4
+    Number of train steps per epoch: 1
+    Number of training epochs: 24000
+    Total number of training steps: 24000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (8, 4, 189, 2) (189,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (8, 4, 189, 2) (189,)
+    Epoch:     0      LossTrajs: 10.82221317     ContextsNorm: 0.00000000     ValIndCrit: 10.18377590
+    Epoch:     1      LossTrajs: 10.23117447     ContextsNorm: 0.00000100     ValIndCrit: 9.63715553
+    Epoch:     2      LossTrajs: 9.69301128     ContextsNorm: 0.00000372     ValIndCrit: 9.11781406
+    Epoch:     3      LossTrajs: 9.18297195     ContextsNorm: 0.00000815     ValIndCrit: 8.63419342
+    Epoch:   100      LossTrajs: 7.58637238     ContextsNorm: 0.00024212     ValIndCrit: 7.52185059
+    Epoch:   200      LossTrajs: 7.53166771     ContextsNorm: 0.00029184     ValIndCrit: 7.45564556
+    Epoch:   300      LossTrajs: 7.44900084     ContextsNorm: 0.00032724     ValIndCrit: 7.37447929
+    Epoch:   400      LossTrajs: 5.21674156     ContextsNorm: 0.00053516     ValIndCrit: 4.59762955
+    Epoch:   500      LossTrajs: 1.06211066     ContextsNorm: 0.00073942     ValIndCrit: 0.70977378
+    Epoch:   600      LossTrajs: 0.53455633     ContextsNorm: 0.00078311     ValIndCrit: 1.07439351
+    Epoch:   700      LossTrajs: 0.30241343     ContextsNorm: 0.00078770     ValIndCrit: 0.44997144
+    Epoch:   800      LossTrajs: 0.29440138     ContextsNorm: 0.00081269     ValIndCrit: 0.39904901
+    Epoch:   900      LossTrajs: 0.26303715     ContextsNorm: 0.00081699     ValIndCrit: 0.37916350
+    Epoch:  1000      LossTrajs: 0.34981072     ContextsNorm: 0.00084868     ValIndCrit: 0.38487411
+    Epoch:  1100      LossTrajs: 0.25961232     ContextsNorm: 0.00087154     ValIndCrit: 0.53059810
+    Epoch:  1200      LossTrajs: 0.20140186     ContextsNorm: 0.00089593     ValIndCrit: 0.29998136
+    Epoch:  1300      LossTrajs: 0.18960005     ContextsNorm: 0.00095259     ValIndCrit: 0.32887483
+    Epoch:  1400      LossTrajs: 0.20050259     ContextsNorm: 0.00095441     ValIndCrit: 0.30591702
+    Epoch:  1500      LossTrajs: 0.24212687     ContextsNorm: 0.00100984     ValIndCrit: 0.29146302
+    Epoch:  1600      LossTrajs: 0.43400329     ContextsNorm: 0.00105063     ValIndCrit: 0.33044732
+    Epoch:  1700      LossTrajs: 0.14791767     ContextsNorm: 0.00107951     ValIndCrit: 0.28335035
+    Epoch:  1800      LossTrajs: 0.61920887     ContextsNorm: 0.00113502     ValIndCrit: 0.50084817
+    Epoch:  1900      LossTrajs: 0.12258187     ContextsNorm: 0.00120284     ValIndCrit: 0.27029070
+    Epoch:  2000      LossTrajs: 0.11693151     ContextsNorm: 0.00119415     ValIndCrit: 0.24654241
+    Epoch:  2100      LossTrajs: 0.98543239     ContextsNorm: 0.00113714     ValIndCrit: 0.32125896
+    Epoch:  2200      LossTrajs: 0.10516745     ContextsNorm: 0.00125326     ValIndCrit: 0.26248217
+    Epoch:  2300      LossTrajs: 0.09378159     ContextsNorm: 0.00130809     ValIndCrit: 0.26993564
+    Epoch:  2400      LossTrajs: 0.15594698     ContextsNorm: 0.00133913     ValIndCrit: 0.32304305
+    Epoch:  2500      LossTrajs: 0.11583340     ContextsNorm: 0.00139100     ValIndCrit: 0.25725237
+    Epoch:  2600      LossTrajs: 0.09664080     ContextsNorm: 0.00141683     ValIndCrit: 0.26091409
+    Epoch:  2700      LossTrajs: 0.09479471     ContextsNorm: 0.00141241     ValIndCrit: 0.25226066
+    Epoch:  2800      LossTrajs: 0.11036392     ContextsNorm: 0.00144603     ValIndCrit: 0.25613731
+    Epoch:  2900      LossTrajs: 0.09434865     ContextsNorm: 0.00151674     ValIndCrit: 0.26451057
+    Epoch:  3000      LossTrajs: 0.24918199     ContextsNorm: 0.00145811     ValIndCrit: 0.26122496
+    Epoch:  3100      LossTrajs: 0.12230101     ContextsNorm: 0.00145951     ValIndCrit: 0.24478121
+    Epoch:  3200      LossTrajs: 0.09773444     ContextsNorm: 0.00144383     ValIndCrit: 0.26830772
+    Epoch:  3300      LossTrajs: 0.15617199     ContextsNorm: 0.00147283     ValIndCrit: 0.26384345
+    Epoch:  3400      LossTrajs: 0.10441246     ContextsNorm: 0.00150012     ValIndCrit: 0.23090294
+    Epoch:  3500      LossTrajs: 0.07173547     ContextsNorm: 0.00154036     ValIndCrit: 0.24156988
+    Epoch:  3600      LossTrajs: 0.07637146     ContextsNorm: 0.00153323     ValIndCrit: 0.23032007
+    Epoch:  3700      LossTrajs: 0.20952782     ContextsNorm: 0.00154407     ValIndCrit: 0.24092476
+    Epoch:  3800      LossTrajs: 0.10452074     ContextsNorm: 0.00159490     ValIndCrit: 0.23450692
+    Epoch:  3900      LossTrajs: 0.26214305     ContextsNorm: 0.00161157     ValIndCrit: 0.24274415
+    Epoch:  4000      LossTrajs: 0.56791830     ContextsNorm: 0.00162737     ValIndCrit: 0.48133644
+    Epoch:  4100      LossTrajs: 0.07670160     ContextsNorm: 0.00166240     ValIndCrit: 0.27478504
+    Epoch:  4200      LossTrajs: 0.06035300     ContextsNorm: 0.00175809     ValIndCrit: 0.26109704
+    Epoch:  4300      LossTrajs: 0.07476333     ContextsNorm: 0.00181879     ValIndCrit: 0.24275614
+    Epoch:  4400      LossTrajs: 0.08294371     ContextsNorm: 0.00173736     ValIndCrit: 0.26199520
+    Epoch:  4500      LossTrajs: 0.07261667     ContextsNorm: 0.00180234     ValIndCrit: 0.25328204
+    Epoch:  4600      LossTrajs: 0.05419746     ContextsNorm: 0.00180760     ValIndCrit: 0.25945294
+    Epoch:  4700      LossTrajs: 0.19237053     ContextsNorm: 0.00184537     ValIndCrit: 0.26823193
+    Epoch:  4800      LossTrajs: 0.04398391     ContextsNorm: 0.00191262     ValIndCrit: 0.27713615
+    Epoch:  4900      LossTrajs: 0.14123133     ContextsNorm: 0.00199376     ValIndCrit: 0.40649325
+    Epoch:  5000      LossTrajs: 0.07608506     ContextsNorm: 0.00209915     ValIndCrit: 0.43947607
+    Epoch:  5100      LossTrajs: 0.06885448     ContextsNorm: 0.00218174     ValIndCrit: 0.28265175
+    Epoch:  5200      LossTrajs: 0.03869856     ContextsNorm: 0.00222198     ValIndCrit: 0.27232474
+    Epoch:  5300      LossTrajs: 0.08201167     ContextsNorm: 0.00226510     ValIndCrit: 0.40107372
+    Epoch:  5400      LossTrajs: 0.06640773     ContextsNorm: 0.00239840     ValIndCrit: 0.21518770
+    Epoch:  5500      LossTrajs: 0.04115459     ContextsNorm: 0.00249791     ValIndCrit: 0.27764812
+    Epoch:  5600      LossTrajs: 0.04364615     ContextsNorm: 0.00252058     ValIndCrit: 0.29984331
+    Epoch:  5700      LossTrajs: 0.06069277     ContextsNorm: 0.00260274     ValIndCrit: 0.20409064
+    Epoch:  5800      LossTrajs: 0.04271331     ContextsNorm: 0.00280719     ValIndCrit: 0.25126019
+    Epoch:  5900      LossTrajs: 0.03343643     ContextsNorm: 0.00286770     ValIndCrit: 0.32713690
+    Epoch:  6000      LossTrajs: 0.04603572     ContextsNorm: 0.00292223     ValIndCrit: 0.34531295
+    Epoch:  6100      LossTrajs: 0.19332477     ContextsNorm: 0.00303271     ValIndCrit: 0.41448477
+    Epoch:  6200      LossTrajs: 0.18504301     ContextsNorm: 0.00336115     ValIndCrit: 0.21712396
+    Epoch:  6300      LossTrajs: 0.04869036     ContextsNorm: 0.00342498     ValIndCrit: 0.20198283
+    Epoch:  6400      LossTrajs: 0.03776418     ContextsNorm: 0.00348844     ValIndCrit: 0.28146875
+    Epoch:  6500      LossTrajs: 0.04307652     ContextsNorm: 0.00357868     ValIndCrit: 0.29979712
+    Epoch:  6600      LossTrajs: 0.06456390     ContextsNorm: 0.00362106     ValIndCrit: 0.34755841
+    Epoch:  6700      LossTrajs: 0.02770815     ContextsNorm: 0.00366742     ValIndCrit: 0.35126945
+    Epoch:  6800      LossTrajs: 0.04043395     ContextsNorm: 0.00370190     ValIndCrit: 0.32748237
+    Epoch:  6900      LossTrajs: 0.14157209     ContextsNorm: 0.00381128     ValIndCrit: 0.31230217
+    Epoch:  7000      LossTrajs: 0.03220563     ContextsNorm: 0.00390179     ValIndCrit: 0.32761207
+    Epoch:  7100      LossTrajs: 0.20663203     ContextsNorm: 0.00381178     ValIndCrit: 0.24461128
+    Epoch:  7200      LossTrajs: 0.02853524     ContextsNorm: 0.00398628     ValIndCrit: 0.31032416
+    Epoch:  7300      LossTrajs: 0.32778698     ContextsNorm: 0.00415983     ValIndCrit: 0.34851101
+    Epoch:  7400      LossTrajs: 0.09179032     ContextsNorm: 0.00436259     ValIndCrit: 0.27316022
+    Epoch:  7500      LossTrajs: 0.09443888     ContextsNorm: 0.00443069     ValIndCrit: 0.38081482
+    Epoch:  7600      LossTrajs: 0.08322918     ContextsNorm: 0.00459491     ValIndCrit: 0.24729639
+    Epoch:  7700      LossTrajs: 0.02754416     ContextsNorm: 0.00477269     ValIndCrit: 0.35732508
+    Epoch:  7800      LossTrajs: 0.10719286     ContextsNorm: 0.00480946     ValIndCrit: 0.58500081
+    Epoch:  7900      LossTrajs: 0.03239242     ContextsNorm: 0.00490716     ValIndCrit: 0.32511750
+    Epoch:  8000      LossTrajs: 0.42989606     ContextsNorm: 0.00497929     ValIndCrit: 0.56139803
+    Epoch:  8100      LossTrajs: 0.02358296     ContextsNorm: 0.00500203     ValIndCrit: 0.36686015
+    Epoch:  8200      LossTrajs: 0.03059324     ContextsNorm: 0.00501190     ValIndCrit: 0.38939309
+    Epoch:  8300      LossTrajs: 0.02468326     ContextsNorm: 0.00502314     ValIndCrit: 0.39856660
+    Epoch:  8400      LossTrajs: 0.02345268     ContextsNorm: 0.00503172     ValIndCrit: 0.37864166
+    Epoch:  8500      LossTrajs: 0.02273375     ContextsNorm: 0.00503363     ValIndCrit: 0.40507308
+    Epoch:  8600      LossTrajs: 0.02239956     ContextsNorm: 0.00503026     ValIndCrit: 0.41708937
+    Epoch:  8700      LossTrajs: 0.02149841     ContextsNorm: 0.00504792     ValIndCrit: 0.41384616
+    Epoch:  8800      LossTrajs: 0.02209523     ContextsNorm: 0.00505258     ValIndCrit: 0.42717263
+    Epoch:  8900      LossTrajs: 0.02076861     ContextsNorm: 0.00506781     ValIndCrit: 0.41405517
+    Epoch:  9000      LossTrajs: 0.02346076     ContextsNorm: 0.00507577     ValIndCrit: 0.43447143
+    Epoch:  9100      LossTrajs: 0.02026577     ContextsNorm: 0.00508093     ValIndCrit: 0.42160857
+    Epoch:  9200      LossTrajs: 0.02052346     ContextsNorm: 0.00509544     ValIndCrit: 0.40716633
+    Epoch:  9300      LossTrajs: 0.02500060     ContextsNorm: 0.00510450     ValIndCrit: 0.43915761
+    Epoch:  9400      LossTrajs: 0.01909802     ContextsNorm: 0.00511257     ValIndCrit: 0.43792194
+    Epoch:  9500      LossTrajs: 0.02092448     ContextsNorm: 0.00511553     ValIndCrit: 0.43404892
+    Epoch:  9600      LossTrajs: 0.02238423     ContextsNorm: 0.00511595     ValIndCrit: 0.42722040
+    Epoch:  9700      LossTrajs: 0.02312607     ContextsNorm: 0.00515573     ValIndCrit: 0.44222432
+    Epoch:  9800      LossTrajs: 0.01934140     ContextsNorm: 0.00517267     ValIndCrit: 0.44209504
+    Epoch:  9900      LossTrajs: 0.01892591     ContextsNorm: 0.00518926     ValIndCrit: 0.44004726
+    Epoch: 10000      LossTrajs: 0.01898630     ContextsNorm: 0.00519013     ValIndCrit: 0.44876093
+    Epoch: 10100      LossTrajs: 0.02057105     ContextsNorm: 0.00521561     ValIndCrit: 0.41690174
+    Epoch: 10200      LossTrajs: 0.02307971     ContextsNorm: 0.00524251     ValIndCrit: 0.42458010
+    Epoch: 10300      LossTrajs: 0.02009991     ContextsNorm: 0.00527893     ValIndCrit: 0.39802700
+    Epoch: 10400      LossTrajs: 0.02533336     ContextsNorm: 0.00528580     ValIndCrit: 0.45694062
+    Epoch: 10500      LossTrajs: 0.02399924     ContextsNorm: 0.00528537     ValIndCrit: 0.43989381
+    Epoch: 10600      LossTrajs: 0.02651278     ContextsNorm: 0.00529233     ValIndCrit: 0.39738536
+    Epoch: 10700      LossTrajs: 0.02047671     ContextsNorm: 0.00531267     ValIndCrit: 0.40383518
+    Epoch: 10800      LossTrajs: 0.02506677     ContextsNorm: 0.00533710     ValIndCrit: 0.41342592
+    Epoch: 10900      LossTrajs: 0.02356962     ContextsNorm: 0.00529565     ValIndCrit: 0.36396798
+    Epoch: 11000      LossTrajs: 0.02132678     ContextsNorm: 0.00530537     ValIndCrit: 0.39338076
+    Epoch: 11100      LossTrajs: 0.01840553     ContextsNorm: 0.00529500     ValIndCrit: 0.42892045
+    Epoch: 11200      LossTrajs: 0.02027747     ContextsNorm: 0.00531909     ValIndCrit: 0.39440802
+    Epoch: 11300      LossTrajs: 0.02028976     ContextsNorm: 0.00539168     ValIndCrit: 0.40256017
+    Epoch: 11400      LossTrajs: 0.02069788     ContextsNorm: 0.00541815     ValIndCrit: 0.43490157
+    Epoch: 11500      LossTrajs: 0.02527570     ContextsNorm: 0.00545803     ValIndCrit: 0.41299284
+    Epoch: 11600      LossTrajs: 0.02265072     ContextsNorm: 0.00549766     ValIndCrit: 0.40605584
+    Epoch: 11700      LossTrajs: 0.02206023     ContextsNorm: 0.00554688     ValIndCrit: 0.37065095
+    Epoch: 11800      LossTrajs: 0.02144745     ContextsNorm: 0.00551851     ValIndCrit: 0.37137774
+    Epoch: 11900      LossTrajs: 0.02613122     ContextsNorm: 0.00552930     ValIndCrit: 0.38024187
+    Epoch: 12000      LossTrajs: 0.01927417     ContextsNorm: 0.00553571     ValIndCrit: 0.33106411
+    Epoch: 12100      LossTrajs: 0.02719667     ContextsNorm: 0.00557371     ValIndCrit: 0.35551929
+    Epoch: 12200      LossTrajs: 0.01644688     ContextsNorm: 0.00560702     ValIndCrit: 0.41330671
+    Epoch: 12300      LossTrajs: 0.01945589     ContextsNorm: 0.00562759     ValIndCrit: 0.37641013
+    Epoch: 12400      LossTrajs: 0.02174155     ContextsNorm: 0.00564688     ValIndCrit: 0.33880717
+    Epoch: 12500      LossTrajs: 0.01934019     ContextsNorm: 0.00568831     ValIndCrit: 0.39515197
+    Epoch: 12600      LossTrajs: 0.01683708     ContextsNorm: 0.00569821     ValIndCrit: 0.36279044
+    Epoch: 12700      LossTrajs: 0.02310253     ContextsNorm: 0.00569816     ValIndCrit: 0.34221646
+    Epoch: 12800      LossTrajs: 0.01896715     ContextsNorm: 0.00574106     ValIndCrit: 0.38336334
+    Epoch: 12900      LossTrajs: 0.04910017     ContextsNorm: 0.00578589     ValIndCrit: 0.34854537
+    Epoch: 13000      LossTrajs: 0.01773156     ContextsNorm: 0.00582590     ValIndCrit: 0.35882699
+    Epoch: 13100      LossTrajs: 0.02207604     ContextsNorm: 0.00585946     ValIndCrit: 0.34315810
+    Epoch: 13200      LossTrajs: 0.04077117     ContextsNorm: 0.00590640     ValIndCrit: 0.44330162
+    Epoch: 13300      LossTrajs: 0.05330885     ContextsNorm: 0.00592627     ValIndCrit: 0.34302992
+    Epoch: 13400      LossTrajs: 0.01756778     ContextsNorm: 0.00592803     ValIndCrit: 0.35243323
+    Epoch: 13500      LossTrajs: 0.01637878     ContextsNorm: 0.00592696     ValIndCrit: 0.36252862
+    Epoch: 13600      LossTrajs: 0.01720360     ContextsNorm: 0.00593927     ValIndCrit: 0.36479431
+    Epoch: 13700      LossTrajs: 0.02135403     ContextsNorm: 0.00598413     ValIndCrit: 0.31861928
+    Epoch: 13800      LossTrajs: 0.01928835     ContextsNorm: 0.00604805     ValIndCrit: 0.31030717
+    Epoch: 13900      LossTrajs: 0.01761737     ContextsNorm: 0.00603634     ValIndCrit: 0.32031977
+    Epoch: 14000      LossTrajs: 0.01929225     ContextsNorm: 0.00607146     ValIndCrit: 0.38220048
+    Epoch: 14100      LossTrajs: 0.02073313     ContextsNorm: 0.00616413     ValIndCrit: 0.38708320
+    Epoch: 14200      LossTrajs: 0.02487610     ContextsNorm: 0.00622248     ValIndCrit: 0.36404949
+    Epoch: 14300      LossTrajs: 0.16790764     ContextsNorm: 0.00616481     ValIndCrit: 0.33191451
+    Epoch: 14400      LossTrajs: 0.02210148     ContextsNorm: 0.00617149     ValIndCrit: 0.22898680
+    Epoch: 14500      LossTrajs: 0.01807968     ContextsNorm: 0.00619122     ValIndCrit: 0.28987956
+    Epoch: 14600      LossTrajs: 0.02077049     ContextsNorm: 0.00621769     ValIndCrit: 0.33786362
+    Epoch: 14700      LossTrajs: 0.01656491     ContextsNorm: 0.00623569     ValIndCrit: 0.35772184
+    Epoch: 14800      LossTrajs: 0.07733676     ContextsNorm: 0.00628041     ValIndCrit: 0.12286749
+    Epoch: 14900      LossTrajs: 0.02983563     ContextsNorm: 0.00627727     ValIndCrit: 0.11572166
+    Epoch: 15000      LossTrajs: 0.02541949     ContextsNorm: 0.00629803     ValIndCrit: 0.18004484
+    Epoch: 15100      LossTrajs: 0.06163834     ContextsNorm: 0.00634250     ValIndCrit: 0.18966293
+    Epoch: 15200      LossTrajs: 0.01948931     ContextsNorm: 0.00638336     ValIndCrit: 0.24513610
+    Epoch: 15300      LossTrajs: 0.01805224     ContextsNorm: 0.00639662     ValIndCrit: 0.26062208
+    Epoch: 15400      LossTrajs: 0.01835632     ContextsNorm: 0.00640414     ValIndCrit: 0.29582113
+    Epoch: 15500      LossTrajs: 0.02133150     ContextsNorm: 0.00643184     ValIndCrit: 0.28791967
+    Epoch: 15600      LossTrajs: 0.01732135     ContextsNorm: 0.00644922     ValIndCrit: 0.35116127
+    Epoch: 15700      LossTrajs: 0.01705514     ContextsNorm: 0.00647140     ValIndCrit: 0.37140179
+    Epoch: 15800      LossTrajs: 0.03483163     ContextsNorm: 0.00641988     ValIndCrit: 0.12228562
+    Epoch: 15900      LossTrajs: 0.02218118     ContextsNorm: 0.00644378     ValIndCrit: 0.13472927
+    Epoch: 16000      LossTrajs: 0.02026826     ContextsNorm: 0.00646518     ValIndCrit: 0.14492700
+    Epoch: 16100      LossTrajs: 0.01881712     ContextsNorm: 0.00646627     ValIndCrit: 0.15186128
+    Epoch: 16200      LossTrajs: 0.01865609     ContextsNorm: 0.00647436     ValIndCrit: 0.15009369
+    Epoch: 16300      LossTrajs: 0.01808230     ContextsNorm: 0.00647283     ValIndCrit: 0.15533774
+    Epoch: 16400      LossTrajs: 0.01879985     ContextsNorm: 0.00647520     ValIndCrit: 0.15289648
+    Epoch: 16500      LossTrajs: 0.01815178     ContextsNorm: 0.00648476     ValIndCrit: 0.15812565
+    Epoch: 16600      LossTrajs: 0.01670820     ContextsNorm: 0.00649086     ValIndCrit: 0.16205482
+    Epoch: 16700      LossTrajs: 0.01802106     ContextsNorm: 0.00649363     ValIndCrit: 0.17055231
+    Epoch: 16800      LossTrajs: 0.01752507     ContextsNorm: 0.00650183     ValIndCrit: 0.16946507
+    Epoch: 16900      LossTrajs: 0.01652491     ContextsNorm: 0.00650732     ValIndCrit: 0.18017271
+    Epoch: 17000      LossTrajs: 0.01607747     ContextsNorm: 0.00651124     ValIndCrit: 0.18489236
+    Epoch: 17100      LossTrajs: 0.01783921     ContextsNorm: 0.00652072     ValIndCrit: 0.19672984
+    Epoch: 17200      LossTrajs: 0.01855161     ContextsNorm: 0.00652482     ValIndCrit: 0.20644376
+    Epoch: 17300      LossTrajs: 0.01717477     ContextsNorm: 0.00652915     ValIndCrit: 0.21395208
+    Epoch: 17400      LossTrajs: 0.01619446     ContextsNorm: 0.00652797     ValIndCrit: 0.22176538
+    Epoch: 17500      LossTrajs: 0.01831059     ContextsNorm: 0.00653231     ValIndCrit: 0.23877858
+    Epoch: 17600      LossTrajs: 0.01956119     ContextsNorm: 0.00654033     ValIndCrit: 0.23974833
+    Epoch: 17700      LossTrajs: 0.01590609     ContextsNorm: 0.00654669     ValIndCrit: 0.24882539
+    Epoch: 17800      LossTrajs: 0.01472313     ContextsNorm: 0.00655607     ValIndCrit: 0.25532687
+    Epoch: 17900      LossTrajs: 0.01644651     ContextsNorm: 0.00655650     ValIndCrit: 0.27218762
+    Epoch: 18000      LossTrajs: 0.01627145     ContextsNorm: 0.00655948     ValIndCrit: 0.28312981
+    Epoch: 18100      LossTrajs: 0.01763405     ContextsNorm: 0.00656780     ValIndCrit: 0.29463300
+    Epoch: 18200      LossTrajs: 0.01484255     ContextsNorm: 0.00658138     ValIndCrit: 0.29669091
+    Epoch: 18300      LossTrajs: 0.01591330     ContextsNorm: 0.00659487     ValIndCrit: 0.29080057
+    Epoch: 18400      LossTrajs: 0.01469065     ContextsNorm: 0.00659714     ValIndCrit: 0.31318021
+    Epoch: 18500      LossTrajs: 0.14450192     ContextsNorm: 0.00658990     ValIndCrit: 0.40792248
+    Epoch: 18600      LossTrajs: 0.02016658     ContextsNorm: 0.00658570     ValIndCrit: 0.22098258
+    Epoch: 18700      LossTrajs: 0.01964248     ContextsNorm: 0.00659169     ValIndCrit: 0.25462309
+    Epoch: 18800      LossTrajs: 0.01563665     ContextsNorm: 0.00659378     ValIndCrit: 0.26375809
+    Epoch: 18900      LossTrajs: 0.01872238     ContextsNorm: 0.00659558     ValIndCrit: 0.28222707
+    Epoch: 19000      LossTrajs: 0.01539033     ContextsNorm: 0.00660924     ValIndCrit: 0.27908522
+    Epoch: 19100      LossTrajs: 0.01614043     ContextsNorm: 0.00661337     ValIndCrit: 0.30375925
+    Epoch: 19200      LossTrajs: 0.01788636     ContextsNorm: 0.00661852     ValIndCrit: 0.30730656
+    Epoch: 19300      LossTrajs: 0.01604630     ContextsNorm: 0.00662394     ValIndCrit: 0.32430467
+    Epoch: 19400      LossTrajs: 0.01506609     ContextsNorm: 0.00661562     ValIndCrit: 0.32699513
+    Epoch: 19500      LossTrajs: 0.01502644     ContextsNorm: 0.00661669     ValIndCrit: 0.33314180
+    Epoch: 19600      LossTrajs: 0.01513726     ContextsNorm: 0.00662179     ValIndCrit: 0.33751544
+    Epoch: 19700      LossTrajs: 0.01542922     ContextsNorm: 0.00663207     ValIndCrit: 0.34220141
+    Epoch: 19800      LossTrajs: 0.01525639     ContextsNorm: 0.00664627     ValIndCrit: 0.34640735
+    Epoch: 19900      LossTrajs: 0.01455355     ContextsNorm: 0.00664655     ValIndCrit: 0.34681538
+    Epoch: 20000      LossTrajs: 0.01548760     ContextsNorm: 0.00664868     ValIndCrit: 0.35272345
+    Epoch: 20100      LossTrajs: 0.01475029     ContextsNorm: 0.00664716     ValIndCrit: 0.35759464
+    Epoch: 20200      LossTrajs: 0.01551668     ContextsNorm: 0.00665221     ValIndCrit: 0.36182642
+    Epoch: 20300      LossTrajs: 0.01481146     ContextsNorm: 0.00665201     ValIndCrit: 0.35877314
+    Epoch: 20400      LossTrajs: 0.02030598     ContextsNorm: 0.00665584     ValIndCrit: 0.34861311
+    Epoch: 20500      LossTrajs: 0.01558325     ContextsNorm: 0.00666207     ValIndCrit: 0.34881201
+    Epoch: 20600      LossTrajs: 0.01889838     ContextsNorm: 0.00667418     ValIndCrit: 0.36939442
+    Epoch: 20700      LossTrajs: 0.01479496     ContextsNorm: 0.00668724     ValIndCrit: 0.36021429
+    Epoch: 20800      LossTrajs: 0.01498789     ContextsNorm: 0.00669262     ValIndCrit: 0.36260533
+    Epoch: 20900      LossTrajs: 0.01659833     ContextsNorm: 0.00669343     ValIndCrit: 0.36556071
+    Epoch: 21000      LossTrajs: 0.01372137     ContextsNorm: 0.00670246     ValIndCrit: 0.36937553
+    Epoch: 21100      LossTrajs: 0.01502732     ContextsNorm: 0.00669475     ValIndCrit: 0.36939952
+    Epoch: 21200      LossTrajs: 0.01501840     ContextsNorm: 0.00668902     ValIndCrit: 0.36777240
+    Epoch: 21300      LossTrajs: 0.02070936     ContextsNorm: 0.00672414     ValIndCrit: 0.27687880
+    Epoch: 21400      LossTrajs: 0.01754118     ContextsNorm: 0.00671775     ValIndCrit: 0.30639625
+    Epoch: 21500      LossTrajs: 0.01646212     ContextsNorm: 0.00672412     ValIndCrit: 0.32092094
+    Epoch: 21600      LossTrajs: 0.01456207     ContextsNorm: 0.00672643     ValIndCrit: 0.33827981
+    Epoch: 21700      LossTrajs: 0.01469161     ContextsNorm: 0.00672892     ValIndCrit: 0.34545270
+    Epoch: 21800      LossTrajs: 0.01473209     ContextsNorm: 0.00673961     ValIndCrit: 0.35306031
+    Epoch: 21900      LossTrajs: 0.01460778     ContextsNorm: 0.00673793     ValIndCrit: 0.35245439
+    Epoch: 22000      LossTrajs: 0.02427066     ContextsNorm: 0.00674366     ValIndCrit: 0.42181152
+    Epoch: 22100      LossTrajs: 0.01500254     ContextsNorm: 0.00674109     ValIndCrit: 0.34885645
+    Epoch: 22200      LossTrajs: 0.01611230     ContextsNorm: 0.00674315     ValIndCrit: 0.35559800
+    Epoch: 22300      LossTrajs: 0.01575447     ContextsNorm: 0.00674747     ValIndCrit: 0.35301304
+    Epoch: 22400      LossTrajs: 0.01454087     ContextsNorm: 0.00675839     ValIndCrit: 0.36261743
+    Epoch: 22500      LossTrajs: 0.01601607     ContextsNorm: 0.00676268     ValIndCrit: 0.36406213
+    Epoch: 22600      LossTrajs: 0.01451371     ContextsNorm: 0.00676459     ValIndCrit: 0.36233321
+    Epoch: 22700      LossTrajs: 0.01434476     ContextsNorm: 0.00676769     ValIndCrit: 0.37456030
+    Epoch: 22800      LossTrajs: 0.01519437     ContextsNorm: 0.00675754     ValIndCrit: 0.36744291
+    Epoch: 22900      LossTrajs: 0.01396031     ContextsNorm: 0.00675564     ValIndCrit: 0.37419391
+    Epoch: 23000      LossTrajs: 0.01304892     ContextsNorm: 0.00674889     ValIndCrit: 0.38189918
+    Epoch: 23100      LossTrajs: 0.01452384     ContextsNorm: 0.00675023     ValIndCrit: 0.37585565
+    Epoch: 23200      LossTrajs: 0.01380133     ContextsNorm: 0.00675733     ValIndCrit: 0.37511274
+    Epoch: 23300      LossTrajs: 0.01893103     ContextsNorm: 0.00675945     ValIndCrit: 0.37787619
+    Epoch: 23400      LossTrajs: 0.01569829     ContextsNorm: 0.00676418     ValIndCrit: 0.38065332
+    Epoch: 23500      LossTrajs: 0.01547522     ContextsNorm: 0.00676713     ValIndCrit: 0.38155121
+    Epoch: 23600      LossTrajs: 0.01559145     ContextsNorm: 0.00676550     ValIndCrit: 0.37857845
+    Epoch: 23700      LossTrajs: 0.01444487     ContextsNorm: 0.00678736     ValIndCrit: 0.38726667
+    Epoch: 23800      LossTrajs: 0.01521572     ContextsNorm: 0.00679439     ValIndCrit: 0.37576354
+    Epoch: 23900      LossTrajs: 0.01492992     ContextsNorm: 0.00680534     ValIndCrit: 0.37853435
+    Epoch: 23999      LossTrajs: 0.01485007     ContextsNorm: 0.00681641     ValIndCrit: 0.37985569
+
+Total gradient descent training time: 2 hours 1 mins 57 secs
+Environment weights at the end of the training: [0.125 0.125 0.125 0.125 0.125 0.125 0.125 0.125]
+WARNING: You did not provide a dataloader id. A new one has been generated: 195120
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 8
+    Final length of the training trajectories: 189
+    Length of the testing trajectories: 189
+Test Score (In-Domain): 0.3798557
+
+
+############# Inductive Bias Learning for Dynamical Systems #############
+
+Jax version: 0.4.23
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/05032024-174904/adapt/
+ Seed: 6078
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 2
+    Trajectory id: 26
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 189
+    Length of the testing trajectories: 189
+Testing finished. Figure saved in: ./runs/05032024-174904/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+
+=== Beginning adaptation ... ===
+    Number of examples in a batch: 12
+    Number of train steps per epoch: 1
+    Number of training epochs: 24
+    Total number of training steps: 24
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (1, 12, 189, 2) (189,)
+    Epoch:     0     LossContext: 0.79842538
+    Epoch:     1     LossContext: 0.77337259
+    Epoch:     2     LossContext: 0.74282783
+    Epoch:     3     LossContext: 0.70945174
+    Epoch:    23     LossContext: 0.09660217
+
+Total gradient descent adaptation time: 0 hours 0 mins 7 secs
+Environment weights at the end of the adaptation: [1.]
+
+Saving adaptation parameters into ./runs/05032024-174904/adapt/ folder with id 170846 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 8
+    Number of adaptation environments: 1
+    Final length of the training trajectories: 189
+    Length of the testing trajectories: 189
+Test Score (OOD): 0.0902136
+
