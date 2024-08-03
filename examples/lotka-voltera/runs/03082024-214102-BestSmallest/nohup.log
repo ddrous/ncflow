@@ -1,3 +1,5 @@
+cp: 'main_T2_nearest.py' and './main_T2_nearest.py' are the same file
+cp: 'dataset.py' and './dataset.py' are the same file
 
 ############# Neural Context Flow #############
 
@@ -6,7 +8,7 @@ Available devices: [cuda(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: train
- Savepath: ./runs/03082024-214102/
+ Savepath: ./
  Seed: 2026
 
 
@@ -17,7 +19,7 @@ Available devices: [cuda(id=0)]
 Running this script in ipython (Jupyter) session ? False
 === Parsed arguments to generate data ===
  Split: test
- Savepath: ./runs/03082024-214102/
+ Savepath: ./
  Seed: 4052
 
 
@@ -26,10 +28,10 @@ Running this script in ipython (Jupyter) session ? False
 Jax version: 0.4.28
 Available devices: [cuda(id=0)]
 Completed copied scripts 
-WARNING: You did not provide a dataloader id. A new one has been generated: 214120
+WARNING: You did not provide a dataloader id. A new one has been generated: 223909
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
-WARNING: You did not provide a dataloader id. A new one has been generated: 214120
+WARNING: You did not provide a dataloader id. A new one has been generated: 223909
 WARNING: Note that this id used to distuinguish between adaptations to different environments.
 WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
 
@@ -68,19 +70,3 @@ Shapes of elements in a batch: (9, 4, 20, 2) (20,)
         -InnerToleranceCtx:  1.00e-08
         -DiffNode: 6.71e-04
         -DiffCxt:  6.97e-04
-    Outer Step:     2      LossTrajs: 0.22721601     ContextsNorm: 0.01074863     ValIndCrit: 0.24938825
-        Saving best model so far ...
-        -NbInnerStepsNode:   25
-        -NbInnerStepsCxt:   25
-        -InnerToleranceNode: 1.00e-09
-        -InnerToleranceCtx:  1.00e-08
-        -DiffNode: 1.74e-04
-        -DiffCxt:  3.69e-04
-    Outer Step:     3      LossTrajs: 0.15535925     ContextsNorm: 0.01019199     ValIndCrit: 0.16826114
-        Saving best model so far ...
-        -NbInnerStepsNode:   25
-        -NbInnerStepsCxt:   25
-        -InnerToleranceNode: 1.00e-09
-        -InnerToleranceCtx:  1.00e-08
-        -DiffNode: 2.09e-05
-        -DiffCxt:  1.05e-04

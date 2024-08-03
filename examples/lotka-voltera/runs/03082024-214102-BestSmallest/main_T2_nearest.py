@@ -69,9 +69,9 @@ if train == True:
         os.mkdir('./')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    # run_folder = './'
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    os.mkdir(run_folder)
+    run_folder = './'
+    # run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    # os.mkdir(run_folder)
 
     # Save the run and dataset scripts in that folder
     script_name = os.path.basename(__file__)
