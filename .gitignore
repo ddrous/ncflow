@@ -64,6 +64,7 @@ examples/gray-scott/runs/*
 examples/navier-stokes/runs/*
 examples/forced-oscillator/runs/*
 examples/selkov-model/runs/*
+examples/brusselator/runs/*
 
 ## Ingnore all folders named "tmp", recursively
 **/tmp/
@@ -125,3 +126,8 @@ venv/*
 !examples/gray-scott/runs/05042024-183849
 !examples/gray-scott/runs/06042024-210906
 !examples/gray-scott/runs/PlotTrajectories
+
+
+# !examples/brusselator/runs/02082024-100530-Test
+# !examples/brusselator/runs/02082024-181243
+!examples/brusselator/runs/03082024-024220

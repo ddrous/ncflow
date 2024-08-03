@@ -351,6 +351,7 @@ class Trainer:
                     ## Restore the learner at the last evaluation step
                     if out_step == nb_outer_steps_max-1:
                         # print(f"        Restoring model to the best one found during training ...")
+                        self.learner.save_learner(save_path+"../")    ## Save a different final model
                         self.learner.load_learner(save_path)
 
                 else:
