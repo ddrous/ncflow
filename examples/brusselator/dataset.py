@@ -137,8 +137,13 @@ elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   ## Adaptation environments
   # As = [0.25, 0.75, 1.25, 1.75, 2.25]
   # Bs = [0.5, 1.5, 2.5, 4.0, 6.0]
-  As = [0.625, 0.875, 1.125, 1.375]
+
+  # As = [0.625, 0.875, 1.125, 1.375]
+  # Bs = [3.125, 3.375, 3.625, 3.875]
+
+  As = [0.875, 1.125, 1.375]
   Bs = [3.125, 3.375, 3.625, 3.875]
+
   environments = [{"A": A, "B": B, "Du": 1.0, "Dv": 0.1} for A in As for B in Bs]
 
 

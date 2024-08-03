@@ -13,25 +13,25 @@ from nodax import *
 seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
-context_pool_size = 1               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 3               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256//1
 nb_epochs = 10000
 nb_epochs_adapt = 1500
-init_lr = 1e-3
+init_lr = 3e-4
 lr_factor = 0.1
 
 print_error_every = 10
 
 train = True
-run_folder = "./runs/02082024-151058/"      ## Run folder to use when not training
+# run_folder = "./runs/03082024-024220-Toy/"      ## Run folder to use when not training
 reuse_run_folder = False
 
 save_trainer = True
 
 finetune = False
 
-nb_outer_steps_max = 1000
-nb_inner_steps_max = 20
+nb_outer_steps_max = 500
+nb_inner_steps_max = 25
 proximal_beta = 1e1
 inner_tol_node = 1e-16
 inner_tol_ctx = 1e-16
@@ -81,6 +81,10 @@ if not os.path.exists(adapt_folder):
     os.mkdir(adapt_folder)
 
 #%%
+
+# os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
+# os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
+# os.system(f'python dataset.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}"');
 
 if train == True and reuse_run_folder == False:
     # Run the dataset script to generate the data
@@ -223,6 +227,8 @@ class ContextFlowVectorField(eqx.Module):
         else:
             vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
 
+        # return vf(ctx)                                                                  ## TODO disable CSM
+
         gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
         scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
 
@@ -248,8 +254,8 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     # ctx_s = all_ctx_s[ind, :]
 
     ## Select the two closes vectors in all_ctx_s to ctx
-    dists = jnp.linalg.norm(all_ctx_s - ctx, axis=1)
-    ind = jnp.argsort(dists)[1:2]        ## ctx itself, and the closest context         ## TODO run this next.
+    dists = jnp.mean(jnp.abs(all_ctx_s-ctx), axis=1)
+    ind = jnp.argsort(dists)[0:context_pool_size]        ## ctx itself, and the closest context
     ctx_s = all_ctx_s[ind, :]
 
     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_s)
@@ -366,6 +372,7 @@ visualtester = VisualTester(trainer)
 # print(ans.shape)
 
 ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
+print("\nPer-environment IND scores:", ind_crit[1])
 
 if finetune:
     savefigdir = finetunedir+"results_in_domain.png"
@@ -456,11 +463,12 @@ adapt_dataloader_test = DataLoader(adapt_folder+"adapt_data_test.npz", adaptatio
 #                                                 int(nb_epochs_adapt*0.75):1.})
 # sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr,
 #                         boundaries_and_scales={nb_total_epochs//3:0.1, 2*nb_total_epochs//3:1.0})
-sched_ctx_new = 1e-3
+sched_ctx_new = 5e-4
 opt_adapt = optax.adabelief(sched_ctx_new)
 
 if adapt == True:
-    trainer.adapt_sequential(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
+    trainer.adapt_sequential(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every**2, save_path=adapt_folder)
+    # trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every**2, save_path=adapt_folder)
 else:
     print("save_id:", adapt_dataloader.data_id)
 
@@ -472,6 +480,8 @@ ood_crit = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)      ## It's
 
 visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
+
+print("\nPer-environment OOD scores:", ood_crit[1])
 
 
 

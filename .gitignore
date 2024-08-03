@@ -110,6 +110,9 @@ venv/*
 !examples/selkov-model/runs/TrainLossesCompare
 
 !examples/lotka-voltera/runs/SmallContextExperiment
+!examples/lotka-voltera/runs/03082024-142030-BestNearest
+!examples/lotka-voltera/runs/03082024-191540-BestRandom
+!examples/lotka-voltera/runs/03082024-214102-BestSmallest
 
 !examples/gray-scott/runs/30032024-091851
 !examples/glycolytic-oscillator/runs/24032024-125527
@@ -130,4 +133,4 @@ venv/*
 
 # !examples/brusselator/runs/02082024-100530-Test
 # !examples/brusselator/runs/02082024-181243
-!examples/brusselator/runs/03082024-024220
+!examples/brusselator/runs/03082024-024220-Toy
