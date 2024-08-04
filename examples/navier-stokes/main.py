@@ -15,13 +15,13 @@ seed = 2026
 # seed = int(np.random.randint(0, 10000))
 
 context_pool_size = 3               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256//1
+context_size = 202
 nb_epochs = 10000
 nb_epochs_adapt = 1500
 init_lr = 3e-4
 lr_factor = 0.1
 
-print_error_every = 10
+print_error_every = 5
 
 train = True
 # run_folder = "./runs/03082024-024220-Toy/"      ## Run folder to use when not training
@@ -31,7 +31,7 @@ save_trainer = True
 
 finetune = False
 
-nb_outer_steps_max = 500
+nb_outer_steps_max = 250
 nb_inner_steps_max = 25
 proximal_beta = 1e1
 inner_tol_node = 1e-16

@@ -137,3 +137,4 @@ venv/*
 
 
 !examples/navier-stokes/runs/04082024-044750-Almost
+!examples/navier-stokes/runs/04082024-130044
