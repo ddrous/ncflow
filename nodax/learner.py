@@ -174,6 +174,32 @@ def RK4(fun, t_span, y0, *args, t_eval=None, subdivisions=1, **kwargs):
     _, ys = jax.lax.scan(step, (t_solve[0], y0), t_solve[:])
     return ys[eval_indices, :]
 
+def Euler(fun, t_span, y0, *args, t_eval=None, subdivisions=1, **kwargs):
+    """ Euler integrator"""
+    if t_eval is None:
+        if t_span[0] is None:
+            t_eval = jnp.array([t_span[1]])
+            raise Warning("t_span[0] is None. Setting t_span[0] to 0.")
+        elif t_span[1] is None:
+            raise ValueError("t_span[1] must be provided if t_eval is not.")
+        else:
+            t_eval = jnp.array(t_span)
+
+    hs = t_eval[1:] - t_eval[:-1]
+    t_ = t_eval[:-1, None] + jnp.arange(subdivisions)[None, :]*hs[:, None]/subdivisions
+    t_solve = jnp.concatenate([t_.flatten(), t_eval[-1:]])
+    eval_indices = jnp.arange(0, t_solve.size, subdivisions)
+
+    def step(state, t):
+        t_prev, y_prev = state
+        h = t - t_prev
+        y = y_prev + h * fun(t_prev, y_prev, *args)
+        return (t, y), y
+
+    _, ys = jax.lax.scan(step, (t_solve[0], y0), t_solve[:])
+    return ys[eval_indices, :]
+
+
 
 
 

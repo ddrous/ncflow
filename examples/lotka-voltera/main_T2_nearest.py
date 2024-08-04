@@ -38,11 +38,11 @@ train = True
 save_trainer = True
 finetune = False
 
-init_lr = 5e-4
+init_lr = 3e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 1000
-nb_inner_steps_max = 25
+nb_outer_steps_max = 1500
+nb_inner_steps_max = 30
 proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-9
 inner_tol_ctx = 1e-8

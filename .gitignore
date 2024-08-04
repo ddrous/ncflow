@@ -51,7 +51,7 @@ examples/lotka-voltera/lightning_logs/*
 examples/glycolytic-oscillator/tmp/*
 examples/pendulum/tmp/*
 examples/gray-scott/tmp/*
-examples/navier-stokes/tmp/*
+# examples/navier-stokes/tmp/*
 examples/selkov-model/tmp/*
 examples/forced-oscillator/tmp/*
 
@@ -69,7 +69,7 @@ examples/brusselator/runs/*
 ## Ingnore all folders named "tmp", recursively
 **/tmp/
 venv/*
-
+!examples/navier-stokes/tmp/
 
 !examples/pendulum/runs/30012024-165151
 !examples/lotka-voltera/runs/27012024-155719
@@ -134,3 +134,4 @@ venv/*
 # !examples/brusselator/runs/02082024-100530-Test
 # !examples/brusselator/runs/02082024-181243
 !examples/brusselator/runs/03082024-024220-Toy
+
