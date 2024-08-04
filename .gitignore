@@ -135,3 +135,5 @@ venv/*
 # !examples/brusselator/runs/02082024-181243
 !examples/brusselator/runs/03082024-024220-Toy
 
+
+!examples/navier-stokes/runs/04082024-044750-Almost

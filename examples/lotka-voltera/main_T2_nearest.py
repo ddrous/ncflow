@@ -44,8 +44,8 @@ sched_factor = 1.0
 nb_outer_steps_max = 1500
 nb_inner_steps_max = 30
 proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 1e-9
-inner_tol_ctx = 1e-8
+inner_tol_node = 1e-16
+inner_tol_ctx = 1e-16
 early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
 
 
@@ -537,8 +537,8 @@ except NameError:
             os.system(f"cp nohup.log {finetunedir}")
             ## Open the results_in_domain in the terminal
             # os.system(f"open {finetunedir}results_in_domain.png")
-        elif adapt_test==True: ## Adaptation
-            os.system(f"cp nohup.log {adapt_folder}")
+        # elif adapt_test==True: ## Adaptation
+        #     os.system(f"cp nohup.log {adapt_folder}")
         else:
             os.system(f"cp nohup.log {run_folder}")
             # os.system(f"open {run_folder}results_in_domain.png")
