@@ -189,28 +189,7 @@ class Augmentation(eqx.Module):
 
 
 
-# # First-order Taylor approximation
-# class ContextFlowVectorField(eqx.Module):
-#     physics: eqx.Module
-#     augmentation: eqx.Module
-
-#     def __init__(self, augmentation, physics=None):
-#         self.augmentation = augmentation
-#         self.physics = physics
-
-#     def __call__(self, t, x, ctxs):
-#         if self.physics is None:
-#             vf = lambda xi_: self.augmentation(t, x, xi_)
-#         else:
-#             vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
-
-#         gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-
-#         ctx, ctx_ = ctxs
-#         return vf(ctx_) + gradvf(ctx_, ctx)
-
-
-## Second-order Taylor approximation
+# First-order Taylor approximation
 class ContextFlowVectorField(eqx.Module):
     physics: eqx.Module
     augmentation: eqx.Module
@@ -220,20 +199,41 @@ class ContextFlowVectorField(eqx.Module):
         self.physics = physics
 
     def __call__(self, t, x, ctxs):
-        ctx, ctx_ = ctxs
-
         if self.physics is None:
-            vf = lambda xi: self.augmentation(t, x, xi)
+            vf = lambda xi_: self.augmentation(t, x, xi_)
         else:
-            vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
+            vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
 
-        # return vf(ctx)                                                                  ## TODO disable CSM
+        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
 
-        gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
-        scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+        ctx, ctx_ = ctxs
+        return vf(ctx_) + gradvf(ctx_, ctx)
 
-        # print("all operand types:", type(vf), type(gradvf), type(scd_order_term))
-        return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
+
+# ## Second-order Taylor approximation
+# class ContextFlowVectorField(eqx.Module):
+#     physics: eqx.Module
+#     augmentation: eqx.Module
+
+#     def __init__(self, augmentation, physics=None):
+#         self.augmentation = augmentation
+#         self.physics = physics
+
+#     def __call__(self, t, x, ctxs):
+#         ctx, ctx_ = ctxs
+
+#         if self.physics is None:
+#             vf = lambda xi: self.augmentation(t, x, xi)
+#         else:
+#             vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
+
+#         # return vf(ctx)                                                                  ## TODO disable CSM
+
+#         gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
+#         scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+
+#         # print("all operand types:", type(vf), type(gradvf), type(scd_order_term))
+#         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
 augmentation = Augmentation(data_res=8, kernel_size=3, nb_comp_chans=8, nb_hidden_chans=64, context_size=context_size, key=seed)
