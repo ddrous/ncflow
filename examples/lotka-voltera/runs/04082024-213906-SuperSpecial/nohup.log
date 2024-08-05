@@ -1,0 +1,1933 @@
+
+############# Neural Context Flow #############
+
+Jax version: 0.4.28
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/04082024-213906/
+ Seed: 2026
+
+
+############# Neural Context Flow #############
+
+Jax version: 0.4.28
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/04082024-213906/
+ Seed: 4052
+
+
+############# Neural Context Flow #############
+
+Jax version: 0.4.28
+Available devices: [cuda(id=0)]
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 213924
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: You did not provide a dataloader id. A new one has been generated: 213924
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+Total number of parameters in the model: 308240 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+
+=== Beginning training with proximal alternating minimization ... ===
+    Number of examples in a batch: 4
+    Maximum number of steps per inner minimization: 30
+    Maximum number of outer minimizations: 1500
+    Maximum total number of training steps: 45000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (9, 4, 20, 2) (20,)
+    Outer Step:     0      LossTrajs: 1.81051505     ContextsNorm: 0.00000000     ValIndCrit: 1.67688727
+        Saving best model so far ...
+        -NbInnerStepsNode:    1
+        -NbInnerStepsCxt:    1
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.53e-05
+        -DiffCxt:  inf
+    Outer Step:     1      LossTrajs: 0.73967505     ContextsNorm: 0.00702437     ValIndCrit: 0.66575879
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.80e-05
+        -DiffCxt:  6.58e-04
+    Outer Step:     2      LossTrajs: 0.26744488     ContextsNorm: 0.00671160     ValIndCrit: 0.30575335
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.29e-05
+        -DiffCxt:  5.24e-04
+    Outer Step:     3      LossTrajs: 0.24276817     ContextsNorm: 0.01051180     ValIndCrit: 0.28155389
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.51e-05
+        -DiffCxt:  1.06e-04
+    Outer Step:    10      LossTrajs: 0.04997707     ContextsNorm: 0.01363451     ValIndCrit: 0.04866039
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.26e-05
+        -DiffCxt:  2.05e-05
+    Outer Step:    20      LossTrajs: 0.00601684     ContextsNorm: 0.01444953     ValIndCrit: 0.00780449
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.29e-07
+        -DiffCxt:  7.29e-08
+    Outer Step:    30      LossTrajs: 0.00247240     ContextsNorm: 0.01482101     ValIndCrit: 0.00432590
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.75e-08
+        -DiffCxt:  6.36e-08
+    Outer Step:    40      LossTrajs: 0.00137508     ContextsNorm: 0.01478512     ValIndCrit: 0.00285075
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.05e-08
+        -DiffCxt:  4.29e-08
+    Outer Step:    50      LossTrajs: 0.00068763     ContextsNorm: 0.01440971     ValIndCrit: 0.00159920
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.42e-08
+        -DiffCxt:  6.71e-08
+    Outer Step:    60      LossTrajs: 0.00036677     ContextsNorm: 0.01418715     ValIndCrit: 0.00089576
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.22e-08
+        -DiffCxt:  7.88e-08
+    Outer Step:    70      LossTrajs: 0.00022222     ContextsNorm: 0.01406306     ValIndCrit: 0.00054163
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.71e-08
+        -DiffCxt:  5.13e-07
+    Outer Step:    80      LossTrajs: 0.00014637     ContextsNorm: 0.01401615     ValIndCrit: 0.00033153
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.81e-08
+        -DiffCxt:  2.25e-07
+    Outer Step:    90      LossTrajs: 0.00009711     ContextsNorm: 0.01395961     ValIndCrit: 0.00023701
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.36e-09
+        -DiffCxt:  7.71e-09
+    Outer Step:   100      LossTrajs: 0.00007596     ContextsNorm: 0.01388687     ValIndCrit: 0.00018482
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.55e-09
+        -DiffCxt:  2.24e-09
+    Outer Step:   110      LossTrajs: 0.00006499     ContextsNorm: 0.01385367     ValIndCrit: 0.00015316
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.57e-08
+        -DiffCxt:  8.19e-08
+    Outer Step:   120      LossTrajs: 0.00005545     ContextsNorm: 0.01377820     ValIndCrit: 0.00012865
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.43e-08
+        -DiffCxt:  1.63e-07
+    Outer Step:   130      LossTrajs: 0.00004648     ContextsNorm: 0.01372775     ValIndCrit: 0.00011521
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.47e-09
+        -DiffCxt:  4.96e-08
+    Outer Step:   140      LossTrajs: 0.00004363     ContextsNorm: 0.01368246     ValIndCrit: 0.00010157
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.33e-08
+        -DiffCxt:  2.29e-07
+    Outer Step:   150      LossTrajs: 0.00003831     ContextsNorm: 0.01363124     ValIndCrit: 0.00009058
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.81e-08
+        -DiffCxt:  1.18e-07
+    Outer Step:   160      LossTrajs: 0.00003455     ContextsNorm: 0.01355864     ValIndCrit: 0.00008222
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.46e-09
+        -DiffCxt:  5.12e-08
+    Outer Step:   170      LossTrajs: 0.00003166     ContextsNorm: 0.01351160     ValIndCrit: 0.00007628
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.88e-09
+        -DiffCxt:  3.62e-08
+    Outer Step:   180      LossTrajs: 0.00002960     ContextsNorm: 0.01351199     ValIndCrit: 0.00007053
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.00e-09
+        -DiffCxt:  7.48e-08
+    Outer Step:   190      LossTrajs: 0.00003403     ContextsNorm: 0.01341551     ValIndCrit: 0.00006653
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.19e-07
+        -DiffCxt:  9.28e-07
+    Outer Step:   200      LossTrajs: 0.00002904     ContextsNorm: 0.01343663     ValIndCrit: 0.00006424
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.11e-08
+        -DiffCxt:  6.69e-07
+    Outer Step:   210      LossTrajs: 0.00002924     ContextsNorm: 0.01332823     ValIndCrit: 0.00005814
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.76e-08
+        -DiffCxt:  6.02e-07
+    Outer Step:   220      LossTrajs: 0.00002905     ContextsNorm: 0.01330777     ValIndCrit: 0.00005858
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.70e-08
+        -DiffCxt:  1.90e-07
+    Outer Step:   230      LossTrajs: 0.00002307     ContextsNorm: 0.01321616     ValIndCrit: 0.00005458
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.54e-09
+        -DiffCxt:  6.73e-08
+    Outer Step:   240      LossTrajs: 0.00002237     ContextsNorm: 0.01315746     ValIndCrit: 0.00005301
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.07e-09
+        -DiffCxt:  7.73e-08
+    Outer Step:   250      LossTrajs: 0.00002134     ContextsNorm: 0.01309370     ValIndCrit: 0.00005022
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.75e-09
+        -DiffCxt:  7.71e-08
+    Outer Step:   260      LossTrajs: 0.00002157     ContextsNorm: 0.01299584     ValIndCrit: 0.00004864
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.97e-08
+        -DiffCxt:  3.21e-07
+    Outer Step:   270      LossTrajs: 0.00002726     ContextsNorm: 0.01294853     ValIndCrit: 0.00004912
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.14e-08
+        -DiffCxt:  4.85e-07
+    Outer Step:   280      LossTrajs: 0.00001980     ContextsNorm: 0.01290768     ValIndCrit: 0.00004598
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.74e-09
+        -DiffCxt:  1.73e-07
+    Outer Step:   290      LossTrajs: 0.00001942     ContextsNorm: 0.01288546     ValIndCrit: 0.00004628
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.13e-09
+        -DiffCxt:  1.83e-07
+    Outer Step:   300      LossTrajs: 0.00001944     ContextsNorm: 0.01287244     ValIndCrit: 0.00004423
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.87e-08
+        -DiffCxt:  3.41e-07
+    Outer Step:   310      LossTrajs: 0.00001945     ContextsNorm: 0.01278753     ValIndCrit: 0.00004230
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.25e-08
+        -DiffCxt:  3.49e-07
+    Outer Step:   320      LossTrajs: 0.00001863     ContextsNorm: 0.01274910     ValIndCrit: 0.00004264
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.38e-08
+        -DiffCxt:  8.47e-08
+    Outer Step:   330      LossTrajs: 0.00002847     ContextsNorm: 0.01272261     ValIndCrit: 0.00004450
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.52e-07
+        -DiffCxt:  2.40e-06
+    Outer Step:   340      LossTrajs: 0.00002141     ContextsNorm: 0.01265183     ValIndCrit: 0.00004134
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.75e-08
+        -DiffCxt:  4.06e-07
+    Outer Step:   350      LossTrajs: 0.00001979     ContextsNorm: 0.01261989     ValIndCrit: 0.00004086
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.77e-08
+        -DiffCxt:  1.63e-07
+    Outer Step:   360      LossTrajs: 0.00001806     ContextsNorm: 0.01259275     ValIndCrit: 0.00004055
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.60e-08
+        -DiffCxt:  2.42e-07
+    Outer Step:   370      LossTrajs: 0.00001762     ContextsNorm: 0.01256525     ValIndCrit: 0.00003944
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.23e-08
+        -DiffCxt:  8.13e-08
+    Outer Step:   380      LossTrajs: 0.00001883     ContextsNorm: 0.01252720     ValIndCrit: 0.00003917
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.44e-08
+        -DiffCxt:  2.63e-07
+    Outer Step:   390      LossTrajs: 0.00002294     ContextsNorm: 0.01254515     ValIndCrit: 0.00003929
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.47e-08
+        -DiffCxt:  1.05e-06
+    Outer Step:   400      LossTrajs: 0.00001712     ContextsNorm: 0.01251176     ValIndCrit: 0.00003853
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.37e-08
+        -DiffCxt:  1.86e-07
+    Outer Step:   410      LossTrajs: 0.00002447     ContextsNorm: 0.01247170     ValIndCrit: 0.00003910
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.30e-07
+        -DiffCxt:  2.04e-06
+    Outer Step:   420      LossTrajs: 0.00001847     ContextsNorm: 0.01242215     ValIndCrit: 0.00003825
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.87e-08
+        -DiffCxt:  7.10e-07
+    Outer Step:   430      LossTrajs: 0.00001678     ContextsNorm: 0.01238380     ValIndCrit: 0.00003737
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.83e-08
+        -DiffCxt:  1.41e-07
+    Outer Step:   440      LossTrajs: 0.00001629     ContextsNorm: 0.01237559     ValIndCrit: 0.00003655
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.73e-09
+        -DiffCxt:  1.29e-07
+    Outer Step:   450      LossTrajs: 0.00001597     ContextsNorm: 0.01233972     ValIndCrit: 0.00003655
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.48e-09
+        -DiffCxt:  1.23e-07
+    Outer Step:   460      LossTrajs: 0.00002113     ContextsNorm: 0.01225954     ValIndCrit: 0.00003802
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.07e-08
+        -DiffCxt:  8.99e-07
+    Outer Step:   470      LossTrajs: 0.00001598     ContextsNorm: 0.01227450     ValIndCrit: 0.00003671
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.46e-08
+        -DiffCxt:  1.22e-07
+    Outer Step:   480      LossTrajs: 0.00001849     ContextsNorm: 0.01225939     ValIndCrit: 0.00003699
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.84e-08
+        -DiffCxt:  6.39e-07
+    Outer Step:   490      LossTrajs: 0.00001544     ContextsNorm: 0.01222765     ValIndCrit: 0.00003553
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.29e-09
+        -DiffCxt:  7.37e-08
+    Outer Step:   500      LossTrajs: 0.00001978     ContextsNorm: 0.01216366     ValIndCrit: 0.00003666
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.82e-08
+        -DiffCxt:  5.92e-07
+    Outer Step:   510      LossTrajs: 0.00001543     ContextsNorm: 0.01213144     ValIndCrit: 0.00003615
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.88e-08
+        -DiffCxt:  3.24e-07
+    Outer Step:   520      LossTrajs: 0.00001491     ContextsNorm: 0.01206553     ValIndCrit: 0.00003598
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.64e-10
+        -DiffCxt:  2.50e-08
+    Outer Step:   530      LossTrajs: 0.00001524     ContextsNorm: 0.01201307     ValIndCrit: 0.00003568
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.41e-08
+        -DiffCxt:  2.54e-07
+    Outer Step:   540      LossTrajs: 0.00001771     ContextsNorm: 0.01198382     ValIndCrit: 0.00003402
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.03e-07
+        -DiffCxt:  7.11e-07
+    Outer Step:   550      LossTrajs: 0.00001458     ContextsNorm: 0.01194094     ValIndCrit: 0.00003383
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.89e-09
+        -DiffCxt:  4.77e-08
+    Outer Step:   560      LossTrajs: 0.00001654     ContextsNorm: 0.01191774     ValIndCrit: 0.00003568
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.42e-08
+        -DiffCxt:  6.21e-07
+    Outer Step:   570      LossTrajs: 0.00001637     ContextsNorm: 0.01186778     ValIndCrit: 0.00003316
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.57e-08
+        -DiffCxt:  3.95e-07
+    Outer Step:   580      LossTrajs: 0.00001572     ContextsNorm: 0.01183608     ValIndCrit: 0.00003457
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.30e-08
+        -DiffCxt:  2.21e-07
+    Outer Step:   590      LossTrajs: 0.00001425     ContextsNorm: 0.01182232     ValIndCrit: 0.00003319
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.10e-09
+        -DiffCxt:  1.30e-07
+    Outer Step:   600      LossTrajs: 0.00001510     ContextsNorm: 0.01178515     ValIndCrit: 0.00003377
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.29e-08
+        -DiffCxt:  2.04e-07
+    Outer Step:   610      LossTrajs: 0.00001409     ContextsNorm: 0.01175809     ValIndCrit: 0.00003257
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.37e-09
+        -DiffCxt:  5.50e-08
+    Outer Step:   620      LossTrajs: 0.00001594     ContextsNorm: 0.01177703     ValIndCrit: 0.00003202
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.29e-08
+        -DiffCxt:  1.81e-07
+    Outer Step:   630      LossTrajs: 0.00001492     ContextsNorm: 0.01172003     ValIndCrit: 0.00003266
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.82e-08
+        -DiffCxt:  2.66e-07
+    Outer Step:   640      LossTrajs: 0.00001697     ContextsNorm: 0.01165129     ValIndCrit: 0.00003313
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.32e-08
+        -DiffCxt:  4.43e-07
+    Outer Step:   650      LossTrajs: 0.00001454     ContextsNorm: 0.01164389     ValIndCrit: 0.00003144
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.89e-08
+        -DiffCxt:  1.24e-07
+    Outer Step:   660      LossTrajs: 0.00004355     ContextsNorm: 0.01163545     ValIndCrit: 0.00003798
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.44e-07
+        -DiffCxt:  5.81e-06
+    Outer Step:   670      LossTrajs: 0.00001524     ContextsNorm: 0.01146938     ValIndCrit: 0.00003267
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.87e-08
+        -DiffCxt:  2.69e-07
+    Outer Step:   680      LossTrajs: 0.00001360     ContextsNorm: 0.01143577     ValIndCrit: 0.00003104
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.51e-09
+        -DiffCxt:  5.92e-08
+    Outer Step:   690      LossTrajs: 0.00003056     ContextsNorm: 0.01142470     ValIndCrit: 0.00003410
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.85e-07
+        -DiffCxt:  2.68e-06
+    Outer Step:   700      LossTrajs: 0.00001372     ContextsNorm: 0.01141164     ValIndCrit: 0.00003157
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.09e-08
+        -DiffCxt:  3.30e-07
+    Outer Step:   710      LossTrajs: 0.00001371     ContextsNorm: 0.01136043     ValIndCrit: 0.00003131
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.58e-08
+        -DiffCxt:  2.15e-07
+    Outer Step:   720      LossTrajs: 0.00001462     ContextsNorm: 0.01133998     ValIndCrit: 0.00003016
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.38e-08
+        -DiffCxt:  2.15e-07
+    Outer Step:   730      LossTrajs: 0.00001325     ContextsNorm: 0.01130699     ValIndCrit: 0.00003102
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.08e-09
+        -DiffCxt:  1.48e-07
+    Outer Step:   740      LossTrajs: 0.00001411     ContextsNorm: 0.01128676     ValIndCrit: 0.00002955
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.56e-08
+        -DiffCxt:  2.79e-07
+    Outer Step:   750      LossTrajs: 0.00001522     ContextsNorm: 0.01123158     ValIndCrit: 0.00003162
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.18e-08
+        -DiffCxt:  9.72e-07
+    Outer Step:   760      LossTrajs: 0.00001550     ContextsNorm: 0.01121233     ValIndCrit: 0.00003087
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.77e-08
+        -DiffCxt:  3.28e-07
+    Outer Step:   770      LossTrajs: 0.00001333     ContextsNorm: 0.01119366     ValIndCrit: 0.00002980
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.82e-08
+        -DiffCxt:  1.19e-07
+    Outer Step:   780      LossTrajs: 0.00001425     ContextsNorm: 0.01116867     ValIndCrit: 0.00002931
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.47e-08
+        -DiffCxt:  2.17e-07
+    Outer Step:   790      LossTrajs: 0.00001386     ContextsNorm: 0.01110911     ValIndCrit: 0.00002907
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.80e-08
+        -DiffCxt:  3.23e-07
+    Outer Step:   800      LossTrajs: 0.00001458     ContextsNorm: 0.01114774     ValIndCrit: 0.00002750
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.17e-08
+        -DiffCxt:  4.24e-07
+    Outer Step:   810      LossTrajs: 0.00001879     ContextsNorm: 0.01108035     ValIndCrit: 0.00002838
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.07e-07
+        -DiffCxt:  6.39e-07
+    Outer Step:   820      LossTrajs: 0.00001275     ContextsNorm: 0.01105721     ValIndCrit: 0.00002796
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.19e-09
+        -DiffCxt:  1.20e-07
+    Outer Step:   830      LossTrajs: 0.00001363     ContextsNorm: 0.01100698     ValIndCrit: 0.00002897
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.82e-08
+        -DiffCxt:  1.07e-06
+    Outer Step:   840      LossTrajs: 0.00001374     ContextsNorm: 0.01094506     ValIndCrit: 0.00002843
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.93e-09
+        -DiffCxt:  3.28e-07
+    Outer Step:   850      LossTrajs: 0.00001266     ContextsNorm: 0.01091207     ValIndCrit: 0.00002743
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.40e-09
+        -DiffCxt:  1.53e-07
+    Outer Step:   860      LossTrajs: 0.00001260     ContextsNorm: 0.01095145     ValIndCrit: 0.00002699
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.92e-09
+        -DiffCxt:  5.30e-08
+    Outer Step:   870      LossTrajs: 0.00001251     ContextsNorm: 0.01091239     ValIndCrit: 0.00002678
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.13e-09
+        -DiffCxt:  6.06e-08
+    Outer Step:   880      LossTrajs: 0.00001744     ContextsNorm: 0.01085504     ValIndCrit: 0.00002731
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.72e-07
+        -DiffCxt:  1.15e-06
+    Outer Step:   890      LossTrajs: 0.00001359     ContextsNorm: 0.01081931     ValIndCrit: 0.00002696
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.55e-08
+        -DiffCxt:  3.23e-07
+    Outer Step:   900      LossTrajs: 0.00001263     ContextsNorm: 0.01079735     ValIndCrit: 0.00002634
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.11e-08
+        -DiffCxt:  1.32e-07
+    Outer Step:   910      LossTrajs: 0.00001489     ContextsNorm: 0.01074684     ValIndCrit: 0.00002755
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.96e-08
+        -DiffCxt:  7.27e-07
+    Outer Step:   920      LossTrajs: 0.00001249     ContextsNorm: 0.01072529     ValIndCrit: 0.00002590
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.41e-08
+        -DiffCxt:  9.65e-08
+    Outer Step:   930      LossTrajs: 0.00001219     ContextsNorm: 0.01067011     ValIndCrit: 0.00002578
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.94e-09
+        -DiffCxt:  8.52e-08
+    Outer Step:   940      LossTrajs: 0.00001734     ContextsNorm: 0.01059946     ValIndCrit: 0.00002692
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.66e-07
+        -DiffCxt:  2.12e-06
+    Outer Step:   950      LossTrajs: 0.00002448     ContextsNorm: 0.01059539     ValIndCrit: 0.00002649
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.16e-07
+        -DiffCxt:  2.83e-06
+    Outer Step:   960      LossTrajs: 0.00001344     ContextsNorm: 0.01053966     ValIndCrit: 0.00002593
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.17e-08
+        -DiffCxt:  4.04e-07
+    Outer Step:   970      LossTrajs: 0.00001587     ContextsNorm: 0.01052511     ValIndCrit: 0.00002476
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.18e-07
+        -DiffCxt:  1.43e-06
+    Outer Step:   980      LossTrajs: 0.00001259     ContextsNorm: 0.01049426     ValIndCrit: 0.00002454
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.37e-08
+        -DiffCxt:  2.02e-07
+    Outer Step:   990      LossTrajs: 0.00001564     ContextsNorm: 0.01051786     ValIndCrit: 0.00002404
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.20e-08
+        -DiffCxt:  3.70e-07
+    Outer Step:  1000      LossTrajs: 0.00001580     ContextsNorm: 0.01047868     ValIndCrit: 0.00002369
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.89e-08
+        -DiffCxt:  1.01e-06
+    Outer Step:  1010      LossTrajs: 0.00001189     ContextsNorm: 0.01039874     ValIndCrit: 0.00002405
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.21e-09
+        -DiffCxt:  7.78e-08
+    Outer Step:  1020      LossTrajs: 0.00001259     ContextsNorm: 0.01044750     ValIndCrit: 0.00002398
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.03e-08
+        -DiffCxt:  2.33e-07
+    Outer Step:  1030      LossTrajs: 0.00001314     ContextsNorm: 0.01037642     ValIndCrit: 0.00002396
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.17e-08
+        -DiffCxt:  1.32e-06
+    Outer Step:  1040      LossTrajs: 0.00001168     ContextsNorm: 0.01032335     ValIndCrit: 0.00002339
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.98e-09
+        -DiffCxt:  1.04e-07
+    Outer Step:  1050      LossTrajs: 0.00001167     ContextsNorm: 0.01028068     ValIndCrit: 0.00002295
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.94e-09
+        -DiffCxt:  5.47e-08
+    Outer Step:  1060      LossTrajs: 0.00001593     ContextsNorm: 0.01027885     ValIndCrit: 0.00002406
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.93e-08
+        -DiffCxt:  1.23e-06
+    Outer Step:  1070      LossTrajs: 0.00001175     ContextsNorm: 0.01027444     ValIndCrit: 0.00002291
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.55e-09
+        -DiffCxt:  9.18e-08
+    Outer Step:  1080      LossTrajs: 0.00001172     ContextsNorm: 0.01030866     ValIndCrit: 0.00002265
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.26e-09
+        -DiffCxt:  9.10e-08
+    Outer Step:  1090      LossTrajs: 0.00001178     ContextsNorm: 0.01025431     ValIndCrit: 0.00002312
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.28e-08
+        -DiffCxt:  1.33e-07
+    Outer Step:  1100      LossTrajs: 0.00001233     ContextsNorm: 0.01024421     ValIndCrit: 0.00002171
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.90e-08
+        -DiffCxt:  2.06e-07
+    Outer Step:  1110      LossTrajs: 0.00001381     ContextsNorm: 0.01025104     ValIndCrit: 0.00002263
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.23e-08
+        -DiffCxt:  7.68e-07
+    Outer Step:  1120      LossTrajs: 0.00001298     ContextsNorm: 0.01028983     ValIndCrit: 0.00002207
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.77e-08
+        -DiffCxt:  4.70e-07
+    Outer Step:  1130      LossTrajs: 0.00001295     ContextsNorm: 0.01017452     ValIndCrit: 0.00002189
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.10e-08
+        -DiffCxt:  5.06e-07
+    Outer Step:  1140      LossTrajs: 0.00001275     ContextsNorm: 0.01015943     ValIndCrit: 0.00002284
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.64e-08
+        -DiffCxt:  7.04e-07
+    Outer Step:  1150      LossTrajs: 0.00001138     ContextsNorm: 0.01012200     ValIndCrit: 0.00002220
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.24e-09
+        -DiffCxt:  1.69e-07
+    Outer Step:  1160      LossTrajs: 0.00001570     ContextsNorm: 0.01018463     ValIndCrit: 0.00002247
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.19e-08
+        -DiffCxt:  1.33e-06
+    Outer Step:  1170      LossTrajs: 0.00001302     ContextsNorm: 0.01014209     ValIndCrit: 0.00002178
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.51e-08
+        -DiffCxt:  4.66e-07
+    Outer Step:  1180      LossTrajs: 0.00001274     ContextsNorm: 0.01009350     ValIndCrit: 0.00002247
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.94e-08
+        -DiffCxt:  2.93e-07
+    Outer Step:  1190      LossTrajs: 0.00001396     ContextsNorm: 0.01010571     ValIndCrit: 0.00002166
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.51e-07
+        -DiffCxt:  9.14e-07
+    Outer Step:  1200      LossTrajs: 0.00001227     ContextsNorm: 0.01005788     ValIndCrit: 0.00002169
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.43e-08
+        -DiffCxt:  2.66e-07
+    Outer Step:  1210      LossTrajs: 0.00002009     ContextsNorm: 0.01006104     ValIndCrit: 0.00002445
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.04e-07
+        -DiffCxt:  1.31e-06
+    Outer Step:  1220      LossTrajs: 0.00001329     ContextsNorm: 0.01004934     ValIndCrit: 0.00002104
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.63e-08
+        -DiffCxt:  6.72e-07
+    Outer Step:  1230      LossTrajs: 0.00001127     ContextsNorm: 0.01004765     ValIndCrit: 0.00002097
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.32e-08
+        -DiffCxt:  9.31e-08
+    Outer Step:  1240      LossTrajs: 0.00001265     ContextsNorm: 0.01001193     ValIndCrit: 0.00002031
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.09e-08
+        -DiffCxt:  4.51e-07
+    Outer Step:  1250      LossTrajs: 0.00001361     ContextsNorm: 0.01001845     ValIndCrit: 0.00002091
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.99e-08
+        -DiffCxt:  1.33e-06
+    Outer Step:  1260      LossTrajs: 0.00001131     ContextsNorm: 0.01004896     ValIndCrit: 0.00002031
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.02e-09
+        -DiffCxt:  3.52e-07
+    Outer Step:  1270      LossTrajs: 0.00001195     ContextsNorm: 0.00998570     ValIndCrit: 0.00002075
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.64e-08
+        -DiffCxt:  3.24e-07
+    Outer Step:  1280      LossTrajs: 0.00001106     ContextsNorm: 0.00994119     ValIndCrit: 0.00001964
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.83e-09
+        -DiffCxt:  9.65e-08
+    Outer Step:  1290      LossTrajs: 0.00001241     ContextsNorm: 0.00994839     ValIndCrit: 0.00001999
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 2.04e-08
+        -DiffCxt:  3.37e-07
+    Outer Step:  1300      LossTrajs: 0.00001181     ContextsNorm: 0.00989818     ValIndCrit: 0.00002046
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.78e-08
+        -DiffCxt:  2.72e-07
+    Outer Step:  1310      LossTrajs: 0.00001230     ContextsNorm: 0.00992269     ValIndCrit: 0.00002054
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.68e-08
+        -DiffCxt:  3.60e-07
+    Outer Step:  1320      LossTrajs: 0.00001096     ContextsNorm: 0.00991837     ValIndCrit: 0.00001979
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.61e-09
+        -DiffCxt:  8.38e-08
+    Outer Step:  1330      LossTrajs: 0.00001273     ContextsNorm: 0.00999200     ValIndCrit: 0.00001957
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.50e-08
+        -DiffCxt:  5.89e-07
+    Outer Step:  1340      LossTrajs: 0.00001526     ContextsNorm: 0.00996369     ValIndCrit: 0.00001994
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.67e-08
+        -DiffCxt:  1.36e-06
+    Outer Step:  1350      LossTrajs: 0.00001176     ContextsNorm: 0.00989411     ValIndCrit: 0.00001922
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.17e-08
+        -DiffCxt:  2.23e-07
+    Outer Step:  1360      LossTrajs: 0.00001129     ContextsNorm: 0.00987990     ValIndCrit: 0.00001872
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 8.49e-09
+        -DiffCxt:  2.46e-07
+    Outer Step:  1370      LossTrajs: 0.00001288     ContextsNorm: 0.00989640     ValIndCrit: 0.00001884
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.13e-08
+        -DiffCxt:  3.91e-07
+    Outer Step:  1380      LossTrajs: 0.00001435     ContextsNorm: 0.00982729     ValIndCrit: 0.00001857
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.36e-07
+        -DiffCxt:  1.08e-06
+    Outer Step:  1390      LossTrajs: 0.00001177     ContextsNorm: 0.00978092     ValIndCrit: 0.00001922
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.65e-08
+        -DiffCxt:  8.22e-07
+    Outer Step:  1400      LossTrajs: 0.00001136     ContextsNorm: 0.00976947     ValIndCrit: 0.00001902
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 5.71e-08
+        -DiffCxt:  3.21e-07
+    Outer Step:  1410      LossTrajs: 0.00001380     ContextsNorm: 0.00972845     ValIndCrit: 0.00001797
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.40e-08
+        -DiffCxt:  5.40e-07
+    Outer Step:  1420      LossTrajs: 0.00001098     ContextsNorm: 0.00971249     ValIndCrit: 0.00001861
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.21e-08
+        -DiffCxt:  9.22e-08
+    Outer Step:  1430      LossTrajs: 0.00001242     ContextsNorm: 0.00969623     ValIndCrit: 0.00001893
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 1.50e-08
+        -DiffCxt:  2.98e-07
+    Outer Step:  1440      LossTrajs: 0.00001306     ContextsNorm: 0.00965216     ValIndCrit: 0.00001831
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 7.11e-08
+        -DiffCxt:  2.74e-07
+    Outer Step:  1450      LossTrajs: 0.00001073     ContextsNorm: 0.00958760     ValIndCrit: 0.00001791
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.11e-09
+        -DiffCxt:  5.03e-08
+    Outer Step:  1460      LossTrajs: 0.00001060     ContextsNorm: 0.00959488     ValIndCrit: 0.00001804
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.60e-09
+        -DiffCxt:  5.04e-08
+    Outer Step:  1470      LossTrajs: 0.00001048     ContextsNorm: 0.00955962     ValIndCrit: 0.00001756
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 4.24e-10
+        -DiffCxt:  5.99e-08
+    Outer Step:  1480      LossTrajs: 0.00001055     ContextsNorm: 0.00948708     ValIndCrit: 0.00001689
+        Saving best model so far ...
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 6.34e-09
+        -DiffCxt:  9.13e-08
+    Outer Step:  1490      LossTrajs: 0.00001306     ContextsNorm: 0.00945522     ValIndCrit: 0.00001841
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 9.92e-08
+        -DiffCxt:  4.25e-07
+    Outer Step:  1499      LossTrajs: 0.00001083     ContextsNorm: 0.00944751     ValIndCrit: 0.00001785
+        -NbInnerStepsNode:   30
+        -NbInnerStepsCxt:   30
+        -InnerToleranceNode: 1.00e-16
+        -InnerToleranceCtx:  1.00e-16
+        -DiffNode: 3.02e-08
+        -DiffCxt:  4.73e-07
+
+Total gradient descent training time: 7 hours 8 mins 4 secs
+Environment weights at the end of the training: [0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111
+ 0.11111111 0.11111111 0.11111111]
+WARNING: You did not provide a dataloader id. A new one has been generated: 044730
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 9
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Test Score (In-Domain): 1.6893076e-05
+
+
+############# Neural Context Flow #############
+
+Jax version: 0.4.28
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/04082024-213906/adapt/
+ Seed: 6078
+
+
+############# Neural Context Flow #############
+
+Jax version: 0.4.28
+Available devices: [cuda(id=0)]
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt_test
+ Savepath: ./runs/04082024-213906/adapt/
+ Seed: 6078
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 4
+    Trajectory id: 2
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Testing finished. Figure saved in: ./runs/04082024-213906/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+=== Beginning sequential adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 1500
+    Total number of training steps: 1500
+
+Adapting to environment 0 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (1, 1, 20, 2) (20,)
+    Epoch:     0     LossContext: 0.03647145
+    Epoch:     1     LossContext: 0.01794709
+    Epoch:     2     LossContext: 0.00390608
+    Epoch:     3     LossContext: 0.00053580
+    Epoch:    10     LossContext: 0.00069946
+    Epoch:    20     LossContext: 0.00050128
+    Epoch:    30     LossContext: 0.00063822
+    Epoch:    40     LossContext: 0.00029666
+    Epoch:    50     LossContext: 0.00004646
+    Epoch:    60     LossContext: 0.00002347
+    Epoch:    70     LossContext: 0.00002813
+    Epoch:    80     LossContext: 0.00001491
+    Epoch:    90     LossContext: 0.00001664
+    Epoch:   100     LossContext: 0.00001484
+    Epoch:   110     LossContext: 0.00001500
+    Epoch:   120     LossContext: 0.00001482
+    Epoch:   130     LossContext: 0.00001477
+    Epoch:   140     LossContext: 0.00001476
+    Epoch:   150     LossContext: 0.00001473
+    Epoch:   160     LossContext: 0.00001471
+    Epoch:   170     LossContext: 0.00001470
+    Epoch:   180     LossContext: 0.00001468
+    Epoch:   190     LossContext: 0.00001466
+    Epoch:   200     LossContext: 0.00001464
+    Epoch:   210     LossContext: 0.00001462
+    Epoch:   220     LossContext: 0.00001460
+    Epoch:   230     LossContext: 0.00001458
+    Epoch:   240     LossContext: 0.00001456
+    Epoch:   250     LossContext: 0.00001453
+    Epoch:   260     LossContext: 0.00001451
+    Epoch:   270     LossContext: 0.00001449
+    Epoch:   280     LossContext: 0.00001446
+    Epoch:   290     LossContext: 0.00001444
+    Epoch:   300     LossContext: 0.00001441
+    Epoch:   310     LossContext: 0.00001439
+    Epoch:   320     LossContext: 0.00001436
+    Epoch:   330     LossContext: 0.00001434
+    Epoch:   340     LossContext: 0.00001431
+    Epoch:   350     LossContext: 0.00001428
+    Epoch:   360     LossContext: 0.00001425
+    Epoch:   370     LossContext: 0.00001423
+    Epoch:   380     LossContext: 0.00001420
+    Epoch:   390     LossContext: 0.00001417
+    Epoch:   400     LossContext: 0.00001414
+    Epoch:   410     LossContext: 0.00001411
+    Epoch:   420     LossContext: 0.00001408
+    Epoch:   430     LossContext: 0.00001405
+    Epoch:   440     LossContext: 0.00001402
+    Epoch:   450     LossContext: 0.00001398
+    Epoch:   460     LossContext: 0.00001395
+    Epoch:   470     LossContext: 0.00001392
+    Epoch:   480     LossContext: 0.00001389
+    Epoch:   490     LossContext: 0.00001385
+    Epoch:   500     LossContext: 0.00001382
+    Epoch:   510     LossContext: 0.00001378
+    Epoch:   520     LossContext: 0.00001375
+    Epoch:   530     LossContext: 0.00001371
+    Epoch:   540     LossContext: 0.00001368
+    Epoch:   550     LossContext: 0.00001364
+    Epoch:   560     LossContext: 0.00001361
+    Epoch:   570     LossContext: 0.00001357
+    Epoch:   580     LossContext: 0.00001353
+    Epoch:   590     LossContext: 0.00001349
+    Epoch:   600     LossContext: 0.00001346
+    Epoch:   610     LossContext: 0.00001342
+    Epoch:   620     LossContext: 0.00001338
+    Epoch:   630     LossContext: 0.00001334
+    Epoch:   640     LossContext: 0.00001330
+    Epoch:   650     LossContext: 0.00001326
+    Epoch:   660     LossContext: 0.00001322
+    Epoch:   670     LossContext: 0.00001318
+    Epoch:   680     LossContext: 0.00001314
+    Epoch:   690     LossContext: 0.00001310
+    Epoch:   700     LossContext: 0.00001305
+    Epoch:   710     LossContext: 0.00001301
+    Epoch:   720     LossContext: 0.00001297
+    Epoch:   730     LossContext: 0.00001293
+    Epoch:   740     LossContext: 0.00001288
+    Epoch:   750     LossContext: 0.00001284
+    Epoch:   760     LossContext: 0.00001279
+    Epoch:   770     LossContext: 0.00001275
+    Epoch:   780     LossContext: 0.00001270
+    Epoch:   790     LossContext: 0.00001266
+    Epoch:   800     LossContext: 0.00001261
+    Epoch:   810     LossContext: 0.00001256
+    Epoch:   820     LossContext: 0.00001252
+    Epoch:   830     LossContext: 0.00001247
+    Epoch:   840     LossContext: 0.00001242
+    Epoch:   850     LossContext: 0.00001238
+    Epoch:   860     LossContext: 0.00001233
+    Epoch:   870     LossContext: 0.00001228
+    Epoch:   880     LossContext: 0.00001223
+    Epoch:   890     LossContext: 0.00001219
+    Epoch:   900     LossContext: 0.00001214
+    Epoch:   910     LossContext: 0.00001209
+    Epoch:   920     LossContext: 0.00001204
+    Epoch:   930     LossContext: 0.00001199
+    Epoch:   940     LossContext: 0.00001194
+    Epoch:   950     LossContext: 0.00001189
+    Epoch:   960     LossContext: 0.00001184
+    Epoch:   970     LossContext: 0.00001179
+    Epoch:   980     LossContext: 0.00001174
+    Epoch:   990     LossContext: 0.00001169
+    Epoch:  1000     LossContext: 0.00001164
+    Epoch:  1010     LossContext: 0.00001159
+    Epoch:  1020     LossContext: 0.00001154
+    Epoch:  1030     LossContext: 0.00001149
+    Epoch:  1040     LossContext: 0.00001144
+    Epoch:  1050     LossContext: 0.00001139
+    Epoch:  1060     LossContext: 0.00001133
+    Epoch:  1070     LossContext: 0.00001128
+    Epoch:  1080     LossContext: 0.00001123
+    Epoch:  1090     LossContext: 0.00001118
+    Epoch:  1100     LossContext: 0.00001113
+    Epoch:  1110     LossContext: 0.00001108
+    Epoch:  1120     LossContext: 0.00001103
+    Epoch:  1130     LossContext: 0.00001098
+    Epoch:  1140     LossContext: 0.00001093
+    Epoch:  1150     LossContext: 0.00001088
+    Epoch:  1160     LossContext: 0.00001083
+    Epoch:  1170     LossContext: 0.00001079
+    Epoch:  1180     LossContext: 0.00001074
+    Epoch:  1190     LossContext: 0.00001069
+    Epoch:  1200     LossContext: 0.00001064
+    Epoch:  1210     LossContext: 0.00001060
+    Epoch:  1220     LossContext: 0.00001055
+    Epoch:  1230     LossContext: 0.00001051
+    Epoch:  1240     LossContext: 0.00001046
+    Epoch:  1250     LossContext: 0.00001042
+    Epoch:  1260     LossContext: 0.00001038
+    Epoch:  1270     LossContext: 0.00001033
+    Epoch:  1280     LossContext: 0.00001029
+    Epoch:  1290     LossContext: 0.00001025
+    Epoch:  1300     LossContext: 0.00001021
+    Epoch:  1310     LossContext: 0.00001017
+    Epoch:  1320     LossContext: 0.00001013
+    Epoch:  1330     LossContext: 0.00001009
+    Epoch:  1340     LossContext: 0.00001005
+    Epoch:  1350     LossContext: 0.00001001
+    Epoch:  1360     LossContext: 0.00000997
+    Epoch:  1370     LossContext: 0.00000993
+    Epoch:  1380     LossContext: 0.00000990
+    Epoch:  1390     LossContext: 0.00000986
+    Epoch:  1400     LossContext: 0.00000982
+    Epoch:  1410     LossContext: 0.00000978
+    Epoch:  1420     LossContext: 0.00000975
+    Epoch:  1430     LossContext: 0.00000971
+    Epoch:  1440     LossContext: 0.00000968
+    Epoch:  1450     LossContext: 0.00000964
+    Epoch:  1460     LossContext: 0.00000961
+    Epoch:  1470     LossContext: 0.00000957
+    Epoch:  1480     LossContext: 0.00000954
+    Epoch:  1490     LossContext: 0.00000950
+    Epoch:  1499     LossContext: 0.00000947
+
+Gradient descent adaptation time: 0 hours 1 mins 42 secs
+
+Adapting to environment 1 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.15091543
+    Epoch:     1     LossContext: 0.10669488
+    Epoch:     2     LossContext: 0.06584782
+    Epoch:     3     LossContext: 0.03119593
+    Epoch:    10     LossContext: 0.01698099
+    Epoch:    20     LossContext: 0.00976580
+    Epoch:    30     LossContext: 0.00316096
+    Epoch:    40     LossContext: 0.00120092
+    Epoch:    50     LossContext: 0.00048204
+    Epoch:    60     LossContext: 0.00011240
+    Epoch:    70     LossContext: 0.00003518
+    Epoch:    80     LossContext: 0.00003693
+    Epoch:    90     LossContext: 0.00003615
+    Epoch:   100     LossContext: 0.00003024
+    Epoch:   110     LossContext: 0.00002854
+    Epoch:   120     LossContext: 0.00002883
+    Epoch:   130     LossContext: 0.00002854
+    Epoch:   140     LossContext: 0.00002848
+    Epoch:   150     LossContext: 0.00002844
+    Epoch:   160     LossContext: 0.00002841
+    Epoch:   170     LossContext: 0.00002838
+    Epoch:   180     LossContext: 0.00002836
+    Epoch:   190     LossContext: 0.00002833
+    Epoch:   200     LossContext: 0.00002830
+    Epoch:   210     LossContext: 0.00002828
+    Epoch:   220     LossContext: 0.00002825
+    Epoch:   230     LossContext: 0.00002822
+    Epoch:   240     LossContext: 0.00002819
+    Epoch:   250     LossContext: 0.00002816
+    Epoch:   260     LossContext: 0.00002813
+    Epoch:   270     LossContext: 0.00002810
+    Epoch:   280     LossContext: 0.00002807
+    Epoch:   290     LossContext: 0.00002803
+    Epoch:   300     LossContext: 0.00002800
+    Epoch:   310     LossContext: 0.00002797
+    Epoch:   320     LossContext: 0.00002793
+    Epoch:   330     LossContext: 0.00002790
+    Epoch:   340     LossContext: 0.00002786
+    Epoch:   350     LossContext: 0.00002783
+    Epoch:   360     LossContext: 0.00002779
+    Epoch:   370     LossContext: 0.00002776
+    Epoch:   380     LossContext: 0.00002772
+    Epoch:   390     LossContext: 0.00002768
+    Epoch:   400     LossContext: 0.00002764
+    Epoch:   410     LossContext: 0.00002760
+    Epoch:   420     LossContext: 0.00002757
+    Epoch:   430     LossContext: 0.00002753
+    Epoch:   440     LossContext: 0.00002749
+    Epoch:   450     LossContext: 0.00002745
+    Epoch:   460     LossContext: 0.00002740
+    Epoch:   470     LossContext: 0.00002736
+    Epoch:   480     LossContext: 0.00002732
+    Epoch:   490     LossContext: 0.00002728
+    Epoch:   500     LossContext: 0.00002724
+    Epoch:   510     LossContext: 0.00002719
+    Epoch:   520     LossContext: 0.00002715
+    Epoch:   530     LossContext: 0.00002710
+    Epoch:   540     LossContext: 0.00002706
+    Epoch:   550     LossContext: 0.00002701
+    Epoch:   560     LossContext: 0.00002697
+    Epoch:   570     LossContext: 0.00002692
+    Epoch:   580     LossContext: 0.00002688
+    Epoch:   590     LossContext: 0.00002683
+    Epoch:   600     LossContext: 0.00002678
+    Epoch:   610     LossContext: 0.00002673
+    Epoch:   620     LossContext: 0.00002668
+    Epoch:   630     LossContext: 0.00002664
+    Epoch:   640     LossContext: 0.00002659
+    Epoch:   650     LossContext: 0.00002654
+    Epoch:   660     LossContext: 0.00002649
+    Epoch:   670     LossContext: 0.00002644
+    Epoch:   680     LossContext: 0.00002638
+    Epoch:   690     LossContext: 0.00002633
+    Epoch:   700     LossContext: 0.00002628
+    Epoch:   710     LossContext: 0.00002623
+    Epoch:   720     LossContext: 0.00002618
+    Epoch:   730     LossContext: 0.00002613
+    Epoch:   740     LossContext: 0.00002607
+    Epoch:   750     LossContext: 0.00002602
+    Epoch:   760     LossContext: 0.00002596
+    Epoch:   770     LossContext: 0.00002591
+    Epoch:   780     LossContext: 0.00002585
+    Epoch:   790     LossContext: 0.00002580
+    Epoch:   800     LossContext: 0.00002574
+    Epoch:   810     LossContext: 0.00002569
+    Epoch:   820     LossContext: 0.00002563
+    Epoch:   830     LossContext: 0.00002558
+    Epoch:   840     LossContext: 0.00002552
+    Epoch:   850     LossContext: 0.00002546
+    Epoch:   860     LossContext: 0.00002541
+    Epoch:   870     LossContext: 0.00002535
+    Epoch:   880     LossContext: 0.00002530
+    Epoch:   890     LossContext: 0.00002524
+    Epoch:   900     LossContext: 0.00002518
+    Epoch:   910     LossContext: 0.00002512
+    Epoch:   920     LossContext: 0.00002507
+    Epoch:   930     LossContext: 0.00002501
+    Epoch:   940     LossContext: 0.00002495
+    Epoch:   950     LossContext: 0.00002489
+    Epoch:   960     LossContext: 0.00002484
+    Epoch:   970     LossContext: 0.00002478
+    Epoch:   980     LossContext: 0.00002472
+    Epoch:   990     LossContext: 0.00002466
+    Epoch:  1000     LossContext: 0.00002461
+    Epoch:  1010     LossContext: 0.00002455
+    Epoch:  1020     LossContext: 0.00002449
+    Epoch:  1030     LossContext: 0.00002444
+    Epoch:  1040     LossContext: 0.00002438
+    Epoch:  1050     LossContext: 0.00002432
+    Epoch:  1060     LossContext: 0.00002427
+    Epoch:  1070     LossContext: 0.00002421
+    Epoch:  1080     LossContext: 0.00002416
+    Epoch:  1090     LossContext: 0.00002410
+    Epoch:  1100     LossContext: 0.00002405
+    Epoch:  1110     LossContext: 0.00002399
+    Epoch:  1120     LossContext: 0.00002394
+    Epoch:  1130     LossContext: 0.00002388
+    Epoch:  1140     LossContext: 0.00002383
+    Epoch:  1150     LossContext: 0.00002377
+    Epoch:  1160     LossContext: 0.00002372
+    Epoch:  1170     LossContext: 0.00002366
+    Epoch:  1180     LossContext: 0.00002361
+    Epoch:  1190     LossContext: 0.00002355
+    Epoch:  1200     LossContext: 0.00002350
+    Epoch:  1210     LossContext: 0.00002344
+    Epoch:  1220     LossContext: 0.00002339
+    Epoch:  1230     LossContext: 0.00002334
+    Epoch:  1240     LossContext: 0.00002329
+    Epoch:  1250     LossContext: 0.00002323
+    Epoch:  1260     LossContext: 0.00002318
+    Epoch:  1270     LossContext: 0.00002313
+    Epoch:  1280     LossContext: 0.00002308
+    Epoch:  1290     LossContext: 0.00002303
+    Epoch:  1300     LossContext: 0.00002298
+    Epoch:  1310     LossContext: 0.00002293
+    Epoch:  1320     LossContext: 0.00002288
+    Epoch:  1330     LossContext: 0.00002283
+    Epoch:  1340     LossContext: 0.00002278
+    Epoch:  1350     LossContext: 0.00002273
+    Epoch:  1360     LossContext: 0.00002268
+    Epoch:  1370     LossContext: 0.00002263
+    Epoch:  1380     LossContext: 0.00002258
+    Epoch:  1390     LossContext: 0.00002253
+    Epoch:  1400     LossContext: 0.00002248
+    Epoch:  1410     LossContext: 0.00002243
+    Epoch:  1420     LossContext: 0.00002238
+    Epoch:  1430     LossContext: 0.00002233
+    Epoch:  1440     LossContext: 0.00002228
+    Epoch:  1450     LossContext: 0.00002223
+    Epoch:  1460     LossContext: 0.00002218
+    Epoch:  1470     LossContext: 0.00002213
+    Epoch:  1480     LossContext: 0.00002208
+    Epoch:  1490     LossContext: 0.00002203
+    Epoch:  1499     LossContext: 0.00002199
+
+Gradient descent adaptation time: 0 hours 1 mins 28 secs
+
+Adapting to environment 2 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.02688134
+    Epoch:     1     LossContext: 0.01268294
+    Epoch:     2     LossContext: 0.00503150
+    Epoch:     3     LossContext: 0.00159964
+    Epoch:    10     LossContext: 0.00399772
+    Epoch:    20     LossContext: 0.00048213
+    Epoch:    30     LossContext: 0.00070862
+    Epoch:    40     LossContext: 0.00019898
+    Epoch:    50     LossContext: 0.00004955
+    Epoch:    60     LossContext: 0.00002237
+    Epoch:    70     LossContext: 0.00002564
+    Epoch:    80     LossContext: 0.00002429
+    Epoch:    90     LossContext: 0.00002222
+    Epoch:   100     LossContext: 0.00002117
+    Epoch:   110     LossContext: 0.00002073
+    Epoch:   120     LossContext: 0.00002051
+    Epoch:   130     LossContext: 0.00002037
+    Epoch:   140     LossContext: 0.00002025
+    Epoch:   150     LossContext: 0.00002014
+    Epoch:   160     LossContext: 0.00002004
+    Epoch:   170     LossContext: 0.00001993
+    Epoch:   180     LossContext: 0.00001983
+    Epoch:   190     LossContext: 0.00001972
+    Epoch:   200     LossContext: 0.00001961
+    Epoch:   210     LossContext: 0.00001950
+    Epoch:   220     LossContext: 0.00001939
+    Epoch:   230     LossContext: 0.00001927
+    Epoch:   240     LossContext: 0.00001916
+    Epoch:   250     LossContext: 0.00001905
+    Epoch:   260     LossContext: 0.00001894
+    Epoch:   270     LossContext: 0.00001883
+    Epoch:   280     LossContext: 0.00001871
+    Epoch:   290     LossContext: 0.00001860
+    Epoch:   300     LossContext: 0.00001849
+    Epoch:   310     LossContext: 0.00001837
+    Epoch:   320     LossContext: 0.00001826
+    Epoch:   330     LossContext: 0.00001815
+    Epoch:   340     LossContext: 0.00001804
+    Epoch:   350     LossContext: 0.00001793
+    Epoch:   360     LossContext: 0.00001782
+    Epoch:   370     LossContext: 0.00001771
+    Epoch:   380     LossContext: 0.00001760
+    Epoch:   390     LossContext: 0.00001749
+    Epoch:   400     LossContext: 0.00001738
+    Epoch:   410     LossContext: 0.00001727
+    Epoch:   420     LossContext: 0.00001716
+    Epoch:   430     LossContext: 0.00001706
+    Epoch:   440     LossContext: 0.00001696
+    Epoch:   450     LossContext: 0.00001685
+    Epoch:   460     LossContext: 0.00001675
+    Epoch:   470     LossContext: 0.00001664
+    Epoch:   480     LossContext: 0.00001654
+    Epoch:   490     LossContext: 0.00001644
+    Epoch:   500     LossContext: 0.00001634
+    Epoch:   510     LossContext: 0.00001624
+    Epoch:   520     LossContext: 0.00001615
+    Epoch:   530     LossContext: 0.00001605
+    Epoch:   540     LossContext: 0.00001596
+    Epoch:   550     LossContext: 0.00001587
+    Epoch:   560     LossContext: 0.00001578
+    Epoch:   570     LossContext: 0.00001570
+    Epoch:   580     LossContext: 0.00001562
+    Epoch:   590     LossContext: 0.00001554
+    Epoch:   600     LossContext: 0.00001546
+    Epoch:   610     LossContext: 0.00001538
+    Epoch:   620     LossContext: 0.00001531
+    Epoch:   630     LossContext: 0.00001524
+    Epoch:   640     LossContext: 0.00001517
+    Epoch:   650     LossContext: 0.00001509
+    Epoch:   660     LossContext: 0.00001503
+    Epoch:   670     LossContext: 0.00001496
+    Epoch:   680     LossContext: 0.00001490
+    Epoch:   690     LossContext: 0.00001483
+    Epoch:   700     LossContext: 0.00001478
+    Epoch:   710     LossContext: 0.00001472
+    Epoch:   720     LossContext: 0.00001466
+    Epoch:   730     LossContext: 0.00001461
+    Epoch:   740     LossContext: 0.00001455
+    Epoch:   750     LossContext: 0.00001450
+    Epoch:   760     LossContext: 0.00001444
+    Epoch:   770     LossContext: 0.00001439
+    Epoch:   780     LossContext: 0.00001434
+    Epoch:   790     LossContext: 0.00001429
+    Epoch:   800     LossContext: 0.00001424
+    Epoch:   810     LossContext: 0.00001419
+    Epoch:   820     LossContext: 0.00001414
+    Epoch:   830     LossContext: 0.00001409
+    Epoch:   840     LossContext: 0.00001404
+    Epoch:   850     LossContext: 0.00001399
+    Epoch:   860     LossContext: 0.00001395
+    Epoch:   870     LossContext: 0.00001390
+    Epoch:   880     LossContext: 0.00001385
+    Epoch:   890     LossContext: 0.00001381
+    Epoch:   900     LossContext: 0.00001376
+    Epoch:   910     LossContext: 0.00001371
+    Epoch:   920     LossContext: 0.00001367
+    Epoch:   930     LossContext: 0.00001363
+    Epoch:   940     LossContext: 0.00001358
+    Epoch:   950     LossContext: 0.00001354
+    Epoch:   960     LossContext: 0.00001350
+    Epoch:   970     LossContext: 0.00001346
+    Epoch:   980     LossContext: 0.00001342
+    Epoch:   990     LossContext: 0.00001338
+    Epoch:  1000     LossContext: 0.00001334
+    Epoch:  1010     LossContext: 0.00001330
+    Epoch:  1020     LossContext: 0.00001326
+    Epoch:  1030     LossContext: 0.00001322
+    Epoch:  1040     LossContext: 0.00001319
+    Epoch:  1050     LossContext: 0.00001315
+    Epoch:  1060     LossContext: 0.00001312
+    Epoch:  1070     LossContext: 0.00001308
+    Epoch:  1080     LossContext: 0.00001304
+    Epoch:  1090     LossContext: 0.00001301
+    Epoch:  1100     LossContext: 0.00001298
+    Epoch:  1110     LossContext: 0.00001294
+    Epoch:  1120     LossContext: 0.00001291
+    Epoch:  1130     LossContext: 0.00001287
+    Epoch:  1140     LossContext: 0.00001284
+    Epoch:  1150     LossContext: 0.00001281
+    Epoch:  1160     LossContext: 0.00001277
+    Epoch:  1170     LossContext: 0.00001274
+    Epoch:  1180     LossContext: 0.00001271
+    Epoch:  1190     LossContext: 0.00001268
+    Epoch:  1200     LossContext: 0.00001265
+    Epoch:  1210     LossContext: 0.00001261
+    Epoch:  1220     LossContext: 0.00001258
+    Epoch:  1230     LossContext: 0.00001255
+    Epoch:  1240     LossContext: 0.00001252
+    Epoch:  1250     LossContext: 0.00001249
+    Epoch:  1260     LossContext: 0.00001246
+    Epoch:  1270     LossContext: 0.00001243
+    Epoch:  1280     LossContext: 0.00001240
+    Epoch:  1290     LossContext: 0.00001237
+    Epoch:  1300     LossContext: 0.00001234
+    Epoch:  1310     LossContext: 0.00001231
+    Epoch:  1320     LossContext: 0.00001228
+    Epoch:  1330     LossContext: 0.00001225
+    Epoch:  1340     LossContext: 0.00001222
+    Epoch:  1350     LossContext: 0.00001219
+    Epoch:  1360     LossContext: 0.00001216
+    Epoch:  1370     LossContext: 0.00001213
+    Epoch:  1380     LossContext: 0.00001210
+    Epoch:  1390     LossContext: 0.00001208
+    Epoch:  1400     LossContext: 0.00001205
+    Epoch:  1410     LossContext: 0.00001202
+    Epoch:  1420     LossContext: 0.00001199
+    Epoch:  1430     LossContext: 0.00001196
+    Epoch:  1440     LossContext: 0.00001194
+    Epoch:  1450     LossContext: 0.00001191
+    Epoch:  1460     LossContext: 0.00001188
+    Epoch:  1470     LossContext: 0.00001186
+    Epoch:  1480     LossContext: 0.00001183
+    Epoch:  1490     LossContext: 0.00001181
+    Epoch:  1499     LossContext: 0.00001178
+
+Gradient descent adaptation time: 0 hours 1 mins 28 secs
+
+Adapting to environment 3 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.01602803
+    Epoch:     1     LossContext: 0.00727703
+    Epoch:     2     LossContext: 0.00297042
+    Epoch:     3     LossContext: 0.00096166
+    Epoch:    10     LossContext: 0.00118528
+    Epoch:    20     LossContext: 0.00118193
+    Epoch:    30     LossContext: 0.00002623
+    Epoch:    40     LossContext: 0.00017781
+    Epoch:    50     LossContext: 0.00003328
+    Epoch:    60     LossContext: 0.00003511
+    Epoch:    70     LossContext: 0.00002731
+    Epoch:    80     LossContext: 0.00002144
+    Epoch:    90     LossContext: 0.00002210
+    Epoch:   100     LossContext: 0.00002143
+    Epoch:   110     LossContext: 0.00002103
+    Epoch:   120     LossContext: 0.00002091
+    Epoch:   130     LossContext: 0.00002078
+    Epoch:   140     LossContext: 0.00002063
+    Epoch:   150     LossContext: 0.00002049
+    Epoch:   160     LossContext: 0.00002036
+    Epoch:   170     LossContext: 0.00002022
+    Epoch:   180     LossContext: 0.00002009
+    Epoch:   190     LossContext: 0.00001995
+    Epoch:   200     LossContext: 0.00001982
+    Epoch:   210     LossContext: 0.00001969
+    Epoch:   220     LossContext: 0.00001956
+    Epoch:   230     LossContext: 0.00001942
+    Epoch:   240     LossContext: 0.00001929
+    Epoch:   250     LossContext: 0.00001916
+    Epoch:   260     LossContext: 0.00001902
+    Epoch:   270     LossContext: 0.00001889
+    Epoch:   280     LossContext: 0.00001876
+    Epoch:   290     LossContext: 0.00001863
+    Epoch:   300     LossContext: 0.00001850
+    Epoch:   310     LossContext: 0.00001838
+    Epoch:   320     LossContext: 0.00001826
+    Epoch:   330     LossContext: 0.00001814
+    Epoch:   340     LossContext: 0.00001802
+    Epoch:   350     LossContext: 0.00001791
+    Epoch:   360     LossContext: 0.00001780
+    Epoch:   370     LossContext: 0.00001769
+    Epoch:   380     LossContext: 0.00001759
+    Epoch:   390     LossContext: 0.00001748
+    Epoch:   400     LossContext: 0.00001738
+    Epoch:   410     LossContext: 0.00001728
+    Epoch:   420     LossContext: 0.00001718
+    Epoch:   430     LossContext: 0.00001708
+    Epoch:   440     LossContext: 0.00001699
+    Epoch:   450     LossContext: 0.00001689
+    Epoch:   460     LossContext: 0.00001680
+    Epoch:   470     LossContext: 0.00001671
+    Epoch:   480     LossContext: 0.00001661
+    Epoch:   490     LossContext: 0.00001653
+    Epoch:   500     LossContext: 0.00001644
+    Epoch:   510     LossContext: 0.00001635
+    Epoch:   520     LossContext: 0.00001627
+    Epoch:   530     LossContext: 0.00001619
+    Epoch:   540     LossContext: 0.00001611
+    Epoch:   550     LossContext: 0.00001603
+    Epoch:   560     LossContext: 0.00001595
+    Epoch:   570     LossContext: 0.00001588
+    Epoch:   580     LossContext: 0.00001580
+    Epoch:   590     LossContext: 0.00001573
+    Epoch:   600     LossContext: 0.00001566
+    Epoch:   610     LossContext: 0.00001558
+    Epoch:   620     LossContext: 0.00001551
+    Epoch:   630     LossContext: 0.00001545
+    Epoch:   640     LossContext: 0.00001538
+    Epoch:   650     LossContext: 0.00001531
+    Epoch:   660     LossContext: 0.00001524
+    Epoch:   670     LossContext: 0.00001518
+    Epoch:   680     LossContext: 0.00001511
+    Epoch:   690     LossContext: 0.00001504
+    Epoch:   700     LossContext: 0.00001498
+    Epoch:   710     LossContext: 0.00001492
+    Epoch:   720     LossContext: 0.00001486
+    Epoch:   730     LossContext: 0.00001480
+    Epoch:   740     LossContext: 0.00001474
+    Epoch:   750     LossContext: 0.00001469
+    Epoch:   760     LossContext: 0.00001463
+    Epoch:   770     LossContext: 0.00001458
+    Epoch:   780     LossContext: 0.00001452
+    Epoch:   790     LossContext: 0.00001447
+    Epoch:   800     LossContext: 0.00001442
+    Epoch:   810     LossContext: 0.00001436
+    Epoch:   820     LossContext: 0.00001431
+    Epoch:   830     LossContext: 0.00001426
+    Epoch:   840     LossContext: 0.00001421
+    Epoch:   850     LossContext: 0.00001416
+    Epoch:   860     LossContext: 0.00001412
+    Epoch:   870     LossContext: 0.00001407
+    Epoch:   880     LossContext: 0.00001402
+    Epoch:   890     LossContext: 0.00001397
+    Epoch:   900     LossContext: 0.00001393
+    Epoch:   910     LossContext: 0.00001389
+    Epoch:   920     LossContext: 0.00001384
+    Epoch:   930     LossContext: 0.00001380
+    Epoch:   940     LossContext: 0.00001376
+    Epoch:   950     LossContext: 0.00001371
+    Epoch:   960     LossContext: 0.00001367
+    Epoch:   970     LossContext: 0.00001363
+    Epoch:   980     LossContext: 0.00001359
+    Epoch:   990     LossContext: 0.00001355
+    Epoch:  1000     LossContext: 0.00001351
+    Epoch:  1010     LossContext: 0.00001348
+    Epoch:  1020     LossContext: 0.00001344
+    Epoch:  1030     LossContext: 0.00001341
+    Epoch:  1040     LossContext: 0.00001337
+    Epoch:  1050     LossContext: 0.00001334
+    Epoch:  1060     LossContext: 0.00001330
+    Epoch:  1070     LossContext: 0.00001327
+    Epoch:  1080     LossContext: 0.00001324
+    Epoch:  1090     LossContext: 0.00001320
+    Epoch:  1100     LossContext: 0.00001317
+    Epoch:  1110     LossContext: 0.00001314
+    Epoch:  1120     LossContext: 0.00001311
+    Epoch:  1130     LossContext: 0.00001308
+    Epoch:  1140     LossContext: 0.00001305
+    Epoch:  1150     LossContext: 0.00001302
+    Epoch:  1160     LossContext: 0.00001299
+    Epoch:  1170     LossContext: 0.00001296
+    Epoch:  1180     LossContext: 0.00001296
+    Epoch:  1190     LossContext: 0.00001290
+    Epoch:  1200     LossContext: 0.00001288
+    Epoch:  1210     LossContext: 0.00001290
+    Epoch:  1220     LossContext: 0.00001287
+    Epoch:  1230     LossContext: 0.00001290
+    Epoch:  1240     LossContext: 0.00001294
+    Epoch:  1250     LossContext: 0.00001294
+    Epoch:  1260     LossContext: 0.00001299
+    Epoch:  1270     LossContext: 0.00001293
+    Epoch:  1280     LossContext: 0.00001320
+    Epoch:  1290     LossContext: 0.00001276
+    Epoch:  1300     LossContext: 0.00001366
+    Epoch:  1310     LossContext: 0.00001272
+    Epoch:  1320     LossContext: 0.00001330
+    Epoch:  1330     LossContext: 0.00001282
+    Epoch:  1340     LossContext: 0.00001302
+    Epoch:  1350     LossContext: 0.00001254
+    Epoch:  1360     LossContext: 0.00001386
+    Epoch:  1370     LossContext: 0.00001272
+    Epoch:  1380     LossContext: 0.00001287
+    Epoch:  1390     LossContext: 0.00001278
+    Epoch:  1400     LossContext: 0.00001286
+    Epoch:  1410     LossContext: 0.00001236
+    Epoch:  1420     LossContext: 0.00001385
+    Epoch:  1430     LossContext: 0.00001236
+    Epoch:  1440     LossContext: 0.00001323
+    Epoch:  1450     LossContext: 0.00001248
+    Epoch:  1460     LossContext: 0.00001294
+    Epoch:  1470     LossContext: 0.00001239
+    Epoch:  1480     LossContext: 0.00001321
+    Epoch:  1490     LossContext: 0.00001249
+    Epoch:  1499     LossContext: 0.00001304
+
+Gradient descent adaptation time: 0 hours 1 mins 28 secs
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+Saving adaptation parameters into ./runs/04082024-213906/adapt/ folder with id 170846 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 9
+    Number of adaptation environments: 4
+    Final length of the training trajectories: 20
+    Length of the testing trajectories: 20
+Test Score (OOD): 1.9957031e-05
+
