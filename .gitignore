@@ -133,7 +133,7 @@ venv/*
 !examples/gray-scott/runs/05042024-183849
 !examples/gray-scott/runs/06042024-210906
 !examples/gray-scott/runs/PlotTrajectories
-
+!examples/gray-scott/runs/05082024-233000-NearestGood
 
 # !examples/brusselator/runs/02082024-100530-Test
 # !examples/brusselator/runs/02082024-181243
