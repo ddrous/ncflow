@@ -301,18 +301,18 @@ if train == True:
     # for propostion in [0.25, 0.5, 0.75]:
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-        # trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
-        trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
-                               nb_inner_steps_max=nb_inner_steps_max, 
-                               proximal_reg=proximal_beta, 
-                               inner_tol_node=inner_tol_node, 
-                               inner_tol_ctx=inner_tol_ctx,
-                               print_error_every=print_error_every*(2**0), 
-                               save_path=trainer_save_path, 
-                               val_dataloader=val_dataloader, 
-                               patience=early_stopping_patience,
-                               int_prop=prop,
-                               key=seed)
+        trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
+        # trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
+        #                        nb_inner_steps_max=nb_inner_steps_max, 
+        #                        proximal_reg=proximal_beta, 
+        #                        inner_tol_node=inner_tol_node, 
+        #                        inner_tol_ctx=inner_tol_ctx,
+        #                        print_error_every=print_error_every*(2**0), 
+        #                        save_path=trainer_save_path, 
+        #                        val_dataloader=val_dataloader, 
+        #                        patience=early_stopping_patience,
+        #                        int_prop=prop,
+        #                        key=seed)
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
 
