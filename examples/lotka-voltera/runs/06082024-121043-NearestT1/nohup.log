@@ -1002,6 +1002,17 @@ Shapes of elements in a batch: (9, 4, 20, 2) (20,)
     Epoch:  9440      LossTrajs: 0.00008941     ContextsNorm: 0.04129598     ValIndCrit: 0.00011658
     Epoch:  9450      LossTrajs: 0.00009097     ContextsNorm: 0.04127926     ValIndCrit: 0.00010741
     Epoch:  9460      LossTrajs: 0.00006465     ContextsNorm: 0.04126471     ValIndCrit: 0.00006734
+
+    ################# BEST MODEL #################
+
+
+
+
+
+
+
+
+
     Epoch:  9470      LossTrajs: 0.00006154     ContextsNorm: 0.04124804     ValIndCrit: 0.00007009
     Epoch:  9480      LossTrajs: 0.00007260     ContextsNorm: 0.04123116     ValIndCrit: 0.00007330
     Epoch:  9490      LossTrajs: 0.00006602     ContextsNorm: 0.04121288     ValIndCrit: 0.00006784
@@ -1774,10 +1785,3 @@ Saving adaptation parameters into ./runs/06082024-121043/adapt/ folder with id 1
     Length of the testing trajectories: 20
 Test Score (OOD): 0.0005089354
 
-==  Begining out-of-distribution visualisation ... ==
-    Environment id: 0
-    Trajectory id: 0
-    Visualized dimensions: (0, 1)
-    Final length of the training trajectories: 20
-    Length of the testing trajectories: 20
-Testing finished. Figure saved in: ./runs/06082024-121043/adapt/results_ood.png
