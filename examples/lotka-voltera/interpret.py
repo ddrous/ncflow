@@ -7,7 +7,7 @@ from nodax import ContextParams
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-run_folder = "runs/10082024-101628/"
+run_folder = "runs/10082024-101628-Interpretable/"
 
 
 #%%
@@ -150,7 +150,7 @@ for i in range(4):
     ax.text(Y_pred[i, 0]+0.01, Y_pred[i, 1]+0.01, f"{i}", fontsize=6, color="k", ha='left', va='bottom', fontstyle='italic', fontweight='bold')
 
 ## Set the title as CoDA - Error: 1.23e-4
-ax.set_title(f"Adapt MSE: {error:.2e}")
+ax.set_title(f"Adaptation MSE: {error:.2e}")
 
 ## Save the figure
 fig.savefig(run_folder+"interpretable_NCF.pdf", dpi=300, bbox_inches='tight')
