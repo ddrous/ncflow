@@ -24,24 +24,24 @@ seed = 2026
 
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 128
+context_size = 2
 print_error_every = 100
 # integrator = diffrax.Dopri5
 integrator = RK4
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 # run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
-# run_folder = "./"
+run_folder = "./"
 
 ## Training hyperparameters ##
-train = True
+train = False
 save_trainer = True
 finetune = False
 
 init_lr = 3e-4
 sched_factor = 1.0
 
-nb_epochs = 10000
+nb_epochs = 20000
 # nb_outer_steps_max = 1
 # nb_inner_steps_max = 30
 # proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
@@ -70,8 +70,8 @@ if train == True:
         os.mkdir('./')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    # run_folder = './'
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    run_folder = './'
+    # run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
     os.mkdir(run_folder)
 
     # Save the run and dataset scripts in that folder
@@ -127,8 +127,6 @@ class Swish(eqx.Module):
         return x * jax.nn.sigmoid(self.beta * x)
 
 class Augmentation(eqx.Module):
-    layers_data: list
-    layers_context: list
     layers_shared: list
     activations: list
 
@@ -136,25 +134,12 @@ class Augmentation(eqx.Module):
         keys = generate_new_keys(key, num=12)
         self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
-                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
-
-        self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
-                            eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
-                            eqx.nn.Linear(int_size, int_size, key=keys[5])]
-
-        self.layers_shared = [eqx.nn.Linear(2*int_size, int_size, key=keys[6]), self.activations[4], 
+        self.layers_shared = [eqx.nn.Linear(data_size+context_size, int_size, key=keys[6]), self.activations[4], 
                               eqx.nn.Linear(int_size, int_size, key=keys[7]), self.activations[5], 
                               eqx.nn.Linear(int_size, int_size, key=keys[8]), self.activations[6], 
                               eqx.nn.Linear(int_size, data_size, key=keys[9])]
 
     def __call__(self, t, y, ctx):
-
-        for layer in self.layers_context:
-            ctx = layer(ctx)
-
-        for layer in self.layers_data:
-            y = layer(y)
 
         y = jnp.concatenate([y, ctx], axis=0)
         for layer in self.layers_shared:

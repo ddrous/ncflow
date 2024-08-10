@@ -24,7 +24,7 @@ seed = 2026
 
 ## Neural Context Flow hyperparameters ##
 context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 128
+context_size = 2
 print_error_every = 100
 # integrator = diffrax.Dopri5
 integrator = RK4
@@ -127,8 +127,6 @@ class Swish(eqx.Module):
         return x * jax.nn.sigmoid(self.beta * x)
 
 class Augmentation(eqx.Module):
-    layers_data: list
-    layers_context: list
     layers_shared: list
     activations: list
 
@@ -136,25 +134,12 @@ class Augmentation(eqx.Module):
         keys = generate_new_keys(key, num=12)
         self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
-                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
-
-        self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
-                            eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
-                            eqx.nn.Linear(int_size, int_size, key=keys[5])]
-
-        self.layers_shared = [eqx.nn.Linear(2*int_size, int_size, key=keys[6]), self.activations[4], 
+        self.layers_shared = [eqx.nn.Linear(data_size+context_size, int_size, key=keys[6]), self.activations[4], 
                               eqx.nn.Linear(int_size, int_size, key=keys[7]), self.activations[5], 
                               eqx.nn.Linear(int_size, int_size, key=keys[8]), self.activations[6], 
                               eqx.nn.Linear(int_size, data_size, key=keys[9])]
 
     def __call__(self, t, y, ctx):
-
-        for layer in self.layers_context:
-            ctx = layer(ctx)
-
-        for layer in self.layers_data:
-            y = layer(y)
 
         y = jnp.concatenate([y, ctx], axis=0)
         for layer in self.layers_shared:
@@ -206,7 +191,7 @@ class ContextFlowVectorField(eqx.Module):
 #         return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
 
 
-augmentation = Augmentation(data_size=2, int_size=64, context_size=context_size, key=seed)
+augmentation = Augmentation(data_size=2, int_size=224, context_size=context_size, key=seed)
 
 # physics = Physics(key=seed)
 physics = None

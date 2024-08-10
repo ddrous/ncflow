@@ -115,7 +115,10 @@ venv/*
 !examples/lotka-voltera/runs/03082024-191540-BestRandom
 !examples/lotka-voltera/runs/03082024-214102-BestSmallest
 !examples/lotka-voltera/runs/04082024-213906-SuperSpecial
-!examples/lotka-voltera/runs/06082024-121043-NearestT1
+!examples/lotka-voltera/runs/10082024-043102-NearestMassiveT1
+!examples/lotka-voltera/runs/10082024-101628-Interpretable
+!examples/lotka-voltera/runs/10082024-083641-Tiny
+
 
 !examples/gray-scott/runs/30032024-091851
 !examples/glycolytic-oscillator/runs/24032024-125527
