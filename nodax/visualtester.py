@@ -443,7 +443,7 @@ class VisualTester:
 
 
 
-    def visualize2D(self, data_loader, e=None, traj=None, res=(32,32), int_cutoff=1.0, nb_plot_timesteps=10, save_path=False, key=None):
+    def visualize2D(self, data_loader, e=None, traj=None, res=(32,32), int_cutoff=1.0, nb_plot_timesteps=10, cmap='gist_ncar', save_path=False, key=None):
 
         """
         The visualize2D function is used to visualize the results of a trained neural ODE model.
@@ -510,8 +510,8 @@ class VisualTester:
             gt_j = vec_to_mats(X[j], res, nb_mats)
             ncf_j = vec_to_mats(X_hat[j], res, nb_mats)
             for i in range(nb_mats):
-                ax[2*i, j].imshow(gt_j[i], cmap='gist_ncar', interpolation='bilinear', origin='lower')
-                ax[2*i+1, j].imshow(ncf_j[i], cmap='gist_ncar', interpolation='bilinear', origin='lower')
+                ax[2*i, j].imshow(gt_j[i], cmap=cmap, interpolation='bilinear', origin='lower')
+                ax[2*i+1, j].imshow(ncf_j[i], cmap=cmap, interpolation='bilinear', origin='lower')
 
         ## Remove the ticks and labels
         for a in ax.flatten():
@@ -527,6 +527,7 @@ class VisualTester:
 
         if save_path:
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            np.savez(save_path+"_data.npz", X=X, X_hat=X_hat)
             print("Testing finished. Figure saved in:", save_path);
 
         ## Save the gifs as well

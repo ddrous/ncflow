@@ -5,7 +5,8 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = 'false'
 from nodax import *
 # jax.config.update("jax_debug_nans", True)
 
-
+%load_ext autoreload
+%autoreload 2
 
 
 #%%
@@ -23,9 +24,9 @@ lr_factor = 0.1
 
 print_error_every = 5
 
-train = True
-# run_folder = "./runs/03082024-024220-Toy/"      ## Run folder to use when not training
-reuse_run_folder = False
+train = False
+run_folder = "./"      ## Run folder to use when not training
+reuse_run_folder = True
 
 save_trainer = True
 
@@ -38,7 +39,7 @@ inner_tol_node = 1e-16
 inner_tol_ctx = 1e-16
 early_stopping_patience = nb_outer_steps_max//1
 
-adapt = True
+adapt = False
 adapt_huge = False
 
 # integrator = diffrax.Dopri5
@@ -559,8 +560,15 @@ if finetune:
     savefigdir = finetunedir+"results_2D_ind.png"
 else:
     savefigdir = run_folder+"results_2D_ind.png"
+
 # visualtester.visualize2D(test_dataloader, int_cutoff=1.0, res=8, nb_plot_timesteps=10, save_path=savefigdir);
-# visualtester.visualize2D(train_dataloader, int_cutoff=1.0, res=8, nb_plot_timesteps=10, save_path=run_folder+"results_2D_ind_train.png");
+# visualtester.visualize2D(train_dataloader, 
+#                          int_cutoff=1.0, 
+#                          res=32, 
+#                          e=0,
+#                          traj=0,
+#                          nb_plot_timesteps=10, 
+#                          save_path=run_folder+"results_2D_ind_train.png");
 
 
 #%%
@@ -647,11 +655,21 @@ else:
 
 #%%
 ood_crit = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
+print("\nPer-environment OOD scores:", ood_crit[1])
 
 visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
+#%%
+visualtester.visualize2D(adapt_dataloader, 
+                         int_cutoff=1.0, 
+                         res=32, 
+                         e=3,
+                         traj=0,
+                         nb_plot_timesteps=10,
+                         cmap="coolwarm", 
+                         save_path=run_folder+"results_2D_ind_train.png");
 
-print("\nPer-environment OOD scores:", ood_crit[1])
+
 
 
 
