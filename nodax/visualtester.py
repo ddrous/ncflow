@@ -359,8 +359,14 @@ class VisualTester:
         t_test = t_eval[:test_length]
 
         if forecast == True:
-            t_span_ext = (t_eval[0], t_eval[-1] + (t_eval[-1]-t_eval[0])/2)
-            t_test_ext = jnp.linspace(*t_span_ext, 2*test_length)
+            delta_t = t_eval[1] - t_eval[0]
+            t_span_ext = (t_eval[0], t_eval[-1]+delta_t+ (t_eval[-1]+delta_t-t_eval[0])/2)
+            # t_test_ext = jnp.linspace(*t_span_ext, 2*test_length)
+            t_test_ext = jnp.linspace(t_eval[-1], t_span_ext[-1], 2+test_length//2, endpoint=True)
+            t_test_ext = jnp.concatenate([t_test, t_test_ext[1:]])
+            ## Round to two decimal places
+            t_test_ext = jnp.round(t_test_ext, 3)
+
         else:
             t_test_ext = t_test
 
@@ -378,7 +384,8 @@ class VisualTester:
         contexts = self.trainer.learner.contexts.params
         if data_loader.adaptation == True:
             contexts_adapt = self.trainer.learner.contexts_adapt.params
-            contexts = jnp.stack([contexts_adapt, contexts], axis=0)
+            print("Shapes before concatenation:", contexts_adapt.shape, contexts.shape)
+            contexts = jnp.concatenate([contexts_adapt, contexts], axis=0)
 
         batched_neuralode = jax.vmap(self.trainer.learner.neuralode, in_axes=(None, None, None, 0))
 
@@ -389,6 +396,8 @@ class VisualTester:
 
         X_hat = X_hat.squeeze()
         X = X.squeeze()
+
+        # self.print_UQ_metrics((t_test_ext, X_hat), (t_test, X))
 
         # fig, ax = plt.subplot_mosaic('AB', figsize=(6*2, 4*1))
         fig, ax = plt.subplot_mosaic('A;B', figsize=(6*1, 4*2))
@@ -440,7 +449,139 @@ class VisualTester:
             print("Testing finished. Figure saved in:", save_path);
 
 
+    def printUQ_metrics(self, data_loader, forecast_factor=0.5, conf_level_scale=3, save_path=False):
 
+        """ Calculate a few UQ metrics the results of the neural ODE model with epistemic uncertainty quantification 
+        """
+
+        print("==  Begining in-domain visualisation with UQ... ==")
+
+        X = data_loader.dataset
+        t_eval = data_loader.t_eval
+        test_length = t_eval.shape[0]
+        t_test = t_eval
+
+        delta_t = t_eval[1] - t_eval[0]
+        t_span_ext = (t_eval[0], t_eval[-1]+delta_t+ forecast_factor*(t_eval[-1]+delta_t-t_eval[0]))
+        # t_test_ext = jnp.linspace(*t_span_ext, 2*test_length)
+        t_test_ext = jnp.linspace(t_eval[-1], t_span_ext[-1], 2+test_length//2, endpoint=False)
+        t_test_ext = jnp.concatenate([t_test, t_test_ext[1:]])
+        ## Round to two decimal places
+        t_test_ext = jnp.round(t_test_ext, 3)
+
+        contexts_ind = self.trainer.learner.contexts.params
+        if data_loader.adaptation == True:
+            contexts_ood = self.trainer.learner.contexts_adapt.params
+            contexts_all = jnp.concatenate([contexts_ind, contexts_ood], axis=0)
+            contexts = contexts_ood     ## Context of interest
+        else:
+            contexts_all = contexts_ind
+            contexts = contexts_ind
+
+
+        @eqx.filter_vmap
+        def UQ_metrics(X_e, contexts_e):
+            ## "==  Uncertainty Quantification Metrics for many traj in one env =="
+            ## The first 3 require the gound truth, the final one doesn, we plot that one
+
+            ## X_e: (trajs, time, dim)
+            ## context_e: (dim,)
+  
+            batched_neuralode = jax.vmap(self.trainer.learner.neuralode, in_axes=(None, None, None, 0))
+            X_hat_ext, _ = batched_neuralode(X_e[:, 0, :], t_test_ext, contexts_e, contexts_all)
+            ## X_hat_ext: (envs, trajs, time_ext, dim)
+            X_hat = X_hat_ext[:, :, :test_length, :]
+
+            means = jnp.mean(X_hat, axis=0, keepdims=False)
+            std = jnp.std(X_hat, axis=0, keepdims=False, ddof=0)
+
+            ## Print the shapes of the means and std
+            print("Shapes of the means and std:", means.shape, std.shape, X_e.shape)
+
+            # 1. Relative MSE loss: Difference between the mean of the predictions and the ground truth
+            rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)) / jnp.mean(means**2, axis=(1,2)))
+            # rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)))
+
+            # 2. Relative MAPE: same as abopve but in percentage
+            rel_mape_loss = jnp.mean(jnp.mean(jnp.abs(X_e-means), axis=(1,2))/jnp.mean(X_e, axis=(1,2)))
+
+            # 3. Confidence level: the percentage of the predictions that fall within the 3xstd of predictions
+            conf_level = jnp.mean(jnp.mean(jnp.abs(X_e-means) <= conf_level_scale*std, axis=(1,2)))
+
+            # 4. Relative standard deviation: quotient the std of the predictions to the mean of the predictions
+            long_means = jnp.mean(X_hat_ext, axis=0)
+            long_std = jnp.std(X_hat_ext, axis=0)
+            # rel_std_loss = jnp.mean(jnp.mean(long_std**2, axis=-1)/jnp.mean(long_means**2, axis=-1), axis=0)
+            rel_std_loss = jnp.mean(jnp.mean(long_std**2, axis=-1), axis=0)
+
+            # print("Shapes of the metrics:", t_test_ext.shape, rel_std_loss.shape)
+            return rel_mse_loss, rel_mape_loss, conf_level, rel_std_loss, (X_e-means, std)
+
+        rel_mse_loss, rel_mape_loss, conf_level, rel_std_loss, aux_dat = UQ_metrics(X, contexts)
+        m_rel_mse, m_rel_mape, m_conf_level = jnp.mean(rel_mse_loss), jnp.mean(rel_mape_loss), jnp.mean(conf_level)
+        m_rel_std = jnp.mean(rel_std_loss, axis=0)
+
+        ## Print the results properly
+        print("==  Uncertainty Quantification Metrics (across all environments)  ==")
+        print(f"    Relative MSE Loss: {m_rel_mse*100:.3e} %")
+        print(f"    MAPE Loss:         {m_rel_mape*100:.2f} %")
+        print(f"    Confidence Level:  {m_conf_level*100:.2f} % - (also called the empirical coverage probability)")
+
+        ## Plot the last one
+        fig, (ax, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 4*3))
+        for e in range(rel_std_loss.shape[0]):
+            ax.plot(t_test_ext, rel_std_loss[e], "s-", label=f"Env {e+1}")
+        ax.axvline(x=t_eval[-1], color='crimson', linestyle='--', label="Forecast Start")
+
+        # ax.set_title("Relative Standard Deviation")
+        ax.set_xlabel(f"Time $t$")
+        ## Set tyhe y label in Latex
+        # ax.set_ylabel(r'$\sum \frac{\Vert\sigma\Vert_2}{\Vert \mu \Vert_2}$')
+        ax.set_ylabel(r'$\sum \Vert\sigma\Vert_2$')
+        ax.legend()
+
+        ## Plot scatter the auxiliary data
+        errors, deviations = aux_dat
+        errors, deviations = jnp.abs(errors.flatten()), deviations.flatten()
+        print("Shapes of the auxiliary data:", errors.shape, deviations.shape)
+        ax2.scatter(deviations, errors, s=1)
+        # ax2.set_title("Errors vs Deviations")
+        ax2.set_xlabel(f"$\hat \sigma$")
+        ax2.set_ylabel(f"$| x - \hat \mu |$")
+
+        ## Put the tandard deviations in bins, and plot the mean error in each bin (plot the std as well as a vertical bar)
+        bins = np.linspace(deviations.min(), deviations.max(), 12)
+        digitized = np.digitize(deviations, bins)
+        bin_means = [errors[digitized == i].mean() for i in range(1, len(bins))]
+        bin_stds = [errors[digitized == i].std()/2 for i in range(1, len(bins))]
+        bin_counts_raw = [len(errors[digitized == i])//5 for i in range(1, len(bins))]
+        ## Normalise the bin counts between 1 and the max
+        bin_counts = np.interp(bin_counts_raw, (min(bin_counts_raw), max(bin_counts_raw)), (10, max(bin_counts_raw)))
+
+        bin_centers = (bins[:-1] + bins[1:]) / 2
+        ax3.errorbar(bin_centers, bin_means, yerr=bin_stds, fmt='s', markersize=0)
+        ## Draw the dots using scatter
+        ax3.scatter(bin_centers, bin_means, s=bin_counts, alpha=0.5)
+        ## Set the xticks and their labels at the centers
+        ax3.set_xticks(bin_centers)
+        ax3.set_xticklabels([f"{b:.3f}" for b in bin_centers])
+
+        ## Plot rectangles that span the standard deviation bins
+        for i in range(len(bins)-1):
+            ax3.add_patch(patches.Rectangle((bins[i], 0), bins[i+1]-bins[i], bin_means[i], color='grey', alpha=0.1))
+
+        # ax3.set_title("Errors vs Deviations")
+        ax3.set_ylabel(f"Absolute Error $ | x - \hat \mu |$")
+        # ax3.set_xlabel("Standard Deviation Bins")
+        ax3.set_xlabel(f"Standard Deviation $\hat \sigma$")
+
+        ## Print and/or return those means (we will plot the rel_std_loss trajectories InD and OoD for all 6 problems)
+        if save_path:
+            np.savez(save_path+".npz", rel_mse=m_rel_mse, rel_mape=m_rel_mape, conf_level=m_conf_level, rel_std=m_rel_std)
+            fig.savefig(save_path+".svg", dpi=100, bbox_inches='tight')
+            print("Matrics plots saved in:", save_path);
+
+        return m_rel_mse, m_rel_mape, m_conf_level, m_rel_std
 
 
     def visualize2D(self, data_loader, e=None, traj=None, res=(32,32), int_cutoff=1.0, nb_plot_timesteps=10, cmap='gist_ncar', save_path=False, key=None):

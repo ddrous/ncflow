@@ -358,6 +358,9 @@ visualtester.visualizeUQ(test_dataloader, std_scale=1e1, int_cutoff=1.0, forecas
 
 
 
+#%%
+
+visualtester.printUQ_metrics(test_dataloader, forecast_factor=0.5, conf_level_scale=3, save_path=run_folder+"uq_metrics");
 
 
 
@@ -372,10 +375,7 @@ visualtester.visualizeUQ(test_dataloader, std_scale=1e1, int_cutoff=1.0, forecas
 
 
 
-
-
-
-
+#%%
 
 ## Give the dataloader an id to help with restoration later on
 
@@ -405,12 +405,16 @@ if adapt_test:
     ood_crit, _ = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)
     # contexts = np.append(contexts, trainer.learner.contexts.params)
 
-    visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
+    visualtester.visualize(adapt_dataloader_test, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
     ## Visualise with Uncertainty
-    visualtester.visualizeUQ(test_dataloader, std_scale=1e1, int_cutoff=1.0, forecast=True,verbose=False, save_path=adapt_folder+"results_ood_uq.pdf");
+    visualtester.visualizeUQ(adapt_dataloader_test, std_scale=1e1, int_cutoff=1.0, forecast=True,verbose=False, save_path=adapt_folder+"results_ood_uq.pdf");
 
 
+#%%
+
+## Visualise with Uncertainty
+visualtester.printUQ_metrics(adapt_dataloader_test, forecast_factor=0.5, conf_level_scale=3, save_path=adapt_folder+"uq_metrics");
 
 
 

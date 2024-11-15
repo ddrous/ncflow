@@ -10,7 +10,17 @@ np.set_printoptions(suppress=True)
 import equinox as eqx
 import diffrax
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme(context='notebook', style='ticks',
+        font='sans-serif', font_scale=1, color_codes=True, rc={"lines.linewidth": 2})
+# plt.style.use("dark_background")
+# plt.style.use('seaborn-whitegrid')
+# plt.style.use('default')
+mpl.rcParams['savefig.facecolor'] = 'w'
+
+import matplotlib.patches as patches
 
 import optax
 from functools import partial
@@ -57,12 +67,6 @@ def generate_new_keys(key=None, num=1):
 
 ## Wrapper function for matplotlib and seaborn
 def sbplot(*args, ax=None, figsize=(6,3.5), x_label=None, y_label=None, title=None, x_scale='linear', y_scale='linear', xlim=None, ylim=None, **kwargs):
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    sns.set(context='notebook', style='ticks',
-            font='sans-serif', font_scale=1, color_codes=True, rc={"lines.linewidth": 2})
-    plt.style.use("dark_background")
-
     if ax==None:
         _, ax = plt.subplots(1, 1, figsize=figsize)
     # sns.despine(ax=ax)
