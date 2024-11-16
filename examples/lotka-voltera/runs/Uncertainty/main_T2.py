@@ -360,7 +360,7 @@ visualtester.visualizeUQ(test_dataloader, std_scale=1e1, int_cutoff=1.0, forecas
 
 #%%
 
-visualtester.printUQ_metrics(test_dataloader, forecast_factor=0.5, conf_level_scale=3, save_path=run_folder+"uq_metrics");
+visualtester.printUQ_metrics(test_dataloader, forecast_factor=0.5, conf_level_scale=3, nb_bins=7, save_path=run_folder+"uq_metrics");
 
 
 
@@ -414,7 +414,7 @@ if adapt_test:
 #%%
 
 ## Visualise with Uncertainty
-visualtester.printUQ_metrics(adapt_dataloader_test, forecast_factor=0.5, conf_level_scale=3, save_path=adapt_folder+"uq_metrics");
+visualtester.printUQ_metrics(adapt_dataloader_test, forecast_factor=0.5, conf_level_scale=3, nb_bins=7, std_color="crimson", save_path=adapt_folder+"uq_metrics");
 
 
 

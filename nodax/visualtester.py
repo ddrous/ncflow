@@ -449,7 +449,7 @@ class VisualTester:
             print("Testing finished. Figure saved in:", save_path);
 
 
-    def printUQ_metrics(self, data_loader, forecast_factor=0.5, conf_level_scale=3, save_path=False):
+    def printUQ_metrics(self, data_loader, forecast_factor=0.5, conf_level_scale=3, nb_bins=12, std_color=None, max_dot_size=None, save_path=False):
 
         """ Calculate a few UQ metrics the results of the neural ODE model with epistemic uncertainty quantification 
         """
@@ -474,9 +474,11 @@ class VisualTester:
             contexts_ood = self.trainer.learner.contexts_adapt.params
             contexts_all = jnp.concatenate([contexts_ind, contexts_ood], axis=0)
             contexts = contexts_ood     ## Context of interest
+            std_color = "crimson" if std_color is None else std_color
         else:
             contexts_all = contexts_ind
             contexts = contexts_ind
+            std_color = "royalblue" if std_color is None else std_color
 
 
         @eqx.filter_vmap
@@ -503,7 +505,7 @@ class VisualTester:
             # rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)))
 
             # 2. Relative MAPE: same as abopve but in percentage
-            rel_mape_loss = jnp.mean(jnp.mean(jnp.abs(X_e-means), axis=(1,2))/jnp.mean(X_e, axis=(1,2)))
+            rel_mape_loss = jnp.mean(jnp.mean(jnp.abs(X_e-means), axis=(1,2))/jnp.mean(jnp.abs(X_e), axis=(1,2)))
 
             # 3. Confidence level: the percentage of the predictions that fall within the 3xstd of predictions
             conf_level = jnp.mean(jnp.mean(jnp.abs(X_e-means) <= conf_level_scale*std, axis=(1,2)))
@@ -523,7 +525,7 @@ class VisualTester:
 
         ## Print the results properly
         print("==  Uncertainty Quantification Metrics (across all environments)  ==")
-        print(f"    Relative MSE Loss: {m_rel_mse*100:.3e} %")
+        print(f"    Relative MSE Loss: {m_rel_mse*100:.3f} %")
         print(f"    MAPE Loss:         {m_rel_mape*100:.2f} %")
         print(f"    Confidence Level:  {m_conf_level*100:.2f} % - (also called the empirical coverage probability)")
 
@@ -543,25 +545,25 @@ class VisualTester:
         ## Plot scatter the auxiliary data
         errors, deviations = aux_dat
         errors, deviations = jnp.abs(errors.flatten()), deviations.flatten()
-        print("Shapes of the auxiliary data:", errors.shape, deviations.shape)
-        ax2.scatter(deviations, errors, s=1)
+        ax2.scatter(deviations, errors, s=1, color=std_color)
         # ax2.set_title("Errors vs Deviations")
         ax2.set_xlabel(f"$\hat \sigma$")
         ax2.set_ylabel(f"$| x - \hat \mu |$")
 
         ## Put the tandard deviations in bins, and plot the mean error in each bin (plot the std as well as a vertical bar)
-        bins = np.linspace(deviations.min(), deviations.max(), 12)
+        bins = np.linspace(deviations.min(), deviations.max(), nb_bins)
         digitized = np.digitize(deviations, bins)
         bin_means = [errors[digitized == i].mean() for i in range(1, len(bins))]
         bin_stds = [errors[digitized == i].std()/2 for i in range(1, len(bins))]
         bin_counts_raw = [len(errors[digitized == i])//5 for i in range(1, len(bins))]
         ## Normalise the bin counts between 1 and the max
-        bin_counts = np.interp(bin_counts_raw, (min(bin_counts_raw), max(bin_counts_raw)), (10, max(bin_counts_raw)))
+        max_size = max_dot_size if max_dot_size else max(bin_counts_raw)
+        bin_counts = np.interp(bin_counts_raw, (min(bin_counts_raw), max(bin_counts_raw)), (10, max_size))
 
         bin_centers = (bins[:-1] + bins[1:]) / 2
-        ax3.errorbar(bin_centers, bin_means, yerr=bin_stds, fmt='s', markersize=0)
+        ax3.errorbar(bin_centers, bin_means, yerr=bin_stds, fmt='s', markersize=0, color=std_color)
         ## Draw the dots using scatter
-        ax3.scatter(bin_centers, bin_means, s=bin_counts, alpha=0.5)
+        ax3.scatter(bin_centers, bin_means, s=bin_counts, alpha=0.5, color=std_color)
         ## Set the xticks and their labels at the centers
         ax3.set_xticks(bin_centers)
         ax3.set_xticklabels([f"{b:.3f}" for b in bin_centers])
@@ -577,7 +579,7 @@ class VisualTester:
 
         ## Print and/or return those means (we will plot the rel_std_loss trajectories InD and OoD for all 6 problems)
         if save_path:
-            np.savez(save_path+".npz", rel_mse=m_rel_mse, rel_mape=m_rel_mape, conf_level=m_conf_level, rel_std=m_rel_std)
+            np.savez(save_path+".npz", rel_mse=m_rel_mse, rel_mape=m_rel_mape, conf_level=m_conf_level, rel_std=m_rel_std, deviations=deviations, errors=errors)
             fig.savefig(save_path+".svg", dpi=100, bbox_inches='tight')
             print("Matrics plots saved in:", save_path);
 
