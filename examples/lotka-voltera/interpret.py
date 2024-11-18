@@ -162,13 +162,14 @@ fig.savefig(save_folder+"interpretable_NCF.pdf", dpi=300, bbox_inches='tight')
 
 #%%
 noise_levels = [0.01, 0.05, 0.1, 1.0]
-noise_level = noise_levels[1]
+noise_level = noise_levels[0]
 
 data = np.load(run_folder+f"adapt/noise_{noise_level}.npz")
 X_tests = data["contexts"][:10]
-errors = data["errors"][:10]
+# errors = data["errors"][:10]
+print(X_tests.shape)
 
-print("Mean error is: ", np.mean(errors))
+# print("Mean error is: ", np.mean(errors))
 
 
 
@@ -184,8 +185,11 @@ ax.scatter(Y_train[:, 0], Y_train[:, 1], label='Train GT', color=train_color, al
 ax.plot(Y_train_pred[:, 0], Y_train_pred[:, 1], "X", markersize=10, label='Train Pred', color=val_color)
 
 ax.scatter(Y_test[:, 0], Y_test[:, 1], label='Adapt GT', color=test_color, alpha=0.5)
+errors = []
 for i in range(10):
     Y_pred = reg.predict(X_tests[i])
+    error = np.mean((Y_pred - Y_test)**2)
+    errors.append(error)
     if i == 0:
         ax.plot(Y_pred[:, 0], Y_pred[:, 1], "X", markersize=10, label='Adapt Pred', color='purple', alpha=1.0)
     else:

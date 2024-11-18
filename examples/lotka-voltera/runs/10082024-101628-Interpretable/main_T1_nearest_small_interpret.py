@@ -442,9 +442,9 @@ if adapt_test:
 
 
 ## Corrupt the data and readapt the model
-noise_level = 1.0
+noise_level = 0.1
 adapt_dataset = adapt_dataloader.dataset
-keys = jax.random.split(jax.random.PRNGKey(seed), 2)
+keys = jax.random.split(jax.random.PRNGKey(seed), 10)
 contexts_noisy = []
 errors_noisy = []
 
