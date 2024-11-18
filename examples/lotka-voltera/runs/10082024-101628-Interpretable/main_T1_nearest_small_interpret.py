@@ -34,7 +34,7 @@ ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdiv
 # run_folder = "./"
 
 ## Training hyperparameters ##
-train = True
+train = False
 save_trainer = True
 finetune = False
 
@@ -52,7 +52,7 @@ nb_epochs = 10000
 
 ## Adaptation hyperparameters ##
 adapt_test = True
-adapt_restore = False
+adapt_restore = True
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
@@ -85,7 +85,7 @@ if train == True:
 
 
 else:
-    # run_folder = "./runs/22022024-112457/"  ## Needed for loading the model and finetuning TODO: opti
+    run_folder = "./"  ## Needed for loading the model and finetuning TODO: opti
     print("No training. Loading data and results from:", run_folder)
 
 ## Create a folder for the adaptation results
@@ -440,16 +440,29 @@ if adapt_test:
 
 #%%
 
-# # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
-# print("Kernel layer 1\n", trainer.learner.neuralode.vectorfield.physics.layers[0].weight)
-# print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
+## Corrupt the data and readapt the model
+noise_level = 1.0
+adapt_dataset = adapt_dataloader.dataset
+keys = jax.random.split(jax.random.PRNGKey(seed), 2)
+contexts_noisy = []
+errors_noisy = []
 
+for key in keys:
+    adapt_dataset_noisy = adapt_dataset + noise_level*jax.random.normal(shape=adapt_dataset.shape, key=key)
+    adapt_dataloader.dataset = adapt_dataset_noisy
 
+    trainer.adapt_sequential(adapt_dataloader, nb_epochs=200, optimizer=opt_adapt, print_error_every=print_error_every, save_path=None)
+    contexts_noisy.append(trainer.learner.contexts_adapt.params)
+    errors_noisy.append(visualtester.test(adapt_dataloader, int_cutoff=1.0)[0])
 
+    visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=None);
 
+print("Errors on noisy data:", errors_noisy)
+print("Contexts on noisy data:\n", contexts_noisy)
 
-
+## Save the contexts and errors to a file with noise level name in the adapt folder
+np.savez(adapt_folder+f"noise_{noise_level}.npz", contexts=contexts_noisy, errors=errors_noisy)
 
 
 

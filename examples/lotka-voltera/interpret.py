@@ -8,6 +8,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 
 run_folder = "runs/10082024-101628-Interpretable/"
+save_folder = "tmp/"
 
 
 #%%
@@ -82,7 +83,7 @@ print(f"Mean Squared Error: {error:.2e}")
 """ Plot Y_pred vs Y_test, same for trainning """
 import matplotlib.pyplot as plt
 import seaborn as sns
-sns.set(context='notebook', style='whitegrid', palette='colorblind')
+sns.set_theme(context='notebook', style='whitegrid', palette='colorblind')
 
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
 
@@ -153,4 +154,95 @@ for i in range(4):
 ax.set_title(f"Adaptation MSE: {error:.2e}")
 
 ## Save the figure
-fig.savefig(run_folder+"interpretable_NCF.pdf", dpi=300, bbox_inches='tight')
+fig.savefig(save_folder+"interpretable_NCF.pdf", dpi=300, bbox_inches='tight')
+
+
+
+
+
+#%%
+noise_levels = [0.01, 0.05, 0.1, 1.0]
+noise_level = noise_levels[1]
+
+data = np.load(run_folder+f"adapt/noise_{noise_level}.npz")
+X_tests = data["contexts"][:10]
+errors = data["errors"][:10]
+
+print("Mean error is: ", np.mean(errors))
+
+
+
+
+fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+
+Y_train_pred = reg.predict(X_train)
+train_color = "orange"
+val_color = "orange"
+test_color = "purple"
+
+ax.scatter(Y_train[:, 0], Y_train[:, 1], label='Train GT', color=train_color, alpha=0.5)
+ax.plot(Y_train_pred[:, 0], Y_train_pred[:, 1], "X", markersize=10, label='Train Pred', color=val_color)
+
+ax.scatter(Y_test[:, 0], Y_test[:, 1], label='Adapt GT', color=test_color, alpha=0.5)
+for i in range(10):
+    Y_pred = reg.predict(X_tests[i])
+    if i == 0:
+        ax.plot(Y_pred[:, 0], Y_pred[:, 1], "X", markersize=10, label='Adapt Pred', color='purple', alpha=1.0)
+    else:
+        ax.plot(Y_pred[:, 0], Y_pred[:, 1], "X", markersize=10, color='purple', alpha=1.0)
+
+ax.set_xlim([0.25, 1.25])
+ax.set_ylim([0.25, 1.25])
+ax.set_xlabel(r'$\beta$', fontsize=12)
+ax.set_ylabel(r'$\delta$', fontsize=12)
+
+## Place xticks in increments of 0.25
+xticks = np.arange(0.25, 1.26, 0.25)
+yticks = np.arange(0.25, 1.26, 0.25)
+ax.set_xticks(xticks)
+ax.set_yticks(yticks)
+ax.grid(True, which='both', linestyle='--', linewidth=0.3)
+
+
+ax.legend(loc='lower left', fontsize=8)
+
+## Plot lines connecting the 9 GT points to each other. The lines should form a grid, with 0.75, 0.75 as the center
+train_mkln = "--"
+for i in range(3):
+    ax.plot([Y_train[i, 0], Y_train[i+6, 0]], [Y_train[i, 1], Y_train[i+6, 1]], color=train_color, alpha=0.5)
+
+## Now plot horizontal lines as well as the vertical lines 
+for i in range(1):
+    ax.plot([Y_train[i, 0], Y_train[i+2, 0]], [Y_train[i, 1], Y_train[i+2, 1]], color=train_color, alpha=0.5)
+    ax.plot([Y_train[i+3, 0], Y_train[i+5, 0]], [Y_train[i+3, 1], Y_train[i+5, 1]], color=train_color, alpha=0.5)
+    ax.plot([Y_train[i+6, 0], Y_train[i+8, 0]], [Y_train[i+6, 1], Y_train[i+8, 1]], color=train_color, alpha=0.5)
+
+# ## Repeat the same for the 4 available test points
+for i in range(1):
+    ax.plot([Y_test[i, 0], Y_test[i+1, 0]], [Y_test[i, 1], Y_test[i+1, 1]], color=test_color, alpha=0.5)
+    ax.plot([Y_test[i+2, 0], Y_test[i+3, 0]], [Y_test[i+2, 1], Y_test[i+3, 1]], color=test_color, alpha=0.5)
+
+## Good. Now plot horizontal lines as well as the vertical lines
+for i in range(1):
+    ax.plot([Y_test[i, 0], Y_test[i+2, 0]], [Y_test[i, 1], Y_test[i+2, 1]], color=test_color, alpha=0.5)
+    ax.plot([Y_test[i+1, 0], Y_test[i+3, 0]], [Y_test[i+1, 1], Y_test[i+3, 1]], color=test_color, alpha=0.5)
+
+
+## Add numbers 0,to 9 next to each training point, as well the train pred points. Place the text sligtyly above, to the upper left of the points
+for i in range(9):
+    ax.text(Y_train[i, 0], Y_train[i, 1], f"{i}", fontsize=8, color="grey", ha='right', va='bottom')
+    ax.text(Y_train_pred[i, 0], Y_train_pred[i, 1], f"{i}", fontsize=6, color="k", ha='left', va='bottom', fontstyle='italic', fontweight='bold')
+
+## Do the same for the test points
+for i in range(4):
+    ax.text(Y_test[i, 0]-0.01, Y_test[i, 1], f"{i}", fontsize=8, color="grey", ha='right', va='bottom')
+    # ax.text(Y_pred[i, 0]+0.01, Y_pred[i, 1]+0.01, f"{i}", fontsize=6, color="k", ha='left', va='bottom', fontstyle='italic', fontweight='bold')
+
+## Set the title as CoDA - Error: 1.23e-4
+ax.set_title(f"$\Vert$ $\eta$={noise_level:.2f}  $\Vert$  MSE={np.mean(errors):.1e} $\pm$ {np.std(errors):.1e} $\Vert$", fontsize=18, y=1.03)
+## Out the title in bold
+ax.title.set_fontweight('bold')
+
+
+## Save the figure
+fig.savefig(save_folder+f"noise_{noise_level}.pdf", dpi=300, bbox_inches='tight')

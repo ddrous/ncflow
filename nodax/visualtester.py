@@ -501,11 +501,20 @@ class VisualTester:
             print("Shapes of the means and std:", means.shape, std.shape, X_e.shape)
 
             # 1. Relative MSE loss: Difference between the mean of the predictions and the ground truth
-            rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)) / jnp.mean(means**2, axis=(1,2)))
-            # rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)))
+            # rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)) / jnp.mean(means**2, axis=(1,2)))
+            # rel_mse_loss = jnp.mean((X_e-means)**2 / (X_e**2))
+            # rel_mse_loss = jnp.mean((X_e-means)**2 / (X_e**2+1e-6))
+
+            ## Design a denominator that is never zero
+            denom = jnp.where(jnp.abs(X_e) > 1e-3, jnp.abs(X_e), jnp.inf)
+            # denom = jnp.abs(X_e)
+            rel_mse_loss = jnp.mean((X_e-means)**2 / denom**2)
 
             # 2. Relative MAPE: same as abopve but in percentage
-            rel_mape_loss = jnp.mean(jnp.mean(jnp.abs(X_e-means), axis=(1,2))/jnp.mean(jnp.abs(X_e), axis=(1,2)))
+            # rel_mape_loss = jnp.mean(jnp.mean(jnp.abs(X_e-means), axis=(1,2))/jnp.mean(jnp.abs(X_e), axis=(1,2)))
+            # rel_mape_loss = jnp.mean(jnp.abs(X_e-means)/(jnp.abs(X_e)))
+            # rel_mape_loss = jnp.mean(jnp.abs(X_e-means)/(jnp.abs(X_e)+1e-6))
+            rel_mape_loss = jnp.mean(jnp.abs(X_e-means)/(denom))
 
             # 3. Confidence level: the percentage of the predictions that fall within the 3xstd of predictions
             conf_level = jnp.mean(jnp.mean(jnp.abs(X_e-means) <= conf_level_scale*std, axis=(1,2)))
