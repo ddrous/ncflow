@@ -1,0 +1,372 @@
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: train
+ Savepath: ./runs/18112024-192758/
+ Seed: 2024
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: test
+ Savepath: ./runs/18112024-192758/
+ Seed: 4048
+
+
+############# Neural Context Flow #############
+
+Jax version: 0.4.35
+Available devices: [CudaDevice(id=0)]
+Run folder created successfuly: ./runs/18112024-192758/
+Completed copied scripts 
+WARNING: You did not provide a dataloader id. A new one has been generated: 192802
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: You did not provide a dataloader id. A new one has been generated: 192802
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+Total number of parameters in the model: 50000 
+
+
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+
+=== Beginning training ... ===
+    Number of examples in a batch: 4
+    Number of train steps per epoch: 1
+    Number of training epochs: 12000
+    Total number of training steps: 12000
+
+Compiling function "train_step" for neural ode ...
+Shapes of elements in a batch: (25, 4, 40, 2) (40,)
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (25, 4, 40, 2) (40,)
+    Epoch:     0      LossTrajs: 1.28064990     ContextsNorm: 0.00000000     ValIndCrit: 1.44180405
+        Saving best model so far ...
+    Epoch:     1      LossTrajs: 1.27909136     ContextsNorm: 0.00009739     ValIndCrit: 1.43986750
+        Saving best model so far ...
+    Epoch:     2      LossTrajs: 1.27759194     ContextsNorm: 0.00018456     ValIndCrit: 1.43799257
+        Saving best model so far ...
+    Epoch:     3      LossTrajs: 1.27615023     ContextsNorm: 0.00027068     ValIndCrit: 1.43617332
+        Saving best model so far ...
+    Epoch:   100      LossTrajs: 1.15539896     ContextsNorm: 0.01156997     ValIndCrit: 1.30332863
+        Saving best model so far ...
+    Epoch:   200      LossTrajs: 1.01777005     ContextsNorm: 0.01988756     ValIndCrit: 1.13712013
+        Saving best model so far ...
+    Epoch:   300      LossTrajs: 0.97910792     ContextsNorm: 0.01725307     ValIndCrit: 1.07345462
+        Saving best model so far ...
+    Epoch:   400      LossTrajs: 0.96427089     ContextsNorm: 0.01677404     ValIndCrit: 1.05504215
+        Saving best model so far ...
+    Epoch:   500      LossTrajs: 0.94806635     ContextsNorm: 0.01687679     ValIndCrit: 1.03710794
+        Saving best model so far ...
+    Epoch:   600      LossTrajs: 0.87460560     ContextsNorm: 0.01820633     ValIndCrit: 0.96360654
+        Saving best model so far ...
+    Epoch:   700      LossTrajs: 0.47519925     ContextsNorm: 0.02331447     ValIndCrit: 0.61843055
+        Saving best model so far ...
+    Epoch:   800      LossTrajs: 0.38145423     ContextsNorm: 0.02496635     ValIndCrit: 0.51533741
+        Saving best model so far ...
+    Epoch:   900      LossTrajs: 0.37389445     ContextsNorm: 0.02605368     ValIndCrit: 0.50747561
+        Saving best model so far ...
+    Epoch:  1000      LossTrajs: 0.34705704     ContextsNorm: 0.02818607     ValIndCrit: 0.47850287
+        Saving best model so far ...
+    Epoch:  1100      LossTrajs: 0.29195407     ContextsNorm: 0.03081401     ValIndCrit: 0.43747085
+        Saving best model so far ...
+    Epoch:  1200      LossTrajs: 0.24854293     ContextsNorm: 0.03342148     ValIndCrit: 0.34449121
+        Saving best model so far ...
+    Epoch:  1300      LossTrajs: 0.22045629     ContextsNorm: 0.03513309     ValIndCrit: 0.28305697
+        Saving best model so far ...
+    Epoch:  1400      LossTrajs: 0.19193128     ContextsNorm: 0.03628397     ValIndCrit: 0.24318999
+        Saving best model so far ...
+    Epoch:  1500      LossTrajs: 0.17803372     ContextsNorm: 0.03697888     ValIndCrit: 0.21414649
+        Saving best model so far ...
+    Epoch:  1600      LossTrajs: 0.15512684     ContextsNorm: 0.03731168     ValIndCrit: 0.19126555
+        Saving best model so far ...
+    Epoch:  1700      LossTrajs: 0.13991527     ContextsNorm: 0.03761978     ValIndCrit: 0.16050456
+        Saving best model so far ...
+    Epoch:  1800      LossTrajs: 0.12318348     ContextsNorm: 0.03763866     ValIndCrit: 0.14789139
+        Saving best model so far ...
+    Epoch:  1900      LossTrajs: 0.09646074     ContextsNorm: 0.03774951     ValIndCrit: 0.12790036
+        Saving best model so far ...
+    Epoch:  2000      LossTrajs: 0.07172686     ContextsNorm: 0.03789142     ValIndCrit: 0.10660079
+        Saving best model so far ...
+    Epoch:  2100      LossTrajs: 0.05145013     ContextsNorm: 0.03782814     ValIndCrit: 0.08797380
+        Saving best model so far ...
+    Epoch:  2200      LossTrajs: 0.03643550     ContextsNorm: 0.03767225     ValIndCrit: 0.08002488
+        Saving best model so far ...
+    Epoch:  2300      LossTrajs: 0.03342595     ContextsNorm: 0.03757713     ValIndCrit: 0.07703956
+        Saving best model so far ...
+    Epoch:  2400      LossTrajs: 0.03869713     ContextsNorm: 0.03749836     ValIndCrit: 0.07127535
+        Saving best model so far ...
+    Epoch:  2500      LossTrajs: 0.02558614     ContextsNorm: 0.03748316     ValIndCrit: 0.07013379
+        Saving best model so far ...
+    Epoch:  2600      LossTrajs: 0.02804359     ContextsNorm: 0.03742170     ValIndCrit: 0.06827379
+        Saving best model so far ...
+    Epoch:  2700      LossTrajs: 0.02621147     ContextsNorm: 0.03740272     ValIndCrit: 0.06792414
+        Saving best model so far ...
+    Epoch:  2800      LossTrajs: 0.02403128     ContextsNorm: 0.03736020     ValIndCrit: 0.06385914
+        Saving best model so far ...
+    Epoch:  2900      LossTrajs: 0.02243530     ContextsNorm: 0.03736524     ValIndCrit: 0.06355536
+        Saving best model so far ...
+    Epoch:  3000      LossTrajs: 0.02411452     ContextsNorm: 0.03732664     ValIndCrit: 0.06202380
+        Saving best model so far ...
+    Epoch:  3100      LossTrajs: 0.02274751     ContextsNorm: 0.03735368     ValIndCrit: 0.06199510
+        Saving best model so far ...
+    Epoch:  3200      LossTrajs: 0.02738162     ContextsNorm: 0.03739094     ValIndCrit: 0.06156369
+        Saving best model so far ...
+    Epoch:  3300      LossTrajs: 0.02605107     ContextsNorm: 0.03743666     ValIndCrit: 0.05983400
+        Saving best model so far ...
+    Epoch:  3400      LossTrajs: 0.01875315     ContextsNorm: 0.03747698     ValIndCrit: 0.05911761
+        Saving best model so far ...
+    Epoch:  3500      LossTrajs: 0.02450309     ContextsNorm: 0.03751799     ValIndCrit: 0.05865775
+        Saving best model so far ...
+    Epoch:  3600      LossTrajs: 0.02333070     ContextsNorm: 0.03745381     ValIndCrit: 0.05877989
+    Epoch:  3700      LossTrajs: 0.02130383     ContextsNorm: 0.03753652     ValIndCrit: 0.05760863
+        Saving best model so far ...
+    Epoch:  3800      LossTrajs: 0.01672353     ContextsNorm: 0.03759019     ValIndCrit: 0.05813777
+    Epoch:  3900      LossTrajs: 0.01962960     ContextsNorm: 0.03759366     ValIndCrit: 0.05675257
+        Saving best model so far ...
+    Epoch:  4000      LossTrajs: 0.02285634     ContextsNorm: 0.03771906     ValIndCrit: 0.05741804
+    Epoch:  4100      LossTrajs: 0.02044908     ContextsNorm: 0.03777799     ValIndCrit: 0.05539679
+        Saving best model so far ...
+    Epoch:  4200      LossTrajs: 0.01695326     ContextsNorm: 0.03781374     ValIndCrit: 0.05576519
+    Epoch:  4300      LossTrajs: 0.01480323     ContextsNorm: 0.03785548     ValIndCrit: 0.05575212
+    Epoch:  4400      LossTrajs: 0.02062146     ContextsNorm: 0.03794308     ValIndCrit: 0.05500069
+        Saving best model so far ...
+    Epoch:  4500      LossTrajs: 0.01633623     ContextsNorm: 0.03807681     ValIndCrit: 0.05580308
+    Epoch:  4600      LossTrajs: 0.01546857     ContextsNorm: 0.03809126     ValIndCrit: 0.05474444
+        Saving best model so far ...
+    Epoch:  4700      LossTrajs: 0.01477030     ContextsNorm: 0.03811893     ValIndCrit: 0.05534162
+    Epoch:  4800      LossTrajs: 0.01808124     ContextsNorm: 0.03810980     ValIndCrit: 0.05345391
+        Saving best model so far ...
+    Epoch:  4900      LossTrajs: 0.01629027     ContextsNorm: 0.03816374     ValIndCrit: 0.05358233
+    Epoch:  5000      LossTrajs: 0.01912288     ContextsNorm: 0.03820302     ValIndCrit: 0.05339020
+        Saving best model so far ...
+    Epoch:  5100      LossTrajs: 0.01930330     ContextsNorm: 0.03827645     ValIndCrit: 0.05612857
+    Epoch:  5200      LossTrajs: 0.02029901     ContextsNorm: 0.03835628     ValIndCrit: 0.05333259
+        Saving best model so far ...
+    Epoch:  5300      LossTrajs: 0.01843788     ContextsNorm: 0.03850985     ValIndCrit: 0.05204181
+        Saving best model so far ...
+    Epoch:  5400      LossTrajs: 0.01663669     ContextsNorm: 0.03860437     ValIndCrit: 0.05211170
+    Epoch:  5500      LossTrajs: 0.01470931     ContextsNorm: 0.03854653     ValIndCrit: 0.05279281
+    Epoch:  5600      LossTrajs: 0.01948547     ContextsNorm: 0.03861672     ValIndCrit: 0.05106225
+        Saving best model so far ...
+    Epoch:  5700      LossTrajs: 0.01472518     ContextsNorm: 0.03867556     ValIndCrit: 0.05192118
+    Epoch:  5800      LossTrajs: 0.01376390     ContextsNorm: 0.03868049     ValIndCrit: 0.05248300
+    Epoch:  5900      LossTrajs: 0.01715265     ContextsNorm: 0.03871197     ValIndCrit: 0.05181211
+    Epoch:  6000      LossTrajs: 0.01478532     ContextsNorm: 0.03871720     ValIndCrit: 0.04990602
+        Saving best model so far ...
+    Epoch:  6100      LossTrajs: 0.01424867     ContextsNorm: 0.03885299     ValIndCrit: 0.05129553
+    Epoch:  6200      LossTrajs: 0.01725344     ContextsNorm: 0.03884355     ValIndCrit: 0.05189472
+    Epoch:  6300      LossTrajs: 0.01974535     ContextsNorm: 0.03889851     ValIndCrit: 0.04975253
+        Saving best model so far ...
+    Epoch:  6400      LossTrajs: 0.01461024     ContextsNorm: 0.03889488     ValIndCrit: 0.04985308
+    Epoch:  6500      LossTrajs: 0.01401662     ContextsNorm: 0.03908968     ValIndCrit: 0.04887540
+        Saving best model so far ...
+    Epoch:  6600      LossTrajs: 0.01230873     ContextsNorm: 0.03916142     ValIndCrit: 0.04973369
+    Epoch:  6700      LossTrajs: 0.01590507     ContextsNorm: 0.03935289     ValIndCrit: 0.04867203
+        Saving best model so far ...
+    Epoch:  6800      LossTrajs: 0.01580786     ContextsNorm: 0.03948658     ValIndCrit: 0.04907266
+    Epoch:  6900      LossTrajs: 0.01754954     ContextsNorm: 0.03956841     ValIndCrit: 0.04858042
+        Saving best model so far ...
+    Epoch:  7000      LossTrajs: 0.01450622     ContextsNorm: 0.03961568     ValIndCrit: 0.04773573
+        Saving best model so far ...
+    Epoch:  7100      LossTrajs: 0.01200231     ContextsNorm: 0.03977539     ValIndCrit: 0.04723573
+        Saving best model so far ...
+    Epoch:  7200      LossTrajs: 0.01307724     ContextsNorm: 0.03982048     ValIndCrit: 0.04731316
+    Epoch:  7300      LossTrajs: 0.01429171     ContextsNorm: 0.03984228     ValIndCrit: 0.04739415
+    Epoch:  7400      LossTrajs: 0.01113304     ContextsNorm: 0.03992288     ValIndCrit: 0.04657361
+        Saving best model so far ...
+    Epoch:  7500      LossTrajs: 0.01204847     ContextsNorm: 0.03998550     ValIndCrit: 0.04558127
+        Saving best model so far ...
+    Epoch:  7600      LossTrajs: 0.01936819     ContextsNorm: 0.04018642     ValIndCrit: 0.04623843
+    Epoch:  7700      LossTrajs: 0.01272047     ContextsNorm: 0.04030012     ValIndCrit: 0.04481520
+        Saving best model so far ...
+    Epoch:  7800      LossTrajs: 0.01217293     ContextsNorm: 0.04038636     ValIndCrit: 0.04425897
+        Saving best model so far ...
+    Epoch:  7900      LossTrajs: 0.01136473     ContextsNorm: 0.04048454     ValIndCrit: 0.04363735
+        Saving best model so far ...
+    Epoch:  8000      LossTrajs: 0.01252443     ContextsNorm: 0.04055889     ValIndCrit: 0.04353479
+        Saving best model so far ...
+    Epoch:  8100      LossTrajs: 0.01000801     ContextsNorm: 0.04055564     ValIndCrit: 0.04323038
+        Saving best model so far ...
+    Epoch:  8200      LossTrajs: 0.01296101     ContextsNorm: 0.04064481     ValIndCrit: 0.04232703
+        Saving best model so far ...
+    Epoch:  8300      LossTrajs: 0.01074254     ContextsNorm: 0.04071356     ValIndCrit: 0.04248365
+    Epoch:  8400      LossTrajs: 0.01075581     ContextsNorm: 0.04072181     ValIndCrit: 0.04096557
+        Saving best model so far ...
+    Epoch:  8500      LossTrajs: 0.01218592     ContextsNorm: 0.04087710     ValIndCrit: 0.04262771
+    Epoch:  8600      LossTrajs: 0.01038263     ContextsNorm: 0.04102464     ValIndCrit: 0.03998987
+        Saving best model so far ...
+    Epoch:  8700      LossTrajs: 0.00973160     ContextsNorm: 0.04118479     ValIndCrit: 0.03959820
+        Saving best model so far ...
+    Epoch:  8800      LossTrajs: 0.01086274     ContextsNorm: 0.04119164     ValIndCrit: 0.03863668
+        Saving best model so far ...
+    Epoch:  8900      LossTrajs: 0.01256590     ContextsNorm: 0.04141973     ValIndCrit: 0.03828886
+        Saving best model so far ...
+    Epoch:  9000      LossTrajs: 0.00942529     ContextsNorm: 0.04142868     ValIndCrit: 0.03781758
+        Saving best model so far ...
+    Epoch:  9100      LossTrajs: 0.00991137     ContextsNorm: 0.04164270     ValIndCrit: 0.03792767
+    Epoch:  9200      LossTrajs: 0.01147453     ContextsNorm: 0.04186285     ValIndCrit: 0.03685557
+        Saving best model so far ...
+    Epoch:  9300      LossTrajs: 0.00991240     ContextsNorm: 0.04204813     ValIndCrit: 0.03631673
+        Saving best model so far ...
+    Epoch:  9400      LossTrajs: 0.01085976     ContextsNorm: 0.04222461     ValIndCrit: 0.03605688
+        Saving best model so far ...
+    Epoch:  9500      LossTrajs: 0.01073647     ContextsNorm: 0.04223387     ValIndCrit: 0.03559050
+        Saving best model so far ...
+    Epoch:  9600      LossTrajs: 0.00966966     ContextsNorm: 0.04235823     ValIndCrit: 0.03540200
+        Saving best model so far ...
+    Epoch:  9700      LossTrajs: 0.01059025     ContextsNorm: 0.04254514     ValIndCrit: 0.03430223
+        Saving best model so far ...
+    Epoch:  9800      LossTrajs: 0.01022349     ContextsNorm: 0.04260133     ValIndCrit: 0.03413860
+        Saving best model so far ...
+    Epoch:  9900      LossTrajs: 0.00948483     ContextsNorm: 0.04283492     ValIndCrit: 0.03413432
+        Saving best model so far ...
+    Epoch: 10000      LossTrajs: 0.00857753     ContextsNorm: 0.04294021     ValIndCrit: 0.03216398
+        Saving best model so far ...
+    Epoch: 10100      LossTrajs: 0.00777645     ContextsNorm: 0.04304126     ValIndCrit: 0.01866221
+        Saving best model so far ...
+    Epoch: 10200      LossTrajs: 0.00717546     ContextsNorm: 0.04320802     ValIndCrit: 0.01858454
+        Saving best model so far ...
+    Epoch: 10300      LossTrajs: 0.00649754     ContextsNorm: 0.04301091     ValIndCrit: 0.01486479
+        Saving best model so far ...
+    Epoch: 10400      LossTrajs: 0.00414607     ContextsNorm: 0.04314721     ValIndCrit: 0.01370122
+        Saving best model so far ...
+    Epoch: 10500      LossTrajs: 0.00447110     ContextsNorm: 0.04322642     ValIndCrit: 0.01470939
+    Epoch: 10600      LossTrajs: 0.00378146     ContextsNorm: 0.04317586     ValIndCrit: 0.01353769
+        Saving best model so far ...
+    Epoch: 10700      LossTrajs: 0.00416895     ContextsNorm: 0.04327195     ValIndCrit: 0.01340742
+        Saving best model so far ...
+    Epoch: 10800      LossTrajs: 0.00377704     ContextsNorm: 0.04335541     ValIndCrit: 0.01452997
+    Epoch: 10900      LossTrajs: 0.00362088     ContextsNorm: 0.04343649     ValIndCrit: 0.01403675
+    Epoch: 11000      LossTrajs: 0.00631850     ContextsNorm: 0.04355836     ValIndCrit: 0.01268801
+        Saving best model so far ...
+    Epoch: 11100      LossTrajs: 0.00508219     ContextsNorm: 0.04374527     ValIndCrit: 0.01282451
+    Epoch: 11200      LossTrajs: 0.00589682     ContextsNorm: 0.04377213     ValIndCrit: 0.01223002
+        Saving best model so far ...
+    Epoch: 11300      LossTrajs: 0.00258208     ContextsNorm: 0.04384477     ValIndCrit: 0.01158039
+        Saving best model so far ...
+    Epoch: 11400      LossTrajs: 0.00538642     ContextsNorm: 0.04395487     ValIndCrit: 0.01083667
+        Saving best model so far ...
+    Epoch: 11500      LossTrajs: 0.00279670     ContextsNorm: 0.04414307     ValIndCrit: 0.01097083
+    Epoch: 11600      LossTrajs: 0.00281700     ContextsNorm: 0.04428301     ValIndCrit: 0.01305958
+    Epoch: 11700      LossTrajs: 0.00239641     ContextsNorm: 0.04452166     ValIndCrit: 0.01049302
+        Saving best model so far ...
+    Epoch: 11800      LossTrajs: 0.00234058     ContextsNorm: 0.04454537     ValIndCrit: 0.01054587
+    Epoch: 11900      LossTrajs: 0.00180916     ContextsNorm: 0.04472367     ValIndCrit: 0.00994044
+        Saving best model so far ...
+    Epoch: 11999      LossTrajs: 0.00171776     ContextsNorm: 0.04487624     ValIndCrit: 0.01028874
+
+Total gradient descent training time: 1 hours 8 mins 43 secs
+Environment weights at the end of the training: [0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04
+ 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.04]
+WARNING: You did not provide a dataloader id. A new one has been generated: 203648
+WARNING: Note that this id used to distuinguish between adaptations to different environments.
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided, using time as seed
+==  Begining in-domain testing ... ==
+    Number of training environments: 25
+    Final length of the training trajectories: 40
+    Length of the testing trajectories: 40
+Test Score (In-Domain): 0.010288738
+
+Running this script in ipython (Jupyter) session ? False
+=== Parsed arguments to generate data ===
+ Split: adapt
+ Savepath: ./runs/18112024-192758/adapt/
+ Seed: 6072
+
+==  Begining in-domain visualisation ... ==
+    Environment id: 17
+    Trajectory id: 27
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 40
+    Length of the testing trajectories: 40
+Testing finished. Figure saved in: ./runs/18112024-192758/results_in_domain.png
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+
+
+=== Beginning sequential adaptation ... ===
+    Number of examples in a batch: 1
+    Number of train steps per epoch: 1
+    Number of training epochs: 1500
+    Total number of training steps: 1500
+
+Adapting to environment 0 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+
+Compiling function "train_step" for context ...
+Shapes of elements in a batch: (1, 1, 40, 2) (40,)
+    Epoch:     0     LossContext: 0.16288894
+    Epoch:     1     LossContext: 0.14957993
+    Epoch:     2     LossContext: 0.13503160
+    Epoch:     3     LossContext: 0.12912804
+    Epoch:   100     LossContext: 0.09997962
+    Epoch:   200     LossContext: 0.02880369
+    Epoch:   300     LossContext: 0.00963421
+    Epoch:   400     LossContext: 0.00402042
+    Epoch:   500     LossContext: 0.00125906
+    Epoch:   600     LossContext: 0.00032363
+    Epoch:   700     LossContext: 0.00019400
+    Epoch:   800     LossContext: 0.00018579
+    Epoch:   900     LossContext: 0.00018315
+    Epoch:  1000     LossContext: 0.00018044
+    Epoch:  1100     LossContext: 0.00017756
+    Epoch:  1200     LossContext: 0.00017452
+    Epoch:  1300     LossContext: 0.00017132
+    Epoch:  1400     LossContext: 0.00016798
+    Epoch:  1499     LossContext: 0.00016455
+
+Gradient descent adaptation time: 0 hours 0 mins 59 secs
+
+Adapting to environment 1 ...
+WARNING: You are demanding a shuffled dataset but did not provide any keys for that.
+WARNING: No key provided, using time as seed
+WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.
+WARNING: No key provided for the context initialization. Initializing at 0.
+WARNING: No key provided, using time as seed
+    Epoch:     0     LossContext: 0.06884824
+    Epoch:     1     LossContext: 0.01082495
+    Epoch:     2     LossContext: 0.00357962
+    Epoch:     3     LossContext: 0.02183987
+    Epoch:   100     LossContext: 0.00019947
+    Epoch:   200     LossContext: 0.00010211
+    Epoch:   300     LossContext: 0.00006784
+    Epoch:   400     LossContext: 0.00006080
+    Epoch:   500     LossContext: 0.00005941
+    Epoch:   600     LossContext: 0.00005869
+    Epoch:   700     LossContext: 0.00005801
+    Epoch:   800     LossContext: 0.00005733
+    Epoch:   900     LossContext: 0.00005673
+    Epoch:  1000     LossContext: 0.00005613
+    Epoch:  1100     LossContext: 0.00005560
+    Epoch:  1200     LossContext: 0.00005514
+    Epoch:  1300     LossContext: 0.00005474
+    Epoch:  1400     LossContext: 0.00005436
+    Epoch:  1499     LossContext: 0.00005398
+
+Gradient descent adaptation time: 0 hours 0 mins 59 secs
+WARNING: No key provided for the context initialization. Initializing at 0.
+
+Saving adaptation parameters into ./runs/18112024-192758/adapt/ folder with id 170846 ...
+
+==  Begining out-of-distribution testing ... ==
+    Number of training environments: 25
+    Number of adaptation environments: 2
+    Final length of the training trajectories: 40
+    Length of the testing trajectories: 40
+Test Score (OOD): 3.5600176e-05
+
+==  Begining out-of-distribution visualisation ... ==
+    Environment id: 1
+    Trajectory id: 0
+    Visualized dimensions: (0, 1)
+    Final length of the training trajectories: 40
+    Length of the testing trajectories: 40
+Testing finished. Figure saved in: ./runs/18112024-192758/adapt/results_ood.png

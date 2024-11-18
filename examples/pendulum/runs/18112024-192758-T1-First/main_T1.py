@@ -18,11 +18,11 @@ from nodax import *
 
 #%%
 
-seed = 2026
+seed = 2024
 # seed = int(np.random.randint(0, 10000))
 
 ## Neural Context Flow hyperparameters ##
-context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 4               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256
 print_error_every = 100
 integrator = diffrax.Dopri5
@@ -30,7 +30,7 @@ integrator = diffrax.Dopri5
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
 ## subdivision is used for non-adaptive integrators like RK4. It's the number of extra steps to take between each evaluation time point
 # run_folder = "./runs/09032024-155347/"      ## Run folder to use when not training
-run_folder = "./runs/28032024-201048/"
+run_folder = "./runs/23012024-163033-T1/"
 
 ## Training hyperparameters ##
 train = True
@@ -40,12 +40,8 @@ finetune = False
 init_lr = 1e-4
 sched_factor = 1.0
 
-nb_outer_steps_max = 600
-nb_inner_steps_max = 10
-proximal_beta = 1e2 ## See beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 1e-9
-inner_tol_ctx = 1e-8
-early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
+nb_epochs = 2000*6
+
 
 ## Adaptation hyperparameters ##
 adapt_test = True
@@ -55,20 +51,16 @@ init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
 nb_epochs_adapt = 1500
 
-
-
 #%%
 
-
 if train == True:
-
     # check that 'tmp' folder exists. If not, create it
     if not os.path.exists('./runs'):
         os.mkdir('./runs')
 
     # Make a new folder inside 'tmp' whose name is the current time
     run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/23012024-163033-T2/"
+    # run_folder = "./runs/23012024-163033-T1/"
     if not os.path.exists(run_folder):
         os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
@@ -81,7 +73,6 @@ if train == True:
     # Save the nodax module files as well
     os.system(f"cp -r ../../nodax {run_folder}")
     print("Completed copied scripts ")
-
 
 else:
     # run_folder = "./runs/22022024-112457/"  ## Needed for loading the model and finetuning TODO: opti
@@ -98,8 +89,6 @@ if train == True:
     # Run the dataset script to generate the data
     os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
     os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-
-
 
 
 #%%
@@ -161,6 +150,7 @@ class Augmentation(eqx.Module):
 
         return y
 
+
 class ContextFlowVectorField(eqx.Module):
     physics: eqx.Module
     augmentation: eqx.Module
@@ -178,9 +168,9 @@ class ContextFlowVectorField(eqx.Module):
             vf = lambda xi: self.physics(t, x, xi) + self.augmentation(t, x, xi)
 
         gradvf = lambda xi_: eqx.filter_jvp(vf, (xi_,), (ctx-xi_,))[1]
-        scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
+        # scd_order_term = eqx.filter_jvp(gradvf, (ctx_,), (ctx-ctx_,))[1]
 
-        return vf(ctx_) + 1.5*gradvf(ctx_) + 0.5*scd_order_term
+        return vf(ctx_) + 1.0*gradvf(ctx_)
 
 
 augmentation = Augmentation(data_size=2, int_size=64, context_size=context_size, key=seed)
@@ -198,10 +188,7 @@ contexts = ContextParams(nb_envs, context_size, key=None)
 def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
 
     # ind = jax.random.randint(key, shape=(context_pool_size,), minval=0, maxval=all_ctx_s.shape[0])
-    # ind = jax.random.permutation(key, all_ctx_s.shape[0])[:context_pool_size]
-
-    ## Sort the contexts by their distance to ctx, and get the closest - NF strategy !!!
-    ind = jnp.argsort(jnp.mean(jnp.abs(all_ctx_s-ctx), axis=1))[:context_pool_size]
+    ind = jax.random.permutation(key, all_ctx_s.shape[0])[:context_pool_size]
     ctx_s = all_ctx_s[ind, :]
 
     # jax.debug.print("indices chosen for this loss {}", ind)
@@ -222,6 +209,8 @@ def loss_fn_ctx(model, trajs, t_eval, ctx, all_ctx_s, key):
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 
 
+
+
 learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=seed)
 
 
@@ -229,7 +218,7 @@ learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, ivp_args, key=
 
 ## Define optimiser and traine the model
 
-nb_total_epochs = nb_outer_steps_max * 1
+nb_total_epochs = nb_epochs * 1
 sched_node = optax.piecewise_constant_schedule(init_value=init_lr,
                         boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
 
@@ -248,18 +237,24 @@ if train == True:
     # for i, prop in enumerate(np.linspace(0.25, 1.0, 3)):
     for i, prop in enumerate(np.linspace(1.0, 1.0, 1)):
         # trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-        # trainer.train(nb_epochs=nb_epochs*(2**0), print_error_every=print_error_every*(2**0), update_context_every=1, save_path=trainer_save_path, key=seed, val_dataloader=val_dataloader, int_prop=prop)
-        trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
-                               nb_inner_steps_max=nb_inner_steps_max, 
-                               proximal_reg=proximal_beta, 
-                               inner_tol_node=inner_tol_node, 
-                               inner_tol_ctx=inner_tol_ctx,
-                               print_error_every=print_error_every*(2**0), 
-                               save_path=trainer_save_path, 
-                               val_dataloader=val_dataloader, 
-                               patience=early_stopping_patience,
-                               int_prop=prop,
-                               key=seed)
+        trainer.train(nb_epochs=nb_epochs*(2**0), 
+                      print_error_every=print_error_every*(2**0), 
+                      update_context_every=1, 
+                      save_path=trainer_save_path, 
+                      key=seed, 
+                      val_dataloader=val_dataloader, 
+                      int_prop=prop)
+        # trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
+        #                        nb_inner_steps_max=nb_inner_steps_max, 
+        #                        proximal_reg=proximal_beta, 
+        #                        inner_tol_node=inner_tol_node, 
+        #                        inner_tol_ctx=inner_tol_ctx,
+        #                        print_error_every=print_error_every*(2**0), 
+        #                        save_path=trainer_save_path, 
+        #                        val_dataloader=val_dataloader, 
+        #                        patience=early_stopping_patience,
+        #                        int_prop=prop,
+        #                        key=seed)
 
 else:
     # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
@@ -357,14 +352,14 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 ## Give the dataloader an id to help with restoration later on
+
 if adapt_test and not adapt_restore:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-    os.system(f'python dataset.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}"');
+
 
 if adapt_test:
 
     adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
-    adapt_dataloader_test = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, data_id="170846", key=seed)
     # print("shape of adapt_dataloader", adapt_dataloader.dataset.shape)
 
     sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
@@ -383,11 +378,14 @@ if adapt_test:
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
-    ood_crit, ood_crit_all = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)
-
 
 #%%
 
+# # eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
+# print("Kernel layer 1\n", trainer.learner.neuralode.vectorfield.physics.layers[0].weight)
+# print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
+
+ood_crit_all
 
 
 

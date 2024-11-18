@@ -47,9 +47,10 @@ inner_tol_node = 1e-9
 inner_tol_ctx = 1e-8
 early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before early stopping
 
+
 ## Adaptation hyperparameters ##
 adapt_test = True
-adapt_restore = False
+adapt_restore = True
 
 init_lr_adapt = 5e-3
 sched_factor_adapt = 0.5
@@ -67,8 +68,8 @@ if train == True:
         os.mkdir('./runs')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/23012024-163033-T2/"
+    # run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    run_folder = "./runs/23012024-163033-T2/"
     if not os.path.exists(run_folder):
         os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
@@ -357,14 +358,13 @@ visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 ## Give the dataloader an id to help with restoration later on
+
 if adapt_test and not adapt_restore:
     os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-    os.system(f'python dataset.py --split=adapt_test --savepath="{adapt_folder}" --seed="{seed*3}"');
 
 if adapt_test:
 
     adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
-    adapt_dataloader_test = DataLoader(adapt_folder+"adapt_test_data.npz", adaptation=True, data_id="170846", key=seed)
     # print("shape of adapt_dataloader", adapt_dataloader.dataset.shape)
 
     sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
@@ -382,8 +382,6 @@ if adapt_test:
 
     visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
-
-    ood_crit, ood_crit_all = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)
 
 
 #%%

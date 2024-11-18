@@ -120,7 +120,6 @@ elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.25)
-# n_steps_per_traj = int(10/0.1)
 # n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))

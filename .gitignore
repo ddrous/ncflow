@@ -151,3 +151,10 @@ venv/*
 !examples/navier-stokes/runs/04082024-164054-T2
 !examples/navier-stokes/runs/04082024-175436-T12
 !examples/navier-stokes/runs/06082024-110150-SpecialT1
+
+!examples/pendulum/runs/18112024-192758-T1-First
+!examples/pendulum/runs/18112024-160214-OneForAll-1
+!examples/pendulum/runs/18112024-123710-OnePerEnv-InD
+!examples/pendulum/runs/18112024-123710-OnePerEnv-OoD
+# !examples/pendulum/runs/28032024-201048-Good
+!examples/pendulum/runs/23012024-163033-T2
