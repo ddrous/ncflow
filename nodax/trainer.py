@@ -93,6 +93,7 @@ class Trainer:
 
         loss_key = get_new_key(key)
 
+        # times = []
         for epoch in range(nb_epochs):
             nb_batches_node = 0
             nb_batches_ctx = 0
@@ -102,6 +103,7 @@ class Trainer:
             nb_steps_eph_ctx = 0
 
             # loss_key = get_new_key(loss_key[-1], self.dataloader.batch_size)
+            # time_start = time.perf_counter()
 
             for i, batch in enumerate(self.dataloader):
                 loss_key = get_new_key(loss_key)
@@ -127,6 +129,10 @@ class Trainer:
                     nb_steps_eph_ctx += nb_steps_ctx_
 
                     nb_batches_ctx += 1
+
+            # time_end = time.perf_counter()
+            # times.append(time_end - time_start)
+            # print(f"Time for epoch {epoch}: {time_end - time_start:.2f} secs,   Current average: {np.mean(times[1:]):.2f} secs      Current std: {np.std(times[1:]):.2f} secs")
 
             loss_epoch_node = loss_sum_node/nb_batches_node
             loss_epoch_ctx = loss_sum_ctx/nb_batches_ctx

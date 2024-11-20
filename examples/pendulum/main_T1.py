@@ -60,7 +60,7 @@ if train == True:
 
     # Make a new folder inside 'tmp' whose name is the current time
     run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/23012024-163033-T1/"
+    # run_folder = "./runs/30012024-100250-Test/"
     if not os.path.exists(run_folder):
         os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
