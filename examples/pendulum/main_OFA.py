@@ -57,8 +57,8 @@ if train == True:
         os.mkdir('./runs')
 
     # Make a new folder inside 'tmp' whose name is the current time
-    # run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    run_folder = "./runs/18112024-160214-OneForAll-BisBis/"
+    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
+    # run_folder = "./runs/21112024-142053-OFA-SampleEfficiency/"
     if not os.path.exists(run_folder):
         os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
@@ -267,6 +267,7 @@ visualtester = VisualTester(trainer)
 ind_crit, _ = visualtester.test(val_dataloader, int_cutoff=1.0)
 visualtester.visualize(val_dataloader, int_cutoff=1.0, save_path=run_folder);
 
+print("\nInD results are:", ind_crit)
 
 
 #%%

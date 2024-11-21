@@ -113,7 +113,7 @@ elif split == "adapt" or split == "adapt_test":
 
 
 if split == "train":
-  n_traj_per_env = 4     ## training
+  n_traj_per_env = 12     ## training
 elif split == "test" or split == "adapt_test":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":

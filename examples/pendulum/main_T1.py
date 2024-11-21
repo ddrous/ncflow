@@ -60,7 +60,7 @@ if train == True:
 
     # Make a new folder inside 'tmp' whose name is the current time
     run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/30012024-100250-Test/"
+    # run_folder = "./runs/21112024-143734-NCF-SampleEfficiency/"
     if not os.path.exists(run_folder):
         os.mkdir(run_folder)
     print("Run folder created successfuly:", run_folder)
@@ -385,7 +385,7 @@ if adapt_test:
 # print("Kernel layer 1\n", trainer.learner.neuralode.vectorfield.physics.layers[0].weight)
 # print("Kernel layer 2\n", trainer.learner.neuralode.vectorfield.physics.layers[1].weight)
 
-ood_crit_all
+# ood_crit_all
 
 
 
