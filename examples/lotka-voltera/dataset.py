@@ -8,7 +8,7 @@ from matplotlib.animation import FuncAnimation
 from IPython.display import Image
 
 import diffrax
-from nodax import RK4
+from ncf import RK4
 import jax.numpy as jnp
 
 try:

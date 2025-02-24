@@ -9,7 +9,7 @@ import os
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 import diffrax
-from nodax import RK4
+from ncf import RK4
 import jax.numpy as jnp
 import numpy as jnp
 

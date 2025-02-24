@@ -35,7 +35,7 @@ import jax.random as jrandom
 import matplotlib.pyplot as plt
 import optax  # https://github.com/deepmind/optax
 
-from nodax._utils import *
+from ncf._utils import *
 
 #%%
 

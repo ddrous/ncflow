@@ -2,7 +2,7 @@
 ## Do not preallocate GPU memory
 # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
 
-from nodax import *
+from ncf import *
 # jax.config.update("jax_debug_nans", True)
 
 

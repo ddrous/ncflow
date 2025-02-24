@@ -1,7 +1,7 @@
 import os
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = 'false'
 
-from nodax import *
+from ncf import *
 # jax.config.update("jax_debug_nans", True)
 
 

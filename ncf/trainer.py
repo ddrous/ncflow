@@ -1,8 +1,8 @@
 import pickle
 
-from nodax.dataloader import DataLoader
-from nodax.learner import ContextParams
-from nodax.visualtester import VisualTester
+from ncf.dataloader import DataLoader
+from ncf.learner import ContextParams
+from ncf.visualtester import VisualTester
 from ._utils import *
 
 class Trainer:

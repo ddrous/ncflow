@@ -1,14 +1,12 @@
 <div style="text-align:center"><img src="docs/assets/Tax.png" /></div>
 
-# NCFlow (previously called Nodax and TAX)
+# Neural Context Flow
 Neural Context Flow: A library for Generalisable Neural ODEs
 
-This is a one-stop shop for all things neural odes for dynamical systems (hopefully, WIP).
-
-What to do: Install the library and run the scripts in the folder `examples/`. 
-
-`pip install -e .`
-
+## Instructions
+1. Install the package: `pip install -e .`
+2. Update the data generation script in `dataset.py`, or directly download the data from [Gen-Dynamics](https://anonymous.4open.science/r/gen-dynamics/)
+3. Then set its hyperparameters and run the main script: `python main.py`
 
 NCflow is built around 5 extensible modules: 
 - a DataLoader: to store the dataset
@@ -16,8 +14,10 @@ NCflow is built around 5 extensible modules:
 - A Trainer: to train
 - a VisualTester: to test and visualize the results
 
-A few neural ODE implemented models:
-- One-Per-Env
-- One-For-All
-- Context-Informed
-- Neural Context Flow
+
+## ToDo:
+- [ ] Put the looses images here: Point to the Torch repo.
+- [ ] Add the BibTex citation
+
+
+If you like our work, please cite the corresponding paper:
