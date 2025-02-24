@@ -11,9 +11,9 @@ pintode.egg-info/*
 *vtk
 quadqs_statistics.json
 
-nodax.egg-info
-nodax.egg-info/*
-nodax/__pycache__/*
+ncf.egg-info
+ncf.egg-info/*
+ncf/__pycache__/*
 
 # For tensorboard logs
 *v2
@@ -29,7 +29,7 @@ nodax/__pycache__/*
 !scripts/isambard.pbs
 
 # Artifacts of testing
-nodax/tests/tmp/*
+ncf/tests/tmp/*
 
 ## Pytorch tmp savings
 *-ubyte
@@ -158,3 +158,11 @@ venv/*
 !examples/pendulum/runs/18112024-123710-OnePerEnv-OoD
 # !examples/pendulum/runs/28032024-201048-Good
 !examples/pendulum/runs/23012024-163033-T2
+
+
+## Ignore all folders named "runs" and "data", recursively
+**/runs/
+**/data/
+
+## Ignore all nohup.log files
+**/nohup.log

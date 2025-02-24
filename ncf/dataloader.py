@@ -31,15 +31,15 @@ class DataLoader:
         self.nb_steps_per_traj = datashape[2]
         self.data_size = datashape[3]
 
-        self.int_cutoff = int(int_cutoff*self.nb_steps_per_traj)    ## integration cutoff
+        self.int_cutoff = int(int_cutoff*self.nb_steps_per_traj)    ## Integration cutoff: length of the trajectory to consider
 
         if batch_size < 0 or batch_size > self.nb_trajs_per_env:
-            print("WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.")
+            # print("WARNING: batch_size must be between 0 and nb_trajs_per_env. Setting batch_size to maximum.")
             self.batch_size = self.nb_trajs_per_env
         else:
             self.batch_size = batch_size
 
-        self.adaptation = adaptation    ## Is this a dataset for adaptation ?
+        self.adaptation = adaptation                                ## Whether this is an adaptation dataset of nor
 
     def __iter__(self):
         nb_batches = self.nb_trajs_per_env // self.batch_size
@@ -48,20 +48,18 @@ class DataLoader:
             key = get_new_key(self.key)
 
             ## A shuffling strategy to avoid encountering the same (env1, traj1) - (env2, traj2) pair across all batches
-
-            ## 1) Extract a subset of environments
+            ### 1) Extract a subset of environments
             e_start = jax.random.randint(key, shape=(1,), minval=0, maxval=self.nb_envs)[0]
             length = jax.random.randint(key, shape=(1,), minval=e_start+1, maxval=self.nb_envs+1)[0] - e_start
-            ## 2) Shuffle that subset accross dimension 1 (trajs), then put them back at the same place
+            ### 2) Shuffle that subset accross dimension 1 (trajs), then put them back at the same place
             perm_env = jax.random.permutation(key, self.dataset[e_start:e_start+length, ...], axis=1)
             perm_dataset = self.dataset.at[e_start:e_start+length, ...].set(perm_env)
-            ## 3) Shuffle the resulting dataset again accross dimension 1 (for extra randomness)
+            ### 3) Shuffle the resulting dataset again accross dimension 1 (for extra randomness)
             perm_dataset = jax.random.permutation(key, perm_dataset, axis=1)
 
         else:
             perm_dataset = self.dataset
 
-        ## We are now ready to iterate over the dataset
         for batch_id in range(nb_batches):
             traj_start, traj_end = batch_id*self.batch_size, (batch_id+1)*self.batch_size
             yield perm_dataset[:, traj_start:traj_end, :self.int_cutoff, :], self.t_eval[:self.int_cutoff]

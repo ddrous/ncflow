@@ -1,7 +1,7 @@
 <div style="text-align:center"><img src="docs/assets/Tax.png" /></div>
 
 # Neural Context Flow
-Neural Context Flow: A library for Generalisable Neural ODEs
+Neural Context Flow: A library for Generalizable Neural ODEs
 
 ## Instructions
 1. Install the package: `pip install -e .`
@@ -18,6 +18,8 @@ NCflow is built around 5 extensible modules:
 ## ToDo:
 - [ ] Put the looses images here: Point to the Torch repo.
 - [ ] Add the BibTex citation
+- [ ] Open-source the weights and biases
+- [ ] Add recommendation to run with nohup
 
 
 If you like our work, please cite the corresponding paper:

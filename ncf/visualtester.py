@@ -4,59 +4,12 @@ from ._utils import *
 class VisualTester:
     def __init__(self, trainer, key=None):
         self.key = get_new_key(key)
-
-        # self.dataloader = test_dataloader
         self.trainer = trainer
 
-        # assert self.dataloader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
-
-    # def test_node(self, criterion=None, int_cutoff=1.0):
-    #     """ Compute test metrics on entire test dataloader  """
-
-    #     criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
-
-    #     t_eval = self.dataloader.t_eval
-    #     test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
-    #     X = self.dataloader.dataset[:, :, :test_length, :]
-    #     t_test = t_eval[:test_length]
-
-    #     print("==  Begining testing ... ==")
-    #     print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
-    #     print("    Length of the testing trajectories:", test_length)
-
-    #     X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0))(X[:, :, 0, :], 
-    #                                          t_test, 
-    #                                          self.trainer.learner.contexts.params)
-
-    #     batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
-
-    #     return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
 
 
 
-    # def test_cf(self, criterion=None, int_cutoff=1.0):
-    #     """ Compute test metrics on entire test dataloader  """
 
-    #     criterion = criterion if criterion else lambda x, x_hat: jnp.mean((x-x_hat)**2)
-
-    #     t_eval = self.dataloader.t_eval
-    #     test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
-    #     X = self.dataloader.dataset[:, :, :test_length, :]
-    #     t_test = t_eval[:test_length]
-
-    #     print("==  Begining testing ... ==")
-    #     print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
-    #     print("    Length of the testing trajectories:", test_length)
-
-    #     X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0, 0))(X[:, :, 0, :], 
-    #                                          t_test, 
-    #                                          self.trainer.learner.contexts.params,
-    #                                          self.trainer.learner.contexts.params)      ## Reuse one's params for testing !
-
-    #     batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
-
-    #     # return batched_criterion(X_hat, X).mean(axis=1).sum(axis=0)
-    #     return batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
 
 
     def test(self, data_loader, criterion=None, int_cutoff=1.0, verbose=True):
@@ -85,14 +38,14 @@ class VisualTester:
         else:
             contexts = self.trainer.learner.contexts_adapt.params
 
-        X_hat, _ = jax.vmap(self.trainer.learner.neuralode, in_axes=(0, None, 0, 0))(X[:, :, 0, :], 
-                                            t_test, 
-                                            contexts,
-                                            contexts)
+        neuralode = self.trainer.learner.turn_off_self_modulation()
+        X_hat, _ = jax.vmap(neuralode, in_axes=(0, None, 0, 0))(X[:, :, 0, :], 
+                                                                t_test, 
+                                                                contexts,
+                                                                contexts)
 
         batched_criterion = jax.vmap(jax.vmap(criterion, in_axes=(0, 0)), in_axes=(0, 0))
 
-        # crit = batched_criterion(X_hat, X).mean(axis=1).mean(axis=0)
         crit_all = batched_criterion(X, X_hat).mean(axis=1)
         crit = crit_all.mean(axis=0)
 
@@ -106,118 +59,20 @@ class VisualTester:
         return crit, crit_all
 
 
-    # def visualise_cf(self, e=None, traj=None, int_cutoff=1.0, save_path=False, key=None):
-
-    #     e_key, traj_key = get_new_key(time.time_ns(), num=2)
-    #     e = e if e else jax.random.randint(e_key, (1,), 0, self.dataloader.nb_envs)[0]
-    #     traj = traj if traj else jax.random.randint(traj_key, (1,), 0, self.dataloader.nb_trajs_per_env)[0]
-
-    #     t_eval = self.dataloader.t_eval
-    #     test_length = int(self.dataloader.nb_steps_per_traj*int_cutoff)
-    #     X = self.dataloader.dataset[e, traj:traj+1, :test_length, :]
-    #     t_test = t_eval[:test_length]
-
-    #     print("==  Begining visualisation ... ==")
-    #     print("    Environment id:", e)
-    #     print("    Trajectory id:", traj)
-    #     print("    Length of the training trajectories:", self.trainer.dataloader.int_cutoff)
-    #     print("    Length of the testing trajectories:", test_length)
-
-    #     X_hat, _ = self.trainer.learner.neuralode(X[:, 0, :], 
-    #                                          t_test, 
-    #                                          self.trainer.learner.contexts.params[e],
-    #                                          self.trainer.learner.contexts.params[e])   ## TODO addition for NCF
-
-    #     X_hat = X_hat.squeeze()
-    #     X = X.squeeze()
-
-
-
-    #     fig, ax = plt.subplot_mosaic('AB;CC;DD;EF', figsize=(6*2, 3.5*4))
-
-    #     mks = 2
-
-    #     ax['A'].plot(t_test, X[:, 0], c="deepskyblue", label=r"$\theta$ (GT)")
-    #     ax['A'].plot(t_test, X_hat[:, 0], "o", c="royalblue", label=r"$\theta$ (NODE)", markersize=mks)
-
-    #     ax['A'].plot(t_test, X[:, 1], c="violet", label=r"$\dot \theta$ (GT)")
-    #     ax['A'].plot(t_test, X_hat[:, 1], "x", c="purple", label=r"$\dot \theta$ (NODE)", markersize=mks)
-
-    #     ax['A'].set_xlabel("Time")
-    #     ax['A'].set_ylabel("State")
-    #     ax['A'].set_title("Trajectories")
-    #     ax['A'].legend()
-
-    #     ax['B'].plot(X[:, 0], X[:, 1], c="turquoise", label="GT")
-    #     ax['B'].plot(X_hat[:, 0], X_hat[:, 1], ".", c="teal", label="Neural ODE")
-    #     ax['B'].set_xlabel(r"$\theta$")
-    #     ax['B'].set_ylabel(r"$\dot \theta$")
-    #     ax['B'].set_title("Phase space")
-    #     ax['B'].legend()
-
-    #     nb_steps = np.concatenate(self.trainer.nb_steps_node)
-    #     xis = self.trainer.learner.contexts.params
-    #     losses_node = np.vstack(self.trainer.losses_node)
-    #     losses_ctx = np.vstack(self.trainer.losses_ctx)
-    #     nb_envs = self.dataloader.nb_envs
-
-    #     print("    Number of steps taken per epoch:", nb_steps.shape)
-
-    #     mke = np.ceil(losses_node.shape[0]/100).astype(int)
-
-    #     ax['C'].plot(losses_node[:,0], label="NodeLoss", color="grey", linewidth=3, alpha=1.0)
-    #     ax['C'].plot(losses_ctx[:,0], "x-", markevery=mke, markersize=mks, label="ContextLoss", color="grey", linewidth=1, alpha=0.5)
-    #     ax['C'].set_xlabel("Epochs")
-    #     ax['C'].set_title("Loss Terms")
-    #     ax['C'].set_yscale('log')
-    #     ax['C'].legend()
-
-    #     ax['D'].plot(nb_steps, c="brown")
-    #     ax['D'].set_xlabel("Epochs")
-    #     ax['D'].set_title("Total Number of Steps Taken per Epoch (Proportional to NFEs)")
-    #     if np.all(nb_steps>0):
-    #         ax['D'].set_yscale('log')
-
-    #     eps = 0.1
-    #     colors = ['dodgerblue', 'r', 'b', 'g', 'm', 'c', 'y', 'orange', 'purple', 'brown']
-    #     colors = colors*(nb_envs)
-
-    #     ax['F'].scatter(xis[:,0], xis[:,1], s=50, c=colors[:nb_envs], marker='o')
-    #     for i, (x, y) in enumerate(xis[:, :2]):
-    #         ax['F'].annotate(str(i), (x, y), fontsize=8)
-    #     ax['F'].set_title(r'Final Contexts ($\xi^e$)')
-
-    #     init_xis = self.trainer.learner.init_ctx_params
-    #     ax['E'].scatter(init_xis[:,0], init_xis[:,1], s=30, c=colors[:nb_envs], marker='X')
-    #     ax['F'].scatter(xis[:,0], xis[:,1], s=50, c=colors[:nb_envs], marker='o')
-    #     for i, (x, y) in enumerate(init_xis[:, :2]):
-    #         ax['E'].annotate(str(i), (x, y), fontsize=8)
-    #     for i, (x, y) in enumerate(xis[:, :2]):
-    #         ax['F'].annotate(str(i), (x, y), fontsize=8)
-    #     ax['E'].set_title(r'Initial Contexts (first 2 dims)')
-    #     ax['F'].set_title(r'Final Contexts (first 2 dims)')
-
-    #     plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
-
-    #     plt.tight_layout()
-    #     plt.show();
-
-    #     if save_path:
-    #         plt.savefig(save_path, dpi=100, bbox_inches='tight')
-    #         print("Testing finished. Ffigure saved in:", save_path);
-
-    #     # return fig, ax
 
 
 
 
 
-
-
-
-    def visualize(self, data_loader, e=None, traj=None, dims=(0,1), context_dims=(0,1), int_cutoff=1.0, save_path=False, key=None):
-
-        # assert data_loader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
+    def visualize(self, 
+                  data_loader, 
+                  e=None, 
+                  traj=None, 
+                  dims=(0,1), 
+                  context_dims=(0,1), 
+                  int_cutoff=1.0, 
+                  save_path=False, 
+                  key=None):
 
         e_key, traj_key = get_new_key(time.time_ns(), num=2)
         e = e if e is not None else jax.random.randint(e_key, (1,), 0, data_loader.nb_envs)[0]
@@ -242,16 +97,12 @@ class VisualTester:
             contexts = self.trainer.learner.contexts.params
         else:
             contexts = self.trainer.learner.contexts_adapt.params
-        X_hat, _ = self.trainer.learner.neuralode(X[:, 0, :],
-                                            t_test, 
-                                            contexts[e],
-                                            contexts[e])
+
+        model = self.trainer.learner.turn_off_self_modulation()
+        X_hat, _ = model(X[:, 0, :], t_test, contexts[e], contexts[e])
 
         X_hat = X_hat.squeeze()
         X = X.squeeze()
-
-        ## Save X_hat in the savepath
-        # np.save(save_path+'X_hat.npy', X_hat)
 
         fig, ax = plt.subplot_mosaic('AB;CC;DD;EF', figsize=(6*2, 3.5*4))
 
@@ -335,7 +186,6 @@ class VisualTester:
         plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
 
         plt.tight_layout()
-        # plt.show();
         plt.draw();
 
         if save_path:
@@ -344,7 +194,23 @@ class VisualTester:
 
 
 
-    def visualizeUQ(self, data_loader, e=None, traj=None, dims=(0,1), std_scale=1e2, int_cutoff=1.0, save_path=False, forecast=True, verbose=True, title=True, key=None):
+
+
+
+
+
+    def visualizeUQ(self, 
+                    data_loader, 
+                    e=None, 
+                    traj=None, 
+                    dims=(0,1), 
+                    std_scale=1e2, 
+                    int_cutoff=1.0, 
+                    save_path=False, 
+                    forecast=True, 
+                    verbose=True, 
+                    title=True, 
+                    key=None):
         """ Visualise the results of the neural ODE model with epistemic uncertainty quantification """
 
         # assert data_loader.nb_envs == self.trainer.dataloader.nb_envs, "The number of environments in the test dataloader must be the same as the number of environments in the trainer."
@@ -387,7 +253,8 @@ class VisualTester:
             print("Shapes before concatenation:", contexts_adapt.shape, contexts.shape)
             contexts = jnp.concatenate([contexts_adapt, contexts], axis=0)
 
-        batched_neuralode = jax.vmap(self.trainer.learner.neuralode, in_axes=(None, None, None, 0))
+        model = self.trainer.learner.turn_off_self_modulation()
+        batched_neuralode = jax.vmap(model, in_axes=(None, None, None, 0))
 
         X_hat, _ = batched_neuralode(X[:, 0, :], 
                                      t_test_ext, 
@@ -397,9 +264,6 @@ class VisualTester:
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
-        # self.print_UQ_metrics((t_test_ext, X_hat), (t_test, X))
-
-        # fig, ax = plt.subplot_mosaic('AB', figsize=(6*2, 4*1))
         fig, ax = plt.subplot_mosaic('A;B', figsize=(6*1, 4*2))
 
         mks = 2
@@ -417,13 +281,12 @@ class VisualTester:
         ax['A'].plot(t_test_ext, X_hat_mean[:, dim1], c="violet", label=f"$\\hat{{x}}_{{{dim1}}}$ (NCF)", markersize=mks)
         ax['A'].fill_between(t_test_ext, X_hat_mean[:, dim1]-X_hat_std[:, dim1], X_hat_mean[:, dim1]+X_hat_std[:, dim1], color="violet", alpha=0.2)
 
-        ## If forecasting, the put a vertical line to show when the forecast starts
+        ## If forecasting, place a vertical line to indicate when the forecast starts
         if forecast == True:
             ax['A'].axvline(x=t_eval[-1], color='crimson', linestyle='--', label="Forecast Start")
 
         ax['A'].set_xlabel("Time")
         ax['A'].set_ylabel("State")
-        # ax['A'].set_title("Trajectories with UQ")
         ax['A'].set_title("Trajectories")
         ax['A'].legend()
 
@@ -433,7 +296,6 @@ class VisualTester:
 
         ax['B'].set_xlabel(f"$x_{{{dim0}}}$")
         ax['B'].set_ylabel(f"$x_{{{dim1}}}$")
-        # ax['B'].set_title("Phase space with UQ")
         ax['B'].set_title("Phase space")
         ax['B'].legend()
 
@@ -441,7 +303,6 @@ class VisualTester:
             plt.suptitle(f"Results for env={e}, traj={traj}", fontsize=14)
 
         plt.tight_layout()
-        # plt.show();
         plt.draw();
 
         if save_path:
@@ -449,9 +310,23 @@ class VisualTester:
             print("Testing finished. Figure saved in:", save_path);
 
 
-    def printUQ_metrics(self, data_loader, forecast_factor=0.5, conf_level_scale=3, nb_bins=12, std_color=None, max_dot_size=None, save_path=False):
 
-        """ Calculate a few UQ metrics the results of the neural ODE model with epistemic uncertainty quantification 
+
+
+
+
+
+    def printUQ_metrics(self, 
+                        data_loader, 
+                        forecast_factor=0.5, 
+                        conf_level_scale=3, 
+                        nb_bins=12, 
+                        std_color=None, 
+                        max_dot_size=None, 
+                        save_path=False):
+
+        """ 
+        Calculate a few UQ metrics the results of the neural ODE model with epistemic uncertainty quantification 
         """
 
         print("==  Begining in-domain visualisation with UQ... ==")
@@ -463,10 +338,8 @@ class VisualTester:
 
         delta_t = t_eval[1] - t_eval[0]
         t_span_ext = (t_eval[0], t_eval[-1]+delta_t+ forecast_factor*(t_eval[-1]+delta_t-t_eval[0]))
-        # t_test_ext = jnp.linspace(*t_span_ext, 2*test_length)
         t_test_ext = jnp.linspace(t_eval[-1], t_span_ext[-1], 2+test_length//2, endpoint=False)
         t_test_ext = jnp.concatenate([t_test, t_test_ext[1:]])
-        ## Round to two decimal places
         t_test_ext = jnp.round(t_test_ext, 3)
 
         contexts_ind = self.trainer.learner.contexts.params
@@ -480,25 +353,20 @@ class VisualTester:
             contexts = contexts_ind
             std_color = "royalblue" if std_color is None else std_color
 
-
+        model = self.trainer.learner.turn_off_self_modulation()
         @eqx.filter_vmap
         def UQ_metrics(X_e, contexts_e):
             ## "==  Uncertainty Quantification Metrics for many traj in one env =="
-            ## The first 3 require the gound truth, the final one doesn, we plot that one
-
+            ## The first 3 require the gound truth, the final one doesnt, we plot that one
             ## X_e: (trajs, time, dim)
             ## context_e: (dim,)
   
-            batched_neuralode = jax.vmap(self.trainer.learner.neuralode, in_axes=(None, None, None, 0))
-            X_hat_ext, _ = batched_neuralode(X_e[:, 0, :], t_test_ext, contexts_e, contexts_all)
-            ## X_hat_ext: (envs, trajs, time_ext, dim)
+            batched_neuralode = jax.vmap(model, in_axes=(None, None, None, 0))
+            X_hat_ext, _ = batched_neuralode(X_e[:, 0, :], t_test_ext, contexts_e, contexts_all)    ## X_hat_ext: (envs, trajs, time_ext, dim)
             X_hat = X_hat_ext[:, :, :test_length, :]
 
             means = jnp.mean(X_hat, axis=0, keepdims=False)
             std = jnp.std(X_hat, axis=0, keepdims=False, ddof=0)
-
-            ## Print the shapes of the means and std
-            print("Shapes of the means and std:", means.shape, std.shape, X_e.shape)
 
             # 1. Relative MSE loss: Difference between the mean of the predictions and the ground truth
             # rel_mse_loss = jnp.mean(jnp.mean((X_e-means)**2, axis=(1,2)) / jnp.mean(means**2, axis=(1,2)))
@@ -507,25 +375,18 @@ class VisualTester:
 
             ## Design a denominator that is never zero
             denom = jnp.where(jnp.abs(X_e) > 1e-3, jnp.abs(X_e), jnp.inf)
-            # denom = jnp.abs(X_e)
             rel_mse_loss = jnp.mean((X_e-means)**2 / denom**2)
 
             # 2. Relative MAPE: same as abopve but in percentage
-            # rel_mape_loss = jnp.mean(jnp.mean(jnp.abs(X_e-means), axis=(1,2))/jnp.mean(jnp.abs(X_e), axis=(1,2)))
-            # rel_mape_loss = jnp.mean(jnp.abs(X_e-means)/(jnp.abs(X_e)))
-            # rel_mape_loss = jnp.mean(jnp.abs(X_e-means)/(jnp.abs(X_e)+1e-6))
             rel_mape_loss = jnp.mean(jnp.abs(X_e-means)/(denom))
 
             # 3. Confidence level: the percentage of the predictions that fall within the 3xstd of predictions
             conf_level = jnp.mean(jnp.mean(jnp.abs(X_e-means) <= conf_level_scale*std, axis=(1,2)))
 
             # 4. Relative standard deviation: quotient the std of the predictions to the mean of the predictions
-            long_means = jnp.mean(X_hat_ext, axis=0)
             long_std = jnp.std(X_hat_ext, axis=0)
-            # rel_std_loss = jnp.mean(jnp.mean(long_std**2, axis=-1)/jnp.mean(long_means**2, axis=-1), axis=0)
             rel_std_loss = jnp.mean(jnp.mean(long_std**2, axis=-1), axis=0)
 
-            # print("Shapes of the metrics:", t_test_ext.shape, rel_std_loss.shape)
             return rel_mse_loss, rel_mape_loss, conf_level, rel_std_loss, (X_e-means, std)
 
         rel_mse_loss, rel_mape_loss, conf_level, rel_std_loss, aux_dat = UQ_metrics(X, contexts)
@@ -538,7 +399,7 @@ class VisualTester:
         print(f"    MAPE Loss:         {m_rel_mape*100:.2f} %")
         print(f"    Confidence Level:  {m_conf_level*100:.2f} % - (also called the empirical coverage probability)")
 
-        ## Plot the last one
+        ## Plot the latest calculation
         fig, (ax, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 4*3))
         for e in range(rel_std_loss.shape[0]):
             ax.plot(t_test_ext, rel_std_loss[e], "s-", label=f"Env {e+1}")
@@ -546,8 +407,6 @@ class VisualTester:
 
         # ax.set_title("Relative Standard Deviation")
         ax.set_xlabel(f"Time $t$")
-        ## Set tyhe y label in Latex
-        # ax.set_ylabel(r'$\sum \frac{\Vert\sigma\Vert_2}{\Vert \mu \Vert_2}$')
         ax.set_ylabel(r'$\sum \Vert\sigma\Vert_2$')
         ax.legend()
 
@@ -583,7 +442,6 @@ class VisualTester:
 
         # ax3.set_title("Errors vs Deviations")
         ax3.set_ylabel(f"Absolute Error $ | x - \hat \mu |$")
-        # ax3.set_xlabel("Standard Deviation Bins")
         ax3.set_xlabel(f"Standard Deviation $\hat \sigma$")
 
         ## Print and/or return those means (we will plot the rel_std_loss trajectories InD and OoD for all 6 problems)
@@ -595,25 +453,38 @@ class VisualTester:
         return m_rel_mse, m_rel_mape, m_conf_level, m_rel_std
 
 
-    def visualize2D(self, data_loader, e=None, traj=None, res=(32,32), int_cutoff=1.0, nb_plot_timesteps=10, cmap='gist_ncar', save_path=False, key=None):
+
+
+
+
+
+
+    def visualize2D(self, 
+                    data_loader, 
+                    e=None, 
+                    traj=None, 
+                    res=(32,32), 
+                    int_cutoff=1.0, 
+                    nb_plot_timesteps=10, 
+                    cmap='gist_ncar', 
+                    save_path=False, 
+                    key=None):
 
         """
-        The visualize2D function is used to visualize the results of a trained neural ODE model.
+        The visualize2D function is used to visualize the results of a trained NCF on spatio-temporal data like PDEs (2D).
         
-        :param self: Access the trainer object
-        :param data_loader: Get the data from the dataset
-        :param e: Select the environment to visualize
+        :param data_loader: data on which to predict and visualize the results
+        :param e: The environment to visualize
         :param traj: Specify which trajectory to visualize
-        :param res: Specify the resolution of the gif
-        :param 32): Set the resolution of the gif
+        :param res: Specify the resolution of the 2D grid
         :param int_cutoff: Specify the length of the trajectory to be visualized
         :param nb_plot_timesteps: Specify the number of timesteps to be visualized
-        :param save_path: Specify the path where to save the figure
-        :param key: Generate a random key for the jax
+        :param save_path: Specify where to save the figure
+        :param key: A random key/seed for jax
         :return: A figure with two subplots
-        :doc-author: Trelent
         """
-        e_key, traj_key = get_new_key(time.time_ns(), num=2)
+        seed = key if key else time.time_ns()%2**32
+        e_key, traj_key = get_new_key(seed, num=2)
         e = e if e else jax.random.randint(e_key, (1,), 0, data_loader.nb_envs)[0]
         traj = traj if traj else jax.random.randint(traj_key, (1,), 0, data_loader.nb_trajs_per_env)[0]
 
@@ -634,19 +505,14 @@ class VisualTester:
             contexts = self.trainer.learner.contexts.params
         else:
             contexts = self.trainer.learner.contexts_adapt.params
-        X_hat, _ = self.trainer.learner.neuralode(X[:, 0, :],
-                                            t_test, 
-                                            contexts[e],
-                                            contexts[e])
+        model = self.trainer.learner.turn_off_self_modulation()
+        X_hat, _ = model(X[:, 0, :], t_test, contexts[e], contexts[e])
 
         X_hat = X_hat.squeeze()
         X = X.squeeze()
 
-        # if isinstance(res, int):
-        #     res = (res, res)
         nb_mats = X_hat.shape[1] // (res*res)
         assert nb_mats > 0, f"Not enough dimensions to form a {res}x{res} matrix"
-        # mats = vec_to_mats(X_hat, res, nb_mats)
 
         if test_length < nb_plot_timesteps:
             print(f"Warning: trajectory visualisation length={test_length} is less than number of plots per row={nb_plot_timesteps}.")
@@ -681,5 +547,3 @@ class VisualTester:
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
             np.savez(save_path+"_data.npz", X=X, X_hat=X_hat)
             print("Testing finished. Figure saved in:", save_path);
-
-        ## Save the gifs as well

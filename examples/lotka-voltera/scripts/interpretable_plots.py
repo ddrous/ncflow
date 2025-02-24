@@ -3,7 +3,7 @@
 """ Fits the contexts to the underlying paramters """
 
 import equinox as eqx
-from nodax import ContextParams
+from ncf import ContextParams
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
