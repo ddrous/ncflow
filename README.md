@@ -35,7 +35,7 @@ To run of the experiments described in the NCF paper, follow the steps below:
 The main requirement to run our package is JAX and its ecosystem (Equinox, Diffrax, Optax). However, we require PyTorch (on the CPU platform) to generate data for the Navier-Stokes problem, as done in [CoDA](https://github.com/yuan-yin/CoDA).
 
 
-## ToDos:
+## To-Do
 - [ ] Provide links to some weights and contexts
 - [ ] Delete long history of commits
 - [ ] Test the installation in neutral conda environments
