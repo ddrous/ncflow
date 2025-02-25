@@ -19,7 +19,7 @@ nb_inner_steps_max = 25             ## Maximum number of inner steps when using 
 proximal_beta = 1e2                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-12               ## Tolerance for the inner optimisation on the weights
 inner_tol_ctx = 1e-12                ## Tolerance for the inner optimisation on the contexts
-early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before stopping early
+early_stopping_patience = nb_outer_steps_max       ## Number of outer steps to wait before stopping early
 
 ## General training hyperparameters ##
 print_error_every = 10              ## Print the error every n epochs
@@ -29,7 +29,7 @@ init_lr = 1e-4                      ## Initial learning rate
 sched_factor = 1.0                  ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
 ncf_variant = 2                     ## 1 for NCF-T1, 2 for NCF-T2
 taylor_order = ncf_variant          ## Taylor order for the neural ODE's vector field
-print(f"NCF variant: NCF-t2{ncf_variant}")
+print(f"NCF variant: NCF-t{ncf_variant}")
 
 train = True                            ## Train the model, or load a pre-trained model
 run_folder = None if train else "./"    ## Folder to save the results of the run
