@@ -1,14 +1,14 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
-from IPython.display import Image
+import os
 
 import torch
 from torch.utils.data import Dataset
 import math
 import shelve
+import argparse
 
 try:
     __IPYTHON__
@@ -16,44 +16,35 @@ try:
 except NameError:
     _in_ipython_session = False
 
-## Parse the three arguments from the command line: "train", the foldername, and the seed
-
-import argparse
-
 
 if _in_ipython_session:
-	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='adapt_test', savepath="./tmp/", seed=2026, verbose=1)
+	args = argparse.Namespace(split='adapt_test', savepath="./data/", verbose=1)
 else:
-	parser = argparse.ArgumentParser(description='Gray-Scott dataset generation script.')
+	parser = argparse.ArgumentParser(description='Navier-Stokes dataset generation script.')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
-	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
-	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=2026, required=False)
+	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='data/', required=False)
 	parser.add_argument('--verbose',type=int, help='Whether to print details or not ?', default=1, required=False)
 
 	args = parser.parse_args()
-
 
 split = args.split
 assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge'"
 
 savepath = args.savepath
-seed = args.seed
+if not os.path.exists(savepath):
+    os.makedirs(savepath)
 
 if args.verbose != 0:
   print("Running this script in ipython (Jupyter) session ?", _in_ipython_session)
   print('=== Parsed arguments to generate data ===')
   print(' Split:', split)
   print(' Savepath:', savepath)
-  print(' Seed:', seed)
   print()
 
 
-## Set numpy seed for reproducibility
-np.random.seed(seed)
-
-
 #%%
+
+###### Credits to https://github.com/yuan-yin/CoDA for this data generation script ######
 
 res = 32
 
@@ -68,8 +59,6 @@ if split == "train" or split=="test":
             {"f": 0.1 * (torch.sin(2 * math.pi * (X + Y)) + torch.cos(2 * math.pi * (X + Y))), "visc": 1.1e-3},
             {"f": 0.1 * (torch.sin(2 * math.pi * (X + Y)) + torch.cos(2 * math.pi * (X + Y))), "visc": 1.2e-3},
         ]   
-
-
 elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   ## Adaptation environments
   tt = torch.linspace(0, 1, res + 1)[0:-1]
@@ -78,18 +67,12 @@ elif split == "adapt" or split == "adapt_test" or split == "adapt_huge":
   viscs = [8.5e-4, 9.5e-4, 1.05e-3, 1.15e-3]
   environments = [{"f": f, "visc": visc} for visc in viscs]
 
-
 if split == "train":
   n_traj_per_env = 16     ## training
 elif split == "test" or split == "adapt_test" or split == "adapt_huge":
   n_traj_per_env = 32     ## testing
 elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
-
-
-
-
-
 
 
 class GaussianRF(object):
@@ -275,9 +258,6 @@ class NavierStokesDataset(Dataset):
 
 
 
-
-
-
 T_final = 10
 n_steps_per_traj = int(T_final/1)
 t_eval = np.linspace(0, T_final, n_steps_per_traj, endpoint=False)
@@ -292,25 +272,18 @@ dataset_train_params = {
 dataset = NavierStokesDataset(**dataset_train_params)
 
 for batch in dataset:
-    # print(batch['state'].shape)
     data[batch['env'], batch['index'], :, :] = batch['state'].reshape(n_steps_per_traj, 1*res*res)
-    # break
-
-
-
-
-
 
 
 # Save t_eval and the solution to a npz file
 if split == "train":
-  filename = savepath+'train_data.npz'
+  filename = savepath+'train.npz'
 elif split == "test":
-  filename = savepath+'test_data.npz'
+  filename = savepath+'test.npz'
 elif split == "adapt":
-  filename = savepath+'adapt_data.npz'
+  filename = savepath+'ood_train.npz'
 elif split == "adapt_test":
-  filename = savepath+'adapt_data_test.npz'
+  filename = savepath+'ood_test.npz'
 
 ## Check if nan or inf in data
 if np.isnan(data).any() or np.isinf(data).any():

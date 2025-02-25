@@ -1,311 +1,243 @@
-# import os
-## Do not preallocate GPU memory
-# os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = '\"platform\"'
+#%%
+### MAIN SCRIPT TO TRAIN A NEURAL CONTEXT FLOW ###
 
+# %load_ext autoreload
+# %autoreload 2
+
+## Import all the necessary libraries
 from ncf import *
-# jax.config.update("jax_debug_nans", True)
 
+## Seed for reproducibility in JAX
+seed = 2026
 
+## NCF main hyperparameters ##
+context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
+context_size = 256                  ## Size of the context vector
+
+nb_outer_steps_max = 2000           ## maximum number of outer steps when using NCF-T2
+nb_inner_steps_max = 25             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
+proximal_beta = 1e2                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
+inner_tol_node = 1e-12               ## Tolerance for the inner optimisation on the weights
+inner_tol_ctx = 1e-12                ## Tolerance for the inner optimisation on the contexts
+early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before stopping early
+
+## General training hyperparameters ##
+print_error_every = 10              ## Print the error every n epochs
+integrator = diffrax.Dopri5         ## Integrator to use for the learner
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
+init_lr = 1e-4                      ## Initial learning rate
+sched_factor = 1.0                  ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
+ncf_variant = 2                     ## 1 for NCF-T1, 2 for NCF-T2
+taylor_order = ncf_variant          ## Taylor order for the neural ODE's vector field
+print(f"NCF variant: NCF-t2{ncf_variant}")
+
+train = True                            ## Train the model, or load a pre-trained model
+run_folder = None if train else "./"    ## Folder to save the results of the run
+save_trainer = True                     ## Save the trainer object after training
+finetune = False                        ## Finetune a trained model
+data_folder = "./data/" if train else "../../data/"  ## Where to load the data from
+
+## Adaptation hyperparameters ##
+adapt_test = True                   ## Test the model on an adaptation dataset
+adapt_restore = False               ## Restore a trained adaptation model
+sequential_adapt = True
+
+init_lr_adapt = 1e-4                ## Initial learning rate for adaptation
+sched_factor_adapt = 1.0            ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
+nb_epochs_adapt = 1500              ## Number of epochs to adapt
 
 
 #%%
 
-## Hyperparams
-
-# ## Take seed as a paramter with argparse !! ONLY during testing.
-# import argparse
-# parser = argparse.ArgumentParser()
-# parser.add_argument("--seed", type=int, default=1176)
-# seed = parser.parse_args().seed
-
-seed = 1178
-
-context_size = 1024
-nb_epochs = 2000
-nb_epochs_adapt = 2000
-
-print_error_every = 1000
-
-train = True
-save_trainer = True
-
-finetune = False
-run_folder = "./runs/30012024-165151/"      ## Only needed if not training
-
-adapt = False
-adapt_huge = False
-
-#%%
-
-
-if train == True:
-
-    # check that 'tmp' folder exists. If not, create it
-    if not os.path.exists('./runs'):
-        os.mkdir('./runs')
-
-    # Make a new folder inside 'tmp' whose name is the current time
-    run_folder = './runs/'+time.strftime("%d%m%Y-%H%M%S")+'/'
-    # run_folder = "./runs/30012024-165151/"
-    if not os.path.exists('./runs'):
-        os.mkdir(run_folder)
-    print("Data folder created successfuly:", run_folder)
-
-    # Save the run and dataset scripts in that folder
-    script_name = os.path.basename(__file__)
-    os.system(f"cp {script_name} {run_folder}")
-    os.system(f"cp dataset.py {run_folder}")
-
-    # Save the nodax module files as well
-    os.system(f"cp -r ../../nodax {run_folder}")
-    print("Completed copied scripts ")
-
-
+if run_folder==None:
+    run_folder = make_run_folder('./runs/')
 else:
-    run_folder = "./runs/30012024-165151/"  ## Needed for loading the model and finetuning TODO: opti
-    print("No training. Loading data and results from:", run_folder)
+    print("Using existing run folder:", run_folder)
 
-## Create a folder for the adaptation results
-adapt_folder = run_folder+"adapt/"
-if not os.path.exists(adapt_folder):
-    os.mkdir(adapt_folder)
+adapt_folder = setup_run_folder(folder_path=run_folder, script_name=os.path.basename(__file__))
+
 
 #%%
 
 if train == True:
-    # Run the dataset script to generate the data
-    os.system(f'python dataset.py --split=train --savepath="{run_folder}" --seed="{seed}"')
-os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-# if adapt == True:
-os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-if adapt_huge == True:
-    os.system(f'python dataset.py --split=adapt_huge --savepath="{adapt_folder}" --seed="{seed*4}"');
-
-
-
-
-#%%
-np.load(run_folder+"train_data.npz")['X'].shape
-
-#%%
+    # If no data is available in Gen-Dynamics: https://github.com/ddrous/gen-dynamics, generate it as below
+    if not os.path.exists(data_folder+"train.npz") or not os.path.exists(data_folder+"test.npz"):
+        os.system(f'python dataset.py --split=train --savepath="{data_folder}"')
+        os.system(f'python dataset.py --split=test --savepath="{data_folder}"')
 
 ## Define dataloader for training
-train_dataloader = DataLoader(run_folder+"train_data.npz", batch_size=4, int_cutoff=0.25, shuffle=True, key=seed)
+train_dataloader = DataLoader(data_folder+"train.npz", shuffle=True, key=seed)
 
+## Useful information about the data - As per the Gen-Dynamics interface
 nb_envs = train_dataloader.nb_envs
 nb_trajs_per_env = train_dataloader.nb_trajs_per_env
 nb_steps_per_traj = train_dataloader.nb_steps_per_traj
 data_size = train_dataloader.data_size
 
+print("== Properties of the data ==")
+print("Number of environments:", nb_envs)
+print("Number of trajectories per environment:", nb_trajs_per_env)
+print("Number of steps per trajectory:", nb_steps_per_traj)
+print("Data size:", data_size)
+
+## Define dataloader for validation (for selecting the best model during training)
+val_dataloader = DataLoader(data_folder+"test.npz", shuffle=False)
+
+
+
+
 #%%
 
 ## Define model and loss function for the learner
 
-activation = jax.nn.softplus
-# activation = jax.nn.swish
-
-class Physics(eqx.Module):
-    layers: list
-
-    def __init__(self, width_size=8, key=None):
-        keys = generate_new_keys(key, num=4)
-        self.layers = [eqx.nn.Linear(context_size, width_size*2, key=keys[0]), activation,
-                        eqx.nn.Linear(width_size*2, width_size*2, key=keys[1]), activation,
-                        eqx.nn.Linear(width_size*2, width_size, key=keys[2]), activation,
-                        eqx.nn.Linear(width_size, 4, key=keys[3])]
-
-    def __call__(self, t, x, ctx):
-        params = ctx
-        for layer in self.layers:
-            params = layer(params)
-        params = jnp.abs(params)
-
-        dx0 = x[0]*params[0] - x[0]*x[1]*params[1]
-        dx1 = x[0]*x[1]*params[3] - x[1]*params[2]
-        return jnp.array([dx0, dx1])
-
-class Augmentation(eqx.Module):
-    # layers_data: list
-    # layers_context: list
+class NeuralNet(eqx.Module):
+    """ 3-networks architecture for the NCF vector field """
+    layers_data: list
+    layers_context: list
     layers_shared: list
+    activations: list
 
-    def __init__(self, data_size, width_size, depth, context_size, key=None):
+    def __init__(self, data_size, int_size, context_size, key=None):
         keys = generate_new_keys(key, num=12)
-        # self.layers_data = [eqx.nn.Linear(data_size, width_size, key=keys[0]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[10]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[1]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[2])]
+        self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        # self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[3]), activation,
-        #                 eqx.nn.Linear(context_size//4, width_size, key=keys[11]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[5])]
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
+                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
 
-        # self.layers_context = [eqx.nn.Linear(context_size, width_size, key=keys[3]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[11]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[4]), activation,
-        #                 eqx.nn.Linear(width_size, width_size, key=keys[5])]
+        self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
+                            eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
+                            eqx.nn.Linear(int_size, int_size, key=keys[5])]
 
-        # self.layers_shared = [eqx.nn.Linear(width_size+width_size, width_size, key=keys[6]), activation,
-        self.layers_shared = [eqx.nn.Linear(context_size+data_size, width_size, key=keys[6]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[7]), activation,
-                        eqx.nn.Linear(width_size, width_size, key=keys[8]), activation,
-                        eqx.nn.Linear(width_size, data_size, key=keys[9])]
+        self.layers_shared = [eqx.nn.Linear(2*int_size, int_size, key=keys[6]), self.activations[4], 
+                              eqx.nn.Linear(int_size, int_size, key=keys[7]), self.activations[5], 
+                              eqx.nn.Linear(int_size, int_size, key=keys[8]), self.activations[6], 
+                              eqx.nn.Linear(int_size, data_size, key=keys[9])]
 
+    def __call__(self, t, y, ctx):
 
-    def __call__(self, t, x, ctx):
-        y = x
-        ctx = ctx
-        # for i in range(len(self.layers_data)):
-        #     y = self.layers_data[i](y)
-        #     ctx = self.layers_context[i](ctx)
+        for layer in self.layers_context:
+            ctx = layer(ctx)
+
+        for layer in self.layers_data:
+            y = layer(y)
 
         y = jnp.concatenate([y, ctx], axis=0)
         for layer in self.layers_shared:
             y = layer(y)
+
         return y
 
-class ContextFlowVectorField(eqx.Module):
-    physics: eqx.Module
-    augmentation: eqx.Module
+## Define a loss function for one environment (one context)
+def loss_fn_env(model, trajs, t_eval, ctx, all_ctx_s, key):
 
-    def __init__(self, augmentation, physics=None):
-        self.augmentation = augmentation
-        self.physics = physics if physics is not None else NoPhysics()
+    ## Define the context pool using the Random-All strategy
+    ind = jax.random.permutation(key, all_ctx_s.shape[0])[:context_pool_size]
+    ctx_s = all_ctx_s[ind, :]
 
-    def __call__(self, t, x, ctx, ctx_):
-
-        vf = lambda xi_: self.physics(t, x, xi_) + self.augmentation(t, x, xi_)
-        gradvf = lambda xi_, xi: eqx.filter_jvp(vf, (xi_,), (xi-xi_,))[1]
-
-        return vf(ctx_) + gradvf(ctx_, ctx)
-        # return vf(ctx)
-
-
-
-# physics = Physics(key=seed)
-physics = None
-
-augmentation = Augmentation(data_size=2, width_size=64, depth=4, context_size=context_size, key=seed)
-
-vectorfield = ContextFlowVectorField(augmentation, physics=physics)
-
-contexts = ContextParams(nb_envs, context_size, key=None)
-
-integrator = diffrax.Tsit5()  ## Has to conform to my API
-# integrator = rk4_integrator
-
-
-# loss_fn_ctx = basic_loss_fn_ctx
-# loss_fn_ctx = default_loss_fn_ctx
-
-## Define a custom loss function here
-def loss_fn_ctx(model, trajs, t_eval, ctx, alpha, beta, ctx_, key):
-
-    trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_)
+    trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_s)
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
-    term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction
-    # term1 = jnp.mean(jnp.abs(new_trajs-trajs_hat))  ## reconstruction
+    term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction loss
+    term2 = jnp.mean(jnp.abs(ctx))              ## context regularisation
+    term3 = params_norm_squared(model)          ## weight regularisation
 
-    # term2 = 1e-3*jnp.mean((ctx)**2)             ## regularisation
-    term2 = 1e-3*jnp.mean(jnp.abs(ctx))             ## regularisation
+    loss_val = term1 + 1e-3*term2 + 1e-3*term3
 
-    loss_val = term1+term2
-
-    return loss_val, (jnp.sum(nb_steps)/ctx_.shape[0], term1, term2)
+    return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 
 
-learner = Learner(vectorfield, contexts, loss_fn_ctx, integrator, key=seed)
+## Create the neural network (accounting for the unknown in the system), and use physics is problem is known
+neuralnet = NeuralNet(data_size=2, int_size=64, context_size=context_size, key=seed)
+vectorfield = SelfModulatedVectorField(physics=None, augmentation=neuralnet, taylor_order=taylor_order)
+## Define the context parameters for all environwemts in a single module
+contexts = ContextParams(nb_envs, context_size, key=None)
+
+print("\n\nTotal number of parameters in the neural ode:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield, eqx.is_array)) if x is not None))
+print("Total number of parameters in the contexts:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(contexts, eqx.is_array)) if x is not None), "\n\n")
+
+## Finnaly, create the learner
+learner = Learner(vectorfield, contexts, loss_fn_env, integrator, ivp_args, key=seed)
+
+
+
+
+
+
 
 
 #%%
 
-## Define optimiser and traine the model
+## Define optimiser and train the model
+nb_total_epochs = nb_outer_steps_max * nb_inner_steps_max
+sched_node = optax.piecewise_constant_schedule(init_value=init_lr,
+                        boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
+sched_ctx = optax.piecewise_constant_schedule(init_value=init_lr,
+                        boundaries_and_scales={nb_total_epochs//3:sched_factor, 2*nb_total_epochs//3:sched_factor})
 
-nb_train_steps = nb_epochs * 3
-sched_node = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_train_steps*0.25):0.1,
-                                                int(nb_train_steps*0.5):0.1,
-                                                int(nb_train_steps*0.75):0.1})
-# sched_node = 1e-3
-# sched_node = optax.exponential_decay(3e-3, nb_epochs*2, 0.99)
+opt_node = optax.adam(sched_node)
+opt_ctx = optax.adam(sched_ctx)
 
-sched_ctx = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_epochs*0.25):0.1,
-                                                int(nb_epochs*0.5):0.1,
-                                                int(nb_epochs*0.75):0.1})
-# sched_ctx = 1e-3
-
-opt_node = optax.adabelief(sched_node)
-opt_ctx = optax.adabelief(sched_ctx)
-
+## Create the trainer
 trainer = Trainer(train_dataloader, learner, (opt_node, opt_ctx), key=seed)
 
 #%%
 
 trainer_save_path = run_folder if save_trainer == True else False
+
 if train == True:
-    # for propostion in [0.25, 0.5, 0.75]:
-    for i, prop in enumerate(np.linspace(0.25, 1.0, 2)):
-    # for i, prop in enumerate([1]):
-        trainer.dataloader.int_cutoff = int(prop*nb_steps_per_traj)
-        # nb_epochs = nb_epochs // 2 if nb_epochs > 1000 else 1000
-        trainer.train(nb_epochs=nb_epochs*(2**i), print_error_every=print_error_every*(2**i), update_context_every=1, save_path=trainer_save_path, key=seed)
+    if ncf_variant == 1:
+        ## Ordinary alternating minimsation to train the NCF-t1 model
+        trainer.train_ordinary(nb_epochs=nb_total_epochs, 
+                                print_error_every=print_error_every, 
+                                update_context_every=1, 
+                                save_path=trainer_save_path, 
+                                key=seed, 
+                                val_dataloader=val_dataloader, 
+                                int_prop=1.0)
+    elif ncf_variant == 2:
+        ## Proximal alternating minimisation to train the NCF-t2 model
+        trainer.train_proximal(nb_outer_steps_max=nb_outer_steps_max, 
+                                nb_inner_steps_max=nb_inner_steps_max, 
+                                proximal_reg=proximal_beta, 
+                                inner_tol_node=inner_tol_node, 
+                                inner_tol_ctx=inner_tol_ctx,
+                                print_error_every=print_error_every, 
+                                save_path=trainer_save_path, 
+                                val_dataloader=val_dataloader, 
+                                patience=early_stopping_patience,
+                                int_prop=1.0,
+                                key=seed)
+    else:
+        raise ValueError("NCF variant must be 1 or 2")
 
 else:
-    # print("\nNo training, attempting to load model and results from "+ run_folder +" folder ...\n")
-
     restore_folder = run_folder
-    # restore_folder = "./runs/27012024-155719/finetune_193625/"
     trainer.restore_trainer(path=restore_folder)
 
 
 #%%
 
-
-
-
-
-
-
-
-
-
+## Finetune the neural weights of a trained model
 if finetune:
-    # ## Finetune a trained model
-
-    finetunedir = run_folder+"finetune_"+trainer.dataloader.data_id+"/"
+    finetunedir = run_folder+"finetune/"
     if not os.path.exists(finetunedir):
         os.mkdir(finetunedir)
     print("No training. Loading and finetuning into:", finetunedir)
 
     trainer.dataloader.int_cutoff = nb_steps_per_traj
 
-    opt_node = optax.adabelief(3e-4*0.1*0.1*0.1)
-    opt_ctx = optax.adabelief(3e-4*0.1*0.1*0.1)
+    opt_node = optax.adabelief(1e-7)
+    opt_ctx = optax.adabelief(1e-7)
     trainer.opt_node, trainer.opt_ctx = opt_node, opt_ctx
 
-    trainer.train(nb_epochs=400000, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
-
-
-
-
-
-
-
+    trainer.train(nb_epochs=2400, print_error_every=1000, update_context_every=1, save_path=finetunedir, key=seed)
 
 
 #%%
 
-## Test and visualise the results on a test dataloader
-
-# test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-test_dataloader = DataLoader(run_folder+"train_data.npz", shuffle=False)
-
+## Test and visualise the results on a test dataloader (same as the validation dataset)
+test_dataloader = DataLoader(data_folder+"test.npz", shuffle=False)
 visualtester = VisualTester(trainer)
-# ans = visualtester.trainer.nb_steps_node
-# print(ans.shape)
 
 ind_crit = visualtester.test(test_dataloader, int_cutoff=1.0)
 
@@ -313,86 +245,7 @@ if finetune:
     savefigdir = finetunedir+"results_in_domain.png"
 else:
     savefigdir = run_folder+"results_in_domain.png"
-# visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
-visualtester.visualize(test_dataloader, e=7, traj=0, int_cutoff=1.0, save_path=savefigdir);
-
-
-
-#%%
-# len(trainer.losses_node
-
-# ## Run and get the contexts
-# for i in range(nb_envs):
-#     ctx = trainer.learner.contexts.params[i]
-#     # print(ctx)
-#     param = ctx
-#     for layer in trainer.learner.physics.layers_context:
-#         param = layer(param)
-#         # print("Context", ctx, "     Param", param)
-#     param = jnp.abs(param)
-#     print("Param:", param)
-
-
-#%%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Give the dataloader an id to help with restoration later on
-
-adapt_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, data_id="170846", key=seed)
-
-sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-                        boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-                                                int(nb_epochs_adapt*0.5):0.1,
-                                                int(nb_epochs_adapt*0.75):0.1})
-opt_adapt = optax.adabelief(sched_ctx_new)
-
-if adapt == True:
-    trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-else:
-    print("save_id:", adapt_dataloader.data_id)
-
-    trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
-
-#%%
-ood_crit = visualtester.test(adapt_dataloader, int_cutoff=1.0)      ## It's the same visualtester as before during training. It knows trainer
-
-visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
-
-
-#%%
-
-# eqx.tree_deserialise_leaves(run_folder+"contexts.eqx", learner.contexts)
-
-
-
-
-
-
-
-
+visualtester.visualize(test_dataloader, int_cutoff=1.0, save_path=savefigdir);
 
 
 
@@ -402,79 +255,52 @@ visualtester.visualize(adapt_dataloader, int_cutoff=1.0, save_path=adapt_folder+
 
 #%%
 
-#### Generate data for analysis
+## Create a new dataset for adaptation and another one to test the model on it (or download it from Gen-Dynamics)
+if adapt_test and not adapt_restore:
+    if not os.path.exists(data_folder+"ood_train.npz") or not os.path.exists(data_folder+"ood_test.npz"):
+        os.system(f'python dataset.py --split=adapt --savepath="{data_folder}"');
+        os.system(f'python dataset.py --split=adapt_test --savepath="{data_folder}"');
 
+## Adaptation of the model to a new dataset
+if adapt_test:
+    adapt_dataloader = DataLoader(data_folder+"ood_train.npz", adaptation=True, key=seed)               ## TRAIN
+    adapt_dataloader_test = DataLoader(data_folder+"ood_test.npz", adaptation=True, key=seed)           ## TEST
 
-# ## We want to store 3 values in a CSV file: "seed", "ind_crit", and "ood_crit", into the tmp/test_scores.csv file
+    ## Define the optimiser for the adaptation (optional)
+    sched_ctx_new = optax.piecewise_constant_schedule(init_value=init_lr_adapt,
+                            boundaries_and_scales={nb_total_epochs//3:sched_factor_adapt, 2*nb_total_epochs//3:sched_factor_adapt})
+    opt_adapt = optax.adabelief(sched_ctx_new)
 
-# # First, check if the file exists. If not, create it and write the header
-# if not os.path.exists('./tmp'):
-#     os.mkdir('./tmp')
+    if adapt_restore == False:
+        if sequential_adapt:
+            trainer.adapt_sequential(adapt_dataloader, 
+                                    nb_epochs=nb_epochs_adapt, 
+                                    optimizer=opt_adapt, 
+                                    print_error_every=print_error_every, 
+                                    save_path=adapt_folder,
+                                    key=seed)
+        else:
+            trainer.adapt_bulk(adapt_dataloader, 
+                                nb_epochs=nb_epochs_adapt, 
+                                optimizer=opt_adapt, 
+                                print_error_every=print_error_every, 
+                                save_path=adapt_folder,
+                                key=seed)
+    else:
+        print("Restoring trained adapation model")
+        trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
 
-# if not os.path.exists('./tmp/test_scores.csv'):
-#     os.system(f"touch ./tmp/test_scores.csv")
+    ## Evaluate the model on the adaptation test dataset
+    ood_crit, _ = visualtester.test(adapt_dataloader_test, int_cutoff=1.0)
 
-# with open('./tmp/test_scores.csv', 'r') as f:
-#     lines = f.readlines()
-#     if len(lines) == 0:
-#         with open('./tmp/test_scores.csv', 'w') as f:
-#             f.write("seed,ind_crit,ood_crit\n")
-
-
-
-
-
-
-for seed in range(4*10**3, 6*10**3, 200):
-
-    os.system(f'python dataset.py --split=test --savepath="{run_folder}" --seed="{seed*2}"')
-    os.system(f'python dataset.py --split=adapt --savepath="{adapt_folder}" --seed="{seed*3}"');
-
-    test_dataloader = DataLoader(run_folder+"test_data.npz", shuffle=False)
-    adapt_test_dataloader = DataLoader(adapt_folder+"adapt_data.npz", adaptation=True, key=seed)
-
-    ind_crit, _ = visualtester.test(test_dataloader, int_cutoff=1.0)
-    ood_crit, _ = visualtester.test(adapt_test_dataloader, int_cutoff=1.0)
-
-    # Then, append the values to the file
-    with open('./runs/30012024-165151/analysis/test_scores.csv', 'a') as f:
-        f.write(f"{seed},{ind_crit},{ood_crit}\n")
-
+    visualtester.visualize(adapt_dataloader_test, int_cutoff=1.0, save_path=adapt_folder+"results_ood.png");
 
 
 
 
 #%%
-
-## Huge adaptation step to 51*51 environments and MAPE score computation
-
-
-
-## Give the dataloader an id to help with restoration later on
-
-
-
-# adapt_dataloader = DataLoader(adapt_folder+"adapt_huge_data.npz", adaptation=True, data_id="090142", key=seed)
-
-# sched_ctx_new = optax.piecewise_constant_schedule(init_value=3e-4,
-#                         boundaries_and_scales={int(nb_epochs_adapt*0.25):0.1,
-#                                                 int(nb_epochs_adapt*0.5):0.1,
-#                                                 int(nb_epochs_adapt*0.75):0.1})
-# opt_adapt = optax.adabelief(sched_ctx_new)
-
-# # nb_epochs_adapt = 2
-# if adapt_huge == True:
-#     trainer.adapt(adapt_dataloader, nb_epochs=nb_epochs_adapt, optimizer=opt_adapt, print_error_every=print_error_every, save_path=adapt_folder)
-# else:
-#     print("save_id:", adapt_dataloader.data_id)
-
-#     trainer.restore_adapted_trainer(path=adapt_folder, data_loader=adapt_dataloader)
-
-# ## Define mape criterion over a trajectory
-# def mape(y, y_hat):
-#     norm_traget = jnp.abs(y)
-#     norm_diff = jnp.abs(y-y_hat)
-#     ratios = jnp.mean(norm_diff/norm_traget, axis=-1)
-#     return jnp.sum(ratios)
-
-# ood_crit, odd_crit_all = visualtester.test(adapt_dataloader, criterion=mape)
+## After training, copy nohup.log to the runfolder
+try:
+    __IPYTHON__         ## in a jupyter notebook
+except NameError:
+    os.system(f"cp nohup.log {run_folder}")

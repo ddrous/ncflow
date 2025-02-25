@@ -14,7 +14,7 @@ seed = 2026
 context_pool_size = 3               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256                 ## Size of the context vector
 
-nb_outer_steps_max = 400           ## maximum number of outer steps when using NCF-T2
+nb_outer_steps_max = 500           ## maximum number of outer steps when using NCF-T2
 nb_inner_steps_max = 20             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
 proximal_beta = 1e1                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-16               ## Tolerance for the inner optimisation on the weights
@@ -101,6 +101,7 @@ def circular_pad_2d(x, pad_width):
         return jnp.pad(x, zero_pad+list(pad_width), mode='wrap')
 
 class NeuralNet(eqx.Module):
+    """ 3-Networks architecture for NCF """
     layers_data: list
     layers_context: list
     layers_shared: list
@@ -128,7 +129,6 @@ class NeuralNet(eqx.Module):
                               eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[8]), self.activations[3],
                               circular_pad, 
                               eqx.nn.Conv2d(nb_hidden_chans, 2, kernel_size, key=keys[9]),
-                            #   lambda x: x.flatten()]
                             lambda x: jnp.concatenate([x[0].flatten(), x[1].flatten()], axis=0)]
 
     def __call__(self, t, y, ctx):
@@ -158,10 +158,9 @@ def loss_fn_env(model, trajs, t_eval, ctx, all_ctx_s, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)      ## reconstruction loss
     term2 = jnp.mean(jnp.abs(ctx))                  ## context regularisation
-    # term3 = params_norm_squared(model)            ## weight regularisation
+    term3 = params_norm_squared(model)              ## weight regularisation
 
-    # loss_val = term1 + 1e-3*term2 + 1e-3*term3
-    loss_val = term1 + 1e-3*term2
+    loss_val = term1 + 1e-3*term2 + 1e-3*term3
 
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 

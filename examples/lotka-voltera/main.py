@@ -1,5 +1,5 @@
 #%%
-### MAIN SCRIPT TO TRAIN EITHER A NCF-T1 or -T2 ###
+### MAIN SCRIPT TO TRAIN A NEURAL CONTEXT FLOW ###
 
 # %load_ext autoreload
 # %autoreload 2
@@ -11,26 +11,27 @@ from ncf import *
 seed = 2026
 
 ## NCF main hyperparameters ##
-context_pool_size = 3               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 6               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 1024                 ## Size of the context vector
 
 nb_outer_steps_max = 2000           ## maximum number of outer steps when using NCF-T2
 nb_inner_steps_max = 25             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
 proximal_beta = 1e2                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 1e-9               ## Tolerance for the inner optimisation on the weights
-inner_tol_ctx = 1e-8                ## Tolerance for the inner optimisation on the contexts
+inner_tol_node = 1e-12               ## Tolerance for the inner optimisation on the weights
+inner_tol_ctx = 1e-12                ## Tolerance for the inner optimisation on the contexts
 early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before stopping early
 
 ## General training hyperparameters ##
 print_error_every = 10              ## Print the error every n epochs
-integrator = diffrax.Dopri5         ## Integrator to use for the learner
+integrator = RK4                    ## Integrator to use for the learner
 ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":5}
 init_lr = 1e-4                      ## Initial learning rate
-sched_factor = 0.1                  ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
+sched_factor = 1.0                  ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
 ncf_variant = 2                     ## 1 for NCF-T1, 2 for NCF-T2
 taylor_order = ncf_variant          ## Taylor order for the neural ODE's vector field
+print(f"NCF variant: NCF-t2{ncf_variant}")
 
-train = False                           ## Train the model, or load a pre-trained model
+train = True                            ## Train the model, or load a pre-trained model
 run_folder = None if train else "./"    ## Folder to save the results of the run
 save_trainer = True                     ## Save the trainer object after training
 finetune = False                        ## Finetune a trained model
@@ -41,9 +42,9 @@ adapt_test = True                   ## Test the model on an adaptation dataset
 adapt_restore = False               ## Restore a trained adaptation model
 sequential_adapt = True
 
-init_lr_adapt = 5e-3                ## Initial learning rate for adaptation
-sched_factor_adapt = 0.5            ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
-nb_epochs_adapt = 1500              ## Number of epochs to adapt
+init_lr_adapt = 1e-4                ## Initial learning rate for adaptation
+sched_factor_adapt = 1.0            ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
+nb_epochs_adapt = 2500              ## Number of epochs to adapt
 
 
 #%%

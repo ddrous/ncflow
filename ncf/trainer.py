@@ -678,7 +678,7 @@ class Trainer:
 
         pickle.dump(self.opt_state_adapt, open(path+"/opt_state_adapt.pkl", "wb"))
 
-        eqx.tree_serialise_leaves(path+"/adapted_contexts.pkl", self.learner.contexts_adapt)
+        eqx.tree_serialise_leaves(path+"/adapted_contexts.eqx", self.learner.contexts_adapt)
 
         np.save(path+"adapted_contexts_init.npy", self.learner.init_ctx_params_adapt)
 
@@ -696,6 +696,6 @@ class Trainer:
         self.opt_state_adapt = pickle.load(open(path+"/opt_state_adapt.pkl", "rb"))
 
         self.learner.contexts_adapt = ContextParams(data_loader.nb_envs, self.learner.contexts.params.shape[1], None)
-        self.learner.contexts_adapt = eqx.tree_deserialise_leaves(path+"/adapted_contexts.pkl", self.learner.contexts_adapt)
+        self.learner.contexts_adapt = eqx.tree_deserialise_leaves(path+"/adapted_contexts.eqx", self.learner.contexts_adapt)
 
         self.learner.init_ctx_params_adapt = np.load(path+"adapted_contexts_init.npy")

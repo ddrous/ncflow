@@ -4,32 +4,32 @@
 # %load_ext autoreload
 # %autoreload 2
 
-## Import all the necessary libraries
+## Import all the necessary modules
 from ncf import *
 
 ## Seed for reproducibility in JAX
 seed = 2026
 
 ## NCF main hyperparameters ##
-context_pool_size = 3               ## Number of neighboring contexts j to use for a flow in env e
+context_pool_size = 2               ## Number of neighboring contexts j to use for a flow in env e
 context_size = 256                 ## Size of the context vector
 
-nb_outer_steps_max = 400           ## maximum number of outer steps when using NCF-T2
-nb_inner_steps_max = 20             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
-proximal_beta = 1e1                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
-inner_tol_node = 1e-16               ## Tolerance for the inner optimisation on the weights
-inner_tol_ctx = 1e-16                ## Tolerance for the inner optimisation on the contexts
-early_stopping_patience = nb_outer_steps_max       ## Number of outer steps to wait before stopping early
+nb_outer_steps_max = 1500           ## maximum number of outer steps when using NCF-T2
+nb_inner_steps_max = 10             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
+proximal_beta = 1e2                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
+inner_tol_node = 1e-9               ## Tolerance for the inner optimisation on the weights
+inner_tol_ctx = 1e-8                ## Tolerance for the inner optimisation on the contexts
+early_stopping_patience = nb_outer_steps_max//1       ## Number of outer steps to wait before stopping early
 
 ## General training hyperparameters ##
 print_error_every = 10              ## Print the error every n epochs
-integrator = diffrax.Dopri5                    ## Integrator to use for the learner
-ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivisions":2}
+integrator = diffrax.Dopri5         ## Integrator to use for the learner
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":40000, "subdivisions":2}
 init_lr = 1e-4                      ## Initial learning rate
 sched_factor = 1.0                  ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
 ncf_variant = 2                     ## 1 for NCF-T1, 2 for NCF-T2
 taylor_order = ncf_variant          ## Taylor order for the neural ODE's vector field
-print(f"NCF variant: NCF-t{ncf_variant}")
+print(f"NCF variant: NCF-t2{ncf_variant}")
 
 train = True                            ## Train the model, or load a pre-trained model
 run_folder = None if train else "./"    ## Folder to save the results of the run
@@ -88,17 +88,7 @@ val_dataloader = DataLoader(data_folder+"test.npz", shuffle=False)
 
 #%%
 
-## Define model for the learner
-def circular_pad_2d(x, pad_width):
-    """ Circular padding for 2D arrays """
-    if isinstance(pad_width, int):
-        pad_width = ((pad_width, pad_width), (pad_width, pad_width))
-    
-    if x.ndim == 2:
-        return jnp.pad(x, pad_width, mode='wrap')
-    else:
-        zero_pad = [(0,0)]*(x.ndim-2)
-        return jnp.pad(x, zero_pad+list(pad_width), mode='wrap')
+## Define model and loss function for the learner
 
 class NeuralNet(eqx.Module):
     layers_data: list
@@ -106,30 +96,21 @@ class NeuralNet(eqx.Module):
     layers_shared: list
     activations: list
 
-    def __init__(self, data_res, kernel_size, nb_comp_chans, nb_hidden_chans, context_size, key=None):
+    def __init__(self, data_size, int_size, context_size, key=None):
         keys = generate_new_keys(key, num=12)
-        circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
-        self.activations = [Swish(key=keys[i]) for i in range(0, 6)]
+        self.activations = [Swish(key=key_i) for key_i in keys[:7]]
 
-        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*2, key=keys[3]), self.activations[0],
-                                lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
-                            circular_pad,
-                            eqx.nn.Conv2d(2, nb_comp_chans, kernel_size, key=keys[0]), self.activations[5]]
+        self.layers_context = [eqx.nn.Linear(context_size, context_size//4, key=keys[0]), self.activations[0],
+                               eqx.nn.Linear(context_size//4, int_size, key=keys[1]), self.activations[1], eqx.nn.Linear(int_size, int_size, key=keys[2])]
 
-        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
-                            circular_pad,
-                            eqx.nn.Conv2d(2, nb_comp_chans, kernel_size, key=keys[0]), self.activations[4]]
+        self.layers_data = [eqx.nn.Linear(data_size, int_size, key=keys[3]), self.activations[2], 
+                            eqx.nn.Linear(int_size, int_size, key=keys[4]), self.activations[3], 
+                            eqx.nn.Linear(int_size, int_size, key=keys[5])]
 
-        self.layers_shared = [circular_pad, 
-                              eqx.nn.Conv2d(nb_comp_chans*2, nb_hidden_chans, kernel_size, key=keys[6]), self.activations[1],
-                              circular_pad, 
-                              eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[7]), self.activations[2],
-                              circular_pad, 
-                              eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[8]), self.activations[3],
-                              circular_pad, 
-                              eqx.nn.Conv2d(nb_hidden_chans, 2, kernel_size, key=keys[9]),
-                            #   lambda x: x.flatten()]
-                            lambda x: jnp.concatenate([x[0].flatten(), x[1].flatten()], axis=0)]
+        self.layers_shared = [eqx.nn.Linear(2*int_size, int_size, key=keys[6]), self.activations[4], 
+                              eqx.nn.Linear(int_size, int_size, key=keys[7]), self.activations[5], 
+                              eqx.nn.Linear(int_size, int_size, key=keys[8]), self.activations[6], 
+                              eqx.nn.Linear(int_size, data_size, key=keys[9])]
 
     def __call__(self, t, y, ctx):
 
@@ -143,8 +124,7 @@ class NeuralNet(eqx.Module):
         for layer in self.layers_shared:
             y = layer(y)
 
-        return y * 1e-2
-
+        return y
 
 ## Define a loss function for one environment (one context)
 def loss_fn_env(model, trajs, t_eval, ctx, all_ctx_s, key):
@@ -156,9 +136,9 @@ def loss_fn_env(model, trajs, t_eval, ctx, all_ctx_s, key):
     trajs_hat, nb_steps = jax.vmap(model, in_axes=(None, None, None, 0))(trajs[:, 0, :], t_eval, ctx, ctx_s)
     new_trajs = jnp.broadcast_to(trajs, trajs_hat.shape)
 
-    term1 = jnp.mean((new_trajs-trajs_hat)**2)      ## reconstruction loss
-    term2 = jnp.mean(jnp.abs(ctx))                  ## context regularisation
-    # term3 = params_norm_squared(model)            ## weight regularisation
+    term1 = jnp.mean((new_trajs-trajs_hat)**2)  ## reconstruction loss
+    term2 = jnp.mean(jnp.abs(ctx))              ## context regularisation
+    # term3 = params_norm_squared(model)          ## weight regularisation
 
     # loss_val = term1 + 1e-3*term2 + 1e-3*term3
     loss_val = term1 + 1e-3*term2
@@ -167,7 +147,7 @@ def loss_fn_env(model, trajs, t_eval, ctx, all_ctx_s, key):
 
 
 ## Create the neural network (accounting for the unknown in the system), and use physics is problem is known
-neuralnet = NeuralNet(data_res=32, kernel_size=3, nb_comp_chans=8, nb_hidden_chans=64, context_size=context_size, key=seed)
+neuralnet = NeuralNet(data_size=2, int_size=64, context_size=context_size, key=seed)
 vectorfield = SelfModulatedVectorField(physics=None, augmentation=neuralnet, taylor_order=taylor_order)
 ## Define the context parameters for all environwemts in a single module
 contexts = ContextParams(nb_envs, context_size, key=None)

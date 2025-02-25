@@ -18,8 +18,14 @@ NCflow is built around 5 extensible modules:
 ## ToDo:
 - [ ] Put the looses images here: Point to the Torch repo.
 - [ ] Add the BibTex citation
-- [ ] Open-source the weights and biases
+- [ ] Open-source the weights and biases (entire runs)
 - [ ] Add recommendation to run with nohup
-
+- [ ] MAIN SCRIPT TO TRAIN EITHER A NCF-T1 or -T2
+- [ ] early_stopping_patience
+- [ ] print(f"NCF variant: NCF-t{ncf_variant}")
+- [ ] We need to install torch cpu for the NS dataset
+- [ ] In the instructions, add that once in the run folder after training, change train to False. Then one can do uncertianty quantification, etc.
+- [ ] Draw the attributes of the trainer and the learner: contexts and contexts adapt
+- [ ] Remove nohup.logs from git commit
 
 If you like our work, please cite the corresponding paper:

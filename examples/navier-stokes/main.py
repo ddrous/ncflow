@@ -6,16 +6,17 @@
 
 ## Import all the necessary libraries
 from ncf import *
+from jax import random
 
 ## Seed for reproducibility in JAX
 seed = 2026
 
 ## NCF main hyperparameters ##
 context_pool_size = 3               ## Number of neighboring contexts j to use for a flow in env e
-context_size = 256                 ## Size of the context vector
+context_size = 202                 ## Size of the context vector
 
-nb_outer_steps_max = 400           ## maximum number of outer steps when using NCF-T2
-nb_inner_steps_max = 20             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
+nb_outer_steps_max = 250           ## maximum number of outer steps when using NCF-T2
+nb_inner_steps_max = 25             ## Maximum number of inner steps when using NCF-T2 (for both weights and contexts)
 proximal_beta = 1e1                 ## Proximal coefficient, see beta in https://proceedings.mlr.press/v97/li19n.html
 inner_tol_node = 1e-16               ## Tolerance for the inner optimisation on the weights
 inner_tol_ctx = 1e-16                ## Tolerance for the inner optimisation on the contexts
@@ -23,8 +24,8 @@ early_stopping_patience = nb_outer_steps_max       ## Number of outer steps to w
 
 ## General training hyperparameters ##
 print_error_every = 10              ## Print the error every n epochs
-integrator = diffrax.Dopri5                    ## Integrator to use for the learner
-ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivisions":2}
+integrator = Euler                    ## Integrator to use for the learner
+ivp_args = {"dt_init":1e-4, "rtol":1e-3, "atol":1e-6, "max_steps":4000, "subdivisions":1}
 init_lr = 1e-4                      ## Initial learning rate
 sched_factor = 1.0                  ## Factor to multiply the learning rate by at after 1/3 and 2/3 of the total gradient steps
 ncf_variant = 2                     ## 1 for NCF-T1, 2 for NCF-T2
@@ -88,62 +89,223 @@ val_dataloader = DataLoader(data_folder+"test.npz", shuffle=False)
 
 #%%
 
-## Define model for the learner
-def circular_pad_2d(x, pad_width):
-    """ Circular padding for 2D arrays """
-    if isinstance(pad_width, int):
-        pad_width = ((pad_width, pad_width), (pad_width, pad_width))
-    
-    if x.ndim == 2:
-        return jnp.pad(x, pad_width, mode='wrap')
-    else:
-        zero_pad = [(0,0)]*(x.ndim-2)
-        return jnp.pad(x, zero_pad+list(pad_width), mode='wrap')
+def normal(stddev=1e-2, dtype=jnp.float32):
+    def init(key, shape, dtype=dtype):
+        keys = random.split(key)
+        return random.normal(keys[0], shape) * stddev
+    return init
 
-class NeuralNet(eqx.Module):
-    layers_data: list
-    layers_context: list
-    layers_shared: list
-    activations: list
+class SpectralConv2d(eqx.Module):
+    in_channels: int
+    out_channels: int
+    modes1: int
+    modes2: int
 
-    def __init__(self, data_res, kernel_size, nb_comp_chans, nb_hidden_chans, context_size, key=None):
-        keys = generate_new_keys(key, num=12)
-        circular_pad = lambda x: circular_pad_2d(x, kernel_size//2)
-        self.activations = [Swish(key=keys[i]) for i in range(0, 6)]
+    kernel_1_r: jnp.ndarray
+    kernel_1_i: jnp.ndarray
+    kernel_2_r: jnp.ndarray
+    kernel_2_i: jnp.ndarray
 
-        self.layers_context = [eqx.nn.Linear(context_size, data_res*data_res*2, key=keys[3]), self.activations[0],
-                                lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
-                            circular_pad,
-                            eqx.nn.Conv2d(2, nb_comp_chans, kernel_size, key=keys[0]), self.activations[5]]
+    def __init__(self, in_channels=1, out_channels=32, modes1=12, modes2=12, key=jax.random.PRNGKey(seed)):
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.modes1 = modes1
+        self.modes2 = modes2
 
-        self.layers_data = [lambda x: jnp.stack(vec_to_mats(x, data_res, 2), axis=0),
-                            circular_pad,
-                            eqx.nn.Conv2d(2, nb_comp_chans, kernel_size, key=keys[0]), self.activations[4]]
+        keys = jax.random.split(key, num=4)
 
-        self.layers_shared = [circular_pad, 
-                              eqx.nn.Conv2d(nb_comp_chans*2, nb_hidden_chans, kernel_size, key=keys[6]), self.activations[1],
-                              circular_pad, 
-                              eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[7]), self.activations[2],
-                              circular_pad, 
-                              eqx.nn.Conv2d(nb_hidden_chans, nb_hidden_chans, kernel_size, key=keys[8]), self.activations[3],
-                              circular_pad, 
-                              eqx.nn.Conv2d(nb_hidden_chans, 2, kernel_size, key=keys[9]),
-                            #   lambda x: x.flatten()]
-                            lambda x: jnp.concatenate([x[0].flatten(), x[1].flatten()], axis=0)]
+        # Initializing the kernel parameters
+        scale = 1 / (self.in_channels * self.out_channels)
 
-    def __call__(self, t, y, ctx):
+        self.kernel_1_r = normal(scale)(keys[0], (self.in_channels, self.out_channels, self.modes1, self.modes2 ))
+        self.kernel_1_i = normal(scale)(keys[1], (self.in_channels, self.out_channels, self.modes1, self.modes2))
+        self.kernel_2_r = normal(scale)(keys[2], (self.in_channels, self.out_channels, self.modes1, self.modes2))
+        self.kernel_2_i = normal(scale)(keys[3], (self.in_channels, self.out_channels, self.modes1, self.modes2))
 
-        for layer in self.layers_context:
-            ctx = layer(ctx)
+    def __call__(self, x):
+        # x.shape: [in_channels, height, width]
+        x = x.transpose((1, 2, 0))[None,...]
+        # NOW, x.shape: [batch, height, width, in_channels]
 
-        for layer in self.layers_data:
-            y = layer(y)
+        # print("Just checking:", x.shape)
 
-        y = jnp.concatenate([y, ctx], axis=0)
-        for layer in self.layers_shared:
-            y = layer(y)
+        height = x.shape[1]
+        width = x.shape[2]
 
-        return y * 1e-2
+        # Checking that the modes are not more than the input size
+        assert self.modes1 <= height // 2 + 1
+        assert self.modes2 <= width // 2 + 1
+        assert height % 2 == 0  # Only tested for even-sized inputs
+        assert width % 2 == 0  # Only tested for even-sized inputs
+
+        # Perform fft of the input
+        x_ft = jnp.fft.rfftn(x, axes=(1, 2))
+
+        # print("Channels in, out", self.in_channels, self.out_channels)
+        # print("Shapes", x_ft.shape, self.kernel_1_r.shape, self.kernel_1_i.shape)
+
+        # Multiply the center of the spectrum by the kernel
+        out_ft = jnp.zeros_like(x_ft)
+        s1 = jnp.einsum(
+            'bijc,coij->bijo',
+            x_ft[:, :self.modes1, :self.modes2, :],
+            self.kernel_1_r + 1j * self.kernel_1_i)
+        s2 = jnp.einsum(
+            'bijc,coij->bijo',
+            x_ft[:, -self.modes1:, :self.modes2, :],
+            self.kernel_2_r + 1j * self.kernel_2_i)
+        out_ft = out_ft.at[:, :self.modes1, :self.modes2, :].set(s1)
+        out_ft = out_ft.at[:, -self.modes1:, :self.modes2, :].set(s2)
+
+        # Go back to the spatial domain
+        y = jnp.fft.irfftn(out_ft, axes=(1, 2))
+
+        # print("Suceeded", y.shape)
+        ## Remove the batch dimension
+        y = y[0].transpose((2, 0, 1))
+
+        return y
+
+class FourierStage(eqx.Module):
+    in_channels: int
+    out_channels: int
+    modes1: int
+    modes2: int
+    activation: callable
+
+    spectral_conv: SpectralConv2d
+    conv: eqx.nn.Conv
+
+    def __init__(self, in_channels=32, out_channels=32, modes1=12, modes2=12, activation=jax.nn.softplus, key=None):
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.modes1 = modes1
+        self.modes2 = modes2
+        self.activation = activation
+
+        key, subkey1, subkey2 = jax.random.split(key, 3)
+        self.spectral_conv = SpectralConv2d(
+            in_channels=self.in_channels,
+            out_channels=self.out_channels,
+            modes1=self.modes1,
+            modes2=self.modes2,
+            key=subkey1
+        )
+        self.conv = eqx.nn.Conv2d(
+            self.in_channels,
+            self.out_channels,
+            (1, 1),
+            key=subkey2
+        )
+
+    def __call__(self, x):
+        x_fourier = self.spectral_conv(x)
+        x_local = self.conv(x)
+        return self.activation(x_fourier + x_local)
+
+
+class FNO2D(eqx.Module):
+    modes1: int
+    modes2: int
+    width: int
+    depth: int
+    channels_last_proj: int
+    activation: callable
+    out_channels: int
+    padding: int
+
+    res: int
+
+    layers: list
+    dense0: eqx.nn.Conv2d
+    dense1: eqx.nn.Conv2d
+    dense2: eqx.nn.Conv2d
+
+    context_layer: eqx.nn.Linear
+
+    def __init__(self, modes1=12, modes2=12, width=32, depth=4, channels_last_proj=32, 
+                 activation=jax.nn.softplus, out_channels=1, padding=0, res=32, context_size=2, key=None):
+        self.modes1 = modes1
+        self.modes2 = modes2
+        self.width = width
+        self.depth = depth
+        self.channels_last_proj = channels_last_proj
+        self.activation = activation
+        self.out_channels = out_channels
+        self.padding = padding
+
+        self.res = res
+
+        keys = jax.random.split(key, depth + 4)
+        self.layers = [FourierStage(
+            in_channels=self.width,
+            out_channels=self.width,
+            modes1=self.modes1,
+            modes2=self.modes2,
+            activation=self.activation if i < self.depth - 1 else lambda x: x,
+            key=keys[i]
+        ) for i in range(self.depth)]
+
+        self.dense0 = eqx.nn.Conv2d(4, self.width, (1, 1), key=keys[-2])
+        self.dense1 = eqx.nn.Conv2d(self.width, self.channels_last_proj, (1, 1), key=keys[-3])
+        self.dense2 = eqx.nn.Conv2d(self.channels_last_proj, self.out_channels, (1, 1), key=keys[-4])
+
+        self.context_layer = eqx.nn.Linear(context_size, self.res*self.res*1, key=keys[-1])
+
+    @staticmethod
+    def get_grid(x):
+        x1 = jnp.linspace(0, 1, x.shape[1])
+        x2 = jnp.linspace(0, 1, x.shape[2])
+        x1, x2 = jnp.meshgrid(x1, x2, indexing='ij')
+        grid = jnp.expand_dims(jnp.stack([x1, x2], axis=-1), 0)
+        batched_grid = jnp.repeat(grid, x.shape[0], axis=0)
+        return batched_grid
+
+    def __call__(self, t, x, ctx):
+
+        ## Batch size always 1
+        x = x.reshape((self.res, self.res, -1))
+
+        ## Process context
+        ctx = self.context_layer(ctx).reshape((self.res, self.res, 1))
+
+        # Generate coordinate grid, and append to input channels
+        grid = self.get_grid(x).squeeze()
+        # x = jnp.concatenate([x, grid], axis=-1)
+        x = jnp.concatenate([x, ctx, grid], axis=-1)
+
+        ## Put channel first
+        x = x.transpose((2, 0, 1))
+
+        # Lift the input to a higher dimension
+        x = self.dense0(x)
+
+        # Pad input
+        if self.padding > 0:
+            x = jnp.pad(
+                x,
+                ((0, 0), (0, self.padding), (0, self.padding), (0, 0)),
+                mode='constant'
+            )
+
+        # Apply Fourier stages
+        for layer in self.layers:
+            x = layer(x)
+
+        # Unpad
+        if self.padding > 0:
+            x = x[:-self.padding, :-self.padding, :]
+
+        # Project to the output channels
+        x = self.dense1(x)
+        x = self.activation(x)
+        x = self.dense2(x)
+
+        ## Reshape for next step
+        # x = x.reshape((1, self.res, self.res, self.out_channels))
+        x = x.reshape((self.res*self.res*self.out_channels,))
+
+        return x
 
 
 ## Define a loss function for one environment (one context)
@@ -158,18 +320,26 @@ def loss_fn_env(model, trajs, t_eval, ctx, all_ctx_s, key):
 
     term1 = jnp.mean((new_trajs-trajs_hat)**2)      ## reconstruction loss
     term2 = jnp.mean(jnp.abs(ctx))                  ## context regularisation
-    # term3 = params_norm_squared(model)            ## weight regularisation
+    term3 = params_norm_squared(model)              ## weight regularisation
 
-    # loss_val = term1 + 1e-3*term2 + 1e-3*term3
-    loss_val = term1 + 1e-3*term2
+    loss_val = term1 + 1e-3*term2 + 1e-3*term3
 
     return loss_val, (jnp.sum(nb_steps)/ctx_s.shape[0], term1, term2)
 
 
 ## Create the neural network (accounting for the unknown in the system), and use physics is problem is known
-neuralnet = NeuralNet(data_res=32, kernel_size=3, nb_comp_chans=8, nb_hidden_chans=64, context_size=context_size, key=seed)
+neuralnet = FNO2D(modes1=8, 
+                  modes2=8, 
+                  width=10, 
+                  depth=4, 
+                  channels_last_proj=16, 
+                  activation=jax.nn.softplus, 
+                  out_channels=1, 
+                  padding=0, 
+                  key=jax.random.PRNGKey(seed), 
+                  res=32, 
+                  context_size=context_size)
 vectorfield = SelfModulatedVectorField(physics=None, augmentation=neuralnet, taylor_order=taylor_order)
-## Define the context parameters for all environwemts in a single module
 contexts = ContextParams(nb_envs, context_size, key=None)
 
 print("\n\nTotal number of parameters in the neural ode:", sum(x.size for x in jax.tree_util.tree_leaves(eqx.filter(vectorfield, eqx.is_array)) if x is not None))

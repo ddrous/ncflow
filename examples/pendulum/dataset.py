@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
-from IPython.display import Image
+import os
 
 
 try:
@@ -22,47 +22,28 @@ import argparse
 
 
 if _in_ipython_session:
-	# args = argparse.Namespace(split='train', savepath='tmp/', seed=42)
-	args = argparse.Namespace(split='adapt', savepath="./runs/30012024-165151/", seed=3422)
+	args = argparse.Namespace(split='adapt', savepath="./data/")
 else:
-	parser = argparse.ArgumentParser(description='Description of your program')
+	parser = argparse.ArgumentParser(description='Simple Pendulum')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
-	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='tmp/', required=False)
-	parser.add_argument('--seed',type=int, help='Seed to gnerate the data', default=42, required=False)
+	parser.add_argument('--savepath', type=str, help='Description of optional argument', default='data/', required=False)
 
 	args = parser.parse_args()
-
 
 split = args.split
 assert split in ["train", "test", "adapt", "adapt_test", "adapt_huge"], "Split must be either 'train', 'test', 'adapt', 'adapt_test', 'adapt_huge'"
 
 savepath = args.savepath
-seed = args.seed
+
+if not os.path.exists(savepath):
+    os.makedirs(savepath)
 
 print('=== Parsed arguments to generate data ===')
 print(' Split:', split)
 print(' Savepath:', savepath)
-print(' Seed:', seed)
 print()
 
 
-## Set numpy seed for reproducibility
-np.random.seed(seed)
-
-
-#%%
-
-# Image(filename="tmp/coda_dataset.png")
-
-
-#%%
-
-
-#%%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import solve_ivp
-from matplotlib.animation import FuncAnimation
 
 # import jax
 # jax.config.update("jax_platform_name", "cpu")
@@ -94,10 +75,6 @@ def rk4_integrator(rhs, y0, t):
     ys.append(y)
   return  jnp.vstack(ys)
 
-#   _, ys = jax.lax.scan(step, (y0, t[0]), t[1:])
-#   return jnp.concatenate([y0[jnp.newaxis, :], ys], axis=0)
-
-
 
 if split == "train" or split=="test":
   # Training environments
@@ -105,11 +82,7 @@ if split == "train" or split=="test":
 
 elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
-  # environments = [(1., g) for g in list(np.linspace(1, 2, 4))] + [(1., g) for g in list(np.linspace(24, 30, 4))]
-  # environments = [(1., g) for g in list(np.linspace(10.5, 17, 4))]
   environments = [(1., 10.25), (1., 14.75)]
-  # environments = [(1., 0.5), (1., 1.5), (1., 10.25), (1., 14.75), (1., 25.5), (1., 28)]
-  # environments = [(1., g) for g in list(np.linspace(1, 30, 30))]
 
 
 if split == "train":
@@ -120,8 +93,6 @@ elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.25)
-# n_steps_per_traj = int(10/0.1)
-# n_steps_per_traj = 201
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
 
@@ -143,24 +114,20 @@ for j in range(n_traj_per_env):
         initial_state = np.concatenate([initial_state_0, initial_state_1], axis=0)
 
         # Solve the ODEs using SciPy's solve_ivp
-        # solution = solve_ivp(simple_pendulum, t_span, initial_state, args=(selected_params[0], selected_params[1]), t_eval=t_eval)
-        # data[i, j, :, :] = solution.y.T
-
-        rhs = lambda x, t: simple_pendulum(t, x, selected_params[0], selected_params[1])
-        solution = rk4_integrator(rhs, initial_state, t_eval)
-        data[i, j, :, :] = solution
+        solution = solve_ivp(simple_pendulum, t_span, initial_state, args=(selected_params[0], selected_params[1]), t_eval=t_eval)
+        data[i, j, :, :] = solution.y.T
 
 # Save t_eval and the solution to a npz file
 if split == "train":
-  filename = savepath+'train_data.npz'
+  filename = savepath+'train.npz'
 elif split == "test":
-  filename = savepath+'test_data.npz'
+  filename = savepath+'test.npz'
 elif split == "adapt":
-  filename = savepath+'adapt_data.npz'
+  filename = savepath+'oof_train.npz'
 elif split == "adapt_test":
-  filename = savepath+'adapt_test_data.npz'
+  filename = savepath+'ood_test.npz'
 elif split == "adapt_huge":
-  filename = savepath+'adapt_huge_data.npz'
+  filename = savepath+'grid_train.npz'
 
 np.savez(filename, t=t_eval, X=data)
 
@@ -168,53 +135,28 @@ np.savez(filename, t=t_eval, X=data)
 
 
 
-# ## Randmly pick a trajectory and plot it, then save it
-# e, traj_id = np.random.randint(0, len(environments)), np.random.randint(0, n_traj_per_env)
-# print("Plotting environment", e, "trajectory", traj_id)
-# traj = data[e, traj_id, :, :]
-# plt.plot(t_eval, traj[:, 0], label='theta')
-# plt.plot(t_eval, traj[:, 1], label='theta_dot')
-# plt.legend()
-# plt.savefig('tmp/pendulum.png')
-# plt.show()
-
-
-
-
-
-
-
-
 if _in_ipython_session:
   # Extract the solution
-  prey_concentration, predator_concentration = solution.T
-  # prey_concentration, predator_concentration = solution.y
-  # prey_concentration, predator_concentration = solution.ys
+  angle, velocity = solution.y
 
   # Create an animation of the Lotka-Volterra system
   fig, ax = plt.subplots()
   eps = 0.5
-  ax.set_xlim(-eps, np.max(prey_concentration)+eps)
-  ax.set_ylim(-eps, np.max(predator_concentration)+eps)
-  ax.set_xlabel('Preys')
-  ax.set_ylabel('Predators')
+  ax.set_xlim(np.min(angle)-eps, np.max(angle)+eps)
+  ax.set_ylim(np.min(velocity)-eps, np.max(velocity)+eps)
+  ax.set_xlabel('Angle')
+  ax.set_ylabel('Velocity')
 
-  concentrations, = ax.plot([], [], 'r-', lw=1, label='Concentrations')
+  concentrations, = ax.plot([], [], 'r-', lw=1)
   time_template = 'Time = %.1fs'
   time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
-  # Add legend
-  ax.legend()
-
   def animate(i):
-      concentrations.set_data(prey_concentration[:i], predator_concentration[:i])
+      concentrations.set_data(angle[:i], velocity[:i])
       time_text.set_text(time_template % t_eval[i])
       return concentrations, time_text
 
   ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
   plt.show()
 
-
-  ## Save the movie to a small mp4 file
-  # ani.save('tmp/lotka_volterra.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
-  ani.save('tmp/lotka_volterra.gif', fps=30)
+  ani.save('data/simple_pendulum.gif', fps=30)
