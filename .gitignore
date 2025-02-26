@@ -46,8 +46,8 @@ examples/runs/cprofile/*
 ## Tmp data
 examples/pendulums/tmp/*
 examples/dahlquist/tmp/*
-examples/lotka-voltera/tmp/*
-examples/lotka-voltera/lightning_logs/*
+examples/lotka-volterra/tmp/*
+examples/lotka-volterra/lightning_logs/*
 examples/glycolytic-oscillator/tmp/*
 examples/pendulum/tmp/*
 examples/gray-scott/tmp/*
@@ -57,7 +57,7 @@ examples/forced-oscillator/tmp/*
 
 
 ## Runs
-examples/lotka-voltera/runs/*
+examples/lotka-volterra/runs/*
 examples/glycolytic-oscillator/runs/*
 examples/pendulum/runs/*
 examples/gray-scott/runs/*
@@ -72,25 +72,25 @@ venv/*
 !examples/navier-stokes/tmp/
 
 !examples/pendulum/runs/30012024-165151
-!examples/lotka-voltera/runs/27012024-155719
-!examples/lotka-voltera/runs/06032024-164034
+!examples/lotka-volterra/runs/27012024-155719
+!examples/lotka-volterra/runs/06032024-164034
 
-!examples/lotka-voltera/runs/08032024-110732
-!examples/lotka-voltera/runs/09032024-155347
+!examples/lotka-volterra/runs/08032024-110732
+!examples/lotka-volterra/runs/09032024-155347
 
-!examples/lotka-voltera/runs/Uncertainty
-!examples/lotka-voltera/runs/ContextSizeExp
+!examples/lotka-volterra/runs/Uncertainty
+!examples/lotka-volterra/runs/ContextSizeExp
 
-!examples/lotka-voltera/runs/MseSequentialExp
+!examples/lotka-volterra/runs/MseSequentialExp
 
-!examples/lotka-voltera/runs/12022024-223202
-!examples/lotka-voltera/runs/15022024-133847
-!examples/lotka-voltera/runs/SampleSizeExperiment
-!examples/lotka-voltera/runs/MapeExperiment
-!examples/lotka-voltera/runs/ContextPoolSizeExperiment
-!examples/lotka-voltera/runs/10042024-171620
-!examples/lotka-voltera/runs/11042024-060422-Special
-!examples/lotka-voltera/runs/MapeBulkExperiment
+!examples/lotka-volterra/runs/12022024-223202
+!examples/lotka-volterra/runs/15022024-133847
+!examples/lotka-volterra/runs/SampleSizeExperiment
+!examples/lotka-volterra/runs/MapeExperiment
+!examples/lotka-volterra/runs/ContextPoolSizeExperiment
+!examples/lotka-volterra/runs/10042024-171620
+!examples/lotka-volterra/runs/11042024-060422-Special
+!examples/lotka-volterra/runs/MapeBulkExperiment
 
 !examples/glycolytic-oscillator/runs/16022024-205415
 !examples/glycolytic-oscillator/runs/10032024-124158
@@ -110,14 +110,14 @@ venv/*
 !examples/selkov-model/runs/23032024-233458
 !examples/selkov-model/runs/TrainLossesCompare
 
-!examples/lotka-voltera/runs/SmallContextExperiment
-!examples/lotka-voltera/runs/03082024-142030-BestNearest
-!examples/lotka-voltera/runs/03082024-191540-BestRandom
-!examples/lotka-voltera/runs/03082024-214102-BestSmallest
-!examples/lotka-voltera/runs/04082024-213906-SuperSpecial
-!examples/lotka-voltera/runs/10082024-043102-NearestMassiveT1
-!examples/lotka-voltera/runs/10082024-101628-Interpretable
-!examples/lotka-voltera/runs/10082024-083641-Tiny
+!examples/lotka-volterra/runs/SmallContextExperiment
+!examples/lotka-volterra/runs/03082024-142030-BestNearest
+!examples/lotka-volterra/runs/03082024-191540-BestRandom
+!examples/lotka-volterra/runs/03082024-214102-BestSmallest
+!examples/lotka-volterra/runs/04082024-213906-SuperSpecial
+!examples/lotka-volterra/runs/10082024-043102-NearestMassiveT1
+!examples/lotka-volterra/runs/10082024-101628-Interpretable
+!examples/lotka-volterra/runs/10082024-083641-Tiny
 
 
 !examples/gray-scott/runs/30032024-091851
@@ -126,7 +126,7 @@ venv/*
 !examples/pendulum/runs/28032024-201048
 
 
-!examples/lotka-voltera/runs/28032024-212427
+!examples/lotka-volterra/runs/28032024-212427
 !examples/gray-scott/runs/31032024-164433
 !examples/gray-scott/runs/31032024-222842
 !examples/gray-scott/runs/01042024-065008
