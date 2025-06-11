@@ -4,7 +4,7 @@
 Official JAX implementation of [Neural Context Flows for Meta-Learning of Dynamical Systems](https://arxiv.org/abs/2405.02154), accepted at ICLR 2025. A PyTorch version is available [at this link](https://github.com/ddrous/ncflow-torch).
 
 <p align="center">
-<img src="docs/assets/hydra.png" alt="drawing" width="350"/>
+<img src="docs/assets/hydra.png" alt="drawing" width="450"/>
 </p>
 
 ## Overview
