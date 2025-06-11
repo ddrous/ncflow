@@ -36,8 +36,7 @@ The main requirement to run our package is JAX and its ecosystem (Equinox, Diffr
 
 
 ## To-Do
-- [ ] Provide links to some weights and contexts
-- [ ] Delete long history of commits
+- [ ] Provide links to weights and contexts
 - [ ] Test the installation in neutral conda environments
 
 If you use this work, please cite the corresponding paper:
