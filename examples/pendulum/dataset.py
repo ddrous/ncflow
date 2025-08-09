@@ -22,7 +22,7 @@ import argparse
 
 
 if _in_ipython_session:
-	args = argparse.Namespace(split='adapt', savepath="./data/")
+	args = argparse.Namespace(split='train', savepath="./data/")
 else:
 	parser = argparse.ArgumentParser(description='Simple Pendulum')
 	parser.add_argument('--split', type=str, help='Generate "train", "test", "adapt", "adapt_test", or "adapt_huge" data', default='train', required=False)
@@ -79,10 +79,12 @@ def rk4_integrator(rhs, y0, t):
 if split == "train" or split=="test":
   # Training environments
   environments = [(1., g) for g in list(np.linspace(2, 24, 25))]
+  # environments = [(1., g) for g in list(np.linspace(2, 6, 25))]
 
 elif split == "adapt" or split == "adapt_test":
   ## Adaptation environments
   environments = [(1., 10.25), (1., 14.75)]
+  # environments = [(1., 1.5), (1., 14.75)]
 
 
 if split == "train":
@@ -93,6 +95,7 @@ elif split == "adapt":
   n_traj_per_env = 1     ## adaptation
 
 n_steps_per_traj = int(10/0.25)
+# n_steps_per_traj = int(10/0.1)
 
 data = np.zeros((len(environments), n_traj_per_env, n_steps_per_traj, 2))
 
@@ -104,11 +107,11 @@ max_seed = np.iinfo(np.int32).max
 for j in range(n_traj_per_env):
 
     np.random.seed(j if not split in ["test", "adapt_test"] else max_seed - j)
+    # Initial conditions (prey and predator concentrations)
 
     for i, selected_params in enumerate(environments):
         # print("Environment", i)
 
-        # Initial conditions (prey and predator concentrations)
         initial_state_0 = np.random.uniform(-np.pi/3, np.pi/3, (1,))
         initial_state_1 = np.random.uniform(-1, 1, (1,))
         initial_state = np.concatenate([initial_state_0, initial_state_1], axis=0)
@@ -123,7 +126,7 @@ if split == "train":
 elif split == "test":
   filename = savepath+'test.npz'
 elif split == "adapt":
-  filename = savepath+'oof_train.npz'
+  filename = savepath+'ood_train.npz'
 elif split == "adapt_test":
   filename = savepath+'ood_test.npz'
 elif split == "adapt_huge":
@@ -159,4 +162,4 @@ if _in_ipython_session:
   ani = FuncAnimation(fig, animate, frames=len(t_eval), interval=5, repeat=False, blit=True)  # Shortened interval
   plt.show()
 
-  ani.save('data/simple_pendulum.gif', fps=30)
+  # ani.save('data/simple_pendulum.gif', fps=30)
