@@ -164,3 +164,4 @@ venv/*
 !examples/pendulum/runs/18112024-123710-OnePerEnv-OoD
 # !examples/pendulum/runs/28032024-201048-Good
 !examples/pendulum/runs/23012024-163033-T2
+examples/navier-stokes/runs/04082024-130044-SpecialT2/results_2D_ind_comparison.mp4
